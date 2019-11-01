@@ -5,6 +5,7 @@
 #'
 #' @param file filename of an aerial survey DAS file
 #'
+#' @importFrom dplyr %>%
 #' @importFrom purrr set_names
 #' @importFrom readr cols
 #' @importFrom readr col_character
@@ -12,8 +13,9 @@
 #' @importFrom readr fwf_positions
 #' @importFrom utils tail
 #'
-#' @details Parses DAS data into columns.
-#'   Data must follow the following column number and format specifications:
+#' @details Parses aerial DAS data into columns; adapted
+#'   from \code{\link[swfscMisc]{das.read}}.
+#'   The provided file must follow the following column number and format specifications:
 #'   \tabular{lrr}{
 #'     \emph{Item} \tab \emph{Columns} \tab \emph{Format}\cr
 #'     Event number \tab 1-3\cr
@@ -32,15 +34,18 @@
 #'     Data7 \tab 70+\cr
 #'   }
 #'   
-#' @return Data frame with DAS data parsed into columns.
+#'   TODO: handle non-UTF-8 symbols in comments?
+#'   
+#' @return Data frame with aerial DAS data parsed into columns.
 #'   The following columns were processed or added:
 #'   \itemize{
-#'     \item \code{DateTime}: of class \code{POSIXct}; combination of \code{Date} and \code{Time} columns 
-#'     \item \code{Lat}: of class \code{numeric}; decimal degrees in range [-90, 90]
-#'     \item \code{Lon}: of class \code{numeric}; decimal degrees in range [-180, 180]
-#'     \item \code{Data#}: leading/trailing whitespace trimmed from columns in rows where \code{Event} is not "C" (i.e. a comment event)
-#'     \item \code{file_das}: filename (note not full filepath) 
-#'     \item \code{line_num}: line number of each data row
+#'     \item \code{EffortDot}: logical; \code{TRUE} if "." present, \code{FALSE otherwise}
+#'     \item \code{DateTime}: \code{POSIXct}; combination of \code{Date} and \code{Time} columns 
+#'     \item \code{Lat}: \code{numeric}; decimal degrees in range [-90, 90]
+#'     \item \code{Lon}: \code{numeric}; decimal degrees in range [-180, 180]
+#'     \item \code{Data#}: leading/trailing whitespace trimmed for non-comment events (rows where \code{Event} is not "C" or "c")
+#'     \item \code{file_das}: character; filename (note not full filepath) 
+#'     \item \code{line_num}: integer; line number of each data row
 #'   }
 #'
 #' @examples
@@ -72,7 +77,7 @@ airdas_read <- function(file) {
   Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
   DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S")
   file_das  <- tail(strsplit(file, "/")[[1]], 1)
-  event_num <- as.numeric(x$event_num)
+  event_num <- suppressWarnings(as.numeric(x$event_num)) #blank for # events
   line_num  <- seq_along(x$Event)
   
   y <- data.frame(
@@ -87,7 +92,7 @@ airdas_read <- function(file) {
                    trimws(x$Data7)), 
     stringsAsFactors = FALSE
   )
-  # Data7 extra ^ is for Data7 entries with >5 spaces (eg "      ")
+  # Data7 extra ^ is for entries with >6 spaces (eg "       ")
   y[y == ""] <- NA
 
   # Data frame to return
