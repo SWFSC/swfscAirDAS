@@ -58,7 +58,7 @@ airdas_read <- function(file) {
   x <- suppressWarnings(read_fwf(
     file, col_positions = fwf_positions(start = fwf.start, end = fwf.end),
     skip_empty_rows = FALSE,
-    na = c("", " ", "  ", "   ", "    ", "     "),
+    na = c("", " ", "  ", "   ", "    ", "     ", "      "),
     col_types = cols(.default = col_character()),
     trim_ws = FALSE
   )) %>%
@@ -68,27 +68,32 @@ airdas_read <- function(file) {
   
   # Process data, and add file and line number columns
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
-  x$Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
-  x$Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
-  x$DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S")
-  x$Data1 <- ifelse(x$Event == "C", x$Data1, trimws(x$Data1)) 
-  x$Data2 <- ifelse(x$Event == "C", x$Data2, trimws(x$Data2)) 
-  x$Data3 <- ifelse(x$Event == "C", x$Data3, trimws(x$Data3)) 
-  x$Data4 <- ifelse(x$Event == "C", x$Data4, trimws(x$Data4)) 
-  x$Data5 <- ifelse(x$Event == "C", x$Data5, trimws(x$Data5)) 
-  x$Data6 <- ifelse(x$Event == "C", x$Data6, trimws(x$Data6)) 
-  x$Data7 <- ifelse(x$Event == "C", x$Data7, trimws(x$Data7))
-  x$file_das  <- tail(strsplit(file, "/")[[1]], 1)
-  x$event_num <- as.numeric(x$event_num)
-  x$line_num  <- seq_along(x$Event)
+  Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
+  Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
+  DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S")
+  file_das  <- tail(strsplit(file, "/")[[1]], 1)
+  event_num <- as.numeric(x$event_num)
+  line_num  <- seq_along(x$Event)
   
+  y <- data.frame(
+    Data1 = ifelse(x$Event == "C", x$Data1, trimws(x$Data1)), 
+    Data2 = ifelse(x$Event == "C", x$Data2, trimws(x$Data2)), 
+    Data3 = ifelse(x$Event == "C", x$Data3, trimws(x$Data3)), 
+    Data4 = ifelse(x$Event == "C", x$Data4, trimws(x$Data4)), 
+    Data5 = ifelse(x$Event == "C", x$Data5, trimws(x$Data5)), 
+    Data6 = ifelse(x$Event == "C", x$Data6, trimws(x$Data6)), 
+    Data7 = ifelse(x$Event == "C", 
+                   ifelse(trimws(x$Data7) == "", NA, x$Data7), 
+                   trimws(x$Data7)), 
+    stringsAsFactors = FALSE
+  )
+  # Data7 extra ^ is for Data7 entries with >5 spaces (eg "      ")
+  y[y == ""] <- NA
+
   # Data frame to return
   data.frame(
-    Event = x$Event, EffortDot = x$EffortDot, DateTime = x$DateTime, 
-    Lat = x$Lat, Lon = x$Lon,
-    Data1 = x$Data1, Data2 = x$Data2, Data3 = x$Data3, Data4 = x$Data4, 
-    Data5 = x$Data5, Data6 = x$Data6, Data7 = x$Data7,
-    file_das = x$file_das, event_num = x$event_num, line_num = x$line_num, 
+    Event = x$Event, EffortDot = x$EffortDot, DateTime, Lat, Lon, y, 
+    file_das, event_num, line_num, 
     stringsAsFactors = FALSE
   )
 }

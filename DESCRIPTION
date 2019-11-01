@@ -9,7 +9,6 @@ Depends: R (>= 3.5.0)
 Imports:
     dplyr, 
     readr, 
-    rlang, 
     purrr
 License: GPL-3
 Encoding: UTF-8

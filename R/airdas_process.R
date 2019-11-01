@@ -7,8 +7,8 @@
 #'   when propogated info (weather/env, observers, etc) is reset
 #'   
 #' @importFrom dplyr %>%
+#' @importFrom dplyr .data
 #' @importFrom dplyr select
-#' @importFrom rlang .data
 #'
 #' @details Read...
 #'   Adapted from \code{\link[swfscMisc]{das.read}}
