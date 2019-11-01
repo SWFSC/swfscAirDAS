@@ -2,15 +2,25 @@
 % Please edit documentation in R/airdas_process.R
 \name{airdas_process}
 \alias{airdas_process}
+\alias{airdas_process.character}
+\alias{airdas_process.data.frame}
 \title{Process aerial survey DAS data}
 \usage{
-airdas_process(das.df, days.gap = 0.5/24)
+airdas_process(x, ...)
+
+\method{airdas_process}{character}(x, ...)
+
+\method{airdas_process}{data.frame}(x, days.gap = 0.5/24, ...)
 }
 \arguments{
-\item{das.df}{data frame; the output of \link{airdas_read}}
+\item{x}{Either a data frame (the output of \link{airdas_read}) or
+a character which is then passed to \link{airdas_read}}
+
+\item{...}{Ignore}
 
 \item{days.gap}{numeric of length 1; time gap (in days) used to identify 
-when propogated info (weather/env, observers, etc) is reset}
+when propogated info (weather/env, observers, etc) is reset. 
+The default is 30 minutes}
 }
 \value{
 Processed aerial survey DAS data...

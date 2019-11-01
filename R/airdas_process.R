@@ -2,9 +2,25 @@
 #'
 #' Process output of \link{airdas_read}
 #'
-#' @param das.df data frame; the output of \link{airdas_read}
+#' @param x Either a data frame (the output of \link{airdas_read}) or
+#'   a character which is then passed to \link{airdas_read}
+#' @param ... Ignore
+#' @export
+airdas_process <- function(x, ...) UseMethod("airdas_process")
+
+
+#' @name airdas_process
+#' @export
+airdas_process.character <- function(x, ...) {
+  airdas_process(airdas_read(x), ...)
+}
+
+
+#' @name airdas_process
+#' 
 #' @param days.gap numeric of length 1; time gap (in days) used to identify 
-#'   when propogated info (weather/env, observers, etc) is reset
+#'   when propogated info (weather/env, observers, etc) is reset. 
+#'   The default is 30 minutes 
 #'   
 #' @importFrom dplyr %>%
 #' @importFrom dplyr .data
@@ -23,10 +39,11 @@
 #' # x <- airdas_process(d)
 #'
 #' @export
-airdas_process <- function(das.df, days.gap = 0.5/24) { 
+airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) { 
   # TODO: #Add flag for printing out lines ID'd by days .gap for KAF error
   # TODO: rm names.expected
   #----------------------------------------------------------------------------
+  das.df <- x
   names.expected <- c(
     "Event", "EffortDot", "DateTime", "Lat", "Lon", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
