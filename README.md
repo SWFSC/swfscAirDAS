@@ -5,6 +5,10 @@
 
 <!-- badges: start -->
 
+[![Travis build
+status](https://travis-ci.org/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.org/smwoodman/swfscAirDAS)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/smwoodman/swfscAirDAS?branch=master&svg=true)](https://ci.appveyor.com/project/smwoodman/swfscAirDAS)
 <!-- badges: end -->
 
 This package contains functions for processing and analyzing aerial
