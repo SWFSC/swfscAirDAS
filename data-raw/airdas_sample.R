@@ -1,4 +1,4 @@
-# code to prepare AirDAS to use for examples
+# code to prepare sample AirDAS .das file to use for examples
 
 library(dplyr)
 library(gdata)
@@ -7,7 +7,7 @@ library(stringr)
 library(swfscAirDAS)
 library(tibble)
 
-source("data-raw/airdas_strawman_funcs.R")
+source("data-raw/airdas_sample_funcs.R")
 
 
 x.orig <- airdas_read("../airdas/airDAS_files/DASDC2019_JUN.das")
@@ -15,9 +15,9 @@ x.orig <- airdas_read("../airdas/airDAS_files/DASDC2019_JUN.das")
 # data7len <- 50
 
 ###############################################################################
-# Pre-processing of x.orig
+# Extract, process, and jitter actual data
 
-### Extract, process, and jitter actual data
+# Pre-processing
 x <- x.orig %>% 
   select(-file_das, -line_num) %>% 
   slice(c(90:200)) %>% 
@@ -37,7 +37,7 @@ rm(sight.rm, comment.rm)
 
 sight.curr <- which(x$Event == "S")
 
-# TODO: make obs realistic, i.e. match p events based on dec angle
+# Jitter sighting data
 x$Data1[sight.curr] <- seq_len(n.sight.keep)
 x$Data2[sight.curr] <- unname(
   vapply(x$Data2[sight.curr], function(i) switch(i, sb = "aa", kw = "bb", sh = "cc", kf = "dd"), 
@@ -63,7 +63,6 @@ x$Data1[x$Event == "T"] <- c("T1", "T2")
 x$Data4[which(x$Event == "W")[2]] <- 2
 
 
-### Manual additions
 # Manual addition of a '1', 't', "R", and 'E' events. And ending "O"
 x$Event[c(32, 34)] <- c("E", "R")
 
@@ -85,13 +84,8 @@ x <- x %>%
 # Checks
 identical(order(na.omit(x$DateTime)), sort(order(na.omit(x$DateTime))))
 
-# Write to text file
-raw_airdas_fwf(x, "data-raw/airdas_strawman_test.das", data7len = 5)
+### Write to das file
+# raw_airdas_fwf(x, "data-raw/airdas_strawman_test.das", data7len = 5)
 raw_airdas_fwf(x, "inst/airdas_sample.das", data7len = 5)
 
-
 ###############################################################################
-
-
-
-usethis::use_data("airdas_strawman")
