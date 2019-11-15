@@ -1,0 +1,34 @@
+---
+title: "AirDAS format"
+author: Samuel Woodman
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{AirDAS_format}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(knitr)
+library(swfscAirDAS)
+```
+
+
+See below for format requirements for AirDAS data expected by this package. In addition, you can view the pdf located at the following location:
+```{r}
+system.file("AirDAS_Format.pdf", package = "swfscAirDAS")
+```
+
+```{r}
+knitr::include_graphics(system.file("AirDAS_Format_Page_1.png", package = "swfscAirDAS"), dpi = 500)
+knitr::include_graphics(system.file("AirDAS_Format_Page_2.png", package = "swfscAirDAS"), dpi = 500)
+knitr::include_graphics(system.file("AirDAS_Format_Page_3.png", package = "swfscAirDAS"), dpi = 500)
+```
