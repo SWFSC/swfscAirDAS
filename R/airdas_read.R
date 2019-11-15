@@ -25,7 +25,7 @@
 #'     Date \tab 13-18 \tab MMDDYY\cr
 #'     Latitude \tab 20-28 \tab NDD:MM.MM\cr
 #'     Longitude \tab 30-39 \tab WDDD:MM.MM\cr
-#'     Data1 \tab 41-44 \cr
+#'     Data1 \tab 40-44 \cr
 #'     Data2 \tab 45-49 \cr
 #'     Data3 \tab 50-54\cr
 #'     Data4 \tab 55-59\cr
@@ -55,7 +55,7 @@ airdas_read <- function(file) {
   stopifnot(inherits(file, "character"))
   
   # Start and end (inclusive) columns 
-  fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 41,45,50,55,60,65,70)
+  fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 40,45,50,55,60,65,70)
   fwf.end   <- c(3,4,5, 11,18, 20,22,28, 30,33,39, 44,49,54,59,64,69,NA)
   
   # suppressWarnings() is for lines that do not have data in all columns
