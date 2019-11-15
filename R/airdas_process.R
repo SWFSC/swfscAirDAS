@@ -69,6 +69,9 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   idx.reset <- c(1, which(time.diff > days.gap)) #Will not reset transect num
   idx.reset.full <- c(1, which(time.diff > 0.5)) #Time diff > 12 hours, reset all
   
+  # TODO: how best to handle this?
+  stopifnot(all(idx.reset.full %in% idx.reset))
+  
   if (!all(idx.reset.full %in% idx.reset)) {
     warning("Warning: not all full resets were in partial resets; ", 
             "check days.gap?", immediate. = TRUE)
@@ -81,22 +84,10 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   
   
   #----------------------------------------------------------------------------
-  # Determine effort using events
-  
-  ### 'Initialize' appropriate objects as NA; will be updated in for loop
-  # t1 <- Sys.time()
+  ### Create vectors with data where values change/are reset
   init.val <- as.numeric(rep(NA, nDAS))
+  event.na <- -9999
   
-  Bft <- CCover <- Jelly <- HorizSun <- HKR <-
-    ObsL <- ObsB <- ObsR <- Rec <- AltFt <- SpKnot <-
-    VLI <- VLO <- VB <- VRI <- VRO <- Trans <- Eff <- init.val
-  
-  LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastHKR <-
-    LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
-    LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- LastTrans <- 
-    LastEff <- NA
-  
-  ### Indices of specific events
   event.A <- das.df$Event == "A"
   event.E <- das.df$Event == "E"
   event.O <- das.df$Event == "O"
@@ -105,43 +96,41 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   event.T <- das.df$Event == "T"
   event.V <- das.df$Event == "V"
   event.W <- das.df$Event == "W"
+
+  Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
+  CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
+  Jelly    <- .airdas_process_num(init.val, das.df, "Data4", event.W, event.na)
+  HorizSun <- .airdas_process_num(init.val, das.df, "Data5", event.W, event.na)
+  HKR      <- .airdas_process_chr(init.val, das.df, "Data1", event.W, event.na)
   
-  browser()
+  ObsL <- .airdas_process_chr(init.val, das.df, "Data1", event.P, event.na)
+  ObsB <- .airdas_process_chr(init.val, das.df, "Data2", event.P, event.na)
+  ObsR <- .airdas_process_chr(init.val, das.df, "Data3", event.P, event.na)
+  Rec <-  .airdas_process_chr(init.val, das.df, "Data4", event.P, event.na)
   
-  ### Put data in vectors in all places where data values change
-  event.na <- -9999
+  AltFt  <- .airdas_process_num(init.val, das.df, "Data1", event.A, event.na)
+  SpKnot <- .airdas_process_num(init.val, das.df, "Data2", event.A, event.na)
   
-  Bft[event.W]      <- .airdas_process_num(das.df, "Data3", event.W, event.na)
-  CCover[event.W]   <- .airdas_process_num(das.df, "Data2", event.W, event.na)
-  Jelly[event.W]    <- .airdas_process_num(das.df, "Data4", event.W, event.na)
-  HorizSun[event.W] <- .airdas_process_num(das.df, "Data5", event.W, event.na)
-  HKR[event.W]      <- .airdas_process_chr(das.df, "Data1", event.W, event.na)
+  VLI <- .airdas_process_chr(init.val, das.df, "Data1", event.V, event.na)
+  VLO <- .airdas_process_chr(init.val, das.df, "Data2", event.V, event.na)
+  VB  <- .airdas_process_chr(init.val, das.df, "Data3", event.V, event.na)
+  VRI <- .airdas_process_chr(init.val, das.df, "Data4", event.V, event.na)
+  VRO <- .airdas_process_chr(init.val, das.df, "Data5", event.V, event.na)
   
-  ObsL[event.P] <- .airdas_process_chr(das.df, "Data1", event.P, event.na)
-  ObsB[event.P] <- .airdas_process_chr(das.df, "Data2", event.P, event.na)
-  ObsR[event.P] <- .airdas_process_chr(das.df, "Data3", event.P, event.na)
-  Rec[event.P] <-  .airdas_process_chr(das.df, "Data4", event.P, event.na)
+  Trans <- .airdas_process_chr(init.val, das.df, "Data1", event.T, event.na)
+  Trans[event.O] <- event.na
   
-  AltFt[event.A]  <- .airdas_process_num(das.df, "Data1", event.A, event.na)
-  SpKnot[event.A] <- .airdas_process_num(das.df, "Data2", event.A, event.na)
-  
-  VLI[event.V] <- .airdas_process_chr(das.df, "Data1", event.V, event.na)
-  VLO[event.V] <- .airdas_process_chr(das.df, "Data2", event.V, event.na)
-  VB[event.V]  <- .airdas_process_chr(das.df, "Data3", event.V, event.na)
-  VRI[event.V] <- .airdas_process_chr(das.df, "Data4", event.V, event.na)
-  VRO[event.V] <- .airdas_process_chr(das.df, "Data5", event.V, event.na)
-  
-  Trans[which(event.O) + 1] <- event.na
-  Trans[event.T] <- .airdas_process_chr(das.df, "Data1", event.T, event.na)
-  
-  Eff[which(event.O) + 1] <- FALSE
-  Eff[which(event.E) + 1] <- FALSE
+  Eff <- init.val
+  Eff[event.O | event.E] <- FALSE
   Eff[idx.reset.full] <- event.na # For resets immediately after O or E events
-  Eff[event.T] <- TRUE
-  Eff[event.R] <- TRUE
+  Eff[event.T | event.R] <- TRUE
+
+  # Additional processing done after for loop
   
   
-  
+  #----------------------------------------------------------------------------
+  # Loop through data for 'carry-over info' that applies to subsequent events
+  # idx.new.cruise always includes 1, so don't need to pre-set Last.. objects
   for (i in seq_len(nDAS)) {
     # Reset data when necessary
     if (i %in% idx.reset) {
@@ -151,30 +140,31 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
     }
     
     # Reset transect number only when it is a new day
+    #   all of idx.reset.full are in idx.reset
     if (i %in% idx.reset.full) LastTrans <- NA
     
     # Set/pass along 'carry-over info'
-    if (is.na(Bft[i])) Bft[i] <- LastBft else LastBft <- Bft[i]                #Beaufort
-    if (is.na(CCover[i])) CCover[i] <- LastCCover else LastCCover <- CCover[i] #Cloud cover
-    if (is.na(Jelly[i])) Jelly[i] <- LastJelly else LastJelly <- Jelly[i]      #Jellyfish
+    if (is.na(Bft[i]))      Bft[i] <- LastBft           else LastBft <- Bft[i]           #Beaufort
+    if (is.na(CCover[i]))   CCover[i] <- LastCCover     else LastCCover <- CCover[i]     #Cloud cover
+    if (is.na(Jelly[i]))    Jelly[i] <- LastJelly       else LastJelly <- Jelly[i]       #Jellyfish
     if (is.na(HorizSun[i])) HorizSun[i] <- LastHorizSun else LastHorizSun <- HorizSun[i] # Horizontal sun
-    if (is.na(HKR[i])) HKR[i] <- LastHKR else LastHKR <- HKR[i]                #Haze/Kelp/Red tide
-    if (is.na(ObsL[i])) ObsL[i] <- LastObsL else LastObsL <- ObsL[i]           #Observer - left
-    if (is.na(ObsB[i])) ObsB[i] <- LastObsB else LastObsB <- ObsB[i]           #Observer - belly
-    if (is.na(ObsR[i])) ObsR[i] <- LastObsR else LastObsR <- ObsR[i]           #Observer - right
-    if (is.na(Rec[i])) Rec[i] <- LastRec else LastRec <- Rec[i]                #Recorder
-    if (is.na(AltFt[i])) AltFt[i] <- LastAltFt else LastAltFt <- AltFt[i]      #Altitude (ft)
-    if (is.na(SpKnot[i])) SpKnot[i] <- LastSpKnot else LastSpKnot <- SpKnot[i] #Speed (knots)
-    if (is.na(VLI[i])) VLI[i] <- LastVLI else LastVLI <- VLI[i]                #Visibility - left inner
-    if (is.na(VLO[i])) VLO[i] <- LastVLO else LastVLO <- VLO[i]                #Visibility - left outer
-    if (is.na(VB[i])) VB[i] <- LastVB else LastVB <- VB[i]                     #Visibility - belly
-    if (is.na(VRI[i])) VRI[i] <- LastVRI else LastVRI <- VRI[i]                #Visibility - right inner
-    if (is.na(VRO[i])) VRO[i] <- LastVRO else LastVRO <- VRO[i]                #Visibility - right outer
-    if (is.na(Trans[i])) Trans[i] <- LastTrans else LastTrans <- Trans[i]      #Transect number
-    if (is.na(Eff[i])) Eff[i] <- LastEff else LastEff <- Eff[i]                #Effort
+    if (is.na(HKR[i]))      HKR[i] <- LastHKR           else LastHKR <- HKR[i]           #Haze/Kelp/Red tide
+    if (is.na(ObsL[i]))     ObsL[i] <- LastObsL         else LastObsL <- ObsL[i]         #Observer - left
+    if (is.na(ObsB[i]))     ObsB[i] <- LastObsB         else LastObsB <- ObsB[i]         #Observer - belly
+    if (is.na(ObsR[i]))     ObsR[i] <- LastObsR         else LastObsR <- ObsR[i]         #Observer - right
+    if (is.na(Rec[i]))      Rec[i] <- LastRec           else LastRec <- Rec[i]           #Recorder
+    if (is.na(AltFt[i]))    AltFt[i] <- LastAltFt       else LastAltFt <- AltFt[i]       #Altitude (ft)
+    if (is.na(SpKnot[i]))   SpKnot[i] <- LastSpKnot     else LastSpKnot <- SpKnot[i]     #Speed (knots)
+    if (is.na(VLI[i]))      VLI[i] <- LastVLI           else LastVLI <- VLI[i]           #Visibility - left inner
+    if (is.na(VLO[i]))      VLO[i] <- LastVLO           else LastVLO <- VLO[i]           #Visibility - left outer
+    if (is.na(VB[i]))       VB[i] <- LastVB             else LastVB <- VB[i]             #Visibility - belly
+    if (is.na(VRI[i]))      VRI[i] <- LastVRI           else LastVRI <- VRI[i]           #Visibility - right inner
+    if (is.na(VRO[i]))      VRO[i] <- LastVRO           else LastVRO <- VRO[i]           #Visibility - right outer
+    if (is.na(Trans[i]))    Trans[i] <- LastTrans       else LastTrans <- Trans[i]       #Transect number
+    if (is.na(Eff[i]))      Eff[i] <- LastEff           else LastEff <- Eff[i]           #Effort
   }
   
-  
+  # Post-processing
   tmp <- list(
     Bft = Bft, CCover = CCover, Jelly = Jelly, HorizSun = HorizSun, HKR = HKR, 
     ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
@@ -192,6 +182,8 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   tmp$OnEffort <- as.logical(tmp$OnEffort)
   tmp$OnEffort[is.na(tmp$OnEffort)] <- FALSE
   
+  
+  #----------------------------------------------------------------------------
   data.frame(das.df, tmp, stringsAsFactors = FALSE) %>%
     select(.data$Event, .data$DateTime, .data$Lat, .data$Lon, .data$OnEffort, .data$Trans, 
            .data$Bft, .data$CCover, .data$Jelly, .data$HorizSun, .data$HKR, 
