@@ -34,8 +34,6 @@
 #'     Data7 \tab 70+\cr
 #'   }
 #'   
-#'   TODO: handle non-UTF-8 symbols in comments?
-#'   
 #' @return Data frame with aerial DAS data parsed into columns.
 #'   The following columns were processed or added:
 #'   \itemize{
@@ -49,8 +47,8 @@
 #'   }
 #'
 #' @examples
-#' # TODO
 #' # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
+#' airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
 #'
 #' @export
 airdas_read <- function(file) {

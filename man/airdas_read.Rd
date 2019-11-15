@@ -47,11 +47,9 @@ Parses aerial DAS data into columns; adapted
     Data6 \tab 65-69\cr
     Data7 \tab 70+\cr
   }
-  
-  TODO: handle non-UTF-8 symbols in comments?
 }
 \examples{
-# TODO
 # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
+airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
 
 }

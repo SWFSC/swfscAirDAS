@@ -34,13 +34,16 @@ airdas_process.character <- function(x, ...) {
 #' @return Processed aerial survey DAS data...
 #'
 #' @examples
-#' # TODO
 #' # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
 #' # x <- airdas_process(d)
+#' airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+#' 
+#' das.sample <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+#' airdas_process(das.sample)
 #'
 #' @export
 airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) { 
-  # TODO: #Add flag for printing out lines ID'd by days .gap for KAF error
+  # TODO: #Add flag for printing out lines ID'd by days .gap for KAF error check
   # TODO: rm names.expected
   #----------------------------------------------------------------------------
   das.df <- x
@@ -103,32 +106,33 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   event.V <- das.df$Event == "V"
   event.W <- das.df$Event == "W"
   
+  browser()
   
   ### Put data in vectors in all places where data values change
   event.na <- -9999
   
-  Bft[event.W]      <- airdas_process_help_num(das.df, "Data3", event.W, event.na)
-  CCover[event.W]   <- airdas_process_help_num(das.df, "Data2", event.W, event.na)
-  Jelly[event.W]    <- airdas_process_help_num(das.df, "Data4", event.W, event.na)
-  HorizSun[event.W] <- airdas_process_help_num(das.df, "Data5", event.W, event.na)
-  HKR[event.W]      <- airdas_process_help_chr(das.df, "Data1", event.W, event.na)
+  Bft[event.W]      <- .airdas_process_num(das.df, "Data3", event.W, event.na)
+  CCover[event.W]   <- .airdas_process_num(das.df, "Data2", event.W, event.na)
+  Jelly[event.W]    <- .airdas_process_num(das.df, "Data4", event.W, event.na)
+  HorizSun[event.W] <- .airdas_process_num(das.df, "Data5", event.W, event.na)
+  HKR[event.W]      <- .airdas_process_chr(das.df, "Data1", event.W, event.na)
   
-  ObsL[event.P] <- airdas_process_help_chr(das.df, "Data1", event.P, event.na)
-  ObsB[event.P] <- airdas_process_help_chr(das.df, "Data2", event.P, event.na)
-  ObsR[event.P] <- airdas_process_help_chr(das.df, "Data3", event.P, event.na)
-  Rec[event.P] <-  airdas_process_help_chr(das.df, "Data4", event.P, event.na)
+  ObsL[event.P] <- .airdas_process_chr(das.df, "Data1", event.P, event.na)
+  ObsB[event.P] <- .airdas_process_chr(das.df, "Data2", event.P, event.na)
+  ObsR[event.P] <- .airdas_process_chr(das.df, "Data3", event.P, event.na)
+  Rec[event.P] <-  .airdas_process_chr(das.df, "Data4", event.P, event.na)
   
-  AltFt[event.A]  <- airdas_process_help_num(das.df, "Data1", event.A, event.na)
-  SpKnot[event.A] <- airdas_process_help_num(das.df, "Data2", event.A, event.na)
+  AltFt[event.A]  <- .airdas_process_num(das.df, "Data1", event.A, event.na)
+  SpKnot[event.A] <- .airdas_process_num(das.df, "Data2", event.A, event.na)
   
-  VLI[event.V] <- airdas_process_help_chr(das.df, "Data1", event.V, event.na)
-  VLO[event.V] <- airdas_process_help_chr(das.df, "Data2", event.V, event.na)
-  VB[event.V]  <- airdas_process_help_chr(das.df, "Data3", event.V, event.na)
-  VRI[event.V] <- airdas_process_help_chr(das.df, "Data4", event.V, event.na)
-  VRO[event.V] <- airdas_process_help_chr(das.df, "Data5", event.V, event.na)
+  VLI[event.V] <- .airdas_process_chr(das.df, "Data1", event.V, event.na)
+  VLO[event.V] <- .airdas_process_chr(das.df, "Data2", event.V, event.na)
+  VB[event.V]  <- .airdas_process_chr(das.df, "Data3", event.V, event.na)
+  VRI[event.V] <- .airdas_process_chr(das.df, "Data4", event.V, event.na)
+  VRO[event.V] <- .airdas_process_chr(das.df, "Data5", event.V, event.na)
   
   Trans[which(event.O) + 1] <- event.na
-  Trans[event.T] <- airdas_process_help_chr(das.df, "Data1", event.T, event.na)
+  Trans[event.T] <- .airdas_process_chr(das.df, "Data1", event.T, event.na)
   
   Eff[which(event.O) + 1] <- FALSE
   Eff[which(event.E) + 1] <- FALSE
@@ -194,5 +198,5 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
            .data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, .data$AltFt, .data$SpKnot, 
            .data$VLI, .data$VLO, .data$VB, .data$VRI, .data$VRO, 
            .data$Data1, .data$Data2, .data$Data3, .data$Data4, .data$Data5, .data$Data6, .data$Data7,
-           .data$file_das, .data$event_num, .data$line_num)
+           .data$EffortDot, .data$file_das, .data$event_num, .data$line_num)
 }
