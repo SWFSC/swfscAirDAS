@@ -39,7 +39,7 @@ Parses aerial DAS data into columns; adapted
     Date \tab 13-18 \tab MMDDYY\cr
     Latitude \tab 20-28 \tab NDD:MM.MM\cr
     Longitude \tab 30-39 \tab WDDD:MM.MM\cr
-    Data1 \tab 41-44 \cr
+    Data1 \tab 40-44 \cr
     Data2 \tab 45-49 \cr
     Data3 \tab 50-54\cr
     Data4 \tab 55-59\cr

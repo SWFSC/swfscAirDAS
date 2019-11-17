@@ -52,7 +52,12 @@
 #'
 #' @export
 airdas_read <- function(file) {
+  # Input check
   stopifnot(inherits(file, "character"))
+  
+  if (!file.exists(file)) 
+    stop("The supplied character string does not name an existing file, ", 
+         "meaning file.exists(file) is FALSE")
   
   # Start and end (inclusive) columns 
   fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 40,45,50,55,60,65,70)
@@ -76,7 +81,7 @@ airdas_read <- function(file) {
   Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
   DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S")
   file_das  <- tail(strsplit(file, "/")[[1]], 1)
-  event_num <- suppressWarnings(as.numeric(x$event_num)) #blank for # events
+  event_num <- suppressWarnings(as.integer(x$event_num)) #blank for # events
   line_num  <- seq_along(x$Event)
   
   y <- data.frame(
