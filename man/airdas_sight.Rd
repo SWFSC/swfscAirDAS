@@ -19,17 +19,27 @@ Data frame with one row for each species for each sighting.
 Extract sightings and associated information from aerial DAS data
 }
 \details{
-TODO. 
-  TODO: make parameters for 'event.sight' and 'event.turtle'?
-  Marine mammal sighting codes: "S" and "s"; turtle sighting code: "t"
+TODO: make parameters for 'event.sight', 'event.turtle', and 'event.sight.info'?
+  
+  Marine mammal sighting codes: "S" (first sighting) and "s" (resighting); 
+  turtle sighting code: "t";
+  additional sighting information: "1"
+  
+  See ... todo (link to pdf) more info
+  
   This function assumes the following 
   \tabular{llll}{
-    \emph{Information} \tab \emph{Mammal sighting} \tab 
-      \emph{Turtle sighting} \tab \emph{New column name}\cr
+    \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
     Sighting number \tab Data1 \tab \tab sight_no\cr
     Observer \tab Data2 \tab Data1 \tab obs\cr
     Declination angle \tab Data3 \tab Data2 \tab angle_declination\cr
-    Etc\cr
+    Group size (best estimate) \tab Data4 \tab NA \tab todo \cr
+    Species code 1 \tab Data5 \tab Data3 \tab todo \cr
+    Species code 2 \tab Data6 \tab NA \tab todo \cr
+    Species code 3 \tab Data7 \tab NA \tab todo \cr
+    Turtle size (ft) \tab NA \tab Data4 \tab todo\cr
+    Travel direction (deg) \tab NA \tab Data5 \tab todo\cr
+    Tail visible? \tab NA \tab Data6 \tab todo\cr
   }
 }
 \examples{
@@ -37,5 +47,8 @@ TODO.
 # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
 # x <- airdas_process(d)
 # x.sight <- airdas_sight(x)
+
+d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+airdas_sight(d.proc)
 
 }
