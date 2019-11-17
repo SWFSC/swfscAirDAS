@@ -18,17 +18,22 @@ airdas_process.character <- function(x, ...) {
 
 #' @name airdas_process
 #' 
-#' @param days.gap numeric of length 1; time gap (in days) used to identify 
-#'   when propogated info (weather/env, observers, etc) is reset. 
-#'   The default is 30 minutes 
+#' @param days.gap.part numeric of length 1; time gap (in days) used to identify 
+#'   when propogated info (weather, observers, etc) is reset. 
+#'   Default is 30 minutes; must be less than or equal to \code{days.gap.full}
+#' @param days.gap.full numeric of length 1; time gap (in days) used to identify 
+#'   when all info (transect number and propogated info) is reset. 
+#'   Default is 12 hours
 #'   
 #' @importFrom dplyr %>%
-#' @importFrom dplyr .data
 #' @importFrom dplyr select
+#' @importFrom rlang !!
 #'
 #' @details Read...
 #'   Adapted from \code{\link[swfscMisc]{das.read}}
+#'   
 #'  TODO: describe columns created?
+#'  
 #'  TODO: any error checking?
 #'
 #' @return Processed aerial survey DAS data...
@@ -42,32 +47,32 @@ airdas_process.character <- function(x, ...) {
 #' airdas_process(das.sample)
 #'
 #' @export
-airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) { 
+airdas_process.data.frame <- function(x, days.gap.part = 0.5/24, 
+                                      days.gap.full = 12/24, ...) { 
   # TODO: #Add flag for printing out lines ID'd by days .gap for KAF error check
   # TODO: rm names.expected
   #----------------------------------------------------------------------------
+  # Input checks
   das.df <- x
-  names.expected <- c(
-    "Event", "EffortDot", "DateTime", "Lat", "Lon", 
-    "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
-    "file_das", "event_num", "line_num"
-  )
+  stopifnot(.airdas_format_check(das.df, "process"))
   
-  stopifnot(
-    identical(names(das.df), names.expected)
-  ); rm(names.expected)
-  
-  nDAS <- nrow(das.df)
+  if (days.gap.part > days.gap.full) {
+    stop("days.gap.part must be less than or equal to days.gap.full")
+  }
   
   
   #----------------------------------------------------------------------------
   ### Determine new days for reset of columns
+  nDAS <- nrow(das.df)
+  
   dt.na <- is.na(das.df$DateTime)
   time.diff <- rep(NA, nDAS)
   time.diff[!dt.na] <- c(NA, abs(diff(das.df$DateTime[!dt.na]))) / (60*60*24)
   
-  idx.reset <- c(1, which(time.diff > days.gap)) #Will not reset transect num
-  idx.reset.full <- c(1, which(time.diff > 0.5)) #Time diff > 12 hours, reset all
+  # Soft reset (not transect num) for time gaps > days.gap.part
+  idx.reset <- c(1, which(time.diff > days.gap.part))
+  # Full reset (including transect num) for time gaps > days.gap.full
+  idx.reset.full <- c(1, which(time.diff > days.gap.full))
   
   # TODO: how best to handle this?
   stopifnot(all(idx.reset.full %in% idx.reset))
@@ -184,11 +189,21 @@ airdas_process.data.frame <- function(x, days.gap = 0.5/24, ...) {
   
   
   #----------------------------------------------------------------------------
+  cols.toreturn <- c(
+    "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", 
+    "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
+    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
+    "VLI", "VLO", "VB", "VRI", "VRO", 
+    "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
+    "EffortDot", "file_das", "event_num", "line_num"
+  )
+  
   data.frame(das.df, tmp, stringsAsFactors = FALSE) %>%
-    select(.data$Event, .data$DateTime, .data$Lat, .data$Lon, .data$OnEffort, .data$Trans, 
-           .data$Bft, .data$CCover, .data$Jelly, .data$HorizSun, .data$HKR, 
-           .data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, .data$AltFt, .data$SpKnot, 
-           .data$VLI, .data$VLO, .data$VB, .data$VRI, .data$VRO, 
-           .data$Data1, .data$Data2, .data$Data3, .data$Data4, .data$Data5, .data$Data6, .data$Data7,
-           .data$EffortDot, .data$file_das, .data$event_num, .data$line_num)
+    select(!!cols.toreturn)
+    # select(.data$Event, .data$DateTime, .data$Lat, .data$Lon, .data$OnEffort, .data$Trans, 
+    #        .data$Bft, .data$CCover, .data$Jelly, .data$HorizSun, .data$HKR, 
+    #        .data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, .data$AltFt, .data$SpKnot, 
+    #        .data$VLI, .data$VLO, .data$VB, .data$VRI, .data$VRO, 
+    #        .data$Data1, .data$Data2, .data$Data3, .data$Data4, .data$Data5, .data$Data6, .data$Data7,
+    #        .data$EffortDot, .data$file_das, .data$event_num, .data$line_num)
 }

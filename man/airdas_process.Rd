@@ -10,7 +10,7 @@ airdas_process(x, ...)
 
 \method{airdas_process}{character}(x, ...)
 
-\method{airdas_process}{data.frame}(x, days.gap = 0.5/24, ...)
+\method{airdas_process}{data.frame}(x, days.gap.part = 0.5/24, days.gap.full = 12/24, ...)
 }
 \arguments{
 \item{x}{Either a data frame (the output of \link{airdas_read}) or
@@ -18,9 +18,13 @@ a character which is then passed to \link{airdas_read}}
 
 \item{...}{Ignore}
 
-\item{days.gap}{numeric of length 1; time gap (in days) used to identify 
-when propogated info (weather/env, observers, etc) is reset. 
-The default is 30 minutes}
+\item{days.gap.part}{numeric of length 1; time gap (in days) used to identify 
+when propogated info (weather, observers, etc) is reset. 
+Default is 30 minutes; must be less than or equal to \code{days.gap.full}}
+
+\item{days.gap.full}{numeric of length 1; time gap (in days) used to identify 
+when all info (transect number and propogated info) is reset. 
+Default is 12 hours}
 }
 \value{
 Processed aerial survey DAS data...
@@ -31,7 +35,9 @@ Process output of \link{airdas_read}
 \details{
 Read...
   Adapted from \code{\link[swfscMisc]{das.read}}
+  
  TODO: describe columns created?
+ 
  TODO: any error checking?
 }
 \examples{
