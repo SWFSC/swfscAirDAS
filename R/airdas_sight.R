@@ -97,7 +97,7 @@ airdas_sight <- function(das.df) {
     rbind(curr.df[1, ], curr.df[1, ], curr.df[1, ]) %>% 
       mutate(Data4 = as.character(sp.num.all), Data5 = sp.all, 
              Data6 = NA, Data7 = NA) %>% 
-      filter(!is.na(.data$EData4))
+      filter(!is.na(.data$Data4))
   }, sight.df = sight.df)
   
   # Add 'new' sightings back into sight.df
