@@ -75,8 +75,8 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
     Lat1 = x.lat$deg_char, Lat2 = chr_z(x.lat$deg, 2), ":", 
     Lat3 = sprintf("%05.2f", x.lat$min + x.lat$sec/60), " ", 
     Lon1 = x.lon$deg_char, Lon2 = chr_z(x.lon$deg, 3), ":", 
-    Lon3 = sprintf("%05.2f", x.lon$min + x.lon$sec/60), " ", 
-    str_pad_data(x$Data1, 4), str_pad_data(x$Data2), str_pad_data(x$Data3), 
+    Lon3 = sprintf("%05.2f", x.lon$min + x.lon$sec/60), 
+    str_pad_data(x$Data1), str_pad_data(x$Data2), str_pad_data(x$Data3), 
     str_pad_data(x$Data4), str_pad_data(x$Data5), str_pad_data(x$Data6), 
     str_pad_data(x$Data7), 
     stringsAsFactors = FALSE
@@ -85,8 +85,8 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
   
   fwf.width <- c(3, 1, 1, 6, 1, 6, 1,
                  1, 2, 1, 5, 1, 
-                 1, 3, 1, 5, 1, 
-                 4, 5, 5, 5, 5, 5, data7len)
+                 1, 3, 1, 5, 
+                 5, 5, 5, 5, 5, 5, data7len)
   stopifnot(length(fwf.width) == ncol(x.df))
   
   ### Write to fwf
