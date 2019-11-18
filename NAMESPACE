@@ -2,6 +2,7 @@
 
 S3method(airdas_process,character)
 S3method(airdas_process,data.frame)
+export(airdas_format_copy)
 export(airdas_process)
 export(airdas_read)
 export(airdas_sight)
