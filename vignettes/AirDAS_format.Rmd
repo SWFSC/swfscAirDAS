@@ -22,10 +22,10 @@ library(swfscAirDAS)
 ```
 
 
-See below for the AirDAS data format required by this package. In addition, you can use `airdas_format_copy` to save the pdf describing the format requirements to a location of your choice:
+See below for the AirDAS data format required by this package. In addition, you can use `airdas_format_pdf` to save the pdf describing the format requirements to a location of your choice:
 ```{r, eval=FALSE}
 # Code not run
-airdas_format_copy("your_filepath_here.pdf")
+airdas_format_pdf("your_filepath_here.pdf")
 ```
 
 ```{r}
