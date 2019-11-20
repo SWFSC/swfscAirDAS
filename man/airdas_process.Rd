@@ -54,8 +54,6 @@ Read...
  TODO: any error checking?
 }
 \examples{
-# d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
-# x <- airdas_process(d)
 airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
 
 das.sample <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))

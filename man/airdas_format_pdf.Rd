@@ -9,7 +9,7 @@ airdas_format_pdf(file, ...)
 \arguments{
 \item{file}{character vector, the name of the file where the pdf will be saved}
 
-\item{...}{arguments passed to \link[base]{file.copy}, such as \code{overwrite}}
+\item{...}{arguments passed to \code{\link[base:files]{file.copy}}, such as \code{overwrite}}
 }
 \value{
 \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
@@ -18,7 +18,7 @@ airdas_format_pdf(file, ...)
 Save the pdf document describing the aerial DAS format required by \code{swfscAirDAS} to a specified file
 }
 \details{
-A wrapper function for \link[base]{file.copy}. This function
+A wrapper function for \code{\link[base:files]{file.copy}}. This function
   saves the pdf document describing the aerial DAS data format requirements by 
   copying the pdf document located at \code{system.file("AirDAS_Format.pdf", package = "swfscAirDAS")}
   to \code{file}
