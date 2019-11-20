@@ -4,7 +4,7 @@
 #'
 #' @param x Either a data frame (the output of \link{airdas_read}) or
 #'   a character which is then passed to \link{airdas_read}
-#' @param ... Ignore
+#' @param ... Ignored
 #' @export
 airdas_process <- function(x, ...) UseMethod("airdas_process")
 
@@ -18,12 +18,16 @@ airdas_process.character <- function(x, ...) {
 
 #' @name airdas_process
 #' 
-#' @param days.gap.part numeric of length 1; time gap (in days) used to identify 
-#'   when propogated info (weather, observers, etc) is reset. 
+#' @param days.gap.part numeric of length 1; 
+#'   time gap (in days) used to identify when a 'partial reset' is performed, 
+#'   i.e. when propogated info (weather, observers, etc) is reset. 
 #'   Default is 30 minutes; must be less than or equal to \code{days.gap.full}
-#' @param days.gap.full numeric of length 1; time gap (in days) used to identify 
-#'   when all info (transect number and propogated info) is reset. 
+#' @param days.gap.full numeric of length 1; 
+#'   time gap (in days) used to identify when a 'full reset; is performed, 
+#'   i.e. when all info (transect number and propogated info) is reset. 
 #'   Default is 12 hours
+#' @param gap.message logical; should messages detailing which row(s) of the 
+#'   output data frame were 'partially reset' or 'fully reset'
 #'   
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
@@ -31,6 +35,8 @@ airdas_process.character <- function(x, ...) {
 #'
 #' @details Read...
 #'   Adapted from \code{\link[swfscMisc]{das.read}}
+#'   
+#'   '#' events are removed (not included in output)
 #'   
 #'  TODO: describe columns created?
 #'  
@@ -47,10 +53,9 @@ airdas_process.character <- function(x, ...) {
 #' airdas_process(das.sample)
 #'
 #' @export
-airdas_process.data.frame <- function(x, days.gap.part = 0.5/24, 
-                                      days.gap.full = 12/24, ...) { 
-  # TODO: #Add flag for printing out lines ID'd by days .gap for KAF error check
-  # TODO: rm names.expected
+airdas_process.data.frame <- function(
+  x, days.gap.part = 0.5/24, days.gap.full = 12/24, gap.message = FALSE, ...) 
+{ 
   #----------------------------------------------------------------------------
   # Input checks
   das.df <- x
@@ -62,6 +67,22 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   
   
   #----------------------------------------------------------------------------
+  # Remove '#' (deleted) events
+  das.del <- das.df$Event == "#"
+  das.df <- das.df[!das.del, ]
+  
+  
+  #----------------------------------------------------------------------------
+  # Fill in Lat/Lon/DateTime of '1' events
+  event.1 <- which(das.df$Event == 1)
+  stopifnot(all(event.1 > 1))
+  
+  das.df$Lat[event.1] <- das.df$Lat[event.1 - 1]
+  das.df$Lon[event.1] <- das.df$Lon[event.1 - 1]
+  das.df$DateTime[event.1] <- das.df$DateTime[event.1 - 1]
+  
+  
+  #----------------------------------------------------------------------------
   ### Determine new days for reset of columns
   nDAS <- nrow(das.df)
   
@@ -70,19 +91,26 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   time.diff[!dt.na] <- c(NA, abs(diff(das.df$DateTime[!dt.na]))) / (60*60*24)
   
   # Soft reset (not transect num) for time gaps > days.gap.part
-  idx.reset <- c(1, which(time.diff > days.gap.part))
+  idx.reset.part <- c(1, which(time.diff > days.gap.part))
   # Full reset (including transect num) for time gaps > days.gap.full
   idx.reset.full <- c(1, which(time.diff > days.gap.full))
   
-  # TODO: how best to handle this?
-  stopifnot(all(idx.reset.full %in% idx.reset))
+  if (gap.message) {
+    message("A 'partial reset' was performed at the following row indicies of the output data frame: ", 
+            idx.reset.part)
+    message("A 'full reset' was performed at the following row indicies of the output data frame: ", 
+            idx.reset.full)
+  }
   
-  if (!all(idx.reset.full %in% idx.reset)) {
+  # TODO: how best to handle this?
+  stopifnot(all(idx.reset.full %in% idx.reset.part))
+  
+  if (!all(idx.reset.full %in% idx.reset.part)) {
     warning("Warning: not all full resets were in partial resets; ", 
             "check days.gap?", immediate. = TRUE)
   }
   
-  if (!all(which(!duplicated(das.df$file_das)) %in% idx.reset)) {
+  if (!all(which(!duplicated(das.df$file_das)) %in% idx.reset.part)) {
     warning("Warning: not all new flight row indices were new file indices", 
             immediate. = TRUE)
   }
@@ -101,7 +129,7 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   event.T <- das.df$Event == "T"
   event.V <- das.df$Event == "V"
   event.W <- das.df$Event == "W"
-
+  
   Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
   CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
   Jelly    <- .airdas_process_num(init.val, das.df, "Data4", event.W, event.na)
@@ -129,7 +157,7 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   Eff[event.O | event.E] <- FALSE
   Eff[idx.reset.full] <- event.na # For resets immediately after O or E events
   Eff[event.T | event.R] <- TRUE
-
+  
   # Additional processing done after for loop
   
   
@@ -138,14 +166,14 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   # idx.new.cruise always includes 1, so don't need to pre-set Last.. objects
   for (i in seq_len(nDAS)) {
     # Reset data when necessary
-    if (i %in% idx.reset) {
+    if (i %in% idx.reset.part) {
       LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastHKR <-
         LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- LastEff <- NA
     }
     
-    # Reset transect number only when it is a new day
-    #   all of idx.reset.full are in idx.reset
+    # Reset transect number only when it is a new day;
+    #   all of idx.reset.full are in idx.reset.part
     if (i %in% idx.reset.full) LastTrans <- NA
     
     # Set/pass along 'carry-over info'
@@ -200,10 +228,4 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   
   data.frame(das.df, tmp, stringsAsFactors = FALSE) %>%
     select(!!cols.toreturn)
-    # select(.data$Event, .data$DateTime, .data$Lat, .data$Lon, .data$OnEffort, .data$Trans, 
-    #        .data$Bft, .data$CCover, .data$Jelly, .data$HorizSun, .data$HKR, 
-    #        .data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, .data$AltFt, .data$SpKnot, 
-    #        .data$VLI, .data$VLO, .data$VB, .data$VRI, .data$VRO, 
-    #        .data$Data1, .data$Data2, .data$Data3, .data$Data4, .data$Data5, .data$Data6, .data$Data7,
-    #        .data$EffortDot, .data$file_das, .data$event_num, .data$line_num)
 }

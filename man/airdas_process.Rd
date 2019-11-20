@@ -10,21 +10,32 @@ airdas_process(x, ...)
 
 \method{airdas_process}{character}(x, ...)
 
-\method{airdas_process}{data.frame}(x, days.gap.part = 0.5/24, days.gap.full = 12/24, ...)
+\method{airdas_process}{data.frame}(
+  x,
+  days.gap.part = 0.5/24,
+  days.gap.full = 12/24,
+  gap.message = FALSE,
+  ...
+)
 }
 \arguments{
 \item{x}{Either a data frame (the output of \link{airdas_read}) or
 a character which is then passed to \link{airdas_read}}
 
-\item{...}{Ignore}
+\item{...}{Ignored}
 
-\item{days.gap.part}{numeric of length 1; time gap (in days) used to identify 
-when propogated info (weather, observers, etc) is reset. 
+\item{days.gap.part}{numeric of length 1; 
+time gap (in days) used to identify when a 'partial reset' is performed, 
+i.e. when propogated info (weather, observers, etc) is reset. 
 Default is 30 minutes; must be less than or equal to \code{days.gap.full}}
 
-\item{days.gap.full}{numeric of length 1; time gap (in days) used to identify 
-when all info (transect number and propogated info) is reset. 
+\item{days.gap.full}{numeric of length 1; 
+time gap (in days) used to identify when a 'full reset; is performed, 
+i.e. when all info (transect number and propogated info) is reset. 
 Default is 12 hours}
+
+\item{gap.message}{logical; should messages detailing which row(s) of the 
+output data frame were 'partially reset' or 'fully reset'}
 }
 \value{
 Processed aerial survey DAS data...
@@ -35,6 +46,8 @@ Process output of \link{airdas_read}
 \details{
 Read...
   Adapted from \code{\link[swfscMisc]{das.read}}
+  
+  '#' events are removed (not included in output)
   
  TODO: describe columns created?
  
