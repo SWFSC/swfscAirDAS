@@ -43,18 +43,13 @@
 #'   Other columns from \code{das.df} will be included in the output
 #'
 #' @examples
-#' # TODO
-#' # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
-#' # x <- airdas_process(d)
-#' # x.sight <- airdas_sight(x)
-#' 
 #' d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
 #' airdas_sight(d.proc)
 #'
 #' @export
 airdas_sight <- function(das.df) {
   #----------------------------------------------------------------------------
-  # Filter for and extract sighting data
+  ### Filter for and extract sighting data
   event.sight <- c("S", "s", "t")
   event.sight.info <- c("1")
   
