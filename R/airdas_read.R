@@ -4,6 +4,7 @@
 #'   or associated programs
 #'
 #' @param file filename of an aerial survey DAS file
+#' @param tz character; see \link[base]{strptime}. Default is UTC
 #'
 #' @importFrom dplyr %>%
 #' @importFrom purrr set_names
@@ -47,11 +48,10 @@
 #'   }
 #'
 #' @examples
-#' # d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
 #' airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
 #'
 #' @export
-airdas_read <- function(file) {
+airdas_read <- function(file, tz = "UTC") {
   # Input check
   stopifnot(inherits(file, "character"))
   
@@ -79,7 +79,7 @@ airdas_read <- function(file) {
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
   Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
   Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
-  DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S")
+  DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S", tz = tz)
   file_das  <- tail(strsplit(file, "/")[[1]], 1)
   event_num <- suppressWarnings(as.integer(x$event_num)) #blank for # events
   line_num  <- seq_along(x$Event)

@@ -4,10 +4,12 @@
 \alias{airdas_read}
 \title{Read aerial survey DAS data}
 \usage{
-airdas_read(file)
+airdas_read(file, tz = "UTC")
 }
 \arguments{
 \item{file}{filename of an aerial survey DAS file}
+
+\item{tz}{character; see \link[base]{strptime}. Default is UTC}
 }
 \value{
 Data frame with aerial DAS data parsed into columns.
@@ -49,7 +51,6 @@ Parses aerial DAS data into columns; adapted
   }
 }
 \examples{
-# d <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_read))
 airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
 
 }
