@@ -25,7 +25,11 @@
 #' @return Data frame...
 #' 
 #' @examples
-#' #TODO
+#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y.proc <- airdas_process(y)
+#' 
+#' y.chop <- airdas_effort_chop(y.proc[1:33, ], 1)
+#' airdas_effort_segdata(y.chop[[1]], y.chop[[2]], 1)
 #' 
 #' @export
 airdas_effort_segdata <- function(das.df, subseg.lengths, eff.id) {

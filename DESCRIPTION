@@ -10,7 +10,6 @@ Imports:
     dplyr, 
     lubridate, 
     readr, 
-    purrr, 
     rlang, 
     swfscMisc
 License: GPL-3

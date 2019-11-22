@@ -33,12 +33,14 @@
 #' @return List of segdata, siteinfo, and randpicks data frames
 #' 
 #' @examples
-#' d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
-#' airdas_effort(d.proc, 3, sp.codes = c("mn", "bm"))
+#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' 
+#' y.proc <- airdas_process(y)
+#' airdas_effort(y.proc, 3, sp.codes = c("mn", "bm"))
+#' 
+#' y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 #' airdas_effort(
-#'   d.proc, 3, sp.codes = c("mn", "bm"), 
-#'   randpicks.load = system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+#'   y.proc, 3, sp.codes = c("mn", "bm"), randpicks.load = y.rand
 #' )
 #' 
 #' @export
@@ -202,7 +204,6 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
            included = ifelse(is.na(.data$included), FALSE, .data$included))
   
   
-  # browser()
   # Make data frame with nSI and ANI columns, and join with segdata
   sp.codes <- sort(sp.codes)
   # TODO: check that sp.codes is an acceptable code?

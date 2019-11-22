@@ -45,10 +45,11 @@ airdas_process.character <- function(x, ...) {
 #' @return Processed aerial survey DAS data...
 #'
 #' @examples
-#' airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' airdas_process(y)
 #' 
-#' das.sample <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
-#' airdas_process(das.sample)
+#' y.read <- airdas_read(y)
+#' airdas_process(y.read)
 #'
 #' @export
 airdas_process.data.frame <- function(

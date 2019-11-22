@@ -14,7 +14,7 @@
 #' @importFrom dplyr select
 #' @importFrom rlang !!
 #'
-#' @details TODO: make parameters for 'event.sight', 'event.turtle', and 'event.sight.info'?
+#' @details This function requires the following event codes: 
 #'   
 #'   Marine mammal sighting codes: "S" (first sighting) and "s" (resighting); 
 #'   turtle sighting code: "t";
@@ -43,8 +43,10 @@
 #'   Other columns from \code{das.df} will be included in the output
 #'
 #' @examples
-#' d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
-#' airdas_sight(d.proc)
+#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y.proc <- airdas_process(y)
+#' 
+#' airdas_sight(y.proc)
 #'
 #' @export
 airdas_sight <- function(das.df) {

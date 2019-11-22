@@ -7,7 +7,6 @@
 #' @param tz character; see \link[base]{strptime}. Default is UTC
 #'
 #' @importFrom dplyr %>%
-#' @importFrom purrr set_names
 #' @importFrom readr cols
 #' @importFrom readr col_character
 #' @importFrom readr read_fwf
@@ -70,10 +69,11 @@ airdas_read <- function(file, tz = "UTC") {
     na = c("", " ", "  ", "   ", "    ", "     ", "      "),
     col_types = cols(.default = col_character()),
     trim_ws = FALSE
-  )) %>%
-    set_names(c("event_num", "Event", "EffortDot", "Time", "Date",
+  )) 
+  
+  names(x) <- c("event_num", "Event", "EffortDot", "Time", "Date",
                 "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", 
-                "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7"))
+                "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7")
   
   # Process data, and add file and line number columns
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
@@ -98,7 +98,7 @@ airdas_read <- function(file, tz = "UTC") {
   )
   # Data7 extra ^ is for entries with >6 spaces (eg "       ")
   y[y == ""] <- NA
-
+  
   # Data frame to return
   data.frame(
     Event = x$Event, EffortDot = x$EffortDot, DateTime, Lat, Lon, y, 

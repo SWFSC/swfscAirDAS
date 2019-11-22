@@ -23,6 +23,10 @@ Summarize data for continuous effort section by effort segment
 Get summary data for effort segment
 }
 \examples{
-#TODO
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.proc <- airdas_process(y)
+
+y.chop <- airdas_effort_chop(y.proc[1:33, ], 1)
+airdas_effort_segdata(y.chop[[1]], y.chop[[2]], 1)
 
 }

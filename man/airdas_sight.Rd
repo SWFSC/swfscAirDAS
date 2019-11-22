@@ -19,7 +19,7 @@ Data frame with one row for each species for each sighting.
 Extract sightings and associated information from aerial DAS data
 }
 \details{
-TODO: make parameters for 'event.sight', 'event.turtle', and 'event.sight.info'?
+This function requires the following event codes: 
   
   Marine mammal sighting codes: "S" (first sighting) and "s" (resighting); 
   turtle sighting code: "t";
@@ -43,7 +43,9 @@ TODO: make parameters for 'event.sight', 'event.turtle', and 'event.sight.info'?
   }
 }
 \examples{
-d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
-airdas_sight(d.proc)
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.proc <- airdas_process(y)
+
+airdas_sight(y.proc)
 
 }

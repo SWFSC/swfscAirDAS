@@ -37,7 +37,9 @@ Chop continuous effort section into effort segments (modeling segments)
   the remainder added to a random segment
 }
 \examples{
-d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
-# airdas_effort_chop(d.proc, 1)
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.proc <- airdas_process(y)
+
+airdas_effort_chop(y.proc[1:33, ], 1)
 
 }
