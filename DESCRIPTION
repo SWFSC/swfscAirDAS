@@ -1,8 +1,7 @@
 Package: swfscAirDAS
 Title: Aerial DAS Data Processing Functions for the Southwest Fisheries Science Center
 Version: 0.0.0.9000
-Authors@R: 
-    person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
+Authors@R: person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
 Description: Processing and summarize aerial survey DAS (AirDAS) 
     data collected using the Southwest Fisheries Science Center (SWFSC) 
     'turtle4d' program. AirDAS format requirements are described in the 
