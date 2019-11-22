@@ -2,8 +2,11 @@ Package: swfscAirDAS
 Title: Aerial DAS Data Processing Functions for the Southwest Fisheries Science Center
 Version: 0.0.0.9000
 Authors@R: person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
-Description: What the package does (one paragraph).
-URL: https://github.com/smwoodman/swfscDAS
+Description: Processing and summarize aerial survey DAS (AirDAS) 
+    data collected using the Southwest Fisheries Science Center (SWFSC) 
+    'turtle4d' program. AirDAS format requirements are described in the 
+    ‘AirDAS_format’ vignette included in this package.
+URL: https://github.com/smwoodman/swfscAirDAS
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues
 Depends: R (>= 3.5.0)
 Imports:
@@ -12,11 +15,11 @@ Imports:
     readr, 
     rlang, 
     swfscMisc
+Suggests: 
+    knitr,
+    rmarkdown
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.1
-Suggests: 
-    knitr,
-    rmarkdown
 VignetteBuilder: knitr
