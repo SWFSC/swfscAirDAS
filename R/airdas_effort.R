@@ -121,8 +121,6 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
   }
   
   eff.list <- lapply(eff.uniq, function(i, das.df, seg.km, r.pos) {
-    # print(i)
-    # if (i == 21) browser()
     das.curr <- filter(das.df, .data$cont_eff_section == i)
     # Get segment lengths
     y <- airdas_effort_chop(das.curr, seg.km, r.pos[i])
@@ -214,7 +212,7 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
       filter(.data$included, .data$species == i) %>% 
       group_by(.data$seg_idx) %>% 
       summarise(nSI = length(.data$species), 
-                ANI = sum(.data$sight_groupsize))
+                ANI = sum(.data$groupsize))
     
     names(d0) <- c("seg_idx", paste0(i, "_", names(d0)[-1]))
     

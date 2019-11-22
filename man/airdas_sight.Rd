@@ -27,6 +27,8 @@ This function requires the following event codes:
   
   See ... todo (link to pdf) more info
   
+  A 'standard sighting' (std_sight in output data frame) means it was by ObsL, ObsB, or ObsR
+  
   This function assumes the following 
   \tabular{llll}{
     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
