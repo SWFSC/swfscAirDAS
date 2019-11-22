@@ -6,12 +6,10 @@
 #' @param file filename of an aerial survey DAS file
 #' @param tz character; see \link[base]{strptime}. Default is UTC
 #'
-#' @importFrom dplyr %>%
 #' @importFrom readr cols
 #' @importFrom readr col_character
 #' @importFrom readr read_fwf
 #' @importFrom readr fwf_positions
-#' @importFrom utils tail
 #'
 #' @details Parses aerial survey DAS data into columns.
 #'   The provided AirDAS file must adhere to the following column number and format specifications 
@@ -82,7 +80,7 @@ airdas_read <- function(file, tz = "UTC") {
   Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
   Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
   DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S", tz = tz)
-  file_das  <- tail(strsplit(file, "/")[[1]], 1)
+  file_das  <- basename(file)
   event_num <- suppressWarnings(as.integer(x$event_num)) #blank for # events
   line_num  <- seq_along(x$Event)
   
