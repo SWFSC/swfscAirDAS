@@ -9,7 +9,7 @@ airdas_format_pdf(file, ...)
 \arguments{
 \item{file}{character vector, the name of the file where the pdf will be saved}
 
-\item{...}{arguments passed to \code{\link[base:files]{file.copy}}, such as \code{overwrite}}
+\item{...}{passed on to \code{\link[base:files]{file.copy}}, might included named argument \code{overwrite}}
 }
 \value{
 \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise

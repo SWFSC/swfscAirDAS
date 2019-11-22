@@ -36,6 +36,11 @@
 #' d.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
 #' airdas_effort(d.proc, 3, sp.codes = c("mn", "bm"))
 #' 
+#' airdas_effort(
+#'   d.proc, 3, sp.codes = c("mn", "bm"), 
+#'   randpicks.load = system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+#' )
+#' 
 #' @export
 airdas_effort <- function(das.df, seg.km, sp.codes, 
                           randpicks.load = NULL, randpicks.save = NULL) {
