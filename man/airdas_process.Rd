@@ -19,10 +19,10 @@ airdas_process(x, ...)
 )
 }
 \arguments{
-\item{x}{Either a data frame (the output of \link{airdas_read}) or
-a character which is then passed to \link{airdas_read}}
+\item{x}{either a data frame (the output of \code{\link{airdas_read}}) or
+a character (filepath) which is first passed to \code{\link{airdas_read}}}
 
-\item{...}{Ignored}
+\item{...}{ignored}
 
 \item{days.gap.part}{numeric of length 1; 
 time gap (in days) used to identify when a 'partial reset' is performed, 
@@ -34,24 +34,51 @@ time gap (in days) used to identify when a 'full reset; is performed,
 i.e. when all info (transect number and propogated info) is reset. 
 Default is 12 hours}
 
-\item{gap.message}{logical; should messages detailing which row(s) of the 
-output data frame were 'partially reset' or 'fully reset'}
+\item{gap.message}{logical; should messages be printed detailing which row(s) of the 
+output data frame were partially or fully reset?}
 }
 \value{
-Processed aerial survey DAS data...
+Data frame; the input data frame, i.e. the output of \code{\link{airdas_read}}, 
+  with the following columns added:
+  \tabular{ll}{
+    \emph{State/condition}            \tab \emph{Column name}\cr
+    On/off effort                     \tab OnEffort\cr
+    Transect code                     \tab Trans\cr
+    Beaufort sea state                \tab Bft\cr
+    Percent overcast (cloud cover)    \tab CCover\cr
+    Jellyfish code                    \tab Trans\cr
+    Horizontal sun (clock system)     \tab HorizSun\cr
+    Haze/Kelp/Red tide code           \tab HKR\cr
+    Left observer                     \tab ObsL\cr
+    Belly observer                    \tab ObsB\cr
+    Right observer                    \tab ObsR\cr
+    Data recorder                     \tab Rec\cr
+    Altitude (feet)                   \tab AltFt\cr
+    Speed (knots)                     \tab SpKnot\cr
+    Viewing condition - left inside   \tab VLI\cr
+    Viewing condition - left outside  \tab VLO\cr
+    Viewing condition - belly         \tab VB\cr
+    Viewing condition - right inside  \tab VRI\cr
+    Viewing condition - right outside \tab VRO\cr
+  }
 }
 \description{
-Process output of \link{airdas_read}
+Process AirDAS data by extracting state and condition information for each AirDAS event
 }
 \details{
-Read...
-  Adapted from \code{\link[swfscMisc]{das.read}}
+AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
+  For instance, a 'W' event indicates when the Beaufort sea state changes, and 
+  the Beaufort is the same for subsequent events until the next 'W' event.
+  For each state/condition: a new column is created, 
+  the state/condition information is extracted from relevant events, 
+  and extracted information is propagated to appropriate subsequent rows (events). 
+  Thus, each row in the output data frame contains all 
+  pertinent state/condition information for that row.
   
-  '#' events are removed (not included in output)
+  During processing, datetime, lat, and lon information are added to '1' events, 
+  and all '#' events (deleted events) are removed.
   
- TODO: describe columns created?
- 
- TODO: any error checking?
+  This function was inspired by \code{\link[swfscMisc]{das.read}}
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
