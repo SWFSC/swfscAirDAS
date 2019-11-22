@@ -127,8 +127,8 @@ airdas_sight <- function(das.df) {
   #   duplicated in final join
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>% 
-    mutate(turtle_sizeft = .data$Data4, 
-           turtle_direction = .data$Data5, 
+    mutate(turtle_sizeft = as.numeric(.data$Data4), 
+           turtle_direction = as.numeric(.data$Data5), 
            turtle_tail = .data$Data6) %>% 
     select(.data$sight_cumsum, .data$turtle_sizeft, .data$turtle_direction, 
            .data$turtle_tail)
