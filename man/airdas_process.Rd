@@ -19,8 +19,8 @@ airdas_process(x, ...)
 )
 }
 \arguments{
-\item{x}{either a data frame (the output of \code{\link{airdas_read}}) or
-a character (filepath) which is first passed to \code{\link{airdas_read}}}
+\item{x}{either a data frame (the output of \code{\link{airdas_read}}), 
+or a character (filepath) which is first passed to \code{\link{airdas_read}}}
 
 \item{...}{ignored}
 
@@ -63,10 +63,14 @@ Data frame; the input data frame, i.e. the output of \code{\link{airdas_read}},
   }
 }
 \description{
-Process AirDAS data by extracting state and condition information for each AirDAS event
+Process AirDAS data (the output of \code{\link{airdas_read}}), 
+  including extracting state and condition information for each AirDAS event
 }
 \details{
-AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
+If \code{x} is a character, it is assumed to be a filepath and first passed to \code{\link{airdas_read}}.
+  This output is then passed to \code{airdas_process}.
+     
+  AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
   For instance, a 'W' event indicates when the Beaufort sea state changes, and 
   the Beaufort is the same for subsequent events until the next 'W' event.
   For each state/condition: a new column is created, 
@@ -75,8 +79,14 @@ AirDAS data is event-based, meaning most events indicate when a state or weather
   Thus, each row in the output data frame contains all 
   pertinent state/condition information for that row.
   
-  During processing, datetime, lat, and lon information are added to '1' events, 
-  and all '#' events (deleted events) are removed.
+  The following assumptions/decisions are made during processing:
+  \itemize{
+    \item All '#' events (deleted events) are removed
+    \item 'Datetime', 'Lat', and 'Lon' information are added to '1' events
+    \item Effort is determined as follows: 'T'/'R' events turns effort on, 
+      and 'O'/'E' events turn effort off. The 'EffortDot' column is ignored
+    \item Missing values are \code{NA} rather than \code{-1}
+  }
   
   This function was inspired by \code{\link[swfscMisc]{das.read}}
 }
