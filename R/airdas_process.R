@@ -50,35 +50,35 @@ airdas_process.character <- function(x, ...) {
 #'   \itemize{
 #'     \item All '#' events (deleted events) are removed
 #'     \item 'Datetime', 'Lat', and 'Lon' information are added to '1' events
-#'     \item Effort is determined as follows: 'T'/'R' events turns effort on, 
-#'       and 'O'/'E' events turn effort off. The 'EffortDot' column is ignored
+#'     \item Effort is determined as follows: T/R events turns effort on, 
+#'       and O/E events turn effort off. 
+#'       T/R events themselves will be on effort, while O/E events will be off effort.
+#'       The 'EffortDot' column is ignored
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
 #'   
-#'   This function was inspired by \code{\link[swfscMisc]{das.read}}
-#'
 #' @return Data frame; the input data frame, i.e. the output of \code{\link{airdas_read}}, 
 #'   with the following columns added:
-#'   \tabular{ll}{
-#'     \emph{State/condition}            \tab \emph{Column name}\cr
-#'     On/off effort                     \tab OnEffort\cr
-#'     Transect code                     \tab Trans\cr
-#'     Beaufort sea state                \tab Bft\cr
-#'     Percent overcast (cloud cover)    \tab CCover\cr
-#'     Jellyfish code                    \tab Trans\cr
-#'     Horizontal sun (clock system)     \tab HorizSun\cr
-#'     Haze/Kelp/Red tide code           \tab HKR\cr
-#'     Left observer                     \tab ObsL\cr
-#'     Belly observer                    \tab ObsB\cr
-#'     Right observer                    \tab ObsR\cr
-#'     Data recorder                     \tab Rec\cr
-#'     Altitude (feet)                   \tab AltFt\cr
-#'     Speed (knots)                     \tab SpKnot\cr
-#'     Viewing condition - left inside   \tab VLI\cr
-#'     Viewing condition - left outside  \tab VLO\cr
-#'     Viewing condition - belly         \tab VB\cr
-#'     Viewing condition - right inside  \tab VRI\cr
-#'     Viewing condition - right outside \tab VRO\cr
+#'   \tabular{lll}{
+#'     \emph{State/condition}            \tab \emph{Column name} \tab \emph{Data source}\cr
+#'     On/off effort                     \tab OnEffort \tab T/R and O/E events\cr
+#'     Transect code                     \tab Trans    \tab Event: T; Column: Data1\cr
+#'     Beaufort sea state                \tab Bft      \tab Event: W; Column: Data3\cr
+#'     Percent overcast (cloud cover)    \tab CCover   \tab Event: W; Column: Data2\cr
+#'     Jellyfish code                    \tab Trans    \tab Event: W; Column: Data4\cr
+#'     Horizontal sun (clock system)     \tab HorizSun \tab Event: W; Column: Data5\cr
+#'     Haze/Kelp/Red tide code           \tab HKR      \tab Event: W; Column: Data1\cr
+#'     Left observer                     \tab ObsL     \tab Event: P; Column: Data1\cr
+#'     Belly observer                    \tab ObsB     \tab Event: P; Column: Data2\cr
+#'     Right observer                    \tab ObsR     \tab Event: P; Column: Data3\cr
+#'     Data recorder                     \tab Rec      \tab Event: P; Column: Data4\cr
+#'     Altitude (feet)                   \tab AltFt    \tab Event: A; Column: Data1\cr
+#'     Speed (knots)                     \tab SpKnot   \tab Event: A; Column: Data2\cr
+#'     Viewing condition - left inside   \tab VLI      \tab Event: V; Column: Data1\cr
+#'     Viewing condition - left outside  \tab VLO      \tab Event: V; Column: Data2\cr
+#'     Viewing condition - belly         \tab VB       \tab Event: V; Column: Data3\cr
+#'     Viewing condition - right inside  \tab VRI      \tab Event: V; Column: Data4\cr
+#'     Viewing condition - right outside \tab VRO      \tab Event: V; Column: Data5\cr
 #'   }
 #'
 #' @examples
