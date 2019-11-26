@@ -57,3 +57,16 @@ the following code:
 ``` r
 y.proc <- do.call(rbind, lapply(list.files("filepath/to/airdas_file_folder", full.names = TRUE), airdas_read))
 ```
+
+## Vignettes
+
+``` r
+# To see the list of available vignettes
+browseVignettes("swfscAirDAS") 
+
+# To open a specific vignette
+vignette("AirDAS_format")
+```
+
+  - AirDAS data format requirements
+    ([AirDAS\_format](https://github.com/smwoodman/swfscAirDAS/blob/master/vignettes/AirDAS_format.Rmd))
