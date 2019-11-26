@@ -28,9 +28,27 @@ devtools::install_github("smwoodman/swfscAirDAS")
 
 ## Example workflow
 
-This is a basic example which shows you how to solve a common problem:
-
 ``` r
-# library(swfscAirDAS)
-## basic example code
+library(swfscAirDAS)
+# # Read and process all AirDAS files; update "../airdas/airDAS_files" to your path
+# y.proc <- do.call(rbind, lapply(list.files("../airdas/airDAS_files", full.names = TRUE), airdas_process))
+
+
+# Get sample files included in the package
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+
+# Read and process AirDAS file, i.e. read data into a data frame and add information columns
+y.read <- airdas_read(y)
+y.proc <- airdas_process(y.read)
+# y.proc <- airdas_process(y) #Alternatively, the file path can be passed directly to airdas_process
+
+# Summarize sighting information
+y.sight <- airdas_sight(y.proc)
+
+# Chop continuous effort sections into effort (modeling) segments
+y.eff <- airdas_effort(y.proc, 3, sp.codes = c("mn", "bm", "qq"), randpicks.load = y.eff.randpicks)
+y.eff.segdata <- y.eff[[1]]
+y.eff.siteinfo <- y.eff[[2]]
+y.eff.randpicks <- y.eff[[3]]
 ```

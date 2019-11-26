@@ -56,7 +56,7 @@ airdas_sight <- function(das.df) {
   ### Filter for and extract sighting data
   event.sight <- c("S", "s", "t")
   event.sight.info <- "1"
-  
+
   ### Filter for sighting-related data
   sight.df <- das.df %>% 
     filter(.data$Event %in% c(event.sight, event.sight.info)) %>% 
