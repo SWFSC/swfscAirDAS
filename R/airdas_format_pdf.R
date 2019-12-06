@@ -5,12 +5,16 @@
 #' @param file character vector, the name of the file where the pdf will be saved
 #' @param ... passed on to \code{\link[base:files]{file.copy}}, might included named argument \code{overwrite}
 #'
-#' @details A wrapper function for \code{\link[base:files]{file.copy}}. This function
-#'   saves the pdf document describing the aerial DAS data format requirements by 
+#' @details A wrapper function for \code{\link[base:files]{file.copy}}. 
+#'   This function saves the pdf document describing the aerial DAS data format requirements by 
 #'   copying the pdf document located at \code{system.file("AirDAS_Format.pdf", package = "swfscAirDAS")}
 #'   to \code{file}
+#'   
+#'   This file can also be downloaded from
+#'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
 #'
-#' @return \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
+#' @return output of \code{\link[base:files]{file.copy}}; 
+#'   \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
 #'
 #' @examples
 #' \dontrun{

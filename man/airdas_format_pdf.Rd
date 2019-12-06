@@ -12,16 +12,20 @@ airdas_format_pdf(file, ...)
 \item{...}{passed on to \code{\link[base:files]{file.copy}}, might included named argument \code{overwrite}}
 }
 \value{
-\code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
+output of \code{\link[base:files]{file.copy}}; 
+  \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
 }
 \description{
 Save the pdf document describing the aerial DAS format required by \code{swfscAirDAS} to a specified file
 }
 \details{
-A wrapper function for \code{\link[base:files]{file.copy}}. This function
-  saves the pdf document describing the aerial DAS data format requirements by 
+A wrapper function for \code{\link[base:files]{file.copy}}. 
+  This function saves the pdf document describing the aerial DAS data format requirements by 
   copying the pdf document located at \code{system.file("AirDAS_Format.pdf", package = "swfscAirDAS")}
   to \code{file}
+  
+  This file can also be downloaded from
+  \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
 }
 \examples{
 \dontrun{
