@@ -42,6 +42,8 @@ of `swfscAirDAS`.
 
 ## Usage
 
+First, you must read and process the AirDAS data
+
 ``` r
 library(swfscAirDAS)
 # Get file paths of sample files included in the package
@@ -53,8 +55,18 @@ y.read <- airdas_read(y)
 y.proc <- airdas_process(y.read)
 
 # Alternatively, the file path can be passed directly to airdas_process
-y.proc <- airdas_process(y) 
+y.proc <- airdas_process(y)
+```
 
+Note that `airdas_read` can read multiple files simultaneously
+
+``` r
+y.read.mult <- airdas_read(c(y, y))
+```
+
+Then you can summarize the processed AirDAS data
+
+``` r
 # Summarize sighting information
 y.sight <- airdas_sight(y.proc)
 
@@ -64,11 +76,4 @@ y.eff <- airdas_effort(y.proc, 3, sp.codes = c("mn", "bm", "qq"), randpicks.load
 y.eff.segdata <- y.eff[[1]]
 y.eff.siteinfo <- y.eff[[2]]
 y.eff.randpicks <- y.eff[[3]]
-```
-
-To read in and concatenate mutliple AirDAS files, currently you can use
-the following code:
-
-``` r
-y.proc <- do.call(rbind, lapply(list.files("filepath/to/airdas_file_folder", full.names = TRUE), airdas_read))
 ```

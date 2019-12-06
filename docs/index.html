@@ -91,6 +91,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
+<p>First, you must read and process the AirDAS data</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span>(swfscAirDAS)</span>
 <span id="cb2-2"><a href="#cb2-2"></a><span class="co"># Get file paths of sample files included in the package</span></span>
 <span id="cb2-3"><a href="#cb2-3"></a>y &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"airdas_sample.das"</span>, <span class="dt">package =</span> <span class="st">"swfscAirDAS"</span>)</span>
@@ -101,19 +102,19 @@
 <span id="cb2-8"><a href="#cb2-8"></a>y.proc &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_process.html">airdas_process</a></span>(y.read)</span>
 <span id="cb2-9"><a href="#cb2-9"></a></span>
 <span id="cb2-10"><a href="#cb2-10"></a><span class="co"># Alternatively, the file path can be passed directly to airdas_process</span></span>
-<span id="cb2-11"><a href="#cb2-11"></a>y.proc &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_process.html">airdas_process</a></span>(y) </span>
-<span id="cb2-12"><a href="#cb2-12"></a></span>
-<span id="cb2-13"><a href="#cb2-13"></a><span class="co"># Summarize sighting information</span></span>
-<span id="cb2-14"><a href="#cb2-14"></a>y.sight &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_sight.html">airdas_sight</a></span>(y.proc)</span>
-<span id="cb2-15"><a href="#cb2-15"></a></span>
-<span id="cb2-16"><a href="#cb2-16"></a><span class="co"># Chop continuous effort sections into effort (modeling) segments, </span></span>
-<span id="cb2-17"><a href="#cb2-17"></a><span class="co">#   and summarize information for each segment</span></span>
-<span id="cb2-18"><a href="#cb2-18"></a>y.eff &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_effort.html">airdas_effort</a></span>(y.proc, <span class="dv">3</span>, <span class="dt">sp.codes =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>, <span class="st">"bm"</span>, <span class="st">"qq"</span>), <span class="dt">randpicks.load =</span> y.eff.randpicks)</span>
-<span id="cb2-19"><a href="#cb2-19"></a>y.eff.segdata &lt;-<span class="st"> </span>y.eff[[<span class="dv">1</span>]]</span>
-<span id="cb2-20"><a href="#cb2-20"></a>y.eff.siteinfo &lt;-<span class="st"> </span>y.eff[[<span class="dv">2</span>]]</span>
-<span id="cb2-21"><a href="#cb2-21"></a>y.eff.randpicks &lt;-<span class="st"> </span>y.eff[[<span class="dv">3</span>]]</span></code></pre></div>
-<p>To read in and concatenate mutliple AirDAS files, currently you can use the following code:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>y.proc &lt;-<span class="st"> </span><span class="kw"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span>(rbind, <span class="kw"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/list.files.html">list.files</a></span>(<span class="st">"filepath/to/airdas_file_folder"</span>, <span class="dt">full.names =</span> <span class="ot">TRUE</span>), airdas_read))</span></code></pre></div>
+<span id="cb2-11"><a href="#cb2-11"></a>y.proc &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_process.html">airdas_process</a></span>(y)</span></code></pre></div>
+<p>Note that <code>airdas_read</code> can read multiple files simultaneously</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>y.read.mult &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_read.html">airdas_read</a></span>(<span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(y, y))</span></code></pre></div>
+<p>Then you can summarize the processed AirDAS data</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Summarize sighting information</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>y.sight &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_sight.html">airdas_sight</a></span>(y.proc)</span>
+<span id="cb4-3"><a href="#cb4-3"></a></span>
+<span id="cb4-4"><a href="#cb4-4"></a><span class="co"># Chop continuous effort sections into effort (modeling) segments, </span></span>
+<span id="cb4-5"><a href="#cb4-5"></a><span class="co">#   and summarize information for each segment</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>y.eff &lt;-<span class="st"> </span><span class="kw"><a href="reference/airdas_effort.html">airdas_effort</a></span>(y.proc, <span class="dv">3</span>, <span class="dt">sp.codes =</span> <span class="kw"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>, <span class="st">"bm"</span>, <span class="st">"qq"</span>), <span class="dt">randpicks.load =</span> y.eff.randpicks)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>y.eff.segdata &lt;-<span class="st"> </span>y.eff[[<span class="dv">1</span>]]</span>
+<span id="cb4-8"><a href="#cb4-8"></a>y.eff.siteinfo &lt;-<span class="st"> </span>y.eff[[<span class="dv">2</span>]]</span>
+<span id="cb4-9"><a href="#cb4-9"></a>y.eff.randpicks &lt;-<span class="st"> </span>y.eff[[<span class="dv">3</span>]]</span></code></pre></div>
 </div>
 </div>
   </div>
