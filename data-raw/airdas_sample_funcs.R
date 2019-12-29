@@ -1,4 +1,4 @@
-# Functions used in airdas_strawman.R
+# Functions used in airdas_sample.R
 
 #------------------------------------------------------------------------------
 chr_z <- function(i, j = 2) sprintf(paste0("%0", j, "d"), i)
@@ -11,8 +11,8 @@ str_pad_data <- function(i, j1 = 5) {
 
 
 #------------------------------------------------------------------------------
+# Adapted from sp::dd2dms
 dd2dms_df <- function (dd, NS = FALSE) {
-  # Adapted from sp::dd2dms
   sdd <- sign(dd)
   # WS <- ifelse(sdd < 0, TRUE, FALSE)
   dd <- abs(dd)
@@ -50,6 +50,8 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
   ### Inputs:
   # x: data.frame; output of airdas_read()
   # file: character; file path to whcih to write fixed-width file
+  # data7len: numeric; width of 'data7' data in output text file;
+  #   final element of 'width' argument of gdata::write.fwf
   
   ### Ouput: Writes fwf to path specified by 'file'
   
@@ -81,8 +83,15 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
     str_pad_data(x$Data7), 
     stringsAsFactors = FALSE
   )
-  x.df[is.na(x.df$x.proc.event_num), 8:16] <- NA
+  names(x.df) <- c(
+    "event_num", "Event", "EffortDot", "tm_hms", "blank1", "da_mdy", "blank2",
+    "Lat1", "Lat2", "c1", "Lat3", "blank3", "Lon1", "Lon2", "c1", "Lon3",
+    paste0("Data", 1:7)
+  )
   
+  which.nona <- which(names(x.df) %in% c("Event", paste0("Data", 1:7)))
+  x.df[is.na(x.df$event_num), -which.nona] <- NA
+
   fwf.width <- c(3, 1, 1, 6, 1, 6, 1,
                  1, 2, 1, 5, 1, 
                  1, 3, 1, 5, 

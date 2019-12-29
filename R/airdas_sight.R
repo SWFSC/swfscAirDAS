@@ -20,7 +20,8 @@
 #'   turtle sighting code: "t";
 #'   additional sighting information: "1"
 #'   
-#'   See ... todo (link to pdf) more info
+#'   For more info about the event codes, see 
+#'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
 #'   
 #'   A 'standard sighting' (std_sight in output data frame) means it was by ObsL, ObsB, or ObsR
 #'   
@@ -41,7 +42,7 @@
 #'
 #' @return Data frame with one row for each species for each sighting.
 #'   Associated information (observer, species, etc.) is extracted 
-#'   from \code{Data#} columns into as specified in Details.
+#'   from \code{Data#} columns as specified in Details.
 #'   Other columns from \code{das.df} will be included in the output
 #'
 #' @examples
