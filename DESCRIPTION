@@ -3,7 +3,7 @@ Title: Aerial DAS Data Processing Functions for the Southwest Fisheries Science 
 Version: 0.0.0.9000
 Authors@R: person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
 Description: Process and summarize aerial survey DAS (AirDAS) data collected using the 
-    Southwest Fisheries Science Center (SWFSC) 'turtle4d' program. 
+    Southwest Fisheries Science Center (SWFSC) 'TURTLEP' program, or associated programs. 
     A PDF with the AirDAS data format requirements is included in this package.
 URL: https://smwoodman.github.io/swfscAirDAS, https://github.com/smwoodman/swfscAirDAS
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues
