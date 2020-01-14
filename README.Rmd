@@ -16,7 +16,7 @@ knitr::opts_chunk$set(
 # swfscAirDAS
 
 <!-- badges: start -->
-[![Travis build status](https://travis-ci.org/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.org/smwoodman/swfscAirDAS)
+[![Travis build status](https://travis-ci.com/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.com/smwoodman/swfscAirDAS)
 [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/smwoodman/swfscAirDAS?branch=master&svg=true)](https://ci.appveyor.com/project/smwoodman/swfscAirDAS)
 <!-- badges: end -->
 
