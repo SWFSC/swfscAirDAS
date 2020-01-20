@@ -13,7 +13,7 @@ as_airdas_df(x)
 \method{as_airdas_df}{data.frame}(x)
 }
 \arguments{
-\item{x}{A object to be coerced to class \code{airdas_df}}
+\item{x}{An object to be coerced to class \code{airdas_df}}
 }
 \value{
 An object of class `airdas_df`

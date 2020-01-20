@@ -2,7 +2,7 @@
 #'
 #' Check if an object is of class \code{\link{airdas_df}}, or coerce it if possible.
 #'
-#' @param x A object to be coerced to class \code{airdas_df}
+#' @param x An object to be coerced to class \code{airdas_df}
 #'
 #' @details Currently only data frames can be coerced to an object of class \code{\link{airdas_df}}.
 #'   If the \code{x} does not have column names and classes as specified in \code{\link{airdas_df}},
@@ -72,7 +72,7 @@ as_airdas_df.data.frame <- function(x) {
            "Specifically, it must contain a column with the name '", names(exp.class)[i], "' ",
            "and class '", exp.class[[i]], "'\n",
            "Was x created using airdas_process()? ", 
-           "See `?airdas_df-class` or `?as_airdas_df` for more details.")
+           "See `?as_airdas_df` or `?airdas_df-class` for more details.")
     }
   }
 
