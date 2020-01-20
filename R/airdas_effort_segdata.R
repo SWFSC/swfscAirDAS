@@ -2,7 +2,7 @@
 #' 
 #' Summarize data for continuous effort section by effort segment
 #' 
-#' @param das.df data frame; todo
+#' @param x data frame; todo
 #' @param subseg.lengths todo
 #' @param eff.id numeric; todo
 #' 
@@ -24,16 +24,11 @@
 #' airdas_effort_segdata(y.chop[[1]], y.chop[[2]], 1)
 #' 
 #' @export
-airdas_effort_segdata <- function(das.df, subseg.lengths, eff.id) {
+airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
   #----------------------------------------------------------------------------
   # Prep stuff
   
-  ### Check that observers stay consistent throughout effort segment
-  # obs.vals1 <- vapply(c("ObsL", "ObsB", "ObsR", "Rec"), function(k) {
-  #   k.uniq <- unique(das.df[[k]])
-  #   if (length(na.omit(k.uniq)) >= 1) {k.uniq <- na.omit(k.uniq)}
-  #   paste(k.uniq, collapse = ",")
-  # }, as.character(1))
+  das.df <- x #TODO: quick fix for function argument
   
   ### Prep - get the info that is consistent for the entire effort length
   df.out1 <- data.frame(

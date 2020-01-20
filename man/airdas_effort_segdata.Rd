@@ -4,10 +4,10 @@
 \alias{airdas_effort_segdata}
 \title{Summarize data within effort segment}
 \usage{
-airdas_effort_segdata(das.df, subseg.lengths, eff.id)
+airdas_effort_segdata(x, subseg.lengths, eff.id)
 }
 \arguments{
-\item{das.df}{data frame; todo}
+\item{x}{data frame; todo}
 
 \item{subseg.lengths}{todo}
 

@@ -2,7 +2,7 @@
 #'
 #' Summarize aerial DAS data by effort segments
 #' 
-#' @param das.df data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
+#' @param x data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
 #' @param seg.km numeric; length of effort segments 
 #' @param sp.codes character; species codes to include in segdata (and siteinfo?)
 #' @param randpicks.load character; file to run read.csv on and pass output to airdas_effort_chop TODO
@@ -40,10 +40,11 @@
 #' )
 #' 
 #' @export
-airdas_effort <- function(das.df, seg.km, sp.codes, 
+airdas_effort <- function(x, seg.km, sp.codes, 
                           randpicks.load = NULL, randpicks.save = NULL) {
   #----------------------------------------------------------------------------
   # TODO: format.. checks
+  das.df <- x
   das.df.orig <- das.df
   
   stopifnot(

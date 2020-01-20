@@ -5,7 +5,7 @@
 \title{Summarize aerial DAS effort}
 \usage{
 airdas_effort(
-  das.df,
+  x,
   seg.km,
   sp.codes,
   randpicks.load = NULL,
@@ -13,7 +13,7 @@ airdas_effort(
 )
 }
 \arguments{
-\item{das.df}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
+\item{x}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
 
 \item{seg.km}{numeric; length of effort segments}
 

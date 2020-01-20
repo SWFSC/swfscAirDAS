@@ -2,7 +2,7 @@
 #' 
 #' Determine lengths of segments into which to chop aerial DAS effort data
 #' 
-#' @param das.df data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
+#' @param x data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
 #' @param seg.km numeric; length of effort segments 
 #' @param randpicks numeric; if not NULL, segment positions that get leftover segment bits todo
 #' 
@@ -36,8 +36,10 @@
 #' airdas_effort_chop(y.proc[1:33, ], 1)
 #' 
 #' @export
-airdas_effort_chop <- function(das.df, seg.km, randpicks = NULL) {
+airdas_effort_chop <- function(x, seg.km, randpicks = NULL) {
   #----------------------------------------------------------------------------
+  das.df <- x #TODO: quick fix for function argument
+  
   # Input checks
   # TODO: what to do if multiple continuous effort sections are in das.df?
   stopifnot(

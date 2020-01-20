@@ -4,10 +4,10 @@
 \alias{airdas_effort_chop}
 \title{Chop AirDAS effort segment length}
 \usage{
-airdas_effort_chop(das.df, seg.km, randpicks = NULL)
+airdas_effort_chop(x, seg.km, randpicks = NULL)
 }
 \arguments{
-\item{das.df}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
+\item{x}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
 
 \item{seg.km}{numeric; length of effort segments}
 
