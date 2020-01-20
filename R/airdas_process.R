@@ -18,6 +18,13 @@ airdas_process.character <- function(x, ...) {
 
 
 #' @name airdas_process
+#' @export
+airdas_process.data.frame <- function(x, ...) {
+  airdas_process(as_airdas_dfr(x), ...)
+}
+
+
+#' @name airdas_process
 #' 
 #' @param days.gap.part numeric of length 1; 
 #'   time gap (in days) used to identify when a 'partial reset' is performed, 
@@ -30,8 +37,7 @@ airdas_process.character <- function(x, ...) {
 #' @param gap.message logical; should messages be printed detailing which row(s) of the 
 #'   output data frame were partially or fully reset?
 #'   
-#' @importFrom dplyr %>%
-#' @importFrom dplyr select
+#' @importFrom dplyr %>% select
 #' @importFrom rlang !!
 #'
 #' @details If \code{x} is a character, it is assumed to be a filepath and first passed to \code{\link{airdas_read}}.
@@ -57,7 +63,8 @@ airdas_process.character <- function(x, ...) {
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
 #'   
-#' @return Data frame; the input data frame, i.e. the output of \code{\link{airdas_read}}, 
+#' @return An \code{airdas_df} object, which is also a data frame.
+#'   It consists of the input data frame, i.e. the output of \code{\link{airdas_read}},
 #'   with the following columns added:
 #'   \tabular{lll}{
 #'     \emph{State/condition}            \tab \emph{Column name} \tab \emph{Data source}\cr
@@ -89,7 +96,7 @@ airdas_process.character <- function(x, ...) {
 #' airdas_process(y.read)
 #'
 #' @export
-airdas_process.data.frame <- function(x, days.gap.part = 0.5/24, 
+airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, 
                                       days.gap.full = 12/24, 
                                       gap.message = FALSE, ...) 
 { 
@@ -97,7 +104,7 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
   # Input checks
   das.df <- x
   stopifnot(
-    .airdas_format_check(das.df, "process"), 
+    # .airdas_format_check(das.df, "process"), 
     length(days.gap.part) == 1, 
     length(days.gap.full) == 1, 
     inherits(days.gap.part, c("integer", "numeric")), 
@@ -145,9 +152,6 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
     message("A 'full reset' was performed at the following row indicies of the output data frame: ", 
             idx.reset.full)
   }
-  
-  # TODO: how best to handle this?
-  stopifnot(all(idx.reset.full %in% idx.reset.part))
   
   if (!all(idx.reset.full %in% idx.reset.part)) {
     warning("Warning: not all full resets were in partial resets; ", 
@@ -267,9 +271,11 @@ airdas_process.data.frame <- function(x, days.gap.part = 0.5/24,
     "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
     "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
-    "EffortDot", "file_das", "event_num", "line_num"
+    "EffortDot", "EventNum", "file_das", "line_num"
   )
   
-  data.frame(das.df, tmp, stringsAsFactors = FALSE, row.names = 1:nrow(das.df)) %>%
-    select(!!cols.toreturn)
+  as_airdas_df(
+    data.frame(das.df, tmp, stringsAsFactors = FALSE, row.names = 1:nrow(das.df)) %>%
+      select(!!cols.toreturn)
+  )
 }

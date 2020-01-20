@@ -8,15 +8,10 @@
 #' @param randpicks.load character; file to run read.csv on and pass output to airdas_effort_chop TODO
 #' @param randpicks.save character; if not 
 #' 
-#' @importFrom dplyr between
-#' @importFrom dplyr bind_cols
-#' @importFrom dplyr filter
-#' @importFrom dplyr full_join
-#' @importFrom dplyr group_by
-#' @importFrom dplyr summarise
+#' @importFrom dplyr %>%  between bind_cols filter full_join group_by summarise
+#' @importFrom rlang !!
 #' @importFrom swfscMisc distance
-#' @importFrom utils read.csv
-#' @importFrom utils write.csv
+#' @importFrom utils read.csv write.csv
 #' 
 #' @details Todo
 #' 
@@ -26,7 +21,8 @@
 #'   
 #'   Continuous effort sections ID'd by T and R events
 #' 
-#'   Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) between events (lat/lon points)
+#'   Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) 
+#'   between events (lat/lon points)
 #'   
 #'   Describe segdata, siteinfo, and randpicks
 #' 
@@ -108,7 +104,7 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
     }
   }
   
-
+  
   ### Do stuff
   eff.uniq <- unique(das.df$cont_eff_section)
   # Check against provided randpicks
@@ -182,12 +178,13 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
   # Summarize sightings (based on siteinfo) and add applicable data to segdata
   
   ### Columns to be included in siteinfo output
-  siteinfo.include <- c(
-    "segnum", "seg_idx", "Event", "DateTime", "Lat", "Lon", "OnEffort", 
-    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
-    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
-    paste0("Data", 1:7), "file_das", "line_num"
-  )
+  # siteinfo.include <- c(
+  #   "segnum", "seg_idx", "Event", "DateTime", "Lat", "Lon", "OnEffort", 
+  #   "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
+  #   "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
+  #   #paste0("Data", 1:7), 
+  #   "file_das", "line_num", "included"
+  # )
   
   ### Filter sightings, then add sightings info to segdata
   # Current sighting filters:
@@ -195,11 +192,14 @@ airdas_effort <- function(das.df, seg.km, sp.codes,
   #   Truncation angle is between -78 and 78
   #   Standard effort, i.e. observer is one of ObsL, ObsB, or ObsR
   #   On effort
-  das.forsiteinfo <- das.df.eff[, siteinfo.include]
-  siteinfo <- airdas_sight(das.forsiteinfo) %>% 
+  
+  # das.forsiteinfo <- das.df.eff[, siteinfo.include]
+  siteinfo <- airdas_sight(das.df.eff) %>% 
     mutate(included = (.data$Bft <= 5 & abs(.data$angle_declination) <= 78 & 
                          .data$std_sight & .data$OnEffort), 
            included = ifelse(is.na(.data$included), FALSE, .data$included))
+  # select(!!siteinfo.include)
+  
   
   
   # Make data frame with nSI and ANI columns, and join with segdata

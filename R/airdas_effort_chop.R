@@ -9,8 +9,7 @@
 #' @importFrom dplyr between
 #' @importFrom stats runif
 #' @importFrom swfscMisc distance
-#' @importFrom utils head
-#' @importFrom utils tail
+#' @importFrom utils head tail
 #' 
 #' @details Chop continuous effort section into effort segments (modeling segments)
 #'   

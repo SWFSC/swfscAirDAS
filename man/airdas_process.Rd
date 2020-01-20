@@ -4,13 +4,16 @@
 \alias{airdas_process}
 \alias{airdas_process.character}
 \alias{airdas_process.data.frame}
+\alias{airdas_process.airdas_dfr}
 \title{Process aerial survey DAS data}
 \usage{
 airdas_process(x, ...)
 
 \method{airdas_process}{character}(x, ...)
 
-\method{airdas_process}{data.frame}(
+\method{airdas_process}{data.frame}(x, ...)
+
+\method{airdas_process}{airdas_dfr}(
   x,
   days.gap.part = 0.5/24,
   days.gap.full = 12/24,
@@ -38,7 +41,8 @@ Default is 12 hours}
 output data frame were partially or fully reset?}
 }
 \value{
-Data frame; the input data frame, i.e. the output of \code{\link{airdas_read}}, 
+An \code{airdas_df} object, which is also a data frame.
+  It consists of the input data frame, i.e. the output of \code{\link{airdas_read}},
   with the following columns added:
   \tabular{lll}{
     \emph{State/condition}            \tab \emph{Column name} \tab \emph{Data source}\cr

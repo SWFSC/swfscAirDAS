@@ -2,12 +2,21 @@
 % Please edit documentation in R/airdas_sight.R
 \name{airdas_sight}
 \alias{airdas_sight}
+\alias{airdas_sight.data.frame}
+\alias{airdas_sight.airdas_df}
 \title{Aerial DAS sightings}
 \usage{
-airdas_sight(das.df)
+airdas_sight(x, mixed.multi)
+
+\method{airdas_sight}{data.frame}(x, mixed.multi = FALSE)
+
+\method{airdas_sight}{airdas_df}(x, mixed.multi = FALSE)
 }
 \arguments{
-\item{das.df}{data frame; processed aerial DAS data.. TODO}
+\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}.
+Can also be a data frame that can be coerced to a \code{airdas_df} object}
+
+\item{mixed.multi}{logical; currently does not do anything}
 }
 \value{
 Data frame with one row for each species for each sighting.

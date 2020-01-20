@@ -6,18 +6,10 @@
 #' @param subseg.lengths todo
 #' @param eff.id numeric; todo
 #' 
-#' @importFrom dplyr %>%
-#' @importFrom dplyr .data
-#' @importFrom dplyr bind_cols
-#' @importFrom dplyr everything
-#' @importFrom dplyr mutate
-#' @importFrom dplyr select
-#' @importFrom lubridate year
-#' @importFrom lubridate month
-#' @importFrom lubridate day
+#' @importFrom dplyr %>% .data bind_cols everything mutate select
+#' @importFrom lubridate year month day
 #' @importFrom stats na.omit
-#' @importFrom swfscMisc bearing
-#' @importFrom swfscMisc destination
+#' @importFrom swfscMisc bearing destination
 #' @importFrom utils head
 #' 
 #' @details Get summary data for effort segment

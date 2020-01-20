@@ -7,10 +7,7 @@
 #' @param file filename(s) of one or more AirDAS files
 #' @param tz character; see \link[base]{strptime}. Default is UTC
 #'
-#' @importFrom readr cols
-#' @importFrom readr col_character
-#' @importFrom readr read_fwf
-#' @importFrom readr fwf_positions
+#' @importFrom readr cols col_character read_fwf fwf_positions
 #'
 #' @details Reads/parses aerial survey DAS data into columns of a data frame.
 #'   If \code{file} contains multiple filenames, then the individual 
@@ -37,7 +34,7 @@
 #'    
 #'   See \code{\link{airdas_format_pdf}} for more information about AirDAS format requirements
 #'   
-#' @return Data frame with AirDAS data read into columns.
+#' @return An \code{airdas_dfr} object, which is also a data frame, with AirDAS data read into columns.
 #'   The data are read into the data frame as characters as described in 'Details',
 #'   with the following exceptions:
 #'   \tabular{lll}{
@@ -47,8 +44,8 @@
 #'     Lat       \tab numeric   \tab 'Latitude' column converted to decimal degrees in range [-90, 90]\cr
 #'     Lon       \tab numeric   \tab 'Longitude' column converted to decimal degrees in range [-180, 180]\cr
 #'     Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (i.e. rows where 'Event' is not "C" or "c")\cr
+#'     EventNum  \tab integer   \tab 'Event number' coerced to an integer using \code{\link[base:integer]{as.integer}}\cr
 #'     file_das  \tab character \tab filename, extracted from the \code{file} argument using \code{\link[base]{basename}}\cr
-#'     event_num \tab integer   \tab 'Event number' coerced to an integer using \code{\link[base:integer]{as.integer}}\cr
 #'     line_num  \tab integer   \tab line number of each data row\cr
 #'   }
 #'
@@ -91,7 +88,7 @@ airdas_read <- function(file, tz = "UTC") {
     trim_ws = FALSE
   )) 
   
-  names(x) <- c("event_num", "Event", "EffortDot", "Time", "Date",
+  names(x) <- c("EventNum", "Event", "EffortDot", "Time", "Date",
                 "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", 
                 "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7")
   
@@ -101,7 +98,7 @@ airdas_read <- function(file, tz = "UTC") {
   Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
   DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S", tz = tz)
   file_das  <- basename(file)
-  event_num <- suppressWarnings(as.integer(x$event_num)) #blank for # events
+  EventNum <- suppressWarnings(as.integer(x$EventNum)) #blank for # events
   line_num  <- seq_along(x$Event)
   
   data.df <- data.frame(
@@ -120,9 +117,9 @@ airdas_read <- function(file, tz = "UTC") {
   data.df[data.df == ""] <- NA
   
   # Data frame to return
-  data.frame(
+  as_airdas_dfr(data.frame(
     Event = x$Event, EffortDot = x$EffortDot, DateTime, Lat, Lon, data.df, 
-    file_das, event_num, line_num, 
+    EventNum, file_das, line_num, 
     stringsAsFactors = FALSE
-  )
+  ))
 }

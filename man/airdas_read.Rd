@@ -12,7 +12,7 @@ airdas_read(file, tz = "UTC")
 \item{tz}{character; see \link[base]{strptime}. Default is UTC}
 }
 \value{
-Data frame with AirDAS data read into columns.
+An \code{airdas_dfr} object, which is also a data frame, with AirDAS data read into columns.
   The data are read into the data frame as characters as described in 'Details',
   with the following exceptions:
   \tabular{lll}{
@@ -22,8 +22,8 @@ Data frame with AirDAS data read into columns.
     Lat       \tab numeric   \tab 'Latitude' column converted to decimal degrees in range [-90, 90]\cr
     Lon       \tab numeric   \tab 'Longitude' column converted to decimal degrees in range [-180, 180]\cr
     Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (i.e. rows where 'Event' is not "C" or "c")\cr
+    EventNum  \tab integer   \tab 'Event number' coerced to an integer using \code{\link[base:integer]{as.integer}}\cr
     file_das  \tab character \tab filename, extracted from the \code{file} argument using \code{\link[base]{basename}}\cr
-    event_num \tab integer   \tab 'Event number' coerced to an integer using \code{\link[base:integer]{as.integer}}\cr
     line_num  \tab integer   \tab line number of each data row\cr
   }
 }

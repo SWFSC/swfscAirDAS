@@ -2,16 +2,11 @@
 #'
 #' Extract sightings and associated information from aerial DAS data
 #'
-#' @param das.df data frame; processed aerial DAS data.. TODO
+#' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}.
+#'  Can also be a data frame that can be coerced to a \code{airdas_df} object
+#' @param mixed.multi logical; currently does not do anything
 #' 
-#' @importFrom dplyr %>%
-#' @importFrom dplyr .data
-#' @importFrom dplyr arrange
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr filter
-#' @importFrom dplyr left_join
-#' @importFrom dplyr mutate
-#' @importFrom dplyr select
+#' @importFrom dplyr %>% .data arrange bind_rows filter left_join mutate select
 #' @importFrom rlang !!
 #'
 #' @details This function requires the following event codes: 
@@ -52,14 +47,26 @@
 #' airdas_sight(y.proc)
 #'
 #' @export
-airdas_sight <- function(das.df) {
+airdas_sight <- function(x, mixed.multi) UseMethod("airdas_sight")
+
+
+#' @name airdas_sight
+#' @export
+airdas_sight.data.frame <- function(x, mixed.multi = FALSE) {
+  airdas_sight(as_airdas_df(x), mixed.multi)
+}
+
+
+#' @name airdas_sight
+#' @export
+airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
   #----------------------------------------------------------------------------
   ### Filter for and extract sighting data
   event.sight <- c("S", "s", "t")
   event.sight.info <- "1"
 
   ### Filter for sighting-related data
-  sight.df <- das.df %>% 
+  sight.df <- x %>% 
     filter(.data$Event %in% c(event.sight, event.sight.info)) %>% 
     mutate(sight_cumsum = cumsum(.data$Event %in% event.sight))
   

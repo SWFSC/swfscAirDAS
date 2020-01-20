@@ -38,7 +38,8 @@ Todo
   
   Continuous effort sections ID'd by T and R events
 
-  Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) between events (lat/lon points)
+  Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) 
+  between events (lat/lon points)
   
   Describe segdata, siteinfo, and randpicks
 }
