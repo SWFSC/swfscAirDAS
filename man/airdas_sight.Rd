@@ -38,16 +38,16 @@ This function requires the following event codes:
   For more info about the event codes, see 
   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
   
-  A 'standard sighting' (std_sight in output data frame) means it was by ObsL, ObsB, or ObsR
+  A 'standard sighting' (SightStd in output data frame) means it was by ObsL, ObsB, or ObsR
   
   This function assumes the following 
   \tabular{llll}{
     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
-    Sighting number \tab Data1 \tab \tab sight_no\cr
-    Observer \tab Data2 \tab Data1 \tab obs\cr
-    Declination angle \tab Data3 \tab Data2 \tab angle_declination\cr
-    Group size (best estimate) \tab Data4 \tab NA \tab todo \cr
-    Species code 1 \tab Data5 \tab Data3 \tab todo \cr
+    Sighting number \tab Data1 \tab \tab SightNo\cr
+    Observer \tab Data2 \tab Data1 \tab Obs\cr
+    Declination angle \tab Data3 \tab Data2 \tab Angle\cr
+    Group size (best estimate) \tab Data4 \tab NA \tab Gs \cr
+    Species code 1 \tab Data5 \tab Data3 \tab Sp \cr
     Species code 2 \tab Data6 \tab NA \tab todo \cr
     Species code 3 \tab Data7 \tab NA \tab todo \cr
     Turtle size (ft) \tab NA \tab Data4 \tab todo\cr

@@ -196,8 +196,8 @@ airdas_effort <- function(x, seg.km, sp.codes,
   
   # das.forsiteinfo <- das.df.eff[, siteinfo.include]
   siteinfo <- airdas_sight(das.df.eff) %>% 
-    mutate(included = (.data$Bft <= 5 & abs(.data$angle_declination) <= 78 & 
-                         .data$std_sight & .data$OnEffort), 
+    mutate(included = (.data$Bft <= 5 & abs(.data$Angle) <= 78 & 
+                         .data$SightStd & .data$OnEffort), 
            included = ifelse(is.na(.data$included), FALSE, .data$included))
   # select(!!siteinfo.include)
   
@@ -210,10 +210,10 @@ airdas_effort <- function(x, seg.km, sp.codes,
   segdata.col1 <- select(segdata, .data$seg_idx)
   siteinfo.forsegdata.list <- lapply(sp.codes, function(i, siteinfo, d1) {
     d0 <- siteinfo %>% 
-      filter(.data$included, .data$species == i) %>% 
+      filter(.data$included, .data$Sp == i) %>% 
       group_by(.data$seg_idx) %>% 
-      summarise(nSI = length(.data$species), 
-                ANI = sum(.data$groupsize))
+      summarise(nSI = length(.data$Sp), 
+                ANI = sum(.data$Gs))
     
     names(d0) <- c("seg_idx", paste0(i, "_", names(d0)[-1]))
     

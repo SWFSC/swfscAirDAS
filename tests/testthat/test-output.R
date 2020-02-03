@@ -82,8 +82,8 @@ test_that("airdas_sight output has expected column names and classes", {
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
     "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
     "VLI", "VLO", "VB", "VRI", "VRO", "EffortDot", "EventNum", "file_das", "line_num", 
-    "sight_no", "obs", "angle_declination", "species", "groupsize", "std_sight", 
-    "turtle_sizeft", "turtle_direction", "turtle_tail"
+    "SightNo", "Obs", "Angle", "SightStd", "Sp", "Gs", 
+    "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
   
   # exp.name.nomulti <- c(

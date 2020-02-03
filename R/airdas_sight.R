@@ -18,16 +18,16 @@
 #'   For more info about the event codes, see 
 #'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
 #'   
-#'   A 'standard sighting' (std_sight in output data frame) means it was by ObsL, ObsB, or ObsR
+#'   A 'standard sighting' (SightStd in output data frame) means it was by ObsL, ObsB, or ObsR
 #'   
 #'   This function assumes the following 
 #'   \tabular{llll}{
 #'     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
-#'     Sighting number \tab Data1 \tab \tab sight_no\cr
-#'     Observer \tab Data2 \tab Data1 \tab obs\cr
-#'     Declination angle \tab Data3 \tab Data2 \tab angle_declination\cr
-#'     Group size (best estimate) \tab Data4 \tab NA \tab todo \cr
-#'     Species code 1 \tab Data5 \tab Data3 \tab todo \cr
+#'     Sighting number \tab Data1 \tab \tab SightNo\cr
+#'     Observer \tab Data2 \tab Data1 \tab Obs\cr
+#'     Declination angle \tab Data3 \tab Data2 \tab Angle\cr
+#'     Group size (best estimate) \tab Data4 \tab NA \tab Gs \cr
+#'     Species code 1 \tab Data5 \tab Data3 \tab Sp \cr
 #'     Species code 2 \tab Data6 \tab NA \tab todo \cr
 #'     Species code 3 \tab Data7 \tab NA \tab todo \cr
 #'     Turtle size (ft) \tab NA \tab Data4 \tab todo\cr
@@ -127,30 +127,30 @@ airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
   ### ...all sighting events
   sight.info.all <- sight.df %>% 
     filter(.data$Event %in% c(event.sight, 1)) %>% 
-    mutate(sight_no = ifelse(.data$Event == "t", NA, .data$Data1), 
-           obs = ifelse(.data$Event == "t", .data$Data1, .data$Data2), 
-           angle_declination = as.numeric(ifelse(.data$Event == "t", .data$Data2, .data$Data3)), 
-           species = ifelse(.data$Event == "t", .data$Data3, .data$Data5), 
-           groupsize = as.numeric(ifelse(.data$Event == "t", 1, .data$Data4)),
-           std_sight = .data$obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)) %>% 
+    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
+           Obs = ifelse(.data$Event == "t", .data$Data1, .data$Data2), 
+           Angle = as.numeric(ifelse(.data$Event == "t", .data$Data2, .data$Data3)),
+           SightStd = .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR), 
+           Sp = ifelse(.data$Event == "t", .data$Data3, .data$Data5), 
+           Gs = as.numeric(ifelse(.data$Event == "t", 1, .data$Data4))) %>% 
     select(-!!paste0("Data", 1:7))
   
   ### ...only t events
   # Must be filtered for t so multi-sp lines are not duplicated in final join
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>% 
-    mutate(turtle_sizeft = as.numeric(.data$Data4), 
-           turtle_direction = as.numeric(.data$Data5), 
-           turtle_tail = .data$Data6) %>% 
-    select(.data$sight_cumsum, .data$turtle_sizeft, .data$turtle_direction, 
-           .data$turtle_tail)
+    mutate(TurtleSizeFt = as.numeric(.data$Data4), 
+           TurtleDirection = as.numeric(.data$Data5), 
+           TurtleTail = .data$Data6) %>% 
+    select(.data$sight_cumsum, .data$TurtleSizeFt, .data$TurtleDirection, 
+           .data$TurtleTail)
   
   
   #----------------------------------------------------------------------------
   # Warning checks and return
   
   ### Checks
-  if (any(is.na(filter(sight.info.all, .data$Event == "S")[["sight_groupsize"]]))) 
+  if (any(is.na(filter(sight.info.all, .data$Event == "S")[["sight_groupsize"]])))
     warning("Some 'S' events had non-numeric group sizes")
   
   ### Join data frames and return
