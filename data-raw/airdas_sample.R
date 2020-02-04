@@ -34,6 +34,7 @@ x <- x %>% slice(-c(sight.rm, comment.rm))
 rm(sight.rm, comment.rm)
 
 sight.curr <- which(x$Event == "S")
+x$EffortDot[x$Event == 1]
 
 # Jitter sighting data
 x$Data1[sight.curr] <- seq_len(n.sight.keep)
@@ -50,12 +51,13 @@ x$Data5[sight.curr] <- sample(c("mn", "bm", "pp", "gg"), size = n.sight.keep, re
 rm(sight.curr)
 
 # Jitter P event data
-p.curr <- x$Event == "P"
-x$Data1[p.curr] <- "aa"
-x$Data2[p.curr] <- "bb"
-x$Data3[p.curr] <- "cc"
-x$Data4[p.curr] <- "dd"
-rm(p.curr)
+p.which <- which(x$Event == "P")
+stopifnot(length(p.which) == 2)
+x$Data1[p.which] <- c("aa", "cc")
+x$Data2[p.which] <- "bb"
+x$Data3[p.which] <- c("cc", "aa")
+x$Data4[p.which] <- "dd"
+rm(p.which)
 
 # Jitter transect number
 x$Data1[x$Event == "T"] <- c("T1", "T2")
@@ -87,7 +89,8 @@ x.out <- x %>%
           Lat = x$Lat[t.idx.after], Lon = x$Lon[t.idx.after], Data1 = "aa", 
           Data2 = -20, Data3 = "dc", Data4 = 5, Data5 = 90, Data6 = "N", 
           .after = t.idx.after) %>% 
-  add_row(Event = 1, Data5 = 80, Data6 = 20, .after = 13) %>% #2nd for indices
+  add_row(Event = 1, EffortDot = FALSE, Data5 = 80, Data6 = 20, 
+          .after = 13) %>% #2nd for indices
   add_row(Event = "s", EffortDot = TRUE, DateTime = x$DateTime[s.idx.after],
           Lat = x$Lat[s.idx.after], Lon = x$Lon[s.idx.after], Data1 = "25", 
           Data2 = -70) %>% 
