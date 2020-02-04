@@ -2,18 +2,27 @@
 % Please edit documentation in R/airdas_effort.R
 \name{airdas_effort}
 \alias{airdas_effort}
+\alias{airdas_effort.data.frame}
+\alias{airdas_effort.airdas_df}
 \title{Summarize aerial DAS effort}
 \usage{
-airdas_effort(
+airdas_effort(x, ...)
+
+\method{airdas_effort}{data.frame}(x, ...)
+
+\method{airdas_effort}{airdas_df}(
   x,
   seg.km,
   sp.codes,
   randpicks.load = NULL,
-  randpicks.save = NULL
+  randpicks.save = NULL,
+  ...
 )
 }
 \arguments{
 \item{x}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
+
+\item{...}{ignored}
 
 \item{seg.km}{numeric; length of effort segments}
 

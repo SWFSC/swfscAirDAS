@@ -80,7 +80,7 @@ test_that("airdas_sight output has expected column names and classes", {
   
   exp.name <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
-    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
+    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
     "VLI", "VLO", "VB", "VRI", "VRO", "EffortDot", "EventNum", "file_das", "line_num", 
     "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Multi", 

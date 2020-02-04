@@ -4,7 +4,6 @@
 #'
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}.
 #'  Can also be a data frame that can be coerced to a \code{airdas_df} object
-#' @param mixed.multi logical; currently does not do anything
 #' 
 #' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
 #' @importFrom rlang !!
@@ -41,7 +40,7 @@
 #'   and 2) columns with sighting information
 #'   (observer, species, etc.) extracted from 'Data#' columns as specified in Details.
 #'   The data frame has one row for each sighting,
-#'   or one row for each species of each sighting if \code{mixed.multi} is \code{TRUE} (TODO).
+#'   or one row for each species of each sighting if it is a multi-species sighting.
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -50,19 +49,19 @@
 #' airdas_sight(y.proc)
 #'
 #' @export
-airdas_sight <- function(x, mixed.multi) UseMethod("airdas_sight")
+airdas_sight <- function(x) UseMethod("airdas_sight")
 
 
 #' @name airdas_sight
 #' @export
-airdas_sight.data.frame <- function(x, mixed.multi = FALSE) {
-  airdas_sight(as_airdas_df(x), mixed.multi)
+airdas_sight.data.frame <- function(x) {
+  airdas_sight(as_airdas_df(x))
 }
 
 
 #' @name airdas_sight
 #' @export
-airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
+airdas_sight.airdas_df <- function(x) {
   #----------------------------------------------------------------------------
   ### Filter for and extract sighting data
   event.sight <- c("S", "s", "t")

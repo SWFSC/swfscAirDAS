@@ -6,24 +6,22 @@
 \alias{airdas_sight.airdas_df}
 \title{Aerial DAS sightings}
 \usage{
-airdas_sight(x, mixed.multi)
+airdas_sight(x)
 
-\method{airdas_sight}{data.frame}(x, mixed.multi = FALSE)
+\method{airdas_sight}{data.frame}(x)
 
-\method{airdas_sight}{airdas_df}(x, mixed.multi = FALSE)
+\method{airdas_sight}{airdas_df}(x)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}.
 Can also be a data frame that can be coerced to a \code{airdas_df} object}
-
-\item{mixed.multi}{logical; currently does not do anything}
 }
 \value{
 Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
   and 2) columns with sighting information
   (observer, species, etc.) extracted from 'Data#' columns as specified in Details.
   The data frame has one row for each sighting,
-  or one row for each species of each sighting if \code{mixed.multi} is \code{TRUE} (TODO).
+  or one row for each species of each sighting if it is a multi-species sighting.
 }
 \description{
 Extract sightings and associated information from aerial DAS data

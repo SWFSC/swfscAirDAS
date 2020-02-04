@@ -7,6 +7,7 @@
 #' @param sp.codes character; species codes to include in segdata (and siteinfo?)
 #' @param randpicks.load character; file to run read.csv on and pass output to airdas_effort_chop TODO
 #' @param randpicks.save character; if not 
+#' @param ... ignored
 #' 
 #' @importFrom dplyr %>%  between bind_cols filter full_join group_by summarise
 #' @importFrom rlang !!
@@ -40,8 +41,21 @@
 #' )
 #' 
 #' @export
-airdas_effort <- function(x, seg.km, sp.codes, 
-                          randpicks.load = NULL, randpicks.save = NULL) {
+airdas_effort <- function(x, ...) UseMethod("airdas_effort")
+
+
+#' @name airdas_effort
+#' @export
+airdas_effort.data.frame <- function(x, ...) {
+  airdas_effort(as_airdas_df(x),...)
+}
+
+
+#' @name airdas_effort
+#' @export
+airdas_effort.airdas_df <- function(x, seg.km, sp.codes, 
+                                    randpicks.load = NULL, 
+                                    randpicks.save = NULL, ...) {
   #----------------------------------------------------------------------------
   # TODO: format.. checks
   das.df <- x
