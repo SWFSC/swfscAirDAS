@@ -74,33 +74,16 @@ test_that("airdas_process output has expected column names and classes", {
 test_that("airdas_sight output has expected column names and classes", {
   y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
   y.sight <- airdas_sight(y.proc)
-  # TODO: multi
-  # y.sight.multi <- airdas_sight(y.proc, mixed.multi = TRUE)
   
   exp.name <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
     "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
     "VLI", "VLO", "VB", "VRI", "VRO", "EffortDot", "EventNum", "file_das", "line_num", 
-    "SightNo", "Obs", "Angle", "SightStd", "Sp", "Gs", 
+    "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Multi", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
   
-  # exp.name.nomulti <- c(
-  #   "Sp1", "Sp2","Sp3", "Sp4", "Sp1Perc", "Sp2Perc", "Sp3Perc", "Sp4Perc",
-  #   "GsSp1", "GsSp2", "GsSp3", "GsSp4", "ResightCourse",
-  #   "TurtleSp", "TurtleNum", "TurtleJFR", "TurtleAge", "TurtleCapt",
-  #   "BoatType", "BoatNum"
-  # )
-  
-  # exp.name.multi <- c(
-  #   "Species", "GsSpecies", "ResightCourse",
-  #   "TurtleSp", "TurtleNum", "TurtleJFR", "TurtleAge", "TurtleCapt",
-  #   "BoatType", "BoatNum"
-  # )
-  
   expect_identical(exp.name, names(y.sight))
-  # expect_identical(c(exp.name, exp.name.nomulti), names(y.sight))
-  # expect_identical(c(exp.name, exp.name.multi), names(y.sight.multi))
 })
 

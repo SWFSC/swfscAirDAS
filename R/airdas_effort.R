@@ -213,7 +213,7 @@ airdas_effort <- function(x, seg.km, sp.codes,
       filter(.data$included, .data$Sp == i) %>% 
       group_by(.data$seg_idx) %>% 
       summarise(nSI = length(.data$Sp), 
-                ANI = sum(.data$Gs))
+                ANI = sum(.data$GsSp))
     
     names(d0) <- c("seg_idx", paste0(i, "_", names(d0)[-1]))
     

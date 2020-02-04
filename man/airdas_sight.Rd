@@ -40,19 +40,21 @@ This function requires the following event codes:
   
   A 'standard sighting' (SightStd in output data frame) means it was by ObsL, ObsB, or ObsR
   
+  Multispecies group size is rounded to nearest integer using round(, 0)
+  
   This function assumes the following 
   \tabular{llll}{
     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
-    Sighting number \tab Data1 \tab \tab SightNo\cr
-    Observer \tab Data2 \tab Data1 \tab Obs\cr
-    Declination angle \tab Data3 \tab Data2 \tab Angle\cr
-    Group size (best estimate) \tab Data4 \tab NA \tab Gs \cr
-    Species code 1 \tab Data5 \tab Data3 \tab Sp \cr
-    Species code 2 \tab Data6 \tab NA \tab todo \cr
-    Species code 3 \tab Data7 \tab NA \tab todo \cr
-    Turtle size (ft) \tab NA \tab Data4 \tab todo\cr
-    Travel direction (deg) \tab NA \tab Data5 \tab todo\cr
-    Tail visible? \tab NA \tab Data6 \tab todo\cr
+    Sighting number   \tab Data1          \tab       \tab SightNo\cr
+    Observer          \tab Data2          \tab Data1 \tab Obs\cr
+    Declination angle \tab Data3          \tab Data2 \tab Angle\cr
+    Group size (best estimate) \tab Data4 \tab NA    \tab Gs \cr
+    Species code 1    \tab Data5          \tab Data3 \tab Sp \cr
+    Species code 2    \tab Data6          \tab NA    \tab todo \cr
+    Species code 3    \tab Data7          \tab NA    \tab todo \cr
+    Turtle size (ft)  \tab NA             \tab Data4 \tab todo\cr
+    Travel direction (deg) \tab NA        \tab Data5 \tab todo\cr
+    Tail visible?     \tab NA             \tab Data6 \tab todo\cr
   }
 }
 \examples{

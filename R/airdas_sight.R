@@ -6,7 +6,7 @@
 #'  Can also be a data frame that can be coerced to a \code{airdas_df} object
 #' @param mixed.multi logical; currently does not do anything
 #' 
-#' @importFrom dplyr %>% .data arrange bind_rows filter left_join mutate select
+#' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
 #' @importFrom rlang !!
 #'
 #' @details This function requires the following event codes: 
@@ -20,19 +20,21 @@
 #'   
 #'   A 'standard sighting' (SightStd in output data frame) means it was by ObsL, ObsB, or ObsR
 #'   
+#'   Multispecies group size is rounded to nearest integer using round(, 0)
+#'   
 #'   This function assumes the following 
 #'   \tabular{llll}{
 #'     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
-#'     Sighting number \tab Data1 \tab \tab SightNo\cr
-#'     Observer \tab Data2 \tab Data1 \tab Obs\cr
-#'     Declination angle \tab Data3 \tab Data2 \tab Angle\cr
-#'     Group size (best estimate) \tab Data4 \tab NA \tab Gs \cr
-#'     Species code 1 \tab Data5 \tab Data3 \tab Sp \cr
-#'     Species code 2 \tab Data6 \tab NA \tab todo \cr
-#'     Species code 3 \tab Data7 \tab NA \tab todo \cr
-#'     Turtle size (ft) \tab NA \tab Data4 \tab todo\cr
-#'     Travel direction (deg) \tab NA \tab Data5 \tab todo\cr
-#'     Tail visible? \tab NA \tab Data6 \tab todo\cr
+#'     Sighting number   \tab Data1          \tab       \tab SightNo\cr
+#'     Observer          \tab Data2          \tab Data1 \tab Obs\cr
+#'     Declination angle \tab Data3          \tab Data2 \tab Angle\cr
+#'     Group size (best estimate) \tab Data4 \tab NA    \tab Gs \cr
+#'     Species code 1    \tab Data5          \tab Data3 \tab Sp \cr
+#'     Species code 2    \tab Data6          \tab NA    \tab todo \cr
+#'     Species code 3    \tab Data7          \tab NA    \tab todo \cr
+#'     Turtle size (ft)  \tab NA             \tab Data4 \tab todo\cr
+#'     Travel direction (deg) \tab NA        \tab Data5 \tab todo\cr
+#'     Tail visible?     \tab NA             \tab Data6 \tab todo\cr
 #'   }
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
@@ -65,7 +67,7 @@ airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
   ### Filter for and extract sighting data
   event.sight <- c("S", "s", "t")
   event.sight.info <- "1"
-
+  
   ### Filter for sighting-related data
   sight.df <- x %>% 
     filter(.data$Event %in% c(event.sight, event.sight.info)) %>% 
@@ -79,6 +81,7 @@ airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
   ###   into multiple lines. 
   ### If no '1' events, sight.mult will be list() and thus not change sight.df
   sight.cumsum.mult <- sight.df$sight_cumsum[sight.df$Event %in% event.sight.info]
+  
   sight.mult <- lapply(sight.cumsum.mult, function(i, sight.df) {
     curr.df <- sight.df %>% filter(.data$sight_cumsum == i)
     stopifnot(identical(curr.df$Event, c("S", "1")))
@@ -90,7 +93,7 @@ airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
       as.numeric(curr.df$Data5[2]), as.numeric(curr.df$Data6[2]), 
       as.numeric(curr.df$Data7[2])
     )
-    sp.num.all <- sp.perc.all / 100 * gs.total
+    sp.num.all <- as.integer(round(sp.perc.all / 100 * gs.total, 0))
     
     # Warning if species percentages do not sum to 100
     if (!all.equal(sum(sp.perc.all, na.rm = TRUE), 100)) {
@@ -102,59 +105,62 @@ airdas_sight.airdas_df <- function(x, mixed.multi = FALSE) {
     }
     
     # Create df with one row for each species
-    curr.df.e1 <- curr.df[1, ] %>% mutate(Event = 1)
-    rbind(curr.df[1, ], curr.df.e1, curr.df.e1) %>% 
+    bind_rows(curr.df[1, ], curr.df[1, ], curr.df[1, ]) %>% 
       mutate(Data4 = as.character(sp.num.all), Data5 = sp.all, 
-             Data6 = NA, Data7 = NA) %>% 
+             Data6 = NA, Data7 = NA, 
+             GsTotal = gs.total, Multi = TRUE) %>% 
       filter(!is.na(.data$Data4))
   }, sight.df = sight.df)
   
-  # Add 'new' sightings back into sight.df
+  # Add multispecies sightings back into sight.df
   sight.df <- sight.df %>% 
     filter(!(.data$sight_cumsum %in% sight.cumsum.mult)) %>% 
-    bind_rows(do.call(rbind, sight.mult)) %>% 
-    arrange(.data$sight_cumsum)
+    mutate(GsTotal = as.integer(.data$Data4), Multi = FALSE) %>% 
+    bind_rows(sight.mult) %>% 
+    arrange(.data$sight_cumsum) %>% 
+    mutate(idx = seq_along(.data$sight_cumsum)) %>% 
+    select(-.data$sight_cumsum)
   
-  # Ensure that there is no "S" event data in Data6 or Data7
-  stopifnot(
-    all(is.na(filter(sight.df, .data$Event %in% c("S", 1))$Data6)), 
-    all(is.na(filter(sight.df, .data$Event %in% c("S", 1))$Data7))
-  )
   
   
   #----------------------------------------------------------------------------
-  # Extract relevant sighting data for...
-  ### ...all sighting events
-  sight.info.all <- sight.df %>% 
-    filter(.data$Event %in% c(event.sight, 1)) %>% 
-    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
-           Obs = ifelse(.data$Event == "t", .data$Data1, .data$Data2), 
-           Angle = as.numeric(ifelse(.data$Event == "t", .data$Data2, .data$Data3)),
-           SightStd = .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR), 
-           Sp = ifelse(.data$Event == "t", .data$Data3, .data$Data5), 
-           Gs = as.numeric(ifelse(.data$Event == "t", 1, .data$Data4))) %>% 
-    select(-!!paste0("Data", 1:7))
+  # Extract relevant information:
+  stopifnot(all(sight.df$Event %in% event.sight))
   
-  ### ...only t events
-  # Must be filtered for t so multi-sp lines are not duplicated in final join
+  ### 1) Processed AirDAS variables
+  sight.info <- sight.df %>% 
+    select(-!!paste0("Data", 1:7), -.data$GsTotal, -.data$Multi)
+  
+  ### 2) Sighting data shared by all sighting types (hence no)
+  sight.info.all <- sight.df %>% 
+    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
+           Obs = case_when(.data$Event == "S" ~ .data$Data2,
+                           .data$Event == "t" ~ .data$Data1), 
+           Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
+                                        .data$Event == "s" ~ .data$Data2, 
+                                        .data$Event == "t" ~ .data$Data2)), 
+           SightStd = .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR), 
+           Sp = case_when(.data$Event == "S" ~ .data$Data5,
+                          .data$Event == "t" ~ .data$Data3), 
+           GsSp = case_when(.data$Event == "S" ~ as.integer(.data$Data4),
+                            .data$Event == "t" ~ as.integer(1))) %>% 
+    select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
+           .data$Sp, .data$GsSp, .data$GsTotal, .data$Multi)
+  
+  ### 3) Turtle sighting data
   sight.info.t <- sight.df %>% 
-    filter(.data$Event == "t") %>% 
+    filter(.data$Event == "t") %>%
     mutate(TurtleSizeFt = as.numeric(.data$Data4), 
            TurtleDirection = as.numeric(.data$Data5), 
            TurtleTail = .data$Data6) %>% 
-    select(.data$sight_cumsum, .data$TurtleSizeFt, .data$TurtleDirection, 
+    select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
            .data$TurtleTail)
   
   
   #----------------------------------------------------------------------------
-  # Warning checks and return
-  
-  ### Checks
-  if (any(is.na(filter(sight.info.all, .data$Event == "S")[["sight_groupsize"]])))
-    warning("Some 'S' events had non-numeric group sizes")
-  
-  ### Join data frames and return
-  sight.info.all %>% 
-    left_join(sight.info.t, by = "sight_cumsum") %>% 
-    select(-.data$sight_cumsum)
+  # Join data frames and return
+  sight.info %>% 
+    left_join(sight.info.all, by = "idx") %>% 
+    left_join(sight.info.t, by = "idx") %>% 
+    select(-.data$idx)
 }
