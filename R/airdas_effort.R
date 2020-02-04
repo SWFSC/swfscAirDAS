@@ -165,7 +165,7 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
     stringsAsFactors = FALSE
   ) %>%
     mutate(segnum = seq_along(.data$seg_idx), 
-           dist = round(dist, 4)) %>%
+           dist = round(.data$dist, 4)) %>%
     select(.data$segnum, .data$seg_idx, everything())
   
   ### Each das data point, along with segnum
