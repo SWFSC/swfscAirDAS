@@ -13,8 +13,8 @@ airdas_sight(x)
 \method{airdas_sight}{airdas_df}(x)
 }
 \arguments{
-\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}.
-Can also be a data frame that can be coerced to a \code{airdas_df} object}
+\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
+or a data frame that can be coerced to a \code{airdas_df} object}
 }
 \value{
 Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,

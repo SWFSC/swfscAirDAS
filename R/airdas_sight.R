@@ -2,8 +2,8 @@
 #'
 #' Extract sightings and associated information from aerial DAS data
 #'
-#' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}.
-#'  Can also be a data frame that can be coerced to a \code{airdas_df} object
+#' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
+#'  or a data frame that can be coerced to a \code{airdas_df} object
 #' 
 #' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
 #' @importFrom rlang !!
