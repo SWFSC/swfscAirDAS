@@ -53,6 +53,9 @@ An \code{airdas_df} object, which is also a data frame.
     Jellyfish code                    \tab Trans    \tab Event: W; Column: Data4\cr
     Horizontal sun (clock system)     \tab HorizSun \tab Event: W; Column: Data5\cr
     Haze/Kelp/Red tide code           \tab HKR      \tab Event: W; Column: Data1\cr
+    Haze (from HKR code)              \tab Haze     \tab HKR\cr
+    Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
+    Red tide (from HKR code)          \tab RedTide  \tab HKR\cr
     Left observer                     \tab ObsL     \tab Event: P; Column: Data1\cr
     Belly observer                    \tab ObsB     \tab Event: P; Column: Data2\cr
     Right observer                    \tab ObsR     \tab Event: P; Column: Data3\cr

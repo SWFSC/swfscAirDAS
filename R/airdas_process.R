@@ -75,6 +75,9 @@ airdas_process.data.frame <- function(x, ...) {
 #'     Jellyfish code                    \tab Trans    \tab Event: W; Column: Data4\cr
 #'     Horizontal sun (clock system)     \tab HorizSun \tab Event: W; Column: Data5\cr
 #'     Haze/Kelp/Red tide code           \tab HKR      \tab Event: W; Column: Data1\cr
+#'     Haze (from HKR code)              \tab Haze     \tab HKR\cr
+#'     Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
+#'     Red tide (from HKR code)          \tab RedTide  \tab HKR\cr
 #'     Left observer                     \tab ObsL     \tab Event: P; Column: Data1\cr
 #'     Belly observer                    \tab ObsB     \tab Event: P; Column: Data2\cr
 #'     Right observer                    \tab ObsR     \tab Event: P; Column: Data3\cr
@@ -248,6 +251,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   # Post-processing
   tmp <- list(
     Bft = Bft, CCover = CCover, Jelly = Jelly, HorizSun = HorizSun, HKR = HKR, 
+    Haze = grepl("h", HKR, ignore.case = TRUE), Kelp = grepl("h", HKR, ignore.case = TRUE), 
+    RedTide = grepl("r", HKR, ignore.case = TRUE), 
     ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
     AltFt = AltFt, SpKnot = SpKnot, 
     VLI = VLI, VLO = VLO, VB = VB, VRI = VRI, VRO = VRO, 
@@ -267,7 +272,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   #----------------------------------------------------------------------------
   cols.toreturn <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", 
-    "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
+    "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
     "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
