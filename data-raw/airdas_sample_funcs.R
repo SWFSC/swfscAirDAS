@@ -5,8 +5,11 @@ chr_z <- function(i, j = 2) sprintf(paste0("%0", j, "d"), i)
 
 
 #------------------------------------------------------------------------------
-str_pad_data <- function(i, j1 = 5) {
-  ifelse(toupper(x$Event) == "C", i, str_pad(i, width = j1, side = "left"))
+str_pad_data <- function(i, i.col, j1 = 5) {
+  i.curr <- i[[i.col]]
+  ifelse(
+    toupper(i$Event) == "C", i.curr, str_pad(i.curr, width = j1, side = "left")
+  )
 }
 
 
@@ -55,6 +58,7 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
   
   ### Ouput: Writes fwf to path specified by 'file'
   
+  stopifnot(require(gdata))
   if (data7len < 5) warning("data7len < 5")
   
   ### Process output of airdas_read
@@ -71,27 +75,29 @@ raw_airdas_fwf <- function(x, file, data7len = 100) {
   x.lat <- dd2dms_df(x$Lat, NS = TRUE)
   x.lon <- dd2dms_df(x$Lon, NS = FALSE)
   
+  x.ev <- x$Event
   x.df <- data.frame(
-    x.proc$event_num, x.proc$Event, x.proc$EffortDot, 
+    x.proc$EventNum, x.proc$Event, x.proc$EffortDot, 
     x.proc$tm_hms, " ", x.proc$da_mdy, " ", 
     Lat1 = x.lat$deg_char, Lat2 = chr_z(x.lat$deg, 2), ":", 
     Lat3 = sprintf("%05.2f", x.lat$min + x.lat$sec/60), " ", 
     Lon1 = x.lon$deg_char, Lon2 = chr_z(x.lon$deg, 3), ":", 
     Lon3 = sprintf("%05.2f", x.lon$min + x.lon$sec/60), 
-    str_pad_data(x$Data1), str_pad_data(x$Data2), str_pad_data(x$Data3), 
-    str_pad_data(x$Data4), str_pad_data(x$Data5), str_pad_data(x$Data6), 
-    str_pad_data(x$Data7), 
+    str_pad_data(x, "Data1"), str_pad_data(x, "Data2"), 
+    str_pad_data(x, "Data3"), str_pad_data(x, "Data4"), 
+    str_pad_data(x, "Data5"), str_pad_data(x, "Data6"), 
+    str_pad_data(x, "Data7"), 
     stringsAsFactors = FALSE
   )
   names(x.df) <- c(
-    "event_num", "Event", "EffortDot", "tm_hms", "blank1", "da_mdy", "blank2",
+    "EventNum", "Event", "EffortDot", "tm_hms", "blank1", "da_mdy", "blank2",
     "Lat1", "Lat2", "c1", "Lat3", "blank3", "Lon1", "Lon2", "c1", "Lon3",
     paste0("Data", 1:7)
   )
   
   which.nona <- which(names(x.df) %in% c("Event", paste0("Data", 1:7)))
-  x.df[is.na(x.df$event_num), -which.nona] <- NA
-
+  x.df[is.na(x.df$EventNum), -which.nona] <- NA
+  
   fwf.width <- c(3, 1, 1, 6, 1, 6, 1,
                  1, 2, 1, 5, 1, 
                  1, 3, 1, 5, 

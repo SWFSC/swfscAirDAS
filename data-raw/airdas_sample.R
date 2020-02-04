@@ -72,10 +72,12 @@ c.data <- str_sub(c.txt, seq(1, 31, by = 5), c(seq(5, 30, by = 5), -1))
 c.idx.after <- 32
 
 t.idx.after <- 24
+s.idx.after <- nrow(x)
 
 x$Data4[13] <- 10
 x$Data6[13] <- "er"
-x <- x %>% 
+
+x.out <- x %>% 
   add_row(Event = "C", EffortDot = TRUE, DateTime = x$DateTime[c.idx.after],
           Lat = x$Lat[c.idx.after], Lon = x$Lon[c.idx.after],
           Data1 = c.data[1], Data2 = c.data[2], Data3 = c.data[3], Data4 = c.data[4], 
@@ -86,17 +88,20 @@ x <- x %>%
           Data2 = -20, Data3 = "dc", Data4 = 5, Data5 = 90, Data6 = "N", 
           .after = t.idx.after) %>% 
   add_row(Event = 1, Data5 = 80, Data6 = 20, .after = 13) %>% #2nd for indices
-  add_row(Event = "O", EffortDot = TRUE, DateTime = tail(x$DateTime, 1) + seconds(30), 
+  add_row(Event = "s", EffortDot = TRUE, DateTime = x$DateTime[s.idx.after],
+          Lat = x$Lat[s.idx.after], Lon = x$Lon[s.idx.after], Data1 = "25", 
+          Data2 = -70) %>% 
+  add_row(Event = "O", EffortDot = FALSE, DateTime = tail(x$DateTime, 1) + seconds(30), 
           Lat = tail(x$Lat, 1), Lon = tail(x$Lon, 1) + 0.02) %>% 
-  mutate(event_num = c(1:13, NA, 14:82))
+  mutate(EventNum = c(1:13, NA, 14:83))
 
 
 
 # Checks
-identical(order(na.omit(x$DateTime)), sort(order(na.omit(x$DateTime))))
+identical(order(na.omit(x.out$DateTime)), sort(order(na.omit(x.out$DateTime))))
 
 ### Write to das file
 # raw_airdas_fwf(x, "data-raw/airdas_strawman_test.das", data7len = 5)
-raw_airdas_fwf(x, "inst/airdas_sample.das", data7len = 15)
+raw_airdas_fwf(x.out, "inst/airdas_sample.das", data7len = 15)
 
 ###############################################################################
