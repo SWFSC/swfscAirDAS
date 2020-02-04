@@ -2,7 +2,8 @@
 #'
 #' Summarize aerial DAS data by effort segments
 #' 
-#' @param x data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
+#' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
+#'  or a data frame that can be coerced to a \code{airdas_df} object
 #' @param seg.km numeric; length of effort segments 
 #' @param sp.codes character; species codes to include in segdata (and siteinfo?)
 #' @param randpicks.load character; file to run read.csv on and pass output to airdas_effort_chop TODO
@@ -68,16 +69,15 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   )
   
   seg.km <- suppressWarnings(as.numeric(seg.km))
-  if (!inherits(seg.km, c("numeric", "integer"))) {
+  if (!inherits(seg.km, c("numeric", "integer")))
     stop("seg.km must be a number")
-  }
   
   
   #----------------------------------------------------------------------------
   # Prep
   
-  ### Filter for on effort (and on effort + 1 for O/E event), 
-  ###   and number continuous effort sections
+  ### Filter for on effort and number continuous effort sections
+  ###   'on effort + 1' is to capture O/E event
   das.oneff <- sort(unique(c(which(das.df$OnEffort), which(das.df$OnEffort) + 1)))
   stopifnot(all(between(das.oneff, 1, nrow(das.df))))
   
@@ -120,7 +120,7 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   }
   
   
-  ### Do stuff
+  ### Chop effort segments and get segdata info
   eff.uniq <- unique(das.df$cont_eff_section)
   # Check against provided randpicks
   if (exists("r.eff.sect")) {
@@ -144,9 +144,6 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   }, das.df = das.df, seg.km = seg.km, r.pos = r.pos)
   
   
-  
-  
-  
   #----------------------------------------------------------------------------
   # Extract information about each segment
   
@@ -158,17 +155,18 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   if (!is.null(randpicks.save)) 
     write.csv(randpicks, file = randpicks.save, row.names = FALSE)
   
-  ### Segment lengths (todo: remove)
-  segdata.len <- lapply(eff.list, function(j) j[[2]])
+  # ### Segment lengths (todo: remove)
+  # segdata.len <- lapply(eff.list, function(j) j[[2]])
+  # segdata.len <- lapply(segdata.len, round, 4)
   
   ### Segdata
   segdata <- data.frame(
     do.call(rbind, lapply(eff.list, function(i) i[[4]])), 
     stringsAsFactors = FALSE
   ) %>%
-    mutate(segnum = seq_along(.data$seg_idx)) %>%
+    mutate(segnum = seq_along(.data$seg_idx), 
+           dist = round(dist, 4)) %>%
     select(.data$segnum, .data$seg_idx, everything())
-  # TODO: round decimals? to 4?
   
   ### Each das data point, along with segnum
   das.df.eff <- data.frame(
@@ -177,47 +175,16 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   ) %>% 
     left_join(segdata[, c("seg_idx", "segnum")], by = "seg_idx")
   
-  ### Sanity check - todo: remove
-  # stopifnot(
-  #   all(segdata$dist == unlist(segdata.len)), 
-  #   identical(das.df %>% select(Event, DateTime, Lat, Lon) %>% tibble::remove_rownames(), 
-  #             das.df.eff %>% select(Event, DateTime, Lat, Lon) %>% tibble::remove_rownames()), 
-  #   sum(duplicated(segdata$seg_idx)) == 0, 
-  #   all(das.df.eff$seg_idx %in% segdata$seg_idx), 
-  #   nrow(segdata) == length(unlist(lapply(eff.list, function(i) i[[2]]))), 
-  #   all.equal(segdata$dist, unlist(lapply(eff.list, function(i) i[[2]])))
-  # )
-  
   
   #----------------------------------------------------------------------------
   # Summarize sightings (based on siteinfo) and add applicable data to segdata
-  
-  ### Columns to be included in siteinfo output
-  # siteinfo.include <- c(
-  #   "segnum", "seg_idx", "Event", "DateTime", "Lat", "Lon", "OnEffort", 
-  #   "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", 
-  #   "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
-  #   #paste0("Data", 1:7), 
-  #   "file_das", "line_num", "included"
-  # )
-  
-  ### Filter sightings, then add sightings info to segdata
-  # Current sighting filters:
-  #   Beaufort <= 5
-  #   Truncation angle is between -78 and 78
-  #   Standard effort, i.e. observer is one of ObsL, ObsB, or ObsR
-  #   On effort
-  
-  # das.forsiteinfo <- das.df.eff[, siteinfo.include]
   siteinfo <- airdas_sight(das.df.eff) %>% 
     mutate(included = (.data$Bft <= 5 & abs(.data$Angle) <= 78 & 
                          .data$SightStd & .data$OnEffort), 
            included = ifelse(is.na(.data$included), FALSE, .data$included))
-  # select(!!siteinfo.include)
   
   
-  
-  # Make data frame with nSI and ANI columns, and join with segdata
+  # Make data frame with nSI and ANI columns, and join it with segdata
   sp.codes <- sort(sp.codes)
   # TODO: check that sp.codes is an acceptable code?
   
@@ -245,5 +212,6 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   
   
   #----------------------------------------------------------------------------
+  # Return list
   list(segdata = segdata, siteinfo = siteinfo, randpicks = randpicks)
 } 

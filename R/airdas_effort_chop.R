@@ -76,11 +76,15 @@ airdas_effort_chop <- function(x, seg.km, randpicks = NULL) {
   #----------------------------------------------------------------------------
   ### Get lengths of effort segments
   if (seg.dist == 0) {
-    # If current segment length is 0, nothing..?
-    stop("Segment distance was zero")
+    # If current segment length is 0 and there are other events, throw warning
+    if (nrow(das.df) > 2) 
+      warning("A segment distance was zero, ", 
+              "and there were events between start and end points")
+    
     # EAB makes a 0.1km segment if it includes a sighting
     # if (any(curr.df$Event == "S")) print("Effort of length 0") #browser()
-    NA
+    subseg.lengths <- 0
+    pos <- NA
     
   } else {
     if (seg.dist <= seg.km) {
@@ -123,7 +127,7 @@ airdas_effort_chop <- function(x, seg.km, randpicks = NULL) {
   subseg.cumsum <- cumsum(subseg.lengths)
   das.cumsum <- cumsum(das.df$dist_from_prev)
   # das.df$dist_from_prev_cumsum <- cumsum(das.df$dist_from_prev)
-
+  
   das.df$effort_seg <- findInterval(
     round(das.cumsum, 4), round(c(-1, subseg.cumsum), 4),
     left.open = TRUE, rightmost.closed = TRUE

@@ -20,7 +20,8 @@ airdas_effort(x, ...)
 )
 }
 \arguments{
-\item{x}{data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)}
+\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
+or a data frame that can be coerced to a \code{airdas_df} object}
 
 \item{...}{ignored}
 

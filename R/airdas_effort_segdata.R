@@ -55,8 +55,9 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
   
   
   # Store condition data in list for organization and readability
-  cond.list.init <- list(
-    Bft = 0, CCover = 0, AltFt = 0, SpKnot = 0, Jelly = 0, HKR = ""
+  conditions.list.init <- list(
+    Bft = 0, CCover = 0, AltFt = 0, SpKnot = 0, Jelly = 0, #HKR = "",
+    Haze = 0, Kelp = 0, RedTide = 0
   )
   
   # 'Initialize' necessary objects
@@ -66,27 +67,27 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
   midpt.curr <- NULL
   segdata.all <- NULL
   
-  cond.list <- cond.list.init
+  conditions.list <- conditions.list.init
   
   stopifnot(nrow(das.df) >= 2)
   
   ### Step through each point in effort length, 
   #     calculating segment midpoints, endpoints, and avg conditions as you go
-  # if (unique(das.df$effort_seg) == 11) browser()
-  
-  
   for (j in 2:nrow(das.df)) {
-    # if (j == 44) browser()
     # t1 and t2: Is point j past the segment midpt or endpt, respectively,
-    #   i.e. do we need to calculate the midpt or endpt
+    #   i.e. do we need to calculate the midpt or endpt?
     t1 <- das.df$dist_from_prev_cumsum[j] >= subseg.mid.cumsum[subseg.curr]
     t2 <- (das.df$dist_from_prev_cumsum[j] >= subseg.cumsum[subseg.curr])
     
     if (!t2) {
-      # If we didn't cross a segment endpoint, get condition and sight info
-      d.rat <- das.df$dist_from_prev[j] / subseg.lengths[subseg.curr]
-      cond.list <- fn_aggr_conditions(cond.list, das.df, j-1, d.rat)
-      rm(d.rat)
+      # If we didn't cross a segment endpoint, get 
+      #   1) the percentage of the segment between j-1 and j, and 
+      #   2) the condition and sight info
+      seg.percentage <- das.df$dist_from_prev[j] / subseg.lengths[subseg.curr]
+      conditions.list <- fn_aggr_conditions(
+        conditions.list, das.df, j-1, seg.percentage
+      )
+      rm(seg.percentage)
     }
     
     # While the current subsegment midpoint or endpoint 
@@ -126,7 +127,8 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
         #     segment start point is closer than [j-1]
         d.tmp <- max(dist.pt.prev, dist.subseg.prev) 
         d.rat <- (dist.subseg.curr - d.tmp) / subseg.lengths[subseg.curr]
-        cond.list <- fn_aggr_conditions(cond.list, das.df, j-1, d.rat)
+        # if (is.nan(d.rat)) d.rat <- NA
+        conditions.list <- fn_aggr_conditions(conditions.list, das.df, j-1, d.rat)
         rm(d, d.tmp, d.rat)
         
         ## If next point is at the same location, don't end the segment yet
@@ -143,18 +145,33 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
         }
         
         ### Store data from this segment
-        cond.list.df <- data.frame(cond.list, stringsAsFactors = FALSE)
-        names(cond.list.df) <- paste0("ave", names(cond.list.df))
+        # Get average condition information
+        conditions.list.df <- data.frame(
+          lapply(conditions.list, round, 2), stringsAsFactors = FALSE
+        )
+        names(conditions.list.df) <- paste0("ave", names(conditions.list.df))
         
+        # Get start line
         j.stlin.curr <- which(das.df$line_num == stlin.curr)
         
+        # Get observer information
+        #   If beginning is TVPAW, then ignore Observers pre-P event
+        if (nrow(das.df) > 5) {
+          if (identical(das.df$Event[1:5], c("T", "V", "P", "A", "W"))) {
+            das.df$ObsL[1:2] <- NA
+            das.df$ObsB[1:2] <- NA
+            das.df$ObsR[1:2] <- NA
+            das.df$Rec[1:2] <- NA
+          }
+        }
         obs.vals <- vapply(c("ObsL", "ObsB", "ObsR", "Rec"), function(k) {
           k.uniq <- unique(das.df[[k]][j.stlin.curr:j])
-          if (length(na.omit(k.uniq)) >= 1) {k.uniq <- na.omit(k.uniq)}
+          if (length(na.omit(k.uniq)) >= 1) k.uniq <- na.omit(k.uniq)
           paste(k.uniq, collapse = ",")
         }, as.character(1), USE.NAMES = TRUE)
         obs.vals[obs.vals == "NA"] <- NA
         
+        # Put segdata in data frame
         segdata <- data.frame(
           seg_idx = paste0(eff.id, "_", subseg.curr), 
           stlin = stlin.curr, endlin = das.df$line_num[j],
@@ -167,10 +184,10 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
           ObsR = obs.vals["ObsR"], Rec = obs.vals["Rec"],
           stringsAsFactors = FALSE
         ) %>% 
-          bind_cols(df.out1, cond.list.df)
+          bind_cols(df.out1, conditions.list.df)
         
         segdata.all <- rbind(segdata.all, segdata)
-        rm(cond.list.df, j.stlin.curr, obs.vals, segdata)
+        rm(conditions.list.df, j.stlin.curr, obs.vals, segdata)
         
         
         ### Prep for next segment
@@ -196,11 +213,11 @@ airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
           #   Else, this info is calculated in t2 section above
           tmp1 <- das.df$dist_from_prev_cumsum[j] - subseg.cumsum[subseg.curr - 1]
           tmp2 <- subseg.lengths[subseg.curr]
-          cond.list <- cond.list.init
+          conditions.list <- conditions.list.init
           
           if (tmp1 < tmp2) {
-            cond.list <- fn_aggr_conditions(
-              cond.list.init, das.df, j-1, tmp1 / tmp2
+            conditions.list <- fn_aggr_conditions(
+              conditions.list.init, das.df, j-1, tmp1 / tmp2
             )
           }
           rm(tmp1, tmp2)

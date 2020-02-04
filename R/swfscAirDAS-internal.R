@@ -33,25 +33,30 @@ fn_uniqchars <- function(x) sort(unique(strsplit(x, "")[[1]]))
 ### Keep running sum of data (conditions) multiplied by distance ratio
 # Requires that names of cond.list elements are the same as
 #   the column names in curr.df
-# TODO?: For HKR, should n be removed if there are other (i.e. hkr) entries
-fn_aggr_conditions <- function(data.list, curr.df, idx, dist.rat) {
+fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   stopifnot(
     all(names(data.list) %in% names(curr.df)), 
-    idx <= nrow(curr.df), dist.rat >= 0
+    idx <= nrow(curr.df)#, 
+    # dist.perc >= 0
   )
   
-  if (dist.rat != 0) {
-    tmp <- lapply(names(data.list), function(k, dist.rat) {
+  if (is.na(dist.perc)) {
+    lapply(data.list, function(i) NA)
+    
+  } else if (dist.perc != 0) {
+    tmp <- lapply(names(data.list), function(k, dist.perc) {
       z <- data.list[[k]]
       if (inherits(z, c("numeric", "integer"))) {
-        z + (dist.rat * curr.df[[k]][idx])
+        z + (dist.perc * curr.df[[k]][idx])
       } else if (inherits(z, "character")) {
         paste(fn_uniqchars(paste0(z, curr.df[[k]][idx])), collapse = "")
+      } else if (inherits(z, "logical")) {
+        browser()
       } else {
         print("class not recognized")
         browser()
       }
-    }, dist.rat = dist.rat)
+    }, dist.perc = dist.perc)
     
     names(tmp) <- names(data.list)
     tmp
