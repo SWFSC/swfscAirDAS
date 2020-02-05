@@ -10,34 +10,15 @@ airdas_effort(x, ...)
 
 \method{airdas_effort}{data.frame}(x, ...)
 
-\method{airdas_effort}{airdas_df}(
-  x,
-  seg.km,
-  sp.codes,
-  randpicks.load = NULL,
-  randpicks.save = NULL,
-  ...
-)
+\method{airdas_effort}{airdas_df}(x, sp.codes, ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
 or a data frame that can be coerced to a \code{airdas_df} object}
 
-\item{...}{ignored}
-
-\item{seg.km}{numeric; maximum length of modeling segments}
+\item{...}{passed to TODO}
 
 \item{sp.codes}{character; species code(s) to include in segdata}
-
-\item{randpicks.load}{character or \code{NULL}; if character, 
-filename of past randpicks output to load and use 
-(passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
-\code{NULL} if new randpicks values should be generated}
-
-\item{randpicks.save}{character or \code{NULL}; if character, 
-file to which to save randpicks output
-(passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
-If \code{NULL}, randpicks output will not be saved to a file}
 }
 \value{
 List of three data frames: 
@@ -78,11 +59,11 @@ Chops processed AirDAS data into modeling segments (henceforth 'segments'),
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 
 y.proc <- airdas_process(y)
-airdas_effort(y.proc, 3, sp.codes = c("mn", "bm"))
+airdas_effort(y.proc, sp.codes = c("mn", "bm"), seg.km = 3)
 
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
-  y.proc, 3, sp.codes = c("mn", "bm"), randpicks.load = y.rand
+  y.proc, sp.codes = c("mn", "bm"), seg.km = 3, randpicks.load = y.rand
 )
 
 }

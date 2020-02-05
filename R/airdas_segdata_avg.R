@@ -19,7 +19,7 @@
 #' @keywords internal
 #' 
 #' @export
-airdas_effort_segdata <- function(x, subseg.lengths, eff.id) {
+airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
   #----------------------------------------------------------------------------
   # Prep stuff
   

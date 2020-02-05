@@ -4,7 +4,7 @@
 \alias{airdas_chop_equal}
 \title{Chop AirDAS effort segment length}
 \usage{
-airdas_chop_equal(x, seg.km, randpicks = NULL)
+airdas_chop_equal(x, seg.km, randpicks.load = NULL, randpicks.save = NULL)
 }
 \arguments{
 \item{x}{data frame; processed aerial DAS data from \code{\link{airdas_effort}}.
