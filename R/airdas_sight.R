@@ -1,6 +1,6 @@
 #' Aerial DAS sightings
 #'
-#' Extract sightings and associated information from aerial DAS data
+#' Extract sighting information from aerial DAS data
 #'
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'  or a data frame that can be coerced to a \code{airdas_df} object
@@ -8,16 +8,17 @@
 #' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
 #' @importFrom rlang !!
 #'
-#' @details This function requires the following event codes: 
+#' @details This function expects the following event codes: 
 #'   
-#'   Marine mammal sighting codes: "S" (first sighting) and "s" (resighting); 
-#'   turtle sighting code: "t";
-#'   additional sighting information: "1"
+#'   Marine mammal sighting codes: "S" (sighting) and "s" (resight); 
+#'   Turtle sighting code: "t";
+#'   Aditional sighting information (multipecies sighting): "1"
 #'   
-#'   For more info about the event codes, see 
+#'   For more information about the event codes, see 
 #'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
 #'   
-#'   A 'standard sighting' (SightStd in output data frame) means it was by ObsL, ObsB, or ObsR
+#'   A 'standard sighting' (SightStd in output data frame) means it was by 
+#'   ObsL, ObsB, or ObsR (not the recorder or pilot)
 #'   
 #'   Multispecies group size is rounded to nearest integer using round(, 0)
 #'   
@@ -40,7 +41,7 @@
 #'   and 2) columns with sighting information
 #'   (observer, species, etc.) extracted from 'Data#' columns as specified in Details.
 #'   The data frame has one row for each sighting,
-#'   or one row for each species of each sighting if it is a multi-species sighting.
+#'   or one row for each species of each sighting if it is a multispecies sighting.
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")

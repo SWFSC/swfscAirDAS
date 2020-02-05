@@ -2,18 +2,44 @@
 #' 
 #' Determine lengths of segments into which to chop aerial DAS effort data
 #' 
-#' @param x data frame; processed aerial DAS data output from \link{airdas_process} (or subsequent airdas function)
-#' @param seg.km numeric; length of effort segments 
-#' @param randpicks numeric; if not NULL, segment positions that get leftover segment bits todo
+#' @param x data frame; processed aerial DAS data from \code{\link{airdas_effort}}.
+#'   This data must contain exactly one continuous effort section, 
+#'   i.e. it must begin with a "T"/"R" event and end with a "E"/"O" event 
+#'   (with no "T"/"R"/"E"/"O" events in between)
+#' @param seg.km numeric; length of effort segments. Passed from \code{\link{airdas_effort}}
+#' @param randpicks numeric; segment positions that get leftover segment bits as described in Details
 #' 
 #' @importFrom dplyr between
 #' @importFrom stats runif
 #' @importFrom swfscMisc distance
 #' @importFrom utils head tail
 #' 
-#' @details Chop continuous effort section into effort segments (modeling segments)
+#' @details This function chops continuous effort sections (henceforth 'effort sections') 
+#'   from the processed AirDAS data into modeling segments (henceforth 'segments') of equal length. 
+#'   Each effort sections runs from a T/R event to its corresponding E/O event. 
+#' 
+#'   If the extra length remaining after chopping is greater than or equal to half of the 
+#'   target segment length (i.e. \code{>= 0.5*seg.km}), 
+#'   it is randomly assigned to a portion of the effort section and 
+#'   the associated distance provided as an offset value (Fig. 1a). 
+#'   If the extra length is less than half of the target segment length (i.e. \code{< 0.5*seg.km}), 
+#'   it is randomly added to one of the equal-length segments and the associated distance provided 
+#'   as an offset value (Fig. 1b). 
+#'   Therefore, the length of each segment is constrained to be between one half and one and one half of 
+#'   \code{seg.km} (i.e. \code{0.5*seg.km to 1.5*seg.km}), 
+#'   and the central tendency is approximately equal to the target segment length. 
+#'   The only exception is when a continuous effort section is less than one half of the 
+#'   target segment length (i.e. \code{< 0.5*seg.km}), 
+#'   in which case the entire continuous effort section is a single segment (Fig. 1c).
 #'   
-#'   Calculates dist_from_prev using swfscMisc::distance, if necessary
+#'   If the length of the effort section is zero and there are more than two events 
+#'   (i.e., events between the "T"/R" and "E"/"O" events),
+#'   the function throws a warning (but still returns a length of zero for that segment).
+#'   
+#'   If the column \code{dist_from_prev} does not exist 
+#'   (it should be calculated in  \code{\link{airdas_effort}}), 
+#'   then the distance between the lat/lon points of subsequent events 
+#'   is calculated using \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}.
 #'   
 #'   randpicks description
 #'   
@@ -27,16 +53,17 @@
 #'   If segment length is greater than the target length and remainder is less than half of the target length, 
 #'   the remainder added to a random segment
 #'   
-#' @return List of...
+#' @return List of:
+#' \itemize{
+#'   \item The AirDAS data, with a \code{effort_seg} column added..
+#'   \item
+#'   \item The index of 
+#' }
 #' 
-#' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' y.proc <- airdas_process(y)
-#' 
-#' airdas_effort_chop(y.proc[1:33, ], 1)
+#' @keywords internal
 #' 
 #' @export
-airdas_effort_chop <- function(x, seg.km, randpicks = NULL) {
+airdas_chop_equal <- function(x, seg.km, randpicks = NULL) {
   #----------------------------------------------------------------------------
   das.df <- x #TODO: quick fix for function argument
   

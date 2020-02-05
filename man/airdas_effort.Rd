@@ -25,33 +25,54 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 
 \item{...}{ignored}
 
-\item{seg.km}{numeric; length of effort segments}
+\item{seg.km}{numeric; maximum length of modeling segments}
 
-\item{sp.codes}{character; species codes to include in segdata (and siteinfo?)}
+\item{sp.codes}{character; species code(s) to include in segdata}
 
-\item{randpicks.load}{character; file to run read.csv on and pass output to airdas_effort_chop TODO}
+\item{randpicks.load}{character or \code{NULL}; if character, 
+filename of past randpicks output to load and use 
+(passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
+\code{NULL} if new randpicks values should be generated}
 
-\item{randpicks.save}{character; if not}
+\item{randpicks.save}{character or \code{NULL}; if character, 
+file to which to save randpicks output
+(passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
+If \code{NULL}, randpicks output will not be saved to a file}
 }
 \value{
-List of segdata, siteinfo, and randpicks data frames
+List of three data frames: 
+  \itemize{
+    \item segdata: one row for every segment, and columns for information such as
+      unique segment number, start/end/midpoint coordinates, conditions (e.g. Beaufort), 
+      and number of sightings and number of animals on that segment for evey species 
+      indicated in \code{sp.codes}. 
+    \item siteinfo: details for each sighting, including the segdata segment number it belongs on, 
+      segment mid points (lat/lon), and whether 
+      the sighting was included in the segdata segments (column \code{included}), 
+      in addition to the other output information described in \code{\link{airdas_sight}}.
+    \item randpicks: see \code{\link{airdas_chop_equal}}
+  }
 }
 \description{
 Summarize aerial DAS data by effort segments
 }
 \details{
-Todo
+Chops processed AirDAS data into modeling segments (henceforth 'segments'), 
+  and assigns sightings and related information (e.g., weather conditions) to each segment. 
+  This function returns all relevant information for the effort segments and 
+  associated sightings ('segdata' and 'siteinfo', respectively). 
+  Before chopping, the AirDAS data is filtered for events (rows) where either
+  the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O". 
+  In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
+  where effort sections run from "T"/"R" to "E"/"O" events (inclusive). 
 
-  "continuous effort sections" and "modeling segments"
+  Currently, the only available chopping method is chopping effort sections into 
+  equal-length modeling segments of length \code{seg.km}, 
+  and doing a weighted average of the conditions for the length of that segment. 
+  See \code{\link{airdas_chop_equal}} for more details about the segment chopping.
 
-  Filters for events where \code{OnEffort} is \code{TRUE}
-  
-  Continuous effort sections ID'd by T and R events
-
-  Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) 
-  between events (lat/lon points)
-  
-  Describe segdata, siteinfo, and randpicks
+  The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
+  calculate the distance (in km) between the lat/lon points of subsequent events.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")

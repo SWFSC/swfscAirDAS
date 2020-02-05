@@ -4,31 +4,52 @@
 #' 
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'  or a data frame that can be coerced to a \code{airdas_df} object
-#' @param seg.km numeric; length of effort segments 
-#' @param sp.codes character; species codes to include in segdata (and siteinfo?)
-#' @param randpicks.load character; file to run read.csv on and pass output to airdas_effort_chop TODO
-#' @param randpicks.save character; if not 
+#' @param seg.km numeric; maximum length of modeling segments
+#' @param sp.codes character; species code(s) to include in segdata
+#' @param randpicks.load character or \code{NULL}; if character, 
+#'   filename of past randpicks output to load and use 
+#'   (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
+#'   \code{NULL} if new randpicks values should be generated
+#' @param randpicks.save character or \code{NULL}; if character, 
+#'   file to which to save randpicks output
+#'   (passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
+#'   If \code{NULL}, randpicks output will not be saved to a file
 #' @param ... ignored
 #' 
-#' @importFrom dplyr %>%  between bind_cols filter full_join group_by summarise
+#' @importFrom dplyr %>% between bind_cols filter full_join group_by summarise
 #' @importFrom rlang !!
 #' @importFrom swfscMisc distance
 #' @importFrom utils read.csv write.csv
 #' 
-#' @details Todo
+#' @details Chops processed AirDAS data into modeling segments (henceforth 'segments'), 
+#'   and assigns sightings and related information (e.g., weather conditions) to each segment. 
+#'   This function returns all relevant information for the effort segments and 
+#'   associated sightings ('segdata' and 'siteinfo', respectively). 
+#'   Before chopping, the AirDAS data is filtered for events (rows) where either
+#'   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O". 
+#'   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
+#'   where effort sections run from "T"/"R" to "E"/"O" events (inclusive). 
 #' 
-#'   "continuous effort sections" and "modeling segments"
+#'   Currently, the only available chopping method is chopping effort sections into 
+#'   equal-length modeling segments of length \code{seg.km}, 
+#'   and doing a weighted average of the conditions for the length of that segment. 
+#'   See \code{\link{airdas_chop_equal}} for more details about the segment chopping.
 #' 
-#'   Filters for events where \code{OnEffort} is \code{TRUE}
-#'   
-#'   Continuous effort sections ID'd by T and R events
+#'   The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
+#'   calculate the distance (in km) between the lat/lon points of subsequent events.
 #' 
-#'   Uses \link[swfscMisc]{distance}, \code{method = "vincenty"} to calculate distance (in km) 
-#'   between events (lat/lon points)
-#'   
-#'   Describe segdata, siteinfo, and randpicks
-#' 
-#' @return List of segdata, siteinfo, and randpicks data frames
+#' @return List of three data frames: 
+#'   \itemize{
+#'     \item segdata: one row for every segment, and columns for information such as
+#'       unique segment number, start/end/midpoint coordinates, conditions (e.g. Beaufort), 
+#'       and number of sightings and number of animals on that segment for evey species 
+#'       indicated in \code{sp.codes}. 
+#'     \item siteinfo: details for each sighting, including the segdata segment number it belongs on, 
+#'       segment mid points (lat/lon), and whether 
+#'       the sighting was included in the segdata segments (column \code{included}), 
+#'       in addition to the other output information described in \code{\link{airdas_sight}}.
+#'     \item randpicks: see \code{\link{airdas_chop_equal}}
+#'   }
 #' 
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -82,7 +103,6 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   stopifnot(all(between(das.oneff, 1, nrow(das.df))))
   
   das.df <- das.df %>%
-    # filter(.data$OnEffort | .data$Event %in% c("O", "E")) %>% #bug if consecutive O/E events
     mutate(cont_eff_section = cumsum(.data$Event %in% c("T", "R")))
   das.df <- das.df[das.oneff, ]
   rm(das.oneff)
@@ -134,7 +154,7 @@ airdas_effort.airdas_df <- function(x, seg.km, sp.codes,
   eff.list <- lapply(eff.uniq, function(i, das.df, seg.km, r.pos) {
     das.curr <- filter(das.df, .data$cont_eff_section == i)
     # Get segment lengths
-    y <- airdas_effort_chop(das.curr, seg.km, r.pos[i])
+    y <- airdas_chop_equal(das.curr, seg.km, r.pos[i])
     y[[1]]$seg_idx <- paste0(i, "_", y[[1]]$effort_seg)
     
     # Summarize info by segment
