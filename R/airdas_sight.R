@@ -28,7 +28,7 @@
 #'     Sighting number   \tab Data1          \tab       \tab SightNo\cr
 #'     Observer          \tab Data2          \tab Data1 \tab Obs\cr
 #'     Declination angle \tab Data3          \tab Data2 \tab Angle\cr
-#'     Group size (best estimate) \tab Data4 \tab NA    \tab Gs \cr
+#'     Group size (best estimate) \tab Data4 \tab NA    \tab GsSp \cr
 #'     Species code 1    \tab Data5          \tab Data3 \tab Sp \cr
 #'     Species code 2    \tab Data6          \tab NA    \tab todo \cr
 #'     Species code 3    \tab Data7          \tab NA    \tab todo \cr
@@ -115,7 +115,8 @@ airdas_sight.airdas_df <- function(x) {
   # Add multispecies sightings back into sight.df
   sight.df <- sight.df %>% 
     filter(!(.data$sight_cumsum %in% sight.cumsum.mult)) %>% 
-    mutate(GsTotal = as.integer(.data$Data4), Multi = FALSE) %>% 
+    mutate(GsTotal = ifelse(.data$Event == "S", as.integer(.data$Data4), NA), 
+           Multi = ifelse(.data$Event == "s", NA, FALSE)) %>% 
     bind_rows(sight.mult) %>% 
     arrange(.data$sight_cumsum) %>% 
     mutate(idx = seq_along(.data$sight_cumsum)) %>% 
@@ -144,7 +145,9 @@ airdas_sight.airdas_df <- function(x) {
            Sp = case_when(.data$Event == "S" ~ .data$Data5,
                           .data$Event == "t" ~ .data$Data3), 
            GsSp = case_when(.data$Event == "S" ~ as.integer(.data$Data4),
-                            .data$Event == "t" ~ as.integer(1))) %>% 
+                            .data$Event == "t" ~ as.integer(1)), 
+           GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
+                               .data$Event == "t" ~ 1)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
            .data$Sp, .data$GsSp, .data$GsTotal, .data$Multi)
   

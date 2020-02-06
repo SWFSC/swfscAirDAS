@@ -47,7 +47,7 @@ This function expects the following event codes:
     Sighting number   \tab Data1          \tab       \tab SightNo\cr
     Observer          \tab Data2          \tab Data1 \tab Obs\cr
     Declination angle \tab Data3          \tab Data2 \tab Angle\cr
-    Group size (best estimate) \tab Data4 \tab NA    \tab Gs \cr
+    Group size (best estimate) \tab Data4 \tab NA    \tab GsSp \cr
     Species code 1    \tab Data5          \tab Data3 \tab Sp \cr
     Species code 2    \tab Data6          \tab NA    \tab todo \cr
     Species code 3    \tab Data7          \tab NA    \tab todo \cr
