@@ -16,7 +16,7 @@ airdas_effort(x, ...)
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
 or a data frame that can be coerced to a \code{airdas_df} object}
 
-\item{...}{arguments passed to chopping function specified by \code{method}}
+\item{...}{arguments passed to the chopping function specified using \code{method}}
 
 \item{method}{character; method to use to chop AirDAS data into effort segments.
 Currently the only option is "equallength".}
@@ -26,12 +26,12 @@ Currently the only option is "equallength".}
 \value{
 List of three data frames: 
   \itemize{
-    \item segdata: one row for every segment, and columns for information such as
+    \item segdata: one row for every segment, and columns for information including
       unique segment number, start/end/midpoint coordinates, conditions (e.g. Beaufort), 
-      and number of sightings and number of animals on that segment for evey species 
+      and number of sightings and number of animals on that segment for every species 
       indicated in \code{sp.codes}. 
-    \item siteinfo: details for each sighting, including the segdata segment number it belongs on, 
-      segment mid points (lat/lon), and whether 
+    \item siteinfo: details for each sighting, including the unique segment number 
+      it is associated with, segment mid points (lat/lon), and whether 
       the sighting was included in the segdata segments (column \code{included}), 
       in addition to the other output information described in \code{\link{airdas_sight}}.
     \item randpicks: see \code{\link{airdas_chop_equal}}
@@ -49,7 +49,8 @@ This is the top-level function for chopping processed AirDAS data
   Before chopping, the AirDAS data is filtered for events (rows) where either
   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O". 
   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
-  where effort sections run from "T"/"R" to "E"/"O" events (inclusive). 
+  where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
+  and then passed to the chopping function specified using \code{method}. 
 
   Currently, the only available chopping method is "equallength": 
   chopping effort sections into equal-length segments of length \code{seg.km}, 
@@ -64,11 +65,15 @@ This is the top-level function for chopping processed AirDAS data
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 
 y.proc <- airdas_process(y)
-airdas_effort(y.proc, sp.codes = c("mn", "bm"), seg.km = 3)
+airdas_effort(
+  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
+  seg.km = 3
+)
 
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
-  y.proc, sp.codes = c("mn", "bm"), seg.km = 3, randpicks.load = y.rand
+  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
+  seg.km = 3, randpicks.load = y.rand
 )
 
 }

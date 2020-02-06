@@ -69,9 +69,12 @@ Then you can summarize the processed AirDAS data
 # Summarize sighting information
 y.sight <- airdas_sight(y.proc)
 
-# Chop continuous effort sections into effort (modeling) segments, 
-#   and summarize information for each segment
-y.eff <- airdas_effort(y.proc, 3, sp.codes = c("mn", "bm", "qq"), randpicks.load = y.eff.randpicks)
+# Chop continuous effort sections into equal length effort (modeling) segments, 
+#   and get summary information for each segment
+y.eff <- airdas_effort(
+  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
+  seg.km = 3, randpicks.load = y.eff.randpicks
+)
 y.eff.segdata <- y.eff[[1]]
 y.eff.siteinfo <- y.eff[[2]]
 y.eff.randpicks <- y.eff[[3]]

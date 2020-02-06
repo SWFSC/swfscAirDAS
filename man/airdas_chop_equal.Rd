@@ -2,69 +2,90 @@
 % Please edit documentation in R/airdas_chop_equal.R
 \name{airdas_chop_equal}
 \alias{airdas_chop_equal}
-\title{Chop AirDAS effort segments by length}
+\title{Chop AirDAS data - equal length}
 \usage{
 airdas_chop_equal(x, seg.km, randpicks.load = NULL, randpicks.save = NULL)
 }
 \arguments{
 \item{x}{data frame; processed aerial DAS data from \code{\link{airdas_effort}}.
-This data must contain exactly one continuous effort section, 
-i.e. it must begin with a "T"/"R" event and end with a "E"/"O" event 
-(with no "T"/"R"/"E"/"O" events in between)}
+This data must be filtered for 'OnEffort' events; see the Details section below}
 
-\item{seg.km}{numeric; length of effort segments. Passed from \code{\link{airdas_effort}}}
+\item{seg.km}{numeric; target segment length, in kilometers}
 
-\item{randpicks}{numeric; segment positions that get leftover segment bits as described in Details}
+\item{randpicks.load}{character or \code{NULL}; if character, 
+filename of past randpicks output to load and use 
+(passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
+\code{NULL} if new randpicks values should be generated}
+
+\item{randpicks.save}{character or \code{NULL}; if character, 
+file to which to save randpicks output
+(passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
+If \code{NULL}, randpicks output will not be saved to a file}
 }
 \value{
 List of:
 \itemize{
-  \item segdata:
-  \item siteinfo: 
-  \item randpick: 
+  \item \code{x}, with columns added for the corresponding unique segment code and number
+  \item segdata: data frame with one row for each segment, and columns with
+    relevant data (see \code{\link{airdas_effort}} for specifics)
+  \item randpicks: data frame with record of length allocations 
+    (see Details section above)
 }
 }
 \description{
-Determine lengths of segments into which to chop aerial DAS effort data
+Chop AirDAS data into equal-length effort segments, averaging conditions by segment
 }
 \details{
-This function chops continuous effort sections (henceforth 'effort sections') 
-  from the processed AirDAS data into modeling segments (henceforth 'segments') of equal length. 
+This function is intended to be called by \code{\link{airdas_effort}} 
+  when the "equallength" method is specified. 
+  Thus, \code{x} must be filtered for events (rows) where either
+  the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O"; 
+  see \code{\link{airdas_effort}} for more details. 
+  Continuous effort sections (henceforth 'effort sections') from \code{x}
+  are chopped into modeling segments (henceforth 'segments') of equal length. 
   Each effort sections runs from a T/R event to its corresponding E/O event. 
+  Then \code{\link{airdas_segdata_avg}} is called to get relevant segdata information.
 
-  If the extra length remaining after chopping is greater than or equal to half of the 
-  target segment length (i.e. \code{>= 0.5*seg.km}), 
-  it is randomly assigned to a portion of the effort section and 
-  the associated distance provided as an offset value (Fig. 1a). 
-  If the extra length is less than half of the target segment length (i.e. \code{< 0.5*seg.km}), 
-  it is randomly added to one of the equal-length segments and the associated distance provided 
-  as an offset value (Fig. 1b). 
-  Therefore, the length of each segment is constrained to be between one half and one and one half of 
-  \code{seg.km} (i.e. \code{0.5*seg.km to 1.5*seg.km}), 
-  and the central tendency is approximately equal to the target segment length. 
-  The only exception is when a continuous effort section is less than one half of the 
-  target segment length (i.e. \code{< 0.5*seg.km}), 
-  in which case the entire continuous effort section is a single segment (Fig. 1c).
+  When chopping the effort sections in segments of length \code{seg.km}, 
+  there are several possible scenarios:
+  \itemize{
+    \item The extra length remaining after chopping is greater than or equal to 
+      half of the target segment length (i.e. \code{>= 0.5*seg.km}): 
+      the extra length is assigned to a random portion of the effort section as its own segment 
+      (Fig. 1a TODO)
+    \item The extra length remaining after chopping is less than half of the 
+      target segment length (i.e. \code{< 0.5*seg.km}): 
+      the extra length is added to one of the (randomly selected) equal-length segments 
+      (Fig. 1b TODO).
+    \item The length of the effort section is less than or equal to 
+      the target segment length: the entire segment becomes a segment 
+      (Fig. 1c TODO)
+    \item The length of the effort section is zero: a segment of length zero. 
+      If there are more than two events (the "T"/R" and "E"/"O" events),
+      the function throws a warning.
+  }
   
-  If the length of the effort section is zero and there are more than two events 
-  (i.e., events between the "T"/R" and "E"/"O" events),
-  the function throws a warning (but still returns a length of zero for that segment).
+  Therefore, the length of each segment is constrained to be between 
+  one half and one and one half of \code{seg.km} 
+  (i.e. \code{0.5*seg.km <=} segment length \code{>=1.5*seg.km}), 
+  and the central tendency is approximately equal to the target segment length. 
+  The only exception is when a continuous effort section is less than 
+  one half of the target segment length (i.e. \code{< 0.5*seg.km}; 
+  Fig. 1c TODO).
+  
+  'Randpicks' is a record of the random assignments that were made when 
+  chopping the effort sections into segments, and can be saved to allow 
+  users to recreate the same random allocation of extra km when chopping. 
+  The randpicks returned by this function is a data frame with two columns: 
+  the number of the effort section and the randpick value. 
+  If \code{randpicks.save} is not \code{NULL}, this data frame is written to a CSV file.
+  This CSV file can then be specified using the \code{randpicks.load} argument
+  to recreate the same effort segments from \code{x} 
+  (i.e., using the same AirDAS data) in the future.
   
   If the column \code{dist_from_prev} does not exist 
-  (it should be calculated in  \code{\link{airdas_effort}}), 
+  (it should be calculated and added to \code{x} in \code{\link{airdas_effort}}), 
   then the distance between the lat/lon points of subsequent events 
   is calculated using \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}.
-  
-  randpicks description
-  
-  If segment length is 0, nothing..? 
-  
-  If segment length is less than target length, only make one segment
-  
-  If segment length is greater than the target length and remainder is greater than or equal to half of the target length, 
-  the remainder is its own (randomly placed) segment
-  
-  If segment length is greater than the target length and remainder is less than half of the target length, 
-  the remainder added to a random segment
 }
 \keyword{internal}
