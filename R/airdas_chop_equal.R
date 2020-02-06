@@ -1,4 +1,4 @@
-#' Chop AirDAS effort segment length
+#' Chop AirDAS effort segments by length
 #' 
 #' Determine lengths of segments into which to chop aerial DAS effort data
 #' 
@@ -12,7 +12,7 @@
 #' @importFrom dplyr between
 #' @importFrom stats runif
 #' @importFrom swfscMisc distance
-#' @importFrom utils head tail
+#' @importFrom utils head read.csv write.csv
 #' 
 #' @details This function chops continuous effort sections (henceforth 'effort sections') 
 #'   from the processed AirDAS data into modeling segments (henceforth 'segments') of equal length. 
@@ -55,9 +55,9 @@
 #'   
 #' @return List of:
 #' \itemize{
-#'   \item The AirDAS data, with a \code{effort_seg} column added..
-#'   \item
-#'   \item The index of 
+#'   \item segdata:
+#'   \item siteinfo: 
+#'   \item randpick: 
 #' }
 #' 
 #' @keywords internal
@@ -65,11 +65,12 @@
 #' @export
 airdas_chop_equal <- function(x, seg.km, randpicks.load = NULL, randpicks.save = NULL) {
   #----------------------------------------------------------------------------
-  # das.df.orig <- x
-  # x <- das.df.orig
-  
   # Input checks
-  # TODO: what to do if multiple continuous effort sections are in das.df?
+  if (missing(seg.km)) {
+    stop("You must specify a 'seg.km' argument when using the \"equallength\" ", 
+         "method. See `?airdas_chop_equal` for more details")
+  }
+  # TODO: checks of x?
   # stopifnot(
   #   all.equal(unique(cumsum(das.df$Event %in% c("R", "T"))), 1), 
   #   all(das.df$OnEffort | das.df$Event %in% c("O", "E"))
@@ -88,7 +89,7 @@ airdas_chop_equal <- function(x, seg.km, randpicks.load = NULL, randpicks.save =
       distance(y1, x1, y2, x2, units = "km", method = "vincenty")
     },
     x1 = head(x$Lon, -1), y1 = head(x$Lat, -1),
-    x2 = tail(x$Lon, -1), y2 = tail(x$Lat, -1), 
+    x2 = x$Lon[-1], y2 = x$Lat[-1], 
     SIMPLIFY = TRUE)
     
     x$dist_from_prev <- c(NA, dist.from.prev)

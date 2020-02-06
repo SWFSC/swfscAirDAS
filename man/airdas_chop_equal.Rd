@@ -2,7 +2,7 @@
 % Please edit documentation in R/airdas_chop_equal.R
 \name{airdas_chop_equal}
 \alias{airdas_chop_equal}
-\title{Chop AirDAS effort segment length}
+\title{Chop AirDAS effort segments by length}
 \usage{
 airdas_chop_equal(x, seg.km, randpicks.load = NULL, randpicks.save = NULL)
 }
@@ -19,9 +19,9 @@ i.e. it must begin with a "T"/"R" event and end with a "E"/"O" event
 \value{
 List of:
 \itemize{
-  \item The AirDAS data, with a \code{effort_seg} column added..
-  \item
-  \item The index of 
+  \item segdata:
+  \item siteinfo: 
+  \item randpick: 
 }
 }
 \description{

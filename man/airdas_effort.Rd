@@ -4,19 +4,22 @@
 \alias{airdas_effort}
 \alias{airdas_effort.data.frame}
 \alias{airdas_effort.airdas_df}
-\title{Summarize aerial DAS effort}
+\title{Summarize AirDAS effort}
 \usage{
 airdas_effort(x, ...)
 
 \method{airdas_effort}{data.frame}(x, ...)
 
-\method{airdas_effort}{airdas_df}(x, sp.codes, ...)
+\method{airdas_effort}{airdas_df}(x, method, sp.codes, ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
 or a data frame that can be coerced to a \code{airdas_df} object}
 
-\item{...}{passed to TODO}
+\item{...}{arguments passed to chopping function specified by \code{method}}
+
+\item{method}{character; method to use to chop AirDAS data into effort segments.
+Currently the only option is "equallength".}
 
 \item{sp.codes}{character; species code(s) to include in segdata}
 }
@@ -35,22 +38,24 @@ List of three data frames:
   }
 }
 \description{
-Summarize aerial DAS data by effort segments
+Chop AirDAS data into effort segments
 }
 \details{
-Chops processed AirDAS data into modeling segments (henceforth 'segments'), 
-  and assigns sightings and related information (e.g., weather conditions) to each segment. 
-  This function returns all relevant information for the effort segments and 
-  associated sightings ('segdata' and 'siteinfo', respectively). 
+This is the top-level function for chopping processed AirDAS data 
+  into modeling segments (henceforth 'segments'), and assigning sightings 
+  and related information (e.g., weather conditions) to each segment. 
+  This function returns data frames with all relevant information for the 
+  effort segments and associated sightings ('segdata' and 'siteinfo', respectively). 
   Before chopping, the AirDAS data is filtered for events (rows) where either
   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O". 
   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
   where effort sections run from "T"/"R" to "E"/"O" events (inclusive). 
 
-  Currently, the only available chopping method is chopping effort sections into 
-  equal-length modeling segments of length \code{seg.km}, 
+  Currently, the only available chopping method is "equallength": 
+  chopping effort sections into equal-length segments of length \code{seg.km}, 
   and doing a weighted average of the conditions for the length of that segment. 
-  See \code{\link{airdas_chop_equal}} for more details about the segment chopping.
+  See \code{\link{airdas_chop_equal}} for more details about this method, 
+  including arguments that must be passed to it via \code{...}.
 
   The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
   calculate the distance (in km) between the lat/lon points of subsequent events.
