@@ -82,31 +82,24 @@ airdas_effort.data.frame <- function(x, ...) {
 #' @name airdas_effort
 #' @export
 airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
-  # #----------------------------------------------------------------------------
-  # # TODO: format.. checks
-  # stopifnot(
-  #   sum(is.na(das.df$Lat)) == 0,
-  #   sum(is.na(das.df$Lon)) == 0, 
-  #   sum(das.df$Event == "#") == 0
-  # )
+  #----------------------------------------------------------------------------
+  # Input checks
+  methods.acc <- c("equallength")
+  if (!(length(method) == 1 & (method %in% c("equallength")))) 
+    stop("method must be a string, and must be one of: ", 
+         paste0("\"", paste(methods.acc, collapse = "\", \""), "\""))
+  
   
   #----------------------------------------------------------------------------
   # Prep
-  stopifnot(
-    sum(is.na(x$Lat)) == 0,
-    sum(is.na(x$Lon)) == 0, 
-    sum(x$Event == "#") == 0, 
-    method %in% c("equallength")
-  )
-  
-  ### Filter for and number continuous effort sections
-  ###   'on effort + 1' is to capture O/E event
+  # Filter for and number continuous effort sections
+  #   'on effort + 1' is to capture O/E event
   x.oneff.which <- sort(unique(c(which(x$OnEffort), which(x$OnEffort) + 1)))
   stopifnot(all(between(x.oneff.which, 1, nrow(x))))
   
   x.oneff <- x[x.oneff.which, ]
   
-  ### For each event, calculate distance to previous event
+  # For each event, calculate distance to previous event
   dist.from.prev <- mapply(function(x1, y1, x2, y2) {
     distance(y1, x1, y2, x2, units = "km", method = "vincenty")
   },

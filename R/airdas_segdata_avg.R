@@ -18,7 +18,8 @@
 #' @importFrom swfscMisc bearing destination
 #' @importFrom utils head
 #' 
-#' @details This function was designed to be called \code{\link{airdas_chop_equal}}.
+#' @details This function should be called by \code{\link{airdas_chop_equal}};
+#'   users should (nearly always) not call it themselves.
 #'   It loops through the events in \code{x}, calculating and storing relevant
 #'   information for each modeling segment as it goes. 
 #'   Because \code{x} is a continuous effort section, it must begin with 
@@ -59,6 +60,23 @@ airdas_segdata_avg.data.frame <- function(x, ...) {
 #' @export
 airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
   #----------------------------------------------------------------------------
+  # Input checks
+  if (!("dist_from_prev" %in% names(x))) 
+    stop("x must contain a 'dist_from_prev' column; ", 
+         "was this function called by airdas_chop_equal()?")
+  
+  stopifnot(
+    inherits(subseg.lengths, c("numeric", "integer")), 
+    inherits(eff.id, c("numeric", "integer"))
+  )
+  
+  if (!all.equal(sum(subseg.lengths), sum(x$dist_from_prev)))
+    stop("The sum of the subseg.lengths values does not equal the sum of the ", 
+         "x$dist_from_prev' values; ", 
+         "was this function called by airdas_chop_equal()?")
+  
+  
+  #----------------------------------------------------------------------------
   # Prep stuff
   das.df <- x
   
@@ -77,10 +95,8 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
   subseg.cumsum <- cumsum(subseg.lengths)
   subseg.mid.cumsum <- (c(0, head(subseg.cumsum, -1)) + subseg.cumsum) / 2
   
-  if (!("dist_from_prev_cumsum" %in% names(das.df))) {
-    stopifnot("dist_from_prev" %in% names(das.df))
+  if (!("dist_from_prev_cumsum" %in% names(das.df)))
     das.df$dist_from_prev_cumsum <- cumsum(das.df$dist_from_prev)
-  }
   
   
   # Store condition data in list for organization and readability

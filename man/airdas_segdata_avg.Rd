@@ -33,7 +33,8 @@ Data frame with the segdata information described above
 Summarize effort data by effort segment, while averaging conditions
 }
 \details{
-This function was designed to be called \code{\link{airdas_chop_equal}}.
+This function should be called by \code{\link{airdas_chop_equal}};
+  users should not call it themselves.
   It loops through the events in \code{x}, calculating and storing relevant
   information for each modeling segment as it goes. 
   Because \code{x} is a continuous effort section, it must begin with 

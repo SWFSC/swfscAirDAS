@@ -109,21 +109,14 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
     stop("You must specify a 'seg.km' argument when using the \"equallength\" ", 
          "method. See `?airdas_chop_equal` for more details")
   }
-  # TODO: checks of x?
-  # stopifnot(
-  #   all.equal(unique(cumsum(das.df$Event %in% c("R", "T"))), 1), 
-  #   all(das.df$OnEffort | das.df$Event %in% c("O", "E"))
-  # )
+  
+  if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
+    stop("x must be filtered for on effort events; see `?airdas_shop_equal")
+  
   
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
-    stopifnot(
-      sum(is.na(x$Lat)) == 0,
-      sum(is.na(x$Lon)) == 0, 
-      sum(x$Event == "#") == 0
-    )
-    
     dist.from.prev <- mapply(function(x1, y1, x2, y2) {
       distance(y1, x1, y2, x2, units = "km", method = "vincenty")
     },
@@ -172,7 +165,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
   
   
   #----------------------------------------------------------------------------
-  # TODO: add loop
+  # For each continuous effort section, get segment lengths and segdata
   eff.list <- lapply(eff.uniq, function(i, x, seg.km, r.pos) {
     #------------------------------------------------------
     ### Get lengths of effort segments
