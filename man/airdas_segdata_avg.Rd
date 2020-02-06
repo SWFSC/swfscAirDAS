@@ -34,7 +34,7 @@ Summarize effort data by effort segment, while averaging conditions
 }
 \details{
 This function should be called by \code{\link{airdas_chop_equal}};
-  users should not call it themselves.
+  users should (nearly always) not call it themselves.
   It loops through the events in \code{x}, calculating and storing relevant
   information for each modeling segment as it goes. 
   Because \code{x} is a continuous effort section, it must begin with 
