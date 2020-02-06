@@ -2,24 +2,45 @@
 % Please edit documentation in R/airdas_segdata_avg.R
 \name{airdas_segdata_avg}
 \alias{airdas_segdata_avg}
-\title{Summarize data within effort segment}
+\title{Summarize data for a continuous effort section}
 \usage{
 airdas_segdata_avg(x, subseg.lengths, eff.id)
 }
 \arguments{
-\item{x}{data frame; todo}
+\item{x}{data frame; a single continuous effort section of AirDAS data}
 
-\item{subseg.lengths}{todo}
+\item{subseg.lengths}{numeric; length of the modeling segments 
+into which \code{x} will be chopped}
 
-\item{eff.id}{numeric; todo}
+\item{eff.id}{numeric; the ID of \code{x} (the current continuous effort section)}
 }
 \value{
-Data frame...
+Data frame with the segdata information described above
 }
 \description{
-Summarize data for continuous effort section by effort segment
+Summarize effort data by effort segment, while averaging conditions
 }
 \details{
-Get summary data for effort segment
+This function was designed to be called \code{\link{airdas_chop_equal}}.
+  It loops through the events in \code{x}, calculating and storing relevant
+  information for each modeling segment as it goes. 
+  Because \code{x} is a continuous effort section, it must begin with 
+  a "T" or "R" event and end with the corresponding "E" or "O" event.
+
+  For each segment, this function reports the 
+  segment ID, transect code, the start/end/midpoints (lat/lon), segment length, 
+  year, month, day, time, observers, and average conditions.
+  
+  The segment ID is designated as \code{eff_id} _ index of the modeling segment.
+  Thus, if \code{eff.id} is \code{1}, then the segment ID for 
+  the second segment from \code{x} is \code{"1_2"}.
+  
+  The average condition values are calculated as a weighted average by distance, 
+  and reported for the following:
+  Beaufort, cloud cover, altitude in feet, aircraft speed in knots, jellyfish code, 
+  and the percentage of the segment with each of haze, kelp, and red tide. 
+  
+  \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}} 
+  are used to calculate the segment midpoints.
 }
 \keyword{internal}

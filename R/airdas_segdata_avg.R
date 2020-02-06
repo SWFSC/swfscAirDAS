@@ -1,20 +1,41 @@
-#' Summarize data within effort segment
+#' Summarize data for a continuous effort section
 #' 
-#' Summarize data for continuous effort section by effort segment
+#' Summarize effort data by effort segment, while averaging conditions
 #' 
-#' @param x data frame; todo
-#' @param subseg.lengths todo
-#' @param eff.id numeric; todo
+#' @param x data frame; a single continuous effort section of AirDAS data
+#' @param subseg.lengths numeric; length of the modeling segments 
+#'   into which \code{x} will be chopped
+#' @param eff.id numeric; the ID of \code{x} (the current continuous effort section)
 #' 
 #' @importFrom dplyr %>% .data bind_cols everything mutate select
-#' @importFrom lubridate year month day
+#' @importFrom lubridate year month day tz
 #' @importFrom stats na.omit
 #' @importFrom swfscMisc bearing destination
 #' @importFrom utils head
 #' 
-#' @details Get summary data for effort segment
+#' @details This function was designed to be called \code{\link{airdas_chop_equal}}.
+#'   It loops through the events in \code{x}, calculating and storing relevant
+#'   information for each modeling segment as it goes. 
+#'   Because \code{x} is a continuous effort section, it must begin with 
+#'   a "T" or "R" event and end with the corresponding "E" or "O" event.
+#' 
+#'   For each segment, this function reports the 
+#'   segment ID, transect code, the start/end/midpoints (lat/lon), segment length, 
+#'   year, month, day, time, observers, and average conditions.
 #'   
-#' @return Data frame...
+#'   The segment ID is designated as \code{eff_id} _ index of the modeling segment.
+#'   Thus, if \code{eff.id} is \code{1}, then the segment ID for 
+#'   the second segment from \code{x} is \code{"1_2"}.
+#'   
+#'   The average condition values are calculated as a weighted average by distance, 
+#'   and reported for the following:
+#'   Beaufort, cloud cover, altitude in feet, aircraft speed in knots, jellyfish code, 
+#'   and the percentage of the segment with each of haze, kelp, and red tide. 
+#'   
+#'   \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}} 
+#'   are used to calculate the segment midpoints.
+#'   
+#' @return Data frame with the segdata information described above
 #' 
 #' @keywords internal
 #' 
@@ -22,18 +43,14 @@
 airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
   #----------------------------------------------------------------------------
   # Prep stuff
-  
-  das.df <- x #TODO: quick fix for function argument
+  das.df <- x
   
   ### Prep - get the info that is consistent for the entire effort length
+  # ymd determined below to be safe
   df.out1 <- data.frame(
-    Date = as.Date(das.df$DateTime[1]), file = das.df$file_das[1], 
-    transect = das.df$Trans[1], 
+    file = das.df$file_das[1], transect = das.df$Trans[1], 
     stringsAsFactors = FALSE
-  ) %>% 
-    mutate(year = year(.data$Date), month = month(.data$Date), 
-           day = day(.data$Date)) %>% 
-    select(.data$file, .data$transect, .data$year, .data$month, .data$day)
+  )
   
   stopifnot(nrow(df.out1) == 1)
   
@@ -66,6 +83,7 @@ airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
   
   stopifnot(nrow(das.df) >= 2)
   
+  #----------------------------------------------------------------------------
   ### Step through each point in effort length, 
   #     calculating segment midpoints, endpoints, and avg conditions as you go
   for (j in 2:nrow(das.df)) {
@@ -173,12 +191,16 @@ airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
           lat1 = startpt.curr[1], lon1 = startpt.curr[2], 
           lat2 = endpt.curr[1], lon2 = endpt.curr[2], 
           mlat = midpt.curr[1], mlon = midpt.curr[2],
-          mtime = mean(c(das.df$DateTime[j.stlin.curr], das.df$DateTime[j])),
+          mDateTime = mean(c(das.df$DateTime[j.stlin.curr], das.df$DateTime[j])),
           dist = subseg.lengths[subseg.curr], 
           ObsL = obs.vals["ObsL"], ObsB = obs.vals["ObsB"], 
           ObsR = obs.vals["ObsR"], Rec = obs.vals["Rec"],
           stringsAsFactors = FALSE
         ) %>% 
+          mutate(mtime = strftime(.data$mDateTime, format = "%H:%M:%S", 
+                                  tz = tz(.data$mDateTime)), 
+                 year = year(.data$mDateTime), month = month(.data$mDateTime), 
+                 day = day(.data$mDateTime)) %>%
           bind_cols(df.out1, conditions.list.df)
         
         segdata.all <- rbind(segdata.all, segdata)
@@ -221,7 +243,13 @@ airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
     }
   }
   
+  
+  #----------------------------------------------------------------------------
   segdata.all %>% 
     select(.data$seg_idx, .data$transect, .data$file, .data$stlin, .data$endlin, 
+           .data$lat1, .data$lon1, .data$lat2, .data$lon2, 
+           .data$mlat, .data$mlon, .data$dist, 
+           .data$mDateTime, .data$year, .data$month, .data$day, .data$mtime, 
            everything())
+  
 }
