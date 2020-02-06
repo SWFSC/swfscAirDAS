@@ -29,6 +29,13 @@
 #'   and doing a weighted average of the conditions for the length of that segment. 
 #'   See \code{\link{airdas_chop_equal}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
+#'   
+#'   The sightings included in the segdata counts are filtered as follows: 
+#'   Beaufort is less than or equal to five, the declination angle is less than 78, 
+#'   it is a standard sighting, and the sighting was made while on effort. 
+#'   Siteinfo, which contains all sightings in \code{x} (see below), 
+#'   contains a column ('included') that indicates whether or not the sighting was
+#'   included in the segdata counts.
 #' 
 #'   The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
 #'   calculate the distance (in km) between the lat/lon points of subsequent events.
@@ -39,9 +46,9 @@
 #'       unique segment number, start/end/midpoint coordinates, conditions (e.g. Beaufort), 
 #'       and number of sightings and number of animals on that segment for every species 
 #'       indicated in \code{sp.codes}. 
-#'     \item siteinfo: details for each sighting, including the unique segment number 
-#'       it is associated with, segment mid points (lat/lon), and whether 
-#'       the sighting was included in the segdata segments (column \code{included}), 
+#'     \item siteinfo: details for all sightings in \code{x}, including: 
+#'       the unique segment number it is associated with, segment mid points (lat/lon), 
+#'       and whether the sighting was included in the segdata counts (column \code{included}), 
 #'       in addition to the other output information described in \code{\link{airdas_sight}}.
 #'     \item randpicks: see \code{\link{airdas_chop_equal}}
 #'   }

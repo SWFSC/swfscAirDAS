@@ -40,7 +40,8 @@ airdas_process.data.frame <- function(x, ...) {
 #' @importFrom dplyr %>% select
 #' @importFrom rlang !!
 #'
-#' @details If \code{x} is a character, it is assumed to be a filepath and first passed to \code{\link{airdas_read}}.
+#' @details If \code{x} is a character, it is assumed to be a filepath 
+#'   and first passed to \code{\link{airdas_read}}.
 #'   This output is then passed to \code{airdas_process}.
 #'      
 #'   AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
@@ -62,6 +63,8 @@ airdas_process.data.frame <- function(x, ...) {
 #'       The 'EffortDot' column is ignored
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
+#'   
+#'   See \code{\link{airdas_format_pdf}} for more information about AirDAS format requirements
 #'   
 #' @return An \code{airdas_df} object, which is also a data frame.
 #'   It consists of the input data frame, i.e. the output of \code{\link{airdas_read}},

@@ -3,43 +3,32 @@
 #' Extract sighting information from aerial DAS data
 #'
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
-#'  or a data frame that can be coerced to a \code{airdas_df} object
+#'   or a data frame that can be coerced to a \code{airdas_df} object
 #' 
 #' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
 #' @importFrom rlang !!
 #'
-#' @details This function expects the following event codes: 
+#' @details AirDAS events contain specific information in the 'Data#' columns,
+#'   with the information depending on the event code for that row.
+#'   This function extracts relevant data for sighting events, and returns a
+#'   data frame with dedicated columns for each piece of sighting information.
+#'   This function recognizes the following types of sightings: 
+#'   marine mammal sightings (event code "S"), marine mammal resights (code "s"), 
+#'   and turtle sightings (code "t"). 
+#'   Multi-species marine mammal sightings are also followed by a "1" event.
+#'   See \code{\link{airdas_format_pdf}} for more information about events and event formats.
 #'   
-#'   Marine mammal sighting codes: "S" (sighting) and "s" (resight); 
-#'   Turtle sighting code: "t";
-#'   Aditional sighting information (multipecies sighting): "1"
+#'   Abbreviations used in column names: Gs = group size, Sp = species, 
+#'   Multi = multispecies.
+#' 
+#'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
+#'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
 #'   
-#'   For more information about the event codes, see 
-#'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
-#'   
-#'   A 'standard sighting' (SightStd in output data frame) means it was by 
-#'   ObsL, ObsB, or ObsR (not the recorder or pilot)
-#'   
-#'   Multispecies group size is rounded to nearest integer using round(, 0)
-#'   
-#'   This function assumes the following 
-#'   \tabular{llll}{
-#'     \emph{Information} \tab \emph{Mammal sighting} \tab \emph{Turtle sighting} \tab \emph{New column name}\cr
-#'     Sighting number   \tab Data1          \tab       \tab SightNo\cr
-#'     Observer          \tab Data2          \tab Data1 \tab Obs\cr
-#'     Declination angle \tab Data3          \tab Data2 \tab Angle\cr
-#'     Group size (best estimate) \tab Data4 \tab NA    \tab GsSp \cr
-#'     Species code 1    \tab Data5          \tab Data3 \tab Sp \cr
-#'     Species code 2    \tab Data6          \tab NA    \tab todo \cr
-#'     Species code 3    \tab Data7          \tab NA    \tab todo \cr
-#'     Turtle size (ft)  \tab NA             \tab Data4 \tab todo\cr
-#'     Travel direction (deg) \tab NA        \tab Data5 \tab todo\cr
-#'     Tail visible?     \tab NA             \tab Data6 \tab todo\cr
-#'   }
+#'   Multispecies group sizes are rounded to nearest integer using \code{round(, 0)}.
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
-#'   and 2) columns with sighting information
-#'   (observer, species, etc.) extracted from 'Data#' columns as specified in Details.
+#'   and 2) columns with sighting information (observer, species, etc.) 
+#'   extracted from 'Data#' columns as specified in Details.
 #'   The data frame has one row for each sighting,
 #'   or one row for each species of each sighting if it is a multispecies sighting.
 #'
