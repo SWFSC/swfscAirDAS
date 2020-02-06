@@ -68,7 +68,7 @@ airdas_effort <- function(x, ...) UseMethod("airdas_effort")
 #' @name airdas_effort
 #' @export
 airdas_effort.data.frame <- function(x, ...) {
-  airdas_effort(as_airdas_df(x),...)
+  airdas_effort(as_airdas_df(x), ...)
 }
 
 
@@ -77,8 +77,6 @@ airdas_effort.data.frame <- function(x, ...) {
 airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   # #----------------------------------------------------------------------------
   # # TODO: format.. checks
-  # das.df <- x
-  # 
   # stopifnot(
   #   sum(is.na(das.df$Lat)) == 0,
   #   sum(is.na(das.df$Lon)) == 0, 
@@ -115,7 +113,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   #----------------------------------------------------------------------------
   # Chop and summarize effort using specified method
   if (method == "equallength") {
-    eff.list <- airdas_chop_equal(x.oneff, ...)
+    eff.list <- airdas_chop_equal(as_airdas_df(x.oneff), ...)
     x.eff <- eff.list[[1]]
     segdata <- eff.list[[2]]
     randpicks <- eff.list[[3]]

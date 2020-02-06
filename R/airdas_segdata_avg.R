@@ -2,10 +2,15 @@
 #' 
 #' Summarize effort data by effort segment, while averaging conditions
 #' 
-#' @param x data frame; a single continuous effort section of AirDAS data
+#' @param x \code{airdas_df} object, 
+#'   or a data frame that can be coerced to a \code{airdas_df} object.
+#'   Must must be filtered for 'OnEffort' events and 
+#'   contain a single continuous effort section of AirDAS data; 
+#'   see the Details section below
 #' @param subseg.lengths numeric; length of the modeling segments 
 #'   into which \code{x} will be chopped
 #' @param eff.id numeric; the ID of \code{x} (the current continuous effort section)
+#' @param ... ignored
 #' 
 #' @importFrom dplyr %>% .data bind_cols everything mutate select
 #' @importFrom lubridate year month day tz
@@ -40,7 +45,19 @@
 #' @keywords internal
 #' 
 #' @export
-airdas_segdata_avg <- function(x, subseg.lengths, eff.id) {
+airdas_segdata_avg <- function(x, ...) UseMethod("airdas_segdata_avg")
+
+
+#' @name airdas_segdata_avg
+#' @export
+airdas_segdata_avg.data.frame <- function(x, ...) {
+  airdas_segdata_avg(as_airdas_df(x), ...)
+}
+
+
+#' @name airdas_segdata_avg
+#' @export
+airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
   #----------------------------------------------------------------------------
   # Prep stuff
   das.df <- x

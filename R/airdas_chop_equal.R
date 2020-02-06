@@ -2,9 +2,11 @@
 #' 
 #' Chop AirDAS data into equal-length effort segments, averaging conditions by segment
 #' 
-#' @param x data frame; processed aerial DAS data from \code{\link{airdas_effort}}.
-#'   This data must be filtered for 'OnEffort' events; see the Details section below
-#' @param seg.km numeric; target segment length, in kilometers
+#' @param x \code{airdas_df} object, 
+#'   or a data frame that can be coerced to a \code{airdas_df} object. 
+#'   This data must be filtered for 'OnEffort' events; 
+#'   see the Details section below
+#' @param seg.km numeric; target segment length in kilometers
 #' @param randpicks.load character or \code{NULL}; if character, 
 #'   filename of past randpicks output to load and use 
 #'   (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
@@ -13,6 +15,7 @@
 #'   file to which to save randpicks output
 #'   (passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
 #'   If \code{NULL}, randpicks output will not be saved to a file
+#' @param ... ignored
 #' 
 #' @importFrom dplyr between
 #' @importFrom stats runif
@@ -86,8 +89,20 @@
 #' @keywords internal
 #' 
 #' @export
-airdas_chop_equal <- function(x, seg.km, randpicks.load = NULL, 
-                              randpicks.save = NULL) {
+airdas_chop_equal <- function(x, ...) UseMethod("airdas_chop_equal")
+
+
+#' @name airdas_chop_equal
+#' @export
+airdas_chop_equal.data.frame <- function(x, ...) {
+  airdas_chop_equal(as_airdas_df(x), ...)
+}
+
+
+#' @name airdas_chop_equal
+#' @export
+airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, 
+                                        randpicks.save = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (missing(seg.km)) {
@@ -231,7 +246,9 @@ airdas_chop_equal <- function(x, seg.km, randpicks.load = NULL,
     
     #------------------------------------------------------
     ### Get segdata, and return
-    das.df.segdata <- airdas_segdata_avg(das.df, subseg.lengths, i)
+    das.df.segdata <- airdas_segdata_avg(
+      as_airdas_df(das.df), subseg.lengths, i
+    )
     
     list(das.df, subseg.lengths, pos, das.df.segdata)
   }, x = x, seg.km = seg.km, r.pos = r.pos)
@@ -267,5 +284,5 @@ airdas_chop_equal <- function(x, seg.km, randpicks.load = NULL,
   
   #----------------------------------------------------------------------------
   # Return
-  list(x.eff, segdata, randpicks)
+  list(as_airdas_df(x.eff), segdata, randpicks)
 }

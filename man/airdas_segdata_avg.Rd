@@ -2,12 +2,24 @@
 % Please edit documentation in R/airdas_segdata_avg.R
 \name{airdas_segdata_avg}
 \alias{airdas_segdata_avg}
+\alias{airdas_segdata_avg.data.frame}
+\alias{airdas_segdata_avg.airdas_df}
 \title{Summarize data for a continuous effort section}
 \usage{
-airdas_segdata_avg(x, subseg.lengths, eff.id)
+airdas_segdata_avg(x, ...)
+
+\method{airdas_segdata_avg}{data.frame}(x, ...)
+
+\method{airdas_segdata_avg}{airdas_df}(x, subseg.lengths, eff.id, ...)
 }
 \arguments{
-\item{x}{data frame; a single continuous effort section of AirDAS data}
+\item{x}{\code{airdas_df} object, 
+or a data frame that can be coerced to a \code{airdas_df} object.
+Must must be filtered for 'OnEffort' events and 
+contain a single continuous effort section of AirDAS data; 
+see the Details section below}
+
+\item{...}{ignored}
 
 \item{subseg.lengths}{numeric; length of the modeling segments 
 into which \code{x} will be chopped}

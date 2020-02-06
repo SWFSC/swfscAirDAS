@@ -2,15 +2,25 @@
 % Please edit documentation in R/airdas_chop_equal.R
 \name{airdas_chop_equal}
 \alias{airdas_chop_equal}
+\alias{airdas_chop_equal.data.frame}
+\alias{airdas_chop_equal.airdas_df}
 \title{Chop AirDAS data - equal length}
 \usage{
-airdas_chop_equal(x, seg.km, randpicks.load = NULL, randpicks.save = NULL)
+airdas_chop_equal(x, ...)
+
+\method{airdas_chop_equal}{data.frame}(x, ...)
+
+\method{airdas_chop_equal}{airdas_df}(x, seg.km, randpicks.load = NULL, randpicks.save = NULL, ...)
 }
 \arguments{
-\item{x}{data frame; processed aerial DAS data from \code{\link{airdas_effort}}.
-This data must be filtered for 'OnEffort' events; see the Details section below}
+\item{x}{\code{airdas_df} object, 
+or a data frame that can be coerced to a \code{airdas_df} object. 
+This data must be filtered for 'OnEffort' events; 
+see the Details section below}
 
-\item{seg.km}{numeric; target segment length, in kilometers}
+\item{...}{ignored}
+
+\item{seg.km}{numeric; target segment length in kilometers}
 
 \item{randpicks.load}{character or \code{NULL}; if character, 
 filename of past randpicks output to load and use 
