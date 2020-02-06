@@ -15,22 +15,23 @@
 #'   This function recognizes the following types of sightings: 
 #'   marine mammal sightings (event code "S"), marine mammal resights (code "s"), 
 #'   and turtle sightings (code "t"). 
-#'   Multi-species marine mammal sightings are also followed by a "1" event.
+#'   Multi-species (mixed species) marine mammal sightings are also followed by a "1" event.
 #'   See \code{\link{airdas_format_pdf}} for more information about events and event formats.
 #'   
 #'   Abbreviations used in column names: Gs = group size, Sp = species, 
-#'   Multi = multispecies.
+#'   Mixed = mixed species (multi-species) sighting.
 #' 
 #'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
 #'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
 #'   
-#'   Multispecies group sizes are rounded to nearest integer using \code{round(, 0)}.
+#'   Multi-species group sizes are rounded to nearest integer using \code{round(, 0)}.
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
 #'   and 2) columns with sighting information (observer, species, etc.) 
 #'   extracted from 'Data#' columns as specified in Details.
 #'   The data frame has one row for each sighting,
-#'   or one row for each species of each sighting if it is a multispecies sighting.
+#'   or one row for each species of each sighting if 
+#'   it is a multi-species sighting.
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -97,15 +98,15 @@ airdas_sight.airdas_df <- function(x) {
     bind_rows(curr.df[1, ], curr.df[1, ], curr.df[1, ]) %>% 
       mutate(Data4 = as.character(sp.num.all), Data5 = sp.all, 
              Data6 = NA, Data7 = NA, 
-             GsTotal = gs.total, Multi = TRUE) %>% 
+             GsTotal = gs.total, Mixed = TRUE) %>% 
       filter(!is.na(.data$Data4))
   }, sight.df = sight.df)
   
-  # Add multispecies sightings back into sight.df
+  # Add multi-species sightings back into sight.df
   sight.df <- sight.df %>% 
     filter(!(.data$sight_cumsum %in% sight.cumsum.mult)) %>% 
     mutate(GsTotal = ifelse(.data$Event == "S", as.integer(.data$Data4), NA), 
-           Multi = ifelse(.data$Event == "s", NA, FALSE)) %>% 
+           Mixed = ifelse(.data$Event == "s", NA, FALSE)) %>% 
     bind_rows(sight.mult) %>% 
     arrange(.data$sight_cumsum) %>% 
     mutate(idx = seq_along(.data$sight_cumsum)) %>% 
@@ -119,7 +120,7 @@ airdas_sight.airdas_df <- function(x) {
   
   ### 1) Processed AirDAS variables
   sight.info <- sight.df %>% 
-    select(-!!paste0("Data", 1:7), -.data$GsTotal, -.data$Multi)
+    select(-!!paste0("Data", 1:7), -.data$GsTotal, -.data$Mixed)
   
   ### 2) Sighting data shared by all sighting types (hence no)
   sight.info.all <- sight.df %>% 
@@ -138,7 +139,7 @@ airdas_sight.airdas_df <- function(x) {
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ 1)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
-           .data$Sp, .data$GsSp, .data$GsTotal, .data$Multi)
+           .data$Sp, .data$GsSp, .data$GsTotal, .data$Mixed)
   
   ### 3) Turtle sighting data
   sight.info.t <- sight.df %>% 

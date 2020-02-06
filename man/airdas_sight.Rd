@@ -21,7 +21,8 @@ Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
   and 2) columns with sighting information (observer, species, etc.) 
   extracted from 'Data#' columns as specified in Details.
   The data frame has one row for each sighting,
-  or one row for each species of each sighting if it is a multispecies sighting.
+  or one row for each species of each sighting if 
+  it is a multi-species sighting.
 }
 \description{
 Extract sighting information from aerial DAS data
@@ -34,16 +35,16 @@ AirDAS events contain specific information in the 'Data#' columns,
   This function recognizes the following types of sightings: 
   marine mammal sightings (event code "S"), marine mammal resights (code "s"), 
   and turtle sightings (code "t"). 
-  Multi-species marine mammal sightings are also followed by a "1" event.
+  Multi-species (mixed species) marine mammal sightings are also followed by a "1" event.
   See \code{\link{airdas_format_pdf}} for more information about events and event formats.
   
   Abbreviations used in column names: Gs = group size, Sp = species, 
-  Multi = multispecies.
+  Mixed = mixed species (multi-species) sighting.
 
   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
   
-  Multispecies group sizes are rounded to nearest integer using \code{round(, 0)}.
+  Multi-species group sizes are rounded to nearest integer using \code{round(, 0)}.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
