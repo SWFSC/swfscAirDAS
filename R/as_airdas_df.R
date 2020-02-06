@@ -4,12 +4,14 @@
 #'
 #' @param x An object to be coerced to class \code{airdas_df}
 #'
-#' @details Currently only data frames can be coerced to an object of class \code{\link{airdas_df}}.
-#'   If the \code{x} does not have column names and classes as specified in \code{\link{airdas_df}},
+#' @details Currently only data frames can be coerced to an object 
+#'   of class \code{\link{airdas_df}}.
+#'   If \code{x} does not have column names, classes, and contents 
+#'   as specified in \code{\link{airdas_df}},
 #'   then the function returns an error message detailing the first column that does not
-#'   meet the \code{\link{airdas_df}} requirements.
+#'   meet the \code{\link{airdas_df}} requirements. 
 #'
-#' @return An object of class `airdas_df`
+#' @return An object of class \code{\link{airdas_df}}
 #'
 #' @seealso \code{\link{airdas_df-class}}
 #'
@@ -78,7 +80,18 @@ as_airdas_df.data.frame <- function(x) {
            "See `?as_airdas_df` or `?airdas_df-class` for more details.")
     }
   }
-
+  
+  if (any(is.na(x$Lat) | is.na(x$Lon) | is.na(x$DateTime)))
+    stop("The following rows have NA values in the Lat, Lon, and/or DateTime columns, ", 
+         "and thus this object cannot be coerced to an airdas_df object: ", 
+         paste(sort(unique(c(which(is.na(x$Lat)), which(is.na(x$Lon))))), 
+               collapse = ", "))
+  
+  
+  if (any(x$Event == "#"))
+    warning("This airdas_df object has some deleted events, meaning ", 
+            "some \"#\" events. Should these be removed?")
+  
   class(x) <- c("airdas_df", setdiff(class(x), "airdas_df"))
   
   x

@@ -6,12 +6,13 @@
 \title{\code{airdas_dfr} class}
 \description{
 The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
-  created to provide a concise and robust way to ensure that the input to \code{\link{airdas_process}}
-  adheres to certain requirements.
+  created to provide a concise and robust way to ensure that the input 
+  to \code{\link{airdas_process}}adheres to certain requirements.
   Specifically, objects of class \code{airdas_dfr} are data frames with specific column names and classes,
-  as detailed in the 'Properties of \code{airdas_dfr}' section. Objects of class \code{airdas_dfr} are created by
-  \code{\link{airdas_read}} or \code{\link{as_airdas_dfr}}, and are intended to be passed directly to
-  \code{\link{airdas_process}}.
+  as detailed in the 'Properties of \code{airdas_dfr}' section. 
+  Objects of class \code{airdas_dfr} are created by
+  \code{\link{airdas_read}} or \code{\link{as_airdas_dfr}}, 
+  and are intended to be passed directly to \code{\link{airdas_process}}.
 
   Subsetting or otherwise altering an object of class \code{airdas_dfr} will cause the object to drop its
   \code{airdas_dfr} class attribute. \code{\link{airdas_process}} will then try to coerce the object to a
