@@ -52,17 +52,17 @@ This function is intended to be called by \code{\link{airdas_effort}}
     \item The extra length remaining after chopping is greater than or equal to 
       half of the target segment length (i.e. \code{>= 0.5*seg.km}): 
       the extra length is assigned to a random portion of the effort section as its own segment 
-      (Fig. 1a TODO)
+      (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1a})
     \item The extra length remaining after chopping is less than half of the 
       target segment length (i.e. \code{< 0.5*seg.km}): 
       the extra length is added to one of the (randomly selected) equal-length segments 
-      (Fig. 1b TODO).
+      (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1b})
     \item The length of the effort section is less than or equal to 
       the target segment length: the entire segment becomes a segment 
-      (Fig. 1c TODO)
+      (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1c})
     \item The length of the effort section is zero: a segment of length zero. 
       If there are more than two events (the "T"/R" and "E"/"O" events),
-      the function throws a warning.
+      the function throws a warning
   }
   
   Therefore, the length of each segment is constrained to be between 
@@ -71,7 +71,10 @@ This function is intended to be called by \code{\link{airdas_effort}}
   and the central tendency is approximately equal to the target segment length. 
   The only exception is when a continuous effort section is less than 
   one half of the target segment length (i.e. \code{< 0.5*seg.km}; 
-  Fig. 1c TODO).
+  \href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1c}).
+  
+  Note the PDF with Figs. 1a - 1c is included in the package, and can be found at:
+  \code{system.file("AirDAS_chop_equal_figures.pdf", package = "swfscAirDAS")}   
   
   'Randpicks' is a record of the random assignments that were made when 
   chopping the effort sections into segments, and can be saved to allow 
