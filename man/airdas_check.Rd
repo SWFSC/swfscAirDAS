@@ -13,7 +13,8 @@ airdas_check(file, file.out = NULL)
 default is \code{NULL}}
 }
 \value{
-A data frame with five columns: the file name, line number, 
+A data frame with five columns that list information about errors found 
+in the AirDAS files: the file name, line number, 
 index (row number) from the \code{airdas_read(file)} data frame, 
 'ID' (columns 4-39 from the DAS file), and description of the issue
 
@@ -35,8 +36,8 @@ Checks that the following is true:
 \tabular{llll}{
   \emph{Item} \tab \emph{Event} \tab \emph{Column} \tab \emph{Requirement}\cr
   Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank)\cr
-  Altitude            \tab A \tab Data1 \tab Can be converted to a numeric value\cr
-  Speed               \tab A \tab Data2 \tab Can be converted to a numeric value\cr
+  Altitude \tab A \tab Data1 \tab Can be converted to a numeric value\cr
+  Speed    \tab A \tab Data2 \tab Can be converted to a numeric value\cr
   HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, or NA (blank)\cr
   Percent overcast \tab W \tab Data2 \tab Can be converted to a numeric value\cr
   Beaufort         \tab W \tab Data3 \tab Can be converted to a numeric value\cr
@@ -44,14 +45,14 @@ Checks that the following is true:
   Horizontal sun   \tab W \tab Data5 \tab Can be converted to a numeric value\cr
   Horizontal sun   \tab W \tab Data5 \tab Must be one of 0:12, or NA (blank)\cr
   Observers        \tab P \tab Data1-4 \tab Each entry must be two characters\cr
-  NA    \tab S \tab Data3-4 \tab Can be converted to a numeric value\cr
-  NA    \tab 1 \tab Data5-7 \tab Can be converted to a numeric value\cr
-  Blank \tab 1 \tab Data1-4 \tab These columns must be NA (blank)\cr
-  NA    \tab s \tab Data2   \tab Can be converted to a numeric value\cr
-  Blank \tab s \tab Data3-7 \tab These columns must be NA (blank)\cr
-  NA    \tab t \tab Data2, 4-5 \tab Can be converted to a numeric value\cr
-  NA    \tab t \tab Data6 \tab Must be one of y, n, u, or NA (blank)\cr
-  Blank \tab t \tab Data7 \tab This column must be NA (blank)\cr
+  Sighting (mammal) \tab S \tab Data3-4 \tab Can be converted to a numeric value\cr
+  Sighting info     \tab 1 \tab Data5-7 \tab Can be converted to a numeric value\cr
+  Sighting info     \tab 1 \tab Data1-4 \tab These columns must be NA (blank)\cr
+  Resight \tab s \tab Data2   \tab Can be converted to a numeric value\cr
+  Resight \tab s \tab Data3-7 \tab These columns must be NA (blank)\cr
+  Turtle sighting \tab t \tab Data2, 4-5 \tab Can be converted to a numeric value\cr
+  Turtle sighting \tab t \tab Data6 \tab Must be one of y, n, u, or NA (blank)\cr
+  Turtle sighting \tab t \tab Data7 \tab This column must be NA (blank)\cr
 }
 
 Outstanding questions:
