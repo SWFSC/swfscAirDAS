@@ -97,17 +97,6 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   }
   
   sort(unique(z.out))
-  
-  # z$idx <- seq_len(nrow(z))
-  # 
-  # z.curr <- z[z$Event == event.code, ]
-  # z.vec <- z.curr[[z.col]]
-  # 
-  # z1.na <- is.na(z.vec)
-  # z2.na <- is.na(suppressWarnings(as.numeric(z.vec)))
-  # stopifnot(all(which(z1.na) %in% which(z2.na)))
-  # 
-  # z.curr$idx[z2.na != z1.na]
 }
 
 
@@ -165,37 +154,6 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   
   sort(unique(z.out))
 }
-
-
-# .check_numeric_sight <- function(z, event.code, z.col) {
-#   # z: airdas_dfr object
-#   # event.code: character; event code by which to filter z
-#   # z.col: Column which to check; must be one of the Data# columns
-#   ### Output: indices of z that cannot be converted to a numeric
-#   
-#   stopifnot(
-#     inherits(z, "airdas_dfr"),
-#     z.col %in% paste0("Data", 1:7)
-#   )
-#   
-#   z$idx <- seq_len(nrow(z))
-#   z.out <- c()
-#   
-#   for (i in event.code) {
-#     for (j in z.col) {
-#       z.curr <- z[z$Event == i, ]
-#       z.vec <- z.curr[[j]]
-#       
-#       z1.na <- is.na(z.vec)
-#       z2.na <- is.na(suppressWarnings(as.numeric(z.vec)))
-#       stopifnot(all(which(z1.na) %in% which(z2.na)))
-#       
-#       z.out <- c(z.out, z.curr$idx[z2.na != z1.na])
-#     }
-#   }
-#   
-#   sort(unique(z.out))
-# }
 
 
 .check_list <- function(z1, z2, z3, z4) {
