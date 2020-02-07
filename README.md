@@ -79,3 +79,10 @@ y.eff.segdata <- y.eff[[1]]
 y.eff.siteinfo <- y.eff[[2]]
 y.eff.randpicks <- y.eff[[3]]
 ```
+
+You can also check that your AirDAS data has accepted formatting and
+values:
+
+``` r
+airdas_check(y)
+```
