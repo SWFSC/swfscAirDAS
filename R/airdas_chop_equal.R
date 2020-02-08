@@ -29,7 +29,7 @@
 #'   see \code{\link{airdas_effort}} for more details. 
 #'   Continuous effort sections (henceforth 'effort sections') from \code{x}
 #'   are chopped into modeling segments (henceforth 'segments') of equal length. 
-#'   Each effort sections runs from a T/R event to its corresponding E/O event. 
+#'   Each effort section runs from a T/R event to its corresponding E/O event. 
 #'   Then \code{\link{airdas_segdata_avg}} is called to get relevant segdata information.
 #' 
 #'   When chopping the effort sections in segments of length \code{seg.km}, 
@@ -186,7 +186,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
                 "and there were events between start and end points")
       
       # EAB makes a 0.1km segment if it includes a sighting - ?
-      subseg.lengths <- 0
+      seg.lengths <- 0
       pos <- NA
       
     } else {
@@ -195,7 +195,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
         #   only make one segment
         n.subseg <- 1
         if (is.null(pos)) pos <- NA
-        subseg.lengths <- seg.dist
+        seg.lengths <- seg.dist
         
       } else if (seg.dist.mod >= (seg.km / 2)) {
         # If current segment length is greater than the target length and
@@ -205,8 +205,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
         if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
         if (is.na(pos) | !between(pos, 1, n.subseg)) 
           stop("Randpicks value is not in proper range")
-        subseg.lengths <- rep(seg.km, n.subseg)
-        subseg.lengths[pos] <- seg.dist.mod
+        seg.lengths <- rep(seg.km, n.subseg)
+        seg.lengths[pos] <- seg.dist.mod
         
       } else if (seg.dist.mod < (seg.km / 2)) {
         # If current segment length is greater than the target length and
@@ -216,8 +216,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
         if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
         if (is.na(pos) | !between(pos, 1, n.subseg)) 
           stop("Randpicks value is not in proper range")
-        subseg.lengths <- rep(seg.km, n.subseg)
-        subseg.lengths[pos] <- seg.km + seg.dist.mod
+        seg.lengths <- rep(seg.km, n.subseg)
+        seg.lengths[pos] <- seg.km + seg.dist.mod
         
       } else {
         stop("Error while chopping effort - unrecognized effort situation")
@@ -227,7 +227,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
     
     #------------------------------------------------------
     ### Assign each event to a segment
-    subseg.cumsum <- cumsum(subseg.lengths)
+    subseg.cumsum <- cumsum(seg.lengths)
     das.cumsum <- cumsum(das.df$dist_from_prev)
     
     das.df$effort_seg <- findInterval(
@@ -240,10 +240,10 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
     #------------------------------------------------------
     ### Get segdata, and return
     das.df.segdata <- airdas_segdata_avg(
-      as_airdas_df(das.df), subseg.lengths, i
+      as_airdas_df(das.df), seg.lengths, i
     )
     
-    list(das.df, subseg.lengths, pos, das.df.segdata)
+    list(das.df, seg.lengths, pos, das.df.segdata)
   }, x = x, seg.km = seg.km, r.pos = r.pos)
   
   

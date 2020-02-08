@@ -7,7 +7,7 @@
 #'   Must must be filtered for 'OnEffort' events and 
 #'   contain a single continuous effort section of AirDAS data; 
 #'   see the Details section below
-#' @param subseg.lengths numeric; length of the modeling segments 
+#' @param seg.lengths numeric; length of the modeling segments 
 #'   into which \code{x} will be chopped
 #' @param eff.id numeric; the ID of \code{x} (the current continuous effort section)
 #' @param ... ignored
@@ -58,7 +58,7 @@ airdas_segdata_avg.data.frame <- function(x, ...) {
 
 #' @name airdas_segdata_avg
 #' @export
-airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
+airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (!("dist_from_prev" %in% names(x))) 
@@ -66,12 +66,12 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
          "was this function called by airdas_chop_equal()?")
   
   stopifnot(
-    inherits(subseg.lengths, c("numeric", "integer")), 
+    inherits(seg.lengths, c("numeric", "integer")), 
     inherits(eff.id, c("numeric", "integer"))
   )
   
-  if (!all.equal(sum(subseg.lengths), sum(x$dist_from_prev)))
-    stop("The sum of the subseg.lengths values does not equal the sum of the ", 
+  if (!all.equal(sum(seg.lengths), sum(x$dist_from_prev)))
+    stop("The sum of the seg.lengths values does not equal the sum of the ", 
          "x$dist_from_prev' values; ", 
          "was this function called by airdas_chop_equal()?")
   
@@ -91,8 +91,8 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
   
   
   ### Prep - objects for for loop
-  n.subseg <- length(subseg.lengths)
-  subseg.cumsum <- cumsum(subseg.lengths)
+  n.subseg <- length(seg.lengths)
+  subseg.cumsum <- cumsum(seg.lengths)
   subseg.mid.cumsum <- (c(0, head(subseg.cumsum, -1)) + subseg.cumsum) / 2
   
   if (!("dist_from_prev_cumsum" %in% names(das.df)))
@@ -129,7 +129,7 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
       # If we didn't cross a segment endpoint, get 
       #   1) the percentage of the segment between j-1 and j, and 
       #   2) the condition and sight info
-      seg.percentage <- das.df$dist_from_prev[j] / subseg.lengths[subseg.curr]
+      seg.percentage <- das.df$dist_from_prev[j] / seg.lengths[subseg.curr]
       conditions.list <- fn_aggr_conditions(
         conditions.list, das.df, j-1, seg.percentage
       )
@@ -172,7 +172,7 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
         #     d.tmp handles multiple segments between pts, aka when current
         #     segment start point is closer than [j-1]
         d.tmp <- max(dist.pt.prev, dist.subseg.prev) 
-        d.rat <- (dist.subseg.curr - d.tmp) / subseg.lengths[subseg.curr]
+        d.rat <- (dist.subseg.curr - d.tmp) / seg.lengths[subseg.curr]
         # if (is.nan(d.rat)) d.rat <- NA
         conditions.list <- fn_aggr_conditions(conditions.list, das.df, j-1, d.rat)
         rm(d, d.tmp, d.rat)
@@ -183,7 +183,7 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
             # tmp1 is dist from current point to end of last segment
             tmp1a <- ifelse(subseg.curr>1, subseg.cumsum[subseg.curr-1], 0) 
             tmp1 <- dist.pt.curr - tmp1a
-            tmp2 <- subseg.lengths[subseg.curr]
+            tmp2 <- seg.lengths[subseg.curr]
             
             if (tmp1 <= tmp2) {break}
             rm(tmp1a, tmp1, tmp2)
@@ -225,7 +225,7 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
           lat2 = endpt.curr[1], lon2 = endpt.curr[2], 
           mlat = midpt.curr[1], mlon = midpt.curr[2],
           mDateTime = mean(c(das.df$DateTime[j.stlin.curr], das.df$DateTime[j])),
-          dist = subseg.lengths[subseg.curr], 
+          dist = seg.lengths[subseg.curr], 
           ObsL = obs.vals["ObsL"], ObsB = obs.vals["ObsB"], 
           ObsR = obs.vals["ObsR"], Rec = obs.vals["Rec"],
           stringsAsFactors = FALSE
@@ -262,7 +262,7 @@ airdas_segdata_avg.airdas_df <- function(x, subseg.lengths, eff.id, ...) {
           # If pt j is before the next seg endpoint, get data from endpt to j
           #   Else, this info is calculated in t2 section above
           tmp1 <- das.df$dist_from_prev_cumsum[j] - subseg.cumsum[subseg.curr - 1]
-          tmp2 <- subseg.lengths[subseg.curr]
+          tmp2 <- seg.lengths[subseg.curr]
           conditions.list <- conditions.list.init
           
           if (tmp1 < tmp2) {

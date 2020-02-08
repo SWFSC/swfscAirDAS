@@ -53,7 +53,7 @@ This function is intended to be called by \code{\link{airdas_effort}}
   see \code{\link{airdas_effort}} for more details. 
   Continuous effort sections (henceforth 'effort sections') from \code{x}
   are chopped into modeling segments (henceforth 'segments') of equal length. 
-  Each effort sections runs from a T/R event to its corresponding E/O event. 
+  Each effort section runs from a T/R event to its corresponding E/O event. 
   Then \code{\link{airdas_segdata_avg}} is called to get relevant segdata information.
 
   When chopping the effort sections in segments of length \code{seg.km}, 

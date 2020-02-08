@@ -10,7 +10,7 @@ airdas_segdata_avg(x, ...)
 
 \method{airdas_segdata_avg}{data.frame}(x, ...)
 
-\method{airdas_segdata_avg}{airdas_df}(x, subseg.lengths, eff.id, ...)
+\method{airdas_segdata_avg}{airdas_df}(x, seg.lengths, eff.id, ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -21,7 +21,7 @@ see the Details section below}
 
 \item{...}{ignored}
 
-\item{subseg.lengths}{numeric; length of the modeling segments 
+\item{seg.lengths}{numeric; length of the modeling segments 
 into which \code{x} will be chopped}
 
 \item{eff.id}{numeric; the ID of \code{x} (the current continuous effort section)}
