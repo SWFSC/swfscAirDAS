@@ -161,7 +161,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   
   if (!all(idx.reset.full %in% idx.reset.part)) {
     warning("Warning: not all full resets were in partial resets; ", 
-            "check days.gap?", immediate. = TRUE)
+            "check days.gap.. arguments?", immediate. = TRUE)
   }
   
   if (!all(which(!duplicated(das.df$file_das)) %in% idx.reset.part)) {
@@ -207,9 +207,9 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   Trans <- .airdas_process_chr(init.val, das.df, "Data1", event.T, event.na)
   Trans[event.O] <- event.na
   
-  Eff <- init.val
+  Eff <- as.logical(init.val)
+  Eff[idx.reset.full] <- FALSE # For resets immediately after O or E events
   Eff[event.O | event.E] <- FALSE
-  Eff[idx.reset.full] <- event.na # For resets immediately after O or E events
   Eff[event.T | event.R] <- TRUE
   
   # Additional processing done after for loop
@@ -267,9 +267,6 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     j[j == -9999] <- NA
     j
   })
-  
-  tmp$OnEffort <- as.logical(tmp$OnEffort)
-  tmp$OnEffort[is.na(tmp$OnEffort)] <- FALSE
   
   
   #----------------------------------------------------------------------------
