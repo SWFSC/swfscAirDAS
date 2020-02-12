@@ -30,6 +30,8 @@
 #'   See \code{\link{airdas_chop_equal}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
 #'   
+#'   In progress: chop by conditions
+#'   
 #'   The sightings included in the segdata counts are filtered as follows: 
 #'   Beaufort is less than or equal to five, the declination angle is less than 78, 
 #'   it is a standard sighting, and the sighting was made while on effort. 
@@ -84,8 +86,8 @@ airdas_effort.data.frame <- function(x, ...) {
 airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   #----------------------------------------------------------------------------
   # Input checks
-  methods.acc <- c("equallength")
-  if (!(length(method) == 1 & (method %in% c("equallength")))) 
+  methods.acc <- c("equallength", "condition")
+  if (!(length(method) == 1 & (method %in% methods.acc))) 
     stop("method must be a string, and must be one of: ", 
          paste0("\"", paste(methods.acc, collapse = "\", \""), "\""))
   
@@ -98,6 +100,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   stopifnot(all(between(x.oneff.which, 1, nrow(x))))
   
   x.oneff <- x[x.oneff.which, ]
+  rownames(x.oneff) <- NULL
   
   # For each event, calculate distance to previous event
   dist.from.prev <- mapply(function(x1, y1, x2, y2) {
@@ -117,13 +120,16 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
     x.eff <- eff.list[[1]]
     segdata <- eff.list[[2]]
     randpicks <- eff.list[[3]]
+    
+  } else if (method == "condition") {
+    eff.list <- airdas_chop_condition(as_airdas_df(x.oneff), ...)
   }
   
   #----------------------------------------------------------------------------
   # Summarize sightings (based on siteinfo) and add applicable data to segdata
   siteinfo <- x.eff %>% 
     left_join(select(segdata, .data$segnum, .data$mlat, .data$mlon), 
-                     by = "segnum") %>% 
+              by = "segnum") %>% 
     airdas_sight() %>% 
     mutate(included = (.data$Bft <= 5 & abs(.data$Angle) <= 78 & 
                          .data$SightStd & .data$OnEffort), 

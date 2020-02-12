@@ -58,6 +58,8 @@ This is the top-level function for chopping processed AirDAS data
   See \code{\link{airdas_chop_equal}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
+  In progress: chop by conditions
+  
   The sightings included in the segdata counts are filtered as follows: 
   Beaufort is less than or equal to five, the declination angle is less than 78, 
   it is a standard sighting, and the sighting was made while on effort. 
