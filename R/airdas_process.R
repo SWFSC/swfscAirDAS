@@ -125,8 +125,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   
   #----------------------------------------------------------------------------
   # Remove '#' (deleted) events
-  das.del <- das.df$Event == "#"
-  das.df <- das.df[!das.del, ]
+  das.df <- das.df[das.df$Event != "#", ]
+  rownames(das.df) <- NULL
   
   
   #----------------------------------------------------------------------------
