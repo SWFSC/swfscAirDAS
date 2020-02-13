@@ -41,15 +41,16 @@ List of three data frames:
 Chop AirDAS data into equal-length effort segments, averaging conditions by segment
 }
 \details{
-This function is intended to be called by \code{\link{airdas_effort}} 
+This function is intended to only be called by \code{\link{airdas_effort}} 
   when the "equallength" method is specified. 
   Thus, \code{x} must be filtered for events (rows) where either
   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O"; 
   see \code{\link{airdas_effort}} for more details. 
-  Continuous effort sections (henceforth 'effort sections') from \code{x}
-  are chopped into modeling segments (henceforth 'segments') of equal length. 
+  This function chops each continuous effort section (henceforth 'effort sections') 
+  in \code{x} into modeling segments (henceforth 'segments') of equal length. 
   Each effort section runs from a T/R event to its corresponding E/O event. 
-  Then \code{\link{airdas_segdata_avg}} is called to get relevant segdata information.
+  After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
+  segdata information for each segment.
 
   When chopping the effort sections in segments of length \code{seg.km}, 
   there are several possible scenarios:
