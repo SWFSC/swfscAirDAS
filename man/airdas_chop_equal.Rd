@@ -33,7 +33,7 @@ file to which to save randpicks output
 If \code{NULL}, randpicks output will not be saved to a file}
 }
 \value{
-List of:
+List of three data frames:
 \itemize{
   \item \code{x}, with columns added for the corresponding unique segment code and number
   \item segdata: data frame with one row for each segment, and columns with

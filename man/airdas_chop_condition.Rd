@@ -20,13 +20,18 @@ see the Details section below}
 
 \item{...}{ignored}
 
-\item{seg.km.min}{numeric; all segments shorter than this distance, 
-which is in kilometers,  will be smushed with the segment 
-immediately following them. 
-Default is 0.1}
+\item{seg.km.min}{numeric; default is 0.1. 
+All segments shorter than this distance, which is in kilometers, 
+will be smushed with the segment immediately following them. 
+If \code{seg.km.min} is \code{0}, then only event series (e.g. TVPAW) will be smushed}
 }
 \value{
-List?
+List of two data frames:
+\itemize{
+  \item \code{x}, with columns added for the corresponding unique segment code and number
+  \item segdata: data frame with one row for each segment, and columns with
+    relevant data (see \code{\link{airdas_effort}} for specifics)
+}
 }
 \description{
 Chop AirDAS data into a new effort segment every time any condition changes
@@ -48,6 +53,7 @@ This function is intended to be called by \code{\link{airdas_effort}}
   
   All segments with length zero will be smushed with the segment immediately following them.
   This will take care of event series that all have the same location, such as TVPAW.
+  Exceptions to \code{seg.km.min} are segments at the end of a continuous effort section
   
   TODO
 }

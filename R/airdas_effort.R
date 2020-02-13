@@ -123,7 +123,28 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
     
   } else if (method == "condition") {
     eff.list <- airdas_chop_condition(as_airdas_df(x.oneff), ...)
+    x.eff <- eff.list[[1]]
+    segdata <- eff.list[[2]]
+    randpicks <- NULL
   }
+  
+  x.eff.names <- c(
+    "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", "Bft", 
+    "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
+    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
+    "VLI", "VLO", "VB", "VRI", "VRO", 
+    "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
+    "EffortDot", "EventNum", "file_das", "line_num", 
+    "dist_from_prev", "cont_eff_section", "effort_seg", "seg_idx", "segnum"
+  )
+  if (!identical(names(x.eff), x.eff.names))
+    stop("Error in airdas_effort: names of x.eff. ", 
+         "Please report this as an issue")
+  
+  if (!all(x.eff$segnum %in% segdata$segnum))
+    stop("Error in airdas_effort(): Error creating and processing ", 
+         "segement numbers. Please report this as an issue")
+  
   
   #----------------------------------------------------------------------------
   # Summarize sightings (based on siteinfo) and add applicable data to segdata
@@ -138,7 +159,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   
   
   # Make data frame with nSI and ANI columns, and join it with segdata
-  # TODO: check that sp.codes is an acceptable code?
+  # TODO: Throw warning if element(s) of sp.codes are not in data?
   sp.codes <- sort(sp.codes)
   
   segdata.col1 <- select(segdata, .data$seg_idx)

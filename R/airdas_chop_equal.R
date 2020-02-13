@@ -77,7 +77,7 @@
 #'   then the distance between the lat/lon points of subsequent events 
 #'   is calculated using \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}.
 #'      
-#' @return List of:
+#' @return List of three data frames:
 #' \itemize{
 #'   \item \code{x}, with columns added for the corresponding unique segment code and number
 #'   \item segdata: data frame with one row for each segment, and columns with
@@ -143,7 +143,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
       warning("For the provided randpicks CSV file, it is assumed that ", 
               "the first column is the continuous effort section numbers, ", 
               "and the second column is the randpick values for that ", 
-              "continuous effort section")
+              "continuous effort section", 
+              immediate. = TRUE)
       r.eff.sect <- randpicks.df[[1]]
       r.pos <- randpicks.df[[2]]
     }
@@ -183,7 +184,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
       # If current segment length is 0 and there are other events, throw warning
       if (nrow(das.df) > 2) 
         warning("The length of continuous effort section ", i, " was zero, ", 
-                "and there were events between start and end points")
+                "and there were events between start and end points", 
+                immediate. = TRUE)
       
       # EAB makes a 0.1km segment if it includes a sighting - ?
       seg.lengths <- 0
