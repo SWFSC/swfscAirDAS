@@ -10,7 +10,7 @@ airdas_chop_equal(x, ...)
 
 \method{airdas_chop_equal}{data.frame}(x, ...)
 
-\method{airdas_chop_equal}{airdas_df}(x, seg.km, randpicks.load = NULL, randpicks.save = NULL, ...)
+\method{airdas_chop_equal}{airdas_df}(x, seg.km, randpicks.load = NULL, ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -26,11 +26,6 @@ see the Details section below}
 filename of past randpicks output to load and use 
 (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
 \code{NULL} if new randpicks values should be generated}
-
-\item{randpicks.save}{character or \code{NULL}; if character, 
-file to which to save randpicks output
-(passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
-If \code{NULL}, randpicks output will not be saved to a file}
 }
 \value{
 List of three data frames:
@@ -76,8 +71,8 @@ This function is intended to be called by \code{\link{airdas_effort}}
   }
   
   Therefore, the length of each segment is constrained to be between 
-  one half and one and one half of \code{seg.km} 
-  (i.e. \code{0.5*seg.km <=} segment length \code{>=1.5*seg.km}), 
+  one half and one and one half of \code{seg.km} (i.e. \code{0.5*seg.km <=} 
+  segment length \code{>=1.5*seg.km}), 
   and the central tendency is approximately equal to the target segment length. 
   The only exception is when a continuous effort section is less than 
   one half of the target segment length (i.e. \code{< 0.5*seg.km}; 
@@ -91,10 +86,14 @@ This function is intended to be called by \code{\link{airdas_effort}}
   users to recreate the same random allocation of extra km when chopping. 
   The randpicks returned by this function is a data frame with two columns: 
   the number of the effort section and the randpick value. 
-  If \code{randpicks.save} is not \code{NULL}, this data frame is written to a CSV file.
-  This CSV file can then be specified using the \code{randpicks.load} argument
+  Users should save the randpicks output to a CSV file, 
+  which then can be specified using the \code{randpicks.load} argument
   to recreate the same effort segments from \code{x} 
   (i.e., using the same AirDAS data) in the future.
+  Note that when saving with \code{\link[utils:read.table]{write.csv}}, users must 
+  specify \code{row.names = FALSE} so that the CSV file only has two columns.
+  For an example randpicks file, see 
+  \code{system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")}
   
   If the column \code{dist_from_prev} does not exist 
   (it should be calculated and added to \code{x} in \code{\link{airdas_effort}}), 

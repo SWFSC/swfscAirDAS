@@ -11,16 +11,12 @@
 #'   filename of past randpicks output to load and use 
 #'   (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
 #'   \code{NULL} if new randpicks values should be generated
-#' @param randpicks.save character or \code{NULL}; if character, 
-#'   file to which to save randpicks output
-#'   (passed to \code{file} argument of \code{\link[utils:write.table]{write.csv}}).
-#'   If \code{NULL}, randpicks output will not be saved to a file
 #' @param ... ignored
 #' 
 #' @importFrom dplyr between
 #' @importFrom stats runif
 #' @importFrom swfscMisc distance
-#' @importFrom utils head read.csv write.csv
+#' @importFrom utils head read.csv
 #' 
 #' @details This function is intended to be called by \code{\link{airdas_effort}} 
 #'   when the "equallength" method is specified. 
@@ -52,8 +48,8 @@
 #'   }
 #'   
 #'   Therefore, the length of each segment is constrained to be between 
-#'   one half and one and one half of \code{seg.km} 
-#'   (i.e. \code{0.5*seg.km <=} segment length \code{>=1.5*seg.km}), 
+#'   one half and one and one half of \code{seg.km} (i.e. \code{0.5*seg.km <=} 
+#'   segment length \code{>=1.5*seg.km}), 
 #'   and the central tendency is approximately equal to the target segment length. 
 #'   The only exception is when a continuous effort section is less than 
 #'   one half of the target segment length (i.e. \code{< 0.5*seg.km}; 
@@ -67,10 +63,14 @@
 #'   users to recreate the same random allocation of extra km when chopping. 
 #'   The randpicks returned by this function is a data frame with two columns: 
 #'   the number of the effort section and the randpick value. 
-#'   If \code{randpicks.save} is not \code{NULL}, this data frame is written to a CSV file.
-#'   This CSV file can then be specified using the \code{randpicks.load} argument
+#'   Users should save the randpicks output to a CSV file, 
+#'   which then can be specified using the \code{randpicks.load} argument
 #'   to recreate the same effort segments from \code{x} 
 #'   (i.e., using the same AirDAS data) in the future.
+#'   Note that when saving with \code{\link[utils:read.table]{write.csv}}, users must 
+#'   specify \code{row.names = FALSE} so that the CSV file only has two columns.
+#'   For an example randpicks file, see 
+#'   \code{system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")}
 #'   
 #'   If the column \code{dist_from_prev} does not exist 
 #'   (it should be calculated and added to \code{x} in \code{\link{airdas_effort}}), 
@@ -101,8 +101,7 @@ airdas_chop_equal.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_equal
 #' @export
-airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, 
-                                        randpicks.save = NULL, ...) {
+airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (missing(seg.km)) {
@@ -260,8 +259,6 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
     effort_section = eff.uniq,
     randpicks = vapply(eff.list, function(j) j[[3]], 1)
   )
-  if (!is.null(randpicks.save)) 
-    write.csv(randpicks, file = randpicks.save, row.names = FALSE)
   
   ### Segdata
   segdata <- data.frame(
