@@ -186,12 +186,11 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
         if (j < nrow(das.df)) {
           if (das.df$dist_from_prev[j+1] == 0) {
             # tmp1 is dist from current point to end of last segment
-            tmp1a <- ifelse(subseg.curr>1, subseg.cumsum[subseg.curr-1], 0) 
+            tmp1a <- ifelse(subseg.curr > 1, subseg.cumsum[subseg.curr-1], 0)
             tmp1 <- dist.pt.curr - tmp1a
             tmp2 <- seg.lengths[subseg.curr]
             
             if (.less_equal(tmp1, tmp2)) {break}
-            # if (tmp1 < tmp2 | isTRUE(all.equal(tmp1, tmp2))) {break}
             rm(tmp1a, tmp1, tmp2)
           }
         }

@@ -13,7 +13,7 @@
 #'   \code{NULL} if new randpicks values should be generated
 #' @param ... ignored
 #' 
-#' @importFrom dplyr between
+#' @importFrom dplyr %>% .data between filter left_join mutate select
 #' @importFrom stats runif
 #' @importFrom swfscMisc distance
 #' @importFrom utils head read.csv
@@ -183,7 +183,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
     seg.dist.mod <- seg.dist %% seg.km
     
     # Determine segment lengths
-    if (seg.dist == 0) {
+    if (.equal(seg.dist, 0)) {
       # If current segment length is 0 and there are other events, throw warning
       if (nrow(das.df) > 2) 
         warning("The length of continuous effort section ", i, " was zero, ", 
@@ -195,14 +195,14 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
       pos <- NA
       
     } else {
-      if (seg.dist <= seg.km) {
+      if (.less_equal(seg.dist, seg.km)) {
         # If current segment length is less than target length,
         #   only make one segment
         n.subseg <- 1
         if (is.null(pos)) pos <- NA
         seg.lengths <- seg.dist
         
-      } else if (seg.dist.mod >= (seg.km / 2)) {
+      } else if (.greater_equal(seg.dist.mod, (seg.km / 2))) {
         # If current segment length is greater than the target length and
         #   remainder is greater than or equal to half of the target length,
         #   the remainder is its own (randomly placed) segment
@@ -213,7 +213,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
         seg.lengths <- rep(seg.km, n.subseg)
         seg.lengths[pos] <- seg.dist.mod
         
-      } else if (seg.dist.mod < (seg.km / 2)) {
+      } else if (.less(seg.dist.mod, (seg.km / 2))) {
         # If current segment length is greater than the target length and
         #   remainder is less than half of the target length,
         #   the remainder added to a random segment
@@ -225,7 +225,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
         seg.lengths[pos] <- seg.km + seg.dist.mod
         
       } else {
-        stop("Error while chopping effort - unrecognized effort situation")
+        stop("Error in airdas_chop_equal() - unrecognized effort situation. ", 
+             "Please report this as an issue")
       }
     }
     

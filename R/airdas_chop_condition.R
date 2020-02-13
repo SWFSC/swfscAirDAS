@@ -79,7 +79,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_chop_equal")
   
-  if (!(seg.km.min >= 0))
+  if (!.greater_equal(seg.km.min, 0))
     stop("seg.km.min must be greater than or equal to 0; ", 
          "see `?airdas_chop_equal")
   
@@ -98,7 +98,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
   }
   
   # Get distance to next point
-  x$dist_to_next <- c(x$dist_from_prev[-1], 0)
+  x$dist_to_next <- c(x$dist_from_prev[-1], NA)
   
   
   #----------------------------------------------------------------------------
@@ -126,7 +126,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
     
     
     #------------------------------------------------------
-    ### Determine indices of condition changes, smushing as needed
+    ### Determine indices of condition changes, and combine as needed
     cond.list <- lapply(cond.names, function(j) {
       which(c(NA, head(das.df[[j]], -1) != das.df[[j]][-1]))
     })
@@ -146,17 +146,15 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
                 dist_length = sum(.data$dist_to_next))
     
     # == 0 check is here in case seg.km.min is 0
-    seg.len0 <- d.pre$idx_end[d.pre$dist_length == 0] + 1
-    seg.len1 <- d.pre$idx_end[d.pre$dist_length < seg.km.min] + 1
+    seg.len0 <- d.pre$idx_end[.equal(d.pre$dist_length, 0)] + 1
+    seg.len1 <- d.pre$idx_end[.less(d.pre$dist_length, seg.km.min)] + 1
     seg.diff <- setdiff(seg.len1, seg.len0)
-    # TODO: use internals: .greater()
-    if (length(seg.diff) > 0 & all(seg.diff <= nrow(das.df)))
-      warning("Because of smushing, not all conditions are the same ", 
+    if (length(seg.diff) > 0 & all(.less_equal(seg.diff, nrow(das.df))))
+      warning("Because of combining based on seg.km.min, ", 
+              "not all conditions are the same ", 
               "for each segment in continuous effort section ", i, 
               immediate. = TRUE)
-    # TODO: throw warning if any seg.len1? aka conditions are not consistent
-    
-    
+
     idx.torm <- sort(unique(c(seg.len0, seg.len1)))
     
     # Remove segment breaks that create too-small segments
@@ -185,8 +183,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
       as_airdas_df(das.df), seg.lengths, i
     )
     # TODO: rename avg?
-    if (!all(das.df$seg_idx %in% das.df.segdata$seg_idx)) browser()
-    
+
     list(
       das.df = das.df, seg.lengths = seg.lengths, 
       das.df.segdata = das.df.segdata
