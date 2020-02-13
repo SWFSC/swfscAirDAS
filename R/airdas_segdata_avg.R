@@ -87,8 +87,10 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
     stringsAsFactors = FALSE
   )
   
-  stopifnot(nrow(df.out1) == 1)
-  
+  if (nrow(df.out1) != 1)
+    stop("Error in airdas_segdata_avg(): ", 
+         "There are unexpected inconsistencies in continuous effort section. ", 
+         "Please report this as an issue")
   
   ### Prep - objects for for loop
   n.subseg <- length(seg.lengths)
@@ -115,7 +117,8 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
   conditions.list <- conditions.list.init
   
   if (!(nrow(das.df) >= 2))
-    stop("Error in airdas_segdata_avg(): x must have at least 2 rows")
+    stop("Error in airdas_segdata_avg(): x must have at least 2 rows. ", 
+         "Please report this as an issue")
   
   #----------------------------------------------------------------------------
   ### Step through each point in effort length, 
@@ -141,7 +144,6 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
     # While the current subsegment midpoint or endpoint 
     #   comes before the next event (which is indexed by j) 
     while((t1 & is.null(midpt.curr)) | t2) {
-      
       ### Make objects for values used multiple times (pt2)
       # Needs to be here for when there are multiple trips through while loop
       dist.subseg.curr <- subseg.cumsum[subseg.curr]
@@ -221,7 +223,7 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
         }, as.character(1), USE.NAMES = TRUE)
         obs.vals[obs.vals == "NA"] <- NA
         
-        # Put segdata in data frame
+        # Add segdata to .all data frame
         segdata <- data.frame(
           seg_idx = paste0(eff.id, "_", subseg.curr), 
           stlin = stlin.curr, endlin = das.df$line_num[j],
@@ -260,14 +262,8 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
           endpt.curr <- NULL
           stlin.curr <- das.df$line_num[j]
           
-          if (!.equal(das.df$dist_from_prev_cumsum[j], dist.pt.curr)) print("nope")
-          t1 <- .greater_equal(
-            das.df$dist_from_prev_cumsum[j], subseg.mid.cumsum[subseg.curr]
-          )
-          t2 <- .greater_equal(
-            das.df$dist_from_prev_cumsum[j], subseg.cumsum[subseg.curr]
-          )
-          
+          t1 <- .greater_equal(dist.pt.curr, subseg.mid.cumsum[subseg.curr])
+          t2 <- .greater_equal(dist.pt.curr, subseg.cumsum[subseg.curr])
           
           # If pt j is before the next seg endpoint, get data from endpt to j
           #   Else, this info is calculated in t2 section above
