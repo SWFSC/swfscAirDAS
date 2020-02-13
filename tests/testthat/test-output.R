@@ -46,12 +46,12 @@ test_that("airdas_process output has expected column names and classes", {
     Haze = "logical",
     Kelp = "logical",
     RedTide = "logical",
+    AltFt = "numeric",
+    SpKnot = "numeric",
     ObsL = "character",
     ObsB = "character",
     ObsR = "character",
     Rec = "character",
-    AltFt = "numeric",
-    SpKnot = "numeric",
     VLI = "character",
     VLO = "character",
     VB = "character",
@@ -81,8 +81,8 @@ test_that("airdas_sight output has expected column names and classes", {
   exp.name <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
-    "VLI", "VLO", "VB", "VRI", "VRO", "EffortDot", "EventNum", "file_das", "line_num", 
+    "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
+    "EffortDot", "EventNum", "file_das", "line_num", 
     "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Mixed", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )

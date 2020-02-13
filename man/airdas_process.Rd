@@ -56,12 +56,12 @@ An \code{airdas_df} object, which is also a data frame.
     Haze (from HKR code)              \tab Haze     \tab HKR\cr
     Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
     Red tide (from HKR code)          \tab RedTide  \tab HKR\cr
+    Altitude (feet)                   \tab AltFt    \tab Event: A; Column: Data1\cr
+    Speed (knots)                     \tab SpKnot   \tab Event: A; Column: Data2\cr
     Left observer                     \tab ObsL     \tab Event: P; Column: Data1\cr
     Belly observer                    \tab ObsB     \tab Event: P; Column: Data2\cr
     Right observer                    \tab ObsR     \tab Event: P; Column: Data3\cr
     Data recorder                     \tab Rec      \tab Event: P; Column: Data4\cr
-    Altitude (feet)                   \tab AltFt    \tab Event: A; Column: Data1\cr
-    Speed (knots)                     \tab SpKnot   \tab Event: A; Column: Data2\cr
     Viewing condition - left inside   \tab VLI      \tab Event: V; Column: Data1\cr
     Viewing condition - left outside  \tab VLO      \tab Event: V; Column: Data2\cr
     Viewing condition - belly         \tab VB       \tab Event: V; Column: Data3\cr

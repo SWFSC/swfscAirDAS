@@ -41,12 +41,15 @@ The \code{airdas_df} class is a subclass of \code{\link[base]{data.frame}},
     Jelly    \tab "numeric"\cr
     HorizSun \tab "numeric"\cr
     HKR      \tab "character"\cr
+    Haze     \tab "logical"\cr
+    Kelp     \tab "logical"\cr
+    Red tide \tab "logical"\cr
+    AltFt  \tab "numeric"\cr
+    SpKnot \tab "numeric"\cr
     ObsL   \tab "character"\cr
     ObsB   \tab "character"\cr
     ObsR   \tab "character"\cr
     Rec    \tab "character"\cr
-    AltFt  \tab "numeric"\cr
-    SpKnot \tab "numeric"\cr
     VLI    \tab "character"\cr
     VLO    \tab "character"\cr
     VB     \tab "character"\cr

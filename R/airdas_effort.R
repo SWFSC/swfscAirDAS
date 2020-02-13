@@ -131,7 +131,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   x.eff.names <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", "Bft", 
     "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
+    "AltFt", "SpKnot", "ObsL", "ObsB", "ObsR", "Rec", 
     "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
     "EffortDot", "EventNum", "file_das", "line_num", 

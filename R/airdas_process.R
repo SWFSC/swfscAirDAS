@@ -81,12 +81,12 @@ airdas_process.data.frame <- function(x, ...) {
 #'     Haze (from HKR code)              \tab Haze     \tab HKR\cr
 #'     Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
 #'     Red tide (from HKR code)          \tab RedTide  \tab HKR\cr
+#'     Altitude (feet)                   \tab AltFt    \tab Event: A; Column: Data1\cr
+#'     Speed (knots)                     \tab SpKnot   \tab Event: A; Column: Data2\cr
 #'     Left observer                     \tab ObsL     \tab Event: P; Column: Data1\cr
 #'     Belly observer                    \tab ObsB     \tab Event: P; Column: Data2\cr
 #'     Right observer                    \tab ObsR     \tab Event: P; Column: Data3\cr
 #'     Data recorder                     \tab Rec      \tab Event: P; Column: Data4\cr
-#'     Altitude (feet)                   \tab AltFt    \tab Event: A; Column: Data1\cr
-#'     Speed (knots)                     \tab SpKnot   \tab Event: A; Column: Data2\cr
 #'     Viewing condition - left inside   \tab VLI      \tab Event: V; Column: Data1\cr
 #'     Viewing condition - left outside  \tab VLO      \tab Event: V; Column: Data2\cr
 #'     Viewing condition - belly         \tab VB       \tab Event: V; Column: Data3\cr
@@ -256,8 +256,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     Bft = Bft, CCover = CCover, Jelly = Jelly, HorizSun = HorizSun, HKR = HKR, 
     Haze = grepl("h", HKR, ignore.case = TRUE), Kelp = grepl("h", HKR, ignore.case = TRUE), 
     RedTide = grepl("r", HKR, ignore.case = TRUE), 
-    ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
     AltFt = AltFt, SpKnot = SpKnot, 
+    ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
     VLI = VLI, VLO = VLO, VB = VB, VRI = VRI, VRO = VRO, 
     Trans = Trans, OnEffort = Eff
   )
@@ -273,8 +273,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   cols.toreturn <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", 
     "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "ObsL", "ObsB", "ObsR", "Rec", "AltFt", "SpKnot", 
-    "VLI", "VLO", "VB", "VRI", "VRO", 
+    "AltFt", "SpKnot", 
+    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
     "EffortDot", "EventNum", "file_das", "line_num"
   )
