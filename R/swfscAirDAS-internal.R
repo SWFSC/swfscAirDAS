@@ -171,23 +171,33 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
 ###############################################################################
 # Functions for doing < / > / <= / >= comparisons with floating points
 .less <- function(x, y) {
-  (x < y) & !isTRUE(all.equal(x, y))
+  stopifnot(length(y) == 1)
+  vapply(x, function(i) {(i < y) & !isTRUE(all.equal(i, y))}, as.logical(1))
+  # (x < y) & !isTRUE(all.equal(x, y))
 }
 
 .greater <- function(x, y) {
-  (x > y) & !isTRUE(all.equal(x, y))
+  stopifnot(length(y) == 1)
+  vapply(x, function(i) {(i > y) & !isTRUE(all.equal(i, y))}, as.logical(1))
+  # (x > y) & !isTRUE(all.equal(x, y))
 }
 
 .less_equal <- function(x, y) {
-  (x < y) | isTRUE(all.equal(x, y))
+  stopifnot(length(y) == 1)
+  vapply(x, function(i) {(i < y) | isTRUE(all.equal(i, y))}, as.logical(1))
+  # (x < y) | isTRUE(all.equal(x, y))
 }
 
 .greater_equal <- function(x, y) {
-  (x > y) | isTRUE(all.equal(x, y))
+  stopifnot(length(y) == 1)
+  vapply(x, function(i) {(i > y) | isTRUE(all.equal(i, y))}, as.logical(1))
+  # (x > y) | isTRUE(all.equal(x, y))
 }
 
 .equal <- function(x, y) {
-  isTRUE(all.equal(x, y))
+  stopifnot(length(y) == 1)
+  vapply(x, function(i) isTRUE(all.equal(i, y)), as.logical(1))
+  # isTRUE(all.equal(x, y))
 }
 
 ###############################################################################

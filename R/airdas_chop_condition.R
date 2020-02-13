@@ -148,13 +148,14 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
     # == 0 check is here in case seg.km.min is 0
     seg.len0 <- d.pre$idx_end[.equal(d.pre$dist_length, 0)] + 1
     seg.len1 <- d.pre$idx_end[.less(d.pre$dist_length, seg.km.min)] + 1
+    
     seg.diff <- setdiff(seg.len1, seg.len0)
-    if (length(seg.diff) > 0 & all(.less_equal(seg.diff, nrow(das.df))))
+    if (length(seg.diff) > 0 & all(seg.diff <= nrow(das.df)))
       warning("Because of combining based on seg.km.min, ", 
               "not all conditions are the same ", 
               "for each segment in continuous effort section ", i, 
               immediate. = TRUE)
-
+    
     idx.torm <- sort(unique(c(seg.len0, seg.len1)))
     
     # Remove segment breaks that create too-small segments
@@ -183,7 +184,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
       as_airdas_df(das.df), seg.lengths, i
     )
     # TODO: rename avg?
-
+    
     list(
       das.df = das.df, seg.lengths = seg.lengths, 
       das.df.segdata = das.df.segdata
