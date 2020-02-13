@@ -24,7 +24,7 @@
 #'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
 #'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
 #'   
-#'   Multi-species group sizes are rounded to nearest integer using \code{round(, 0)}.
+#'   Multi-species group sizes are rounded to nearest whole number using \code{round(, 0)}.
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
 #'   and 2) columns with sighting information (observer, species, etc.) 
@@ -83,7 +83,7 @@ airdas_sight.airdas_df <- function(x) {
       as.numeric(curr.df$Data5[2]), as.numeric(curr.df$Data6[2]), 
       as.numeric(curr.df$Data7[2])
     )
-    sp.num.all <- as.integer(round(sp.perc.all / 100 * gs.total, 0))
+    sp.num.all <- round(sp.perc.all / 100 * gs.total, 0)
     
     # Warning if species percentages do not sum to 100
     if (!all.equal(sum(sp.perc.all, na.rm = TRUE), 100)) {
@@ -105,7 +105,7 @@ airdas_sight.airdas_df <- function(x) {
   # Add multi-species sightings back into sight.df
   sight.df <- sight.df %>% 
     filter(!(.data$sight_cumsum %in% sight.cumsum.mult)) %>% 
-    mutate(GsTotal = ifelse(.data$Event == "S", as.integer(.data$Data4), NA), 
+    mutate(GsTotal = ifelse(.data$Event == "S", as.numeric(.data$Data4), NA), 
            Mixed = ifelse(.data$Event == "s", NA, FALSE)) %>% 
     bind_rows(sight.mult) %>% 
     arrange(.data$sight_cumsum) %>% 
@@ -134,10 +134,10 @@ airdas_sight.airdas_df <- function(x) {
                              .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)), 
            Sp = case_when(.data$Event == "S" ~ .data$Data5,
                           .data$Event == "t" ~ .data$Data3), 
-           GsSp = case_when(.data$Event == "S" ~ as.integer(.data$Data4),
-                            .data$Event == "t" ~ as.integer(1)), 
+           GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
+                            .data$Event == "t" ~ 1), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
-                               .data$Event == "t" ~ as.integer(1))) %>% 
+                               .data$Event == "t" ~ 1)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
            .data$Sp, .data$GsSp, .data$GsTotal, .data$Mixed)
   

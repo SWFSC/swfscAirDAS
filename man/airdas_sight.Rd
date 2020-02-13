@@ -44,7 +44,7 @@ AirDAS events contain specific information in the 'Data#' columns,
   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
   
-  Multi-species group sizes are rounded to nearest integer using \code{round(, 0)}.
+  Multi-species group sizes are rounded to nearest whole number using \code{round(, 0)}.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
