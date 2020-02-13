@@ -132,9 +132,12 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
   # Load randpicks if applicable
   if (is.null(randpicks.load)) {
     r.pos <- NULL
+    message("No argument was passed via randpicks.load, and thus new ", 
+            "randpicks values will be generated")
     
   } else {
     randpicks.df <- read.csv(randpicks.load)
+    
     if (all(c("effort_section", "randpicks") %in% names(randpicks.df))) {
       r.eff.sect <- randpicks.df$effort_section
       r.pos <- randpicks.df$randpicks

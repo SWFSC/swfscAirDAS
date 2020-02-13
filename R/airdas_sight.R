@@ -137,7 +137,7 @@ airdas_sight.airdas_df <- function(x) {
            GsSp = case_when(.data$Event == "S" ~ as.integer(.data$Data4),
                             .data$Event == "t" ~ as.integer(1)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
-                               .data$Event == "t" ~ 1)) %>% 
+                               .data$Event == "t" ~ as.integer(1))) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
            .data$Sp, .data$GsSp, .data$GsTotal, .data$Mixed)
   
