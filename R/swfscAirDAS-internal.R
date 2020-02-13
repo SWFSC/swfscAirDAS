@@ -167,4 +167,27 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   list(z1$file_das[z3], z1$line_num[z3], z3, z2[z3], rep(z4, length(z3)))
 }
 
+
+###############################################################################
+# Functions for doing < / > / <= / >= comparisons with floating points
+.less <- function(x, y) {
+  (x < y) & !isTRUE(all.equal(x, y))
+}
+
+.greater <- function(x, y) {
+  (x > y) & !isTRUE(all.equal(x, y))
+}
+
+.less_equal <- function(x, y) {
+  (x < y) | isTRUE(all.equal(x, y))
+}
+
+.greater_equal <- function(x, y) {
+  (x > y) | isTRUE(all.equal(x, y))
+}
+
+.equal <- function(x, y) {
+  isTRUE(all.equal(x, y))
+}
+
 ###############################################################################

@@ -70,7 +70,7 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
     inherits(eff.id, c("numeric", "integer"))
   )
   
-  if (!all.equal(sum(seg.lengths), sum(x$dist_from_prev)))
+  if (!.equal(sum(seg.lengths), sum(x$dist_from_prev)))
     stop("The sum of the seg.lengths values does not equal the sum of the ", 
          "x$dist_from_prev' values; ", 
          "was this function called by airdas_chop_equal()?")
@@ -114,7 +114,8 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
   
   conditions.list <- conditions.list.init
   
-  stopifnot(nrow(das.df) >= 2)
+  if (!(nrow(das.df) >= 2))
+    stop("Error in airdas_segdata_avg(): x must have at least 2 rows")
   
   #----------------------------------------------------------------------------
   ### Step through each point in effort length, 
@@ -122,8 +123,9 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
   for (j in 2:nrow(das.df)) {
     # t1 and t2: Is point j past the segment midpt or endpt, respectively,
     #   i.e. do we need to calculate the midpt or endpt?
-    t1 <- das.df$dist_from_prev_cumsum[j] >= subseg.mid.cumsum[subseg.curr]
-    t2 <- (das.df$dist_from_prev_cumsum[j] >= subseg.cumsum[subseg.curr])
+    dist.pt.curr <- das.df$dist_from_prev_cumsum[j]
+    t1 <- .greater_equal(dist.pt.curr, subseg.mid.cumsum[subseg.curr])
+    t2 <- .greater_equal(dist.pt.curr, subseg.cumsum[subseg.curr])
     
     if (!t2) {
       # If we didn't cross a segment endpoint, get 
@@ -139,12 +141,13 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
     # While the current subsegment midpoint or endpoint 
     #   comes before the next event (which is indexed by j) 
     while((t1 & is.null(midpt.curr)) | t2) {
-      ### Make objects for values used multiple times
+      
+      ### Make objects for values used multiple times (pt2)
+      # Needs to be here for when there are multiple trips through while loop
       dist.subseg.curr <- subseg.cumsum[subseg.curr]
       dist.subseg.prev <- subseg.cumsum[subseg.curr - 1]
-      dist.pt.prev     <- das.df$dist_from_prev_cumsum[j-1]
       dist.pt.curr     <- das.df$dist_from_prev_cumsum[j]
-      
+      dist.pt.prev     <- das.df$dist_from_prev_cumsum[j-1]
       
       ### Get data
       # Calculate midpoint (if not already done for this segment)
@@ -185,7 +188,8 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
             tmp1 <- dist.pt.curr - tmp1a
             tmp2 <- seg.lengths[subseg.curr]
             
-            if (tmp1 <= tmp2) {break}
+            if (.less_equal(tmp1, tmp2)) {break}
+            # if (tmp1 < tmp2 | isTRUE(all.equal(tmp1, tmp2))) {break}
             rm(tmp1a, tmp1, tmp2)
           }
         }
@@ -256,8 +260,14 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
           endpt.curr <- NULL
           stlin.curr <- das.df$line_num[j]
           
-          t1 <- das.df$dist_from_prev_cumsum[j] >= subseg.mid.cumsum[subseg.curr]
-          t2 <- das.df$dist_from_prev_cumsum[j] >= subseg.cumsum[subseg.curr]
+          if (!.equal(das.df$dist_from_prev_cumsum[j], dist.pt.curr)) print("nope")
+          t1 <- .greater_equal(
+            das.df$dist_from_prev_cumsum[j], subseg.mid.cumsum[subseg.curr]
+          )
+          t2 <- .greater_equal(
+            das.df$dist_from_prev_cumsum[j], subseg.cumsum[subseg.curr]
+          )
+          
           
           # If pt j is before the next seg endpoint, get data from endpt to j
           #   Else, this info is calculated in t2 section above
@@ -265,7 +275,7 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
           tmp2 <- seg.lengths[subseg.curr]
           conditions.list <- conditions.list.init
           
-          if (tmp1 < tmp2) {
+          if (.less(tmp1, tmp2)) {
             conditions.list <- fn_aggr_conditions(
               conditions.list.init, das.df, j-1, tmp1 / tmp2
             )
