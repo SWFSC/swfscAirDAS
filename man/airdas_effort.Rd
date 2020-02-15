@@ -18,8 +18,8 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 
 \item{...}{arguments passed to the chopping function specified using \code{method}}
 
-\item{method}{character; method to use to chop AirDAS data into effort segments.
-Currently the only option is "equallength".}
+\item{method}{character; method to use to chop AirDAS data into effort segments
+Can be "equallength" or "condition" (case-sensitive)}
 
 \item{sp.codes}{character; species code(s) to include in segdata}
 }
@@ -52,13 +52,18 @@ This is the top-level function for chopping processed AirDAS data
   where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
   and then passed to the chopping function specified using \code{method}. 
 
-  Currently, the only available chopping method is "equallength": 
+  Currently, two chopping methods are available: "equallength" and "condition". 
+  The "equallength" method consists of
   chopping effort sections into equal-length segments of length \code{seg.km}, 
   and doing a weighted average of the conditions for the length of that segment. 
   See \code{\link{airdas_chop_equal}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
-  In progress: chop by conditions
+  When using the "condition" method, effort sections are chopped into segments
+  every time a condition changes, 
+  therby ensuring that the conditions are consistent across the entire segment.
+  See \code{\link{airdas_chop_condition}} for more details about this method, 
+  including arguments that must be passed to it via \code{...}.
   
   The sightings included in the segdata counts are filtered as follows: 
   Beaufort is less than or equal to five, the declination angle is less than 78, 
