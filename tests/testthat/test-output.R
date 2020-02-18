@@ -74,6 +74,7 @@ test_that("airdas_process output has expected column names and classes", {
   expect_identical(exp.class, lapply(y.proc2, class))
 })
 
+
 test_that("airdas_sight output has expected column names and classes", {
   y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
   y.sight <- airdas_sight(y.proc)
@@ -83,6 +84,24 @@ test_that("airdas_sight output has expected column names and classes", {
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", 
+    "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Mixed", 
+    "TurtleSizeFt", "TurtleDirection", "TurtleTail"
+  )
+  
+  expect_identical(exp.name, names(y.sight))
+})
+
+
+test_that("airdas_sight output has expected column names and classes with an extra column", {
+  y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.proc$testrr <- 4
+  y.sight <- airdas_sight(y.proc)
+  
+  exp.name <- c(
+    "Event", "DateTime", "Lat", "Lon", "OnEffort", 
+    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
+    "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
+    "EffortDot", "EventNum", "file_das", "line_num", "testrr", 
     "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Mixed", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
