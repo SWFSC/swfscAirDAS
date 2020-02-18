@@ -17,7 +17,7 @@
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "condition" method is specified. 
 #'   Thus, \code{x} must be filtered for events (rows) where either
-#'   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O"; 
+#'   the 'OnEffort' column is \code{TRUE} or the 'Event' column is either "E" or "O"; 
 #'   see \code{\link{airdas_effort}} for more details. 
 #'   This function chops each continuous effort section (henceforth 'effort sections') 
 #'   in \code{x} into modeling segments (henceforth 'segments') by 
@@ -51,6 +51,9 @@
 #'   into a single segment (such as a 'TVPAW' series of events) 
 #'   is followed even if \code{seg.km.min = 0}.
 #'   
+#'   Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
+#'   that doesn't average conditions?
+#'   
 #' @return List of two data frames:
 #' \itemize{
 #'   \item \code{x}, with columns added for the corresponding unique segment code and number
@@ -77,16 +80,22 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
-    stop("x must be filtered for on effort events; see `?airdas_chop_equal")
+    stop("x must be filtered for on effort events; see `?airdas_chop_condition")
   
   if (!.greater_equal(seg.km.min, 0))
     stop("seg.km.min must be greater than or equal to 0; ", 
-         "see `?airdas_chop_equal")
+         "see `?airdas_chop_condition")
   
   
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
+    if (any(is.na(x$Lat)) | any(is.na(x$Lon))) {
+      stop("Error in airdas_chop_condition: Some unexpected events ",
+           "(i.e. not one of ?, 1, 2, 3, 4, 5, 6, 7, 8) ",
+           "have NA values in the Lat and/or Lon columns, ",
+           "and thus the distance between each point cannot be determined")
+    }
     dist.from.prev <- mapply(function(x1, y1, x2, y2) {
       distance(y1, x1, y2, x2, units = "km", method = "vincenty")
     },

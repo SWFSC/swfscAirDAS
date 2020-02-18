@@ -38,7 +38,7 @@ Chop AirDAS data into a new effort segment every time a condition changes
 This function is intended to only be called by \code{\link{airdas_effort}} 
   when the "condition" method is specified. 
   Thus, \code{x} must be filtered for events (rows) where either
-  the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O"; 
+  the 'OnEffort' column is \code{TRUE} or the 'Event' column is either "E" or "O"; 
   see \code{\link{airdas_effort}} for more details. 
   This function chops each continuous effort section (henceforth 'effort sections') 
   in \code{x} into modeling segments (henceforth 'segments') by 
@@ -71,5 +71,8 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   Note that the above rule for 'combining' condition changes that have the same location 
   into a single segment (such as a 'TVPAW' series of events) 
   is followed even if \code{seg.km.min = 0}.
+  
+  Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
+  that doesn't average conditions?
 }
 \keyword{internal}

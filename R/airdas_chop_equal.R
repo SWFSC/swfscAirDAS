@@ -117,6 +117,12 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
+    if (any(is.na(x$Lat)) | any(is.na(x$Lon))) {
+      stop("Error in airdas_chop_equal: Some unexpected events ",
+           "(i.e. not one of ?, 1, 2, 3, 4, 5, 6, 7, 8) ",
+           "have NA values in the Lat and/or Lon columns, ",
+           "and thus the distance between each point cannot be determined")
+    }
     dist.from.prev <- mapply(function(x1, y1, x2, y2) {
       distance(y1, x1, y2, x2, units = "km", method = "vincenty")
     },
