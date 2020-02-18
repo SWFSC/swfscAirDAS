@@ -6,26 +6,6 @@
 #' @param x either a data frame (the output of \code{\link{airdas_read}}), 
 #'   or a character (filepath) which is first passed to \code{\link{airdas_read}}
 #' @param ... ignored
-#' @export
-airdas_process <- function(x, ...) UseMethod("airdas_process")
-
-
-#' @name airdas_process
-#' @export
-airdas_process.character <- function(x, ...) {
-  airdas_process(airdas_read(x), ...)
-}
-
-
-#' @name airdas_process
-#' @export
-airdas_process.data.frame <- function(x, ...) {
-  airdas_process(as_airdas_dfr(x), ...)
-}
-
-
-#' @name airdas_process
-#' 
 #' @param days.gap.part numeric of length 1; 
 #'   time gap (in days) used to identify when a 'partial reset' is performed, 
 #'   i.e. when propogated info (weather, observers, etc) is reset. 
@@ -101,6 +81,25 @@ airdas_process.data.frame <- function(x, ...) {
 #' y.read <- airdas_read(y)
 #' airdas_process(y.read)
 #'
+#' @export
+airdas_process <- function(x, ...) UseMethod("airdas_process")
+
+
+#' @name airdas_process
+#' @export
+airdas_process.character <- function(x, ...) {
+  airdas_process(airdas_read(x), ...)
+}
+
+
+#' @name airdas_process
+#' @export
+airdas_process.data.frame <- function(x, ...) {
+  airdas_process(as_airdas_dfr(x), ...)
+}
+
+
+#' @name airdas_process
 #' @export
 airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, 
                                       days.gap.full = 12/24, 
