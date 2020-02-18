@@ -105,10 +105,9 @@ airdas_chop_equal.data.frame <- function(x, ...) {
 airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
-  if (missing(seg.km)) {
+  if (missing(seg.km))
     stop("You must specify a 'seg.km' argument when using the \"equallength\" ", 
          "method. See `?airdas_chop_equal` for more details")
-  }
   
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_shop_equal")

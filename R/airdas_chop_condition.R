@@ -82,6 +82,10 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_chop_condition")
   
+  if (!inherits(seg.km.min, c("integer", "numeric")))
+    stop("When using the \"condition\" method, seg.km.min must be a numeric. ",
+         "See `?airdas_chop_condition` for more details")
+  
   if (!.greater_equal(seg.km.min, 0))
     stop("seg.km.min must be greater than or equal to 0; ", 
          "see `?airdas_chop_condition")
