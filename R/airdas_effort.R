@@ -9,7 +9,7 @@
 #' @param sp.codes character; species code(s) to include in segdata
 #' @param ... arguments passed to the chopping function specified using \code{method}
 #' 
-#' @importFrom dplyr %>% between bind_cols filter full_join group_by summarise
+#' @importFrom dplyr %>% between bind_cols filter full_join group_by left_join summarise
 #' @importFrom swfscMisc distance
 #' @importFrom utils head
 #' 
@@ -69,10 +69,17 @@
 #'   seg.km = 3
 #' )
 #' 
+#' # Using "equallength" method
 #' y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 #' airdas_effort(
 #'   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
 #'   seg.km = 3, randpicks.load = y.rand
+#' )
+#' 
+#' # Using "condition" method
+#' airdas_effort(
+#'   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
+#'   seg.km.min = 0.05
 #' )
 #' 
 #' @export

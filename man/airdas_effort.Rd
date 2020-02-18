@@ -84,10 +84,17 @@ airdas_effort(
   seg.km = 3
 )
 
+# Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
   seg.km = 3, randpicks.load = y.rand
+)
+
+# Using "condition" method
+airdas_effort(
+  y.proc, method = "condition", sp.codes = c("mn", "bm"), 
+  seg.km.min = 0.05
 )
 
 }

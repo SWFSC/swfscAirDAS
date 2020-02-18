@@ -21,11 +21,11 @@
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "equallength" method is specified. 
 #'   Thus, \code{x} must be filtered for events (rows) where either
-#'   the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O"; 
+#'   the 'OnEffort' column is \code{TRUE} or the 'Event' column is either "E" or "O"; 
 #'   see \code{\link{airdas_effort}} for more details. 
 #'   This function chops each continuous effort section (henceforth 'effort sections') 
 #'   in \code{x} into modeling segments (henceforth 'segments') of equal length. 
-#'   Each effort section runs from a T/R event to its corresponding E/O event. 
+#'   Each effort section runs from a "T"/"R" event to its corresponding "E"/"O" event. 
 #'   After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
 #'   segdata information for each segment.
 #' 
@@ -249,7 +249,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
       as_airdas_df(das.df), seg.lengths, i
     )
     
-    list(das.df, seg.lengths, pos, das.df.segdata)
+    list(das.df = das.df, seg.lengths = seg.lengths, pos = pos, 
+         das.df.segdata = das.df.segdata)
   }, x = x, seg.km = seg.km, r.pos = r.pos)
   
   
@@ -259,12 +260,12 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   ### Randpicks; including writing to csv if specified
   randpicks <- data.frame(
     effort_section = eff.uniq,
-    randpicks = vapply(eff.list, function(j) j[[3]], 1)
+    randpicks = vapply(eff.list, function(j) j[["pos"]], 1)
   )
   
   ### Segdata
   segdata <- data.frame(
-    do.call(rbind, lapply(eff.list, function(i) i[[4]])), 
+    do.call(rbind, lapply(eff.list, function(i) i[["das.df.segdata"]])), 
     stringsAsFactors = FALSE
   ) %>%
     mutate(segnum = seq_along(.data$seg_idx), 
@@ -273,7 +274,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   
   ### Each das data point, along with segnum
   x.eff <- data.frame(
-    do.call(rbind, lapply(eff.list, function(i) i[[1]])), 
+    do.call(rbind, lapply(eff.list, function(i) i[["das.df"]])), 
     stringsAsFactors = FALSE
   ) %>% 
     left_join(segdata[, c("seg_idx", "segnum")], by = "seg_idx")

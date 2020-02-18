@@ -4,7 +4,7 @@
 \alias{airdas_segdata_avg}
 \alias{airdas_segdata_avg.data.frame}
 \alias{airdas_segdata_avg.airdas_df}
-\title{Summarize data for a continuous effort section}
+\title{Summarize AirDAS data for a continuous effort section}
 \usage{
 airdas_segdata_avg(x, ...)
 
@@ -30,7 +30,7 @@ into which \code{x} will be chopped}
 Data frame with the segdata information described above
 }
 \description{
-Summarize effort data by effort segment, while averaging conditions
+Summarize AirDAS effort data by effort segment, while averaging conditions
 }
 \details{
 This function should be called by \code{\link{airdas_chop_equal}};

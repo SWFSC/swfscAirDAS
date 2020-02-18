@@ -1,6 +1,6 @@
-#' Summarize data for a continuous effort section
+#' Summarize AirDAS data for a continuous effort section
 #' 
-#' Summarize effort data by effort segment, while averaging conditions
+#' Summarize AirDAS effort data by effort segment, while averaging conditions
 #' 
 #' @param x \code{airdas_df} object, 
 #'   or a data frame that can be coerced to a \code{airdas_df} object.
@@ -289,5 +289,4 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
            .data$mlat, .data$mlon, .data$dist, 
            .data$mDateTime, .data$year, .data$month, .data$day, .data$mtime, 
            everything())
-  
 }
