@@ -44,6 +44,7 @@
 #' \itemize{
 #'   \item Are there supposed to be equal numbers of T/O and R/E events?
 #'   \item What else to add?
+#'   \item How to check that everything is right-justified?
 #' }
 #'
 #' @return 
