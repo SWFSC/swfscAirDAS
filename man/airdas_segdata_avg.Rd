@@ -28,6 +28,7 @@ into which \code{x} will be chopped}
 }
 \value{
 Data frame with the segdata information described above
+  and in \code{\link{airdas_effort}}
 }
 \description{
 Summarize AirDAS effort data by effort segment, while averaging conditions
@@ -52,8 +53,13 @@ This function should be called by \code{\link{airdas_chop_equal}};
   and reported for the following:
   Beaufort, cloud cover, altitude in feet, aircraft speed in knots, jellyfish code, 
   and the percentage of the segment with each of haze, kelp, and red tide. 
+  For logical columns such as Haze, the reported value is the percentage 
+  (in decimals) of the segment in which that condition was \code{TRUE}.   
+  Transect number and file name are also also incldued in the segdata output;
+  these values are (should be) all consistent across the whole effort section,
+  and thus across all segments in \code{x}.
   
   \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}} 
-  are used to calculate the segment midpoints.
+  are used to calculate the segment start, mid, and end points.
 }
 \keyword{internal}
