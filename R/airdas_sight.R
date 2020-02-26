@@ -139,7 +139,7 @@ airdas_sight.airdas_df <- function(x) {
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ 1)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
-           .data$Sp, .data$GsSp, .data$GsTotal, .data$Mixed)
+           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
   
   ### 3) Turtle sighting data
   sight.info.t <- sight.df %>% 

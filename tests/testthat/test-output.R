@@ -84,7 +84,7 @@ test_that("airdas_sight output has expected column names and classes", {
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", 
-    "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Mixed", 
+    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
   
@@ -102,7 +102,7 @@ test_that("airdas_sight output has expected column names and classes with an ext
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", "testrr", 
-    "SightNo", "Obs", "Angle", "SightStd", "Sp", "GsSp", "GsTotal", "Mixed", 
+    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
   
