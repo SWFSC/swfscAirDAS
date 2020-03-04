@@ -18,6 +18,7 @@ airdas_process(x, ...)
   days.gap.part = 0.5/24,
   days.gap.full = 12/24,
   gap.message = FALSE,
+  reset.tvpaw = TRUE,
   ...
 )
 }
@@ -39,6 +40,10 @@ Default is 12 hours}
 
 \item{gap.message}{logical; should messages be printed detailing which row(s) of the 
 output data frame were partially or fully reset?}
+
+\item{reset.tvpaw}{logical; default is \code{TRUE}.
+Indicates if state/condition information should be reset to \code{NA}
+when beginning a new transect. See details}
 }
 \value{
 An \code{airdas_df} object, which is also a data frame.
@@ -97,6 +102,11 @@ If \code{x} is a character, it is assumed to be a filepath
       The 'EffortDot' column is ignored
     \item Missing values are \code{NA} rather than \code{-1}
   }
+  
+  Normally, a T event (to indicate starting/resuming a transect)
+  is immediately followed by a VPAW event series, creating a TVPAW event series.
+  The \code{reset.tvpaw} argument causes the conditions set in the VPAW event series
+  (Beaufort, viewing conditions, altitude, etc.) to be reset to \code{NA} at each T event
   
   See \code{\link{airdas_format_pdf}} for more information about AirDAS format requirements
 }

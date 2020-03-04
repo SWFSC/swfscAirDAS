@@ -16,6 +16,9 @@
 #'   Default is 12 hours
 #' @param gap.message logical; should messages be printed detailing which row(s) of the 
 #'   output data frame were partially or fully reset?
+#' @param reset.tvpaw logical; default is \code{TRUE}.
+#'   Indicates if state/condition information should be reset to \code{NA}
+#'   when beginning a new transect. See details
 #'   
 #' @importFrom dplyr %>% select
 #' @importFrom rlang !!
@@ -43,6 +46,11 @@
 #'       The 'EffortDot' column is ignored
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
+#'   
+#'   Normally, a T event (to indicate starting/resuming a transect)
+#'   is immediately followed by a VPAW event series, creating a TVPAW event series.
+#'   The \code{reset.tvpaw} argument causes the conditions set in the VPAW event series
+#'   (Beaufort, viewing conditions, altitude, etc.) to be reset to \code{NA} at each T event
 #'   
 #'   See \code{\link{airdas_format_pdf}} for more information about AirDAS format requirements
 #'   
@@ -103,7 +111,8 @@ airdas_process.data.frame <- function(x, ...) {
 #' @export
 airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, 
                                       days.gap.full = 12/24, 
-                                      gap.message = FALSE, ...) 
+                                      gap.message = FALSE, 
+                                      reset.tvpaw = TRUE, ...) 
 { 
   #----------------------------------------------------------------------------
   # Input checks
@@ -213,6 +222,9 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   
   # Additional processing done after for loop
   
+  # Determine reset rows for effort reset
+  idx.eff <- which(event.T)
+  
   
   #----------------------------------------------------------------------------
   # Loop through data for 'carry-over info' that applies to subsequent events
@@ -228,6 +240,12 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     # Reset transect number only when it is a new day;
     #   all of idx.reset.full are in idx.reset.part
     if (i %in% idx.reset.full) LastTrans <- NA
+    
+    if ((i %in% idx.eff) & reset.tvpaw) {
+      LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastHKR <-
+        LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
+        LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- NA
+    }
     
     # Set/pass along 'carry-over info'
     if (is.na(Bft[i]))      Bft[i] <- LastBft           else LastBft <- Bft[i]           #Beaufort
