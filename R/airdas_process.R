@@ -66,6 +66,7 @@
 #'     Percent overcast (cloud cover)    \tab CCover   \tab Event: W; Column: Data2\cr
 #'     Jellyfish code                    \tab Trans    \tab Event: W; Column: Data4\cr
 #'     Horizontal sun (clock system)     \tab HorizSun \tab Event: W; Column: Data5\cr
+#'     Vertical sun (clock system) \tab VertSun \tab Event: W; Column: Data5\cr
 #'     Haze/Kelp/Red tide code           \tab HKR      \tab Event: W; Column: Data1\cr
 #'     Haze (from HKR code)              \tab Haze     \tab HKR\cr
 #'     Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
@@ -291,7 +292,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   
   # Post-processing
   tmp <- list(
-    Bft = Bft, CCover = CCover, Jelly = Jelly, HorizSun = HorizSun, HKR = HKR, 
+    Bft = Bft, CCover = CCover, Jelly = Jelly, 
+    HorizSun = HorizSun, VertSun = VertSun, HKR = HKR, 
     Haze = grepl("h", HKR, ignore.case = TRUE) | grepl("y", HKR, ignore.case = TRUE), 
     Kelp = grepl("h", HKR, ignore.case = TRUE), 
     RedTide = grepl("r", HKR, ignore.case = TRUE), 
@@ -342,8 +344,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   #----------------------------------------------------------------------------
   cols.toreturn <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", 
-    "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "AltFt", "SpKnot", 
+    "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+    "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
     "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
     "EffortDot", "EventNum", "file_das", "line_num", "file_type"

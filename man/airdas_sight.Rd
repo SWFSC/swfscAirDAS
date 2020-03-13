@@ -18,7 +18,7 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 }
 \value{
 Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
-  and 2) columns with sighting information (observer, species, etc.) 
+  and 2) columns with sighting information (observer, species, group size, etc.) 
   extracted from 'Data#' columns as specified in Details.
   The data frame has one row for each sighting,
   or one row for each species of each sighting if 
@@ -29,25 +29,20 @@ Extract sighting information from aerial DAS data
 }
 \details{
 AirDAS events contain specific information in the 'Data#' columns,
-  with the information depending on the event code for that row.
-  This function extracts relevant data for sighting events, and returns a
+  with the information depending on the event code and file type for that row.
+  This function, which can handle multiple file types in \code{x} 
+  (for instance, \code{x} could be combined PHOCOENA and TURTLE data) 
+  extracts relevant data for sighting events, and returns a
   data frame with dedicated columns for each piece of sighting information.
-  This function recognizes the following types of sightings: 
-  marine mammal sightings (event code "S"), marine mammal resights (code "s"), 
-  and turtle sightings (code "t"). 
-  Multi-species (mixed species) marine mammal sightings are also followed by a "1" event.
-  See \code{\link{airdas_format_pdf}} for more information about events and event formats.
+  See \code{\link{airdas_format_pdf}} for more information about the expected
+  events and event formats, depending on the file type.
   
-  Abbreviations used in column names: Gs = group size, Sp = species, 
-  Mixed = mixed species (multi-species) sighting.
-
+  Abbreviations used in column names include: Gs = group size, Sp = species, 
+  Mixed = mixed species (multi-species) sighting.#' 
   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
-  made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
-  
-  Multi-species group sizes are rounded to nearest whole number using \code{round(, 0)}.
-  
-  Note that this function can handle multiple file types in \code{x};
-  for instance \code{x} could be combined PHOCOENA and TURTLE data.
+  made by ObsL, ObsB, or ObsR (not the data recorder or pilot).#'   
+  In addition, multi-species group sizes are rounded to 
+  the nearest whole number using \code{round(, 0)}.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")

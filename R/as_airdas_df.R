@@ -37,6 +37,7 @@ as_airdas_df.data.frame <- function(x) {
     CCover = "numeric",
     Jelly = "numeric",
     HorizSun = "numeric",
+    VertSun = "numeric",
     HKR = "character",
     Haze = "logical",
     Kelp = "logical",

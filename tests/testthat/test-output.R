@@ -43,6 +43,7 @@ test_that("airdas_process output has expected column names and classes", {
     CCover = "numeric",
     Jelly = "numeric",
     HorizSun = "numeric",
+    VertSun = "numeric",
     HKR = "character",
     Haze = "logical",
     Kelp = "logical",
@@ -83,8 +84,9 @@ test_that("airdas_sight output has expected column names and classes", {
   
   exp.name <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
-    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
+    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+    "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot",  
+    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", 
     "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
@@ -101,8 +103,9 @@ test_that("airdas_sight output has expected column names and classes with an ext
   
   exp.name <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
-    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
-    "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
+    "Trans", "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+    "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot",  
+    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", "testrr", 
     "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"

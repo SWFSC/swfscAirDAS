@@ -58,6 +58,7 @@ An \code{airdas_df} object, which is also a data frame.
     Percent overcast (cloud cover)    \tab CCover   \tab Event: W; Column: Data2\cr
     Jellyfish code                    \tab Trans    \tab Event: W; Column: Data4\cr
     Horizontal sun (clock system)     \tab HorizSun \tab Event: W; Column: Data5\cr
+    Vertical sun (clock system) \tab VertSun \tab Event: W; Column: Data5\cr
     Haze/Kelp/Red tide code           \tab HKR      \tab Event: W; Column: Data1\cr
     Haze (from HKR code)              \tab Haze     \tab HKR\cr
     Kelp (from HKR code)              \tab Kelp     \tab HKR\cr
