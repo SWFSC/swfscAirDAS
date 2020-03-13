@@ -45,23 +45,23 @@ describing the AirDAS data format requirements of `swfscAirDAS`.
 First, you must read and process the AirDAS data
 
 ``` r
-# library(swfscAirDAS)
-# # Get file paths of sample files included in the package
-# y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-# y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
-# 
-# # Read and process AirDAS file, i.e. read AirDAS data into a data frame and add info columns
-# y.read <- airdas_read(y)
-# y.proc <- airdas_process(y.read)
-# 
-# # Alternatively, the file path can be passed directly to airdas_process
-# y.proc <- airdas_process(y)
+library(swfscAirDAS)
+# Get file paths of sample files included in the package
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+
+# Read and process AirDAS file, i.e. read AirDAS data into a data frame and add info columns
+y.read <- airdas_read(y)
+y.proc <- airdas_process(y.read)
+
+# Alternatively, the file path can be passed directly to airdas_process
+y.proc <- airdas_process(y)
 ```
 
 Note that `airdas_read` can read multiple files simultaneously
 
 ``` r
-# y.read.mult <- airdas_read(c(y, y))
+y.read.mult <- airdas_read(c(y, y))
 ```
 
 After processing, you can summarize the processed AirDAS data. There are
@@ -72,9 +72,9 @@ sections into equal length effort (modeling) segments, while the method
 condition changes.
 
 ``` r
-# # Summarize sighting information
-# y.sight <- airdas_sight(y.proc)
-# 
+# Summarize sighting information
+y.sight <- airdas_sight(y.proc)
+
 # # Chop and summarize effort using "equallength" method
 # y.eff <- airdas_effort(
 #   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 

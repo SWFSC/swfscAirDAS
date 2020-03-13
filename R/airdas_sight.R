@@ -22,6 +22,9 @@
 #'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
 #'   
 #'   Multi-species group sizes are rounded to nearest whole number using \code{round(, 0)}.
+#'   
+#'   Note that this function can handle multiple file types in \code{x};
+#'   for instance \code{x} could be combined PHOCOENA and TURTLE data.
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
 #'   and 2) columns with sighting information (observer, species, etc.) 
@@ -110,16 +113,56 @@ airdas_sight.airdas_df <- function(x) {
     select(-.data$sight_cumsum)
   
   
-  
   #----------------------------------------------------------------------------
-  # Extract relevant information:
   stopifnot(all(sight.df$Event %in% event.sight))
   
-  ### 1) Processed AirDAS variables
+  ### 1) Extract processed AirDAS variables
   sight.info <- sight.df %>% 
     select(-!!paste0("Data", 1:7), -.data$GsTotal, -.data$Mixed)
   
-  ### 2) Sighting data shared by all sighting types (hence no)
+  ### 2) Extract sighting information based on file type
+  sight.df.all <- bind_rows(
+    .airdas_sight_phocoena(filter(sight.df, file_type == "phocoena")), 
+    # .airdas_sight_turtle(filter(sight.df, file_type == "caretta")), 
+    .airdas_sight_turtle(filter(sight.df, file_type == "turtle"))
+  )
+
+  #----------------------------------------------------------------------------
+  # Join data frames and return
+  sight.info %>% 
+    left_join(sight.df.all, by = "idx") %>% 
+    select(-.data$idx)
+}
+
+
+
+###############################################################################
+# Extract sighting data from data created using PHOCOENA program
+.airdas_sight_phocoena <- function(sight.df) {
+  if (!all(sight.df$Event == "S")) 
+    stop("Error in processing: not all sighitng rows with file_type ", 
+         "PHOCOENA are Event S. ", 
+         "Please reprocess data and/or submit an issue")
+  
+  sight.df %>% 
+    mutate(SightNo = .data$Data1, 
+           Sp = .data$Data2, 
+           GsTotal = as.numeric(.data$Data3), 
+           Angle = as.numeric(.data$Data4), 
+           Obs = .data$Data5, 
+           GsSp = GsTotal, 
+           SightStd = .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR), 
+           TurtleSizeFt = NA, 
+           TurtleDirection = NA, 
+           TurtleTail = NA) %>% 
+    select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
+           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp, 
+           .data$TurtleSizeFt, .data$TurtleDirection, .data$TurtleTail)
+}
+
+
+# Extract sighting data from data created using CARETTA program
+.airdas_sight_caretta <- function(sight.df) {
   sight.info.all <- sight.df %>% 
     mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
            Obs = case_when(.data$Event == "S" ~ .data$Data2,
@@ -138,7 +181,6 @@ airdas_sight.airdas_df <- function(x) {
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
            .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
   
-  ### 3) Turtle sighting data
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
     mutate(TurtleSizeFt = as.numeric(.data$Data4), 
@@ -147,11 +189,37 @@ airdas_sight.airdas_df <- function(x) {
     select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
            .data$TurtleTail)
   
+  left_join(sight.info.all, sight.info.t, by = "idx")
+}
+
+
+# Extract sighting data from data created using TURTLE program
+.airdas_sight_turtle <- function(sight.df) {
+  sight.info.all <- sight.df %>% 
+    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
+           Obs = case_when(.data$Event == "S" ~ .data$Data2,
+                           .data$Event == "t" ~ .data$Data1), 
+           Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
+                                        .data$Event == "s" ~ .data$Data2, 
+                                        .data$Event == "t" ~ .data$Data2)), 
+           SightStd = ifelse(.data$Event == "s", NA, 
+                             .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)), 
+           Sp = case_when(.data$Event == "S" ~ .data$Data5,
+                          .data$Event == "t" ~ .data$Data3), 
+           GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
+                            .data$Event == "t" ~ 1), 
+           GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
+                               .data$Event == "t" ~ 1)) %>% 
+    select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
+           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
   
-  #----------------------------------------------------------------------------
-  # Join data frames and return
-  sight.info %>% 
-    left_join(sight.info.all, by = "idx") %>% 
-    left_join(sight.info.t, by = "idx") %>% 
-    select(-.data$idx)
+  sight.info.t <- sight.df %>% 
+    filter(.data$Event == "t") %>%
+    mutate(TurtleSizeFt = as.numeric(.data$Data4), 
+           TurtleDirection = as.numeric(.data$Data5), 
+           TurtleTail = .data$Data6) %>% 
+    select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
+           .data$TurtleTail)
+  
+  left_join(sight.info.all, sight.info.t, by = "idx")
 }

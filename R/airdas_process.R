@@ -312,9 +312,18 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   
   # Convert values to lower case
   tmp$HKR <- tolower(tmp$HKR)
-  tmp[c("ObsL", "ObsB", "ObsR", "Rec")] <- tolower(tmp[c("ObsL", "ObsB", "ObsR", "Rec")])
-  tmp[c("VLI", "VLO", "VB", "VRI", "VRO")] <- tolower(tmp[c("VLI", "VLO", "VB", "VRI", "VRO")])
-
+  
+  tmp$ObsL <- tolower(tmp$ObsL)
+  tmp$ObsB <- tolower(tmp$ObsB)
+  tmp$ObsR <- tolower(tmp$ObsR)
+  tmp$Rec  <- tolower(tmp$Rec)
+  
+  tmp$VLI <- tolower(tmp$VLI)
+  tmp$VLO <- tolower(tmp$VLO)
+  tmp$VB  <- tolower(tmp$VB)
+  tmp$VRI <- tolower(tmp$VRI)
+  tmp$VRO <- tolower(tmp$VRO)
+  
     
   #----------------------------------------------------------------------------
   # Warning check for accepted event codes

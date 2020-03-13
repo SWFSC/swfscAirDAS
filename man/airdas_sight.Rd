@@ -45,6 +45,9 @@ AirDAS events contain specific information in the 'Data#' columns,
   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
   
   Multi-species group sizes are rounded to nearest whole number using \code{round(, 0)}.
+  
+  Note that this function can handle multiple file types in \code{x};
+  for instance \code{x} could be combined PHOCOENA and TURTLE data.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
