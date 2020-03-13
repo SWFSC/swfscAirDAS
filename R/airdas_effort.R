@@ -5,7 +5,8 @@
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'  or a data frame that can be coerced to a \code{airdas_df} object
 #' @param method character; method to use to chop AirDAS data into effort segments
-#'   Can be "equallength" or "condition" (case-sensitive)
+#'   Can be "equallength" or "condition" (case-sensitive) to use 
+#'   \code{\link{airdas_chop_equal}} or \code{\link{airdas_chop_condition}}, respectively
 #' @param sp.codes character; species code(s) to include in segdata
 #' @param dist.method character;
 #'   method to use to calculate distance between lat/lon coordinates.

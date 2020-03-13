@@ -1,34 +1,69 @@
 #' Aerial DAS format requirements
 #'
-#' Save the pdf document describing the aerial DAS format required by \code{swfscAirDAS} to a specified file
+#' Access and save PDF documents describing the data format of the different file types
+#' supported by \code{swfscAirDAS}
 #'
-#' @param file character vector, the name of the file where the pdf will be saved
-#' @param ... passed on to \code{\link[base:files]{file.copy}}, might included named argument \code{overwrite}
+#' @param file character; the name of the file where the PDF will be saved
+#' @param file.type character; indicates which data format PDF to extract.
+#'   Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive)
+#' @param ... passed to \code{\link[base:files]{file.copy}}; 
+#'   might included named argument \code{overwrite}
 #'
-#' @details A wrapper function for \code{\link[base:files]{file.copy}}. 
-#'   This function saves the pdf document describing the aerial DAS data format requirements by 
-#'   copying the pdf document located at \code{system.file("AirDAS_Format.pdf", package = "swfscAirDAS")}
-#'   to \code{file}
+#' @details This function is a wrapper function for \code{\link[base:files]{file.copy}}. 
+#'   It saves a PDF document describing the specified aerial DAS data 
+#'   format requirements by copying the PDF document to \code{file}
 #'   
-#'   This file can also be downloaded from
-#'   \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
+#'   The PDF files can also be manually copied or downloaded from:
+#'   
+#'   PHOCOENA
+#'   \itemize{
+#'     \item Can be copied from: 
+#'       \code{system.file("AirDAS_Format_PHOCOENA.pdf", package = "swfscAirDAS")}
+#'     \item Can be downloaded from: 
+#'       \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf}
+#'   }
+#'   CARETTA
+#'   \itemize{
+#'     \item Can be copied from: 
+#'       \code{system.file("AirDAS_Format_CARETTA.pdf", package = "swfscAirDAS")}
+#'     \item Can be downloaded from: 
+#'       \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf}
+#'   }
+#'   TURTLE
+#'   \itemize{
+#'     \item Can be copied from: 
+#'       \code{system.file("AirDAS_Format_TURTLE.pdf", package = "swfscAirDAS")}
+#'     \item Can be downloaded from: 
+#'       \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf}
+#'   }
 #'
-#' @return output of \code{\link[base:files]{file.copy}}; 
+#' @return output of \code{\link[base:files]{file.copy}}: 
 #'   \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
+#'   
+#' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
 #' @examples
 #' \dontrun{
-#' airdas_format_pdf("AirDAS_Format.pdf", overwrite = FALSE)
+#' airdas_format_pdf("AirDAS_Format_TURTLE.pdf", file.type  = "turtle", overwrite = FALSE)
 #' }
 #'
 #' @export
-airdas_format_pdf <- function(file, ...) {
-  stopifnot(
-    inherits(file, "character"), 
-    length(file) == 1
-  )
+airdas_format_pdf <- function(file, file.type, ...) {
+  if (!(inherits(file, "character") & length(file) == 1))
+    stop("file must be a single character string")
   
-  file.copy(
-    system.file("AirDAS_Format.pdf", package = "swfscAirDAS"), to = file, ...
-  )
+  file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
+  if (!(file.type %in% file.type.acc))
+    stop("file.type must be one of: ", paste(file.type.acc, collapse = ", "))
+  
+  if (file.type == "survey") 
+    stop("This package does not yet support the SURVEY method")
+  
+  file.tocopy <- switch(file.type, 
+                        phocoena = "AirDAS_Format_PHOCOENA.pdf", 
+                        # survey = "AirDAS_Format_SURVEY.pdf", 
+                        caretta = "AirDAS_Format_CARETTA.pdf", 
+                        turtle = "AirDAS_Format_TURTLE.pdf")
+  
+  file.copy(system.file(file.tocopy, package = "swfscAirDAS"), to = file, ...)
 }

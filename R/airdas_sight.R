@@ -7,10 +7,11 @@
 #' 
 #' @details AirDAS events contain specific information in the 'Data#' columns,
 #'   with the information depending on the event code and file type for that row.
-#'   This function, which can handle multiple file types in \code{x} 
-#'   (for instance, \code{x} could be combined PHOCOENA and TURTLE data) 
-#'   extracts relevant data for sighting events, and returns a
-#'   data frame with dedicated columns for each piece of sighting information.
+#'   This function extracts relevant data for sighting events, and returns a
+#'   data frame with dedicated columns for each piece of sighting information. 
+#'   It can handle multiple file types in \code{x}; for instance, 
+#'   \code{x} could be processed PHOCOENA and TURTLE data
+#'   combined using \code{\link[base:cbind]{rbind}}. 
 #'   See \code{\link{airdas_format_pdf}} for more information about the expected
 #'   events and event formats, depending on the file type.
 #'   
@@ -19,14 +20,28 @@
 #'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
 #'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).#'   
 #'   In addition, multi-species group sizes are rounded to 
-#'   the nearest whole number using \code{round(, 0)}.
+#'   the nearest whole number using \code{round(, 0)}
 #'
 #' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
-#'   and 2) columns with sighting information (observer, species, group size, etc.) 
-#'   extracted from 'Data#' columns as specified in Details.
-#'   The data frame has one row for each sighting,
-#'   or one row for each species of each sighting if 
-#'   it is a multi-species sighting.
+#'   and 2) columns with sighting information extracted from 'Data#' columns as described below.
+#'   The data frame has one row for each sighting, or one row for each 
+#'   species of each sighting if it is a multi-species (mixed) sighting.
+#'   
+#'   Added sighting information columns:
+#'   \tabular{lll}{
+#'     \emph{Sighting information}       \tab \emph{Column name} \tab \emph{Notes}\cr
+#'     Sighting number                   \tab SightNo\cr
+#'     Observer that made the sighting   \tab Obs\cr
+#'     Angle of declination              \tab Angle    \tab Left is negative\cr
+#'     Standard sighting                 \tab SightStd \tab Logical; described in Details\cr
+#'     Mixed species sighting            \tab Mixed    \tab Logical\cr
+#'     Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
+#'     Species                           \tab Sp\cr
+#'     Species-specific group size       \tab GsSp\cr
+#'     Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events\cr
+#'     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
+#'     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
+#'   }
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")

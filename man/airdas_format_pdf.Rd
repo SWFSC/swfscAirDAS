@@ -4,32 +4,60 @@
 \alias{airdas_format_pdf}
 \title{Aerial DAS format requirements}
 \usage{
-airdas_format_pdf(file, ...)
+airdas_format_pdf(file, file.type, ...)
 }
 \arguments{
-\item{file}{character vector, the name of the file where the pdf will be saved}
+\item{file}{character; the name of the file where the PDF will be saved}
 
-\item{...}{passed on to \code{\link[base:files]{file.copy}}, might included named argument \code{overwrite}}
+\item{file.type}{character; indicates which data format PDF to extract.
+Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive)}
+
+\item{...}{passed to \code{\link[base:files]{file.copy}}; 
+might included named argument \code{overwrite}}
 }
 \value{
-output of \code{\link[base:files]{file.copy}}; 
+output of \code{\link[base:files]{file.copy}}: 
   \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
 }
 \description{
-Save the pdf document describing the aerial DAS format required by \code{swfscAirDAS} to a specified file
+Access and save PDF documents describing the data format of the different file types
+supported by \code{swfscAirDAS}
 }
 \details{
-A wrapper function for \code{\link[base:files]{file.copy}}. 
-  This function saves the pdf document describing the aerial DAS data format requirements by 
-  copying the pdf document located at \code{system.file("AirDAS_Format.pdf", package = "swfscAirDAS")}
-  to \code{file}
+This function is a wrapper function for \code{\link[base:files]{file.copy}}. 
+  It saves a PDF document describing the specified aerial DAS data 
+  format requirements by copying the PDF document to \code{file}
   
-  This file can also be downloaded from
-  \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf}
+  The PDF files can also be manually copied or downloaded from:
+  
+  PHOCOENA
+  \itemize{
+    \item Can be copied from: 
+      \code{system.file("AirDAS_Format_PHOCOENA.pdf", package = "swfscAirDAS")}
+    \item Can be downloaded from: 
+      \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf}
+  }
+  CARETTA
+  \itemize{
+    \item Can be copied from: 
+      \code{system.file("AirDAS_Format_CARETTA.pdf", package = "swfscAirDAS")}
+    \item Can be downloaded from: 
+      \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf}
+  }
+  TURTLE
+  \itemize{
+    \item Can be copied from: 
+      \code{system.file("AirDAS_Format_TURTLE.pdf", package = "swfscAirDAS")}
+    \item Can be downloaded from: 
+      \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf}
+  }
 }
 \examples{
 \dontrun{
-airdas_format_pdf("AirDAS_Format.pdf", overwrite = FALSE)
+airdas_format_pdf("AirDAS_Format_TURTLE.pdf", file.type  = "turtle", overwrite = FALSE)
 }
 
+}
+\seealso{
+\url{https://smwoodman.github.io/swfscAirDAS/}
 }

@@ -6,52 +6,52 @@
 #'
 #' @param file filename(s) of one or more AirDAS files
 #' @param file.type character; indicates the program used to create \code{file}.
-#'   Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive).
+#'   Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive). 
 #'   Default is "turtle"
 #' @param skip integer: see \code{\link[readr]{read_fwf}}. Default is 0
 #' @param tz character; see \code{\link[base]{strptime}}. Default is UTC
+#' @param ... ignored
 #'
 #' @details Reads/parses aerial survey DAS data into columns of a data frame.
 #'   If \code{file} contains multiple filenames, then the individual 
-#'   data frames will be concatenated.
+#'   data frames will be combined using \code{\link[base:cbind]{rbind}}
 #'   
 #'   See \code{\link{airdas_format_pdf}} for information about AirDAS format requirements
 #'   for the specific file types (programs)
 #'   
 #' @return An \code{airdas_dfr} object, which is also a data frame, with AirDAS data read into columns.
-#'   The data are read into the data frame as characters as described in 'Details',
+#'   The data are read into the data frame as characters,
 #'   with the following exceptions:
 #'   \tabular{lll}{
 #'     \emph{Name} \tab \emph{Class} \tab \emph{Details}\cr
 #'     EffortDot \tab logical   \tab \code{TRUE} if "." was present, and \code{FALSE} otherwise\cr
 #'     DateTime  \tab POSIXct   \tab combination of 'Date' and 'Time' columns, with time zone \code{tz}\cr
-#'     Lat       \tab numeric   \tab 'Latitude' column converted to decimal degrees in range [-90, 90]\cr
-#'     Lon       \tab numeric   \tab 'Longitude' column converted to decimal degrees in range [-180, 180]\cr
-#'     Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (rows where 'Event' is not "C" or "c")\cr
-#'     file_das  \tab character \tab filename, extracted from the \code{file} argument using \code{\link[base]{basename}}\cr
+#'     Lat       \tab numeric   \tab 'Latitude' columns converted to decimal degrees in range [-90, 90]\cr
+#'     Lon       \tab numeric   \tab 'Longitude' columns converted to decimal degrees in range [-180, 180]\cr
+#'     Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (rows where 'Event' is not "C" )\cr
+#'     file_das  \tab character \tab base filename, extracted from the \code{file} argument\cr
 #'     line_num  \tab integer   \tab line number of each data row\cr
 #'     file_type \tab character \tab \code{file.type} argument
 #'   }
 #'
 #' @examples
-#' airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' airdas_read(y, file.type = "turtle")
 #'
 #' @export
-airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC") {
+airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   stopifnot(
     inherits(file, "character"),
     inherits(file.type, "character")
   )
-  
+
   if (length(file) < 1)
     stop("file must be a vector of one or more filename(s)")
   
   if (!all(file.exists(file)))
     stop("The supplied character string does not all name an existing file(s), ",
          "meaning file.exists(file) is FALSE")
-  
-  
-  
+
   
   # Call appropriate read function
   file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
@@ -61,7 +61,7 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC") {
   call.read <- switch(file.type, 
                       phocoena = .airdas_read_phocoena, 
                       survey = .airdas_read_survey,
-                      caretta = .airdas_read_caretta, 
+                      caretta = .airdas_read_turtle, 
                       turtle = .airdas_read_turtle)
   
   do.call(rbind, lapply(file, call.read, skip = skip, tz = tz))
@@ -103,19 +103,12 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC") {
 #------------------------------------------------------------------------------
 # Read data from the SURVEY program
 .airdas_read_survey <- function(file, skip, tz) {
-  stop("The SURVEY read method is not yet ready")
+  stop("This package does not yet support the SURVEY method")
 }
 
 
 #------------------------------------------------------------------------------
-# Read data from the CARETTA program
-.airdas_read_caretta <- function(file, skip, tz) {
-  stop("The CARETTA read method is not yet ready")
-}
-
-
-#------------------------------------------------------------------------------
-# Read data from the TURTLE* program
+# Read data from the CARETTA or TURTLE* program
 .airdas_read_turtle <- function(file, skip, tz) {
   # Start and end (inclusive) column indices
   fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 40,45,50,55,60,65,70)

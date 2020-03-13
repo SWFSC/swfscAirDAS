@@ -19,7 +19,8 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 \item{...}{arguments passed to the chopping function specified using \code{method}}
 
 \item{method}{character; method to use to chop AirDAS data into effort segments
-Can be "equallength" or "condition" (case-sensitive)}
+Can be "equallength" or "condition" (case-sensitive) to use 
+\code{\link{airdas_chop_equal}} or \code{\link{airdas_chop_condition}}, respectively}
 
 \item{sp.codes}{character; species code(s) to include in segdata}
 
