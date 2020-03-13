@@ -6,14 +6,16 @@
 #'   or a data frame that can be coerced to a \code{airdas_df} object. 
 #'   This data must be filtered for 'OnEffort' events; 
 #'   see the Details section below
+#' @param ... ignored
 #' @param seg.km.min numeric; minimum allowable segment length (in kilometers).
 #'   Default is 0.1. See the Details section below for more information
-#' @param ... ignored
+#' @param dist.method character; see \code{\link{airdas_effort}}.
+#'   Default is \code{NULL} since these distances should have already been
+#'   calculated in \code{\link{airdas_effort}}
+#' @param num.cores Number of CPUs to over which to distribute computations.
+#'   Defaults to \code{NULL} which uses one fewer than the number of cores
+#'   reported by \code{\link[parallel]{detectCores}}
 #'   
-#' @importFrom dplyr %>% filter group_by left_join mutate select summarise
-#' @importFrom swfscMisc distance
-#' @importFrom utils head
-#' 
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "condition" method is specified. 
 #'   Thus, \code{x} must be filtered for events (rows) where either
@@ -50,6 +52,9 @@
 #'   Note that the above rule for 'combining' condition changes that have the same location 
 #'   into a single segment (such as a 'TVPAW' series of events) 
 #'   is followed even if \code{seg.km.min = 0}.
+#'
+#'   If the column \code{dist_from_prev} does not exist, the distance between
+#'   subsequent events is calculated as described in \code{\link{airdas_effort}}
 #'   
 #'   Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
 #'   that doesn't average conditions?
@@ -76,7 +81,9 @@ airdas_chop_condition.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_condition
 #' @export
-airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
+airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, 
+                                            dist.method = NULL, 
+                                            num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
@@ -94,20 +101,12 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
-    if (any(is.na(x$Lat)) | any(is.na(x$Lon))) {
-      stop("Error in airdas_chop_condition: Some unexpected events ",
-           "(i.e. not one of ?, 1, 2, 3, 4, 5, 6, 7, 8) ",
-           "have NA values in the Lat and/or Lon columns, ",
-           "and thus the distance between each point cannot be determined")
-    }
-    dist.from.prev <- mapply(function(x1, y1, x2, y2) {
-      distance(y1, x1, y2, x2, units = "km", method = "vincenty")
-    },
-    x1 = head(x$Lon, -1), y1 = head(x$Lat, -1),
-    x2 = x$Lon[-1], y2 = x$Lat[-1], 
-    SIMPLIFY = TRUE)
+    if (is.null(dist.method))
+      stop("If the distance between consectutive points (events) ",
+           "has not already been calculated, ",
+           "then you must provide a valid argument for dist.method")
     
-    x$dist_from_prev <- c(NA, dist.from.prev)
+    x$dist_from_prev <- .dist_from_prev(x, dist.method)
   }
   
   # Get distance to next point
@@ -127,82 +126,43 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, ...) {
     "AltFt", "SpKnot", "VLI", "VLO", "VB", "VRI", "VRO"
   )
   
-  eff.list <- lapply(eff.uniq, function(i, x) {
-    #------------------------------------------------------
-    # Prep
-    das.df <- filter(x, .data$cont_eff_section == i)
-    
-    # Ignore distance from last effort
-    das.df$dist_from_prev[1] <- 0
-    # Ignore distance past this continuous effort section
-    das.df$dist_to_next[nrow(das.df)] <- 0
-    
-    
-    #------------------------------------------------------
-    ### Determine indices of condition changes, and combine as needed
-    cond.list <- lapply(cond.names, function(j) {
-      which(c(NA, head(das.df[[j]], -1) != das.df[[j]][-1]))
-    })
-    cond.idx.pre <- sort(unique(c(1, unlist(cond.list))))
-    
-    effort.seg.pre <- rep(FALSE, nrow(das.df))
-    effort.seg.pre[cond.idx.pre] <- TRUE
-    
-    das.df$effort_seg_pre <- cumsum(effort.seg.pre)
-    das.df$idx <- seq_len(nrow(das.df))
-    
-    # Get distances of current effort sections
-    d.pre <- das.df %>% 
-      group_by(.data$effort_seg_pre) %>% 
-      summarise(idx_start = min(.data$idx), 
-                idx_end = max(.data$idx), 
-                dist_length = sum(.data$dist_to_next))
-    
-    # == 0 check is here in case seg.km.min is 0
-    seg.len0 <- d.pre$idx_end[.equal(d.pre$dist_length, 0)] + 1
-    seg.len1 <- d.pre$idx_end[.less(d.pre$dist_length, seg.km.min)] + 1
-    
-    seg.diff <- setdiff(seg.len1, seg.len0)
-    if (length(seg.diff) > 0 & all(seg.diff <= nrow(das.df)))
-      warning("Because of combining based on seg.km.min, ", 
-              "not all conditions are the same ", 
-              "for each segment in continuous effort section ", i, 
-              immediate. = TRUE)
-    
-    idx.torm <- sort(unique(c(seg.len0, seg.len1)))
-    
-    # Remove segment breaks that create too-small segments
-    #   Ignores idx.torm values > nrow(das.df)
-    cond.idx <- cond.idx.pre[!(cond.idx.pre %in% idx.torm)]
-    effort.seg <- rep(FALSE, nrow(das.df))
-    effort.seg[cond.idx] <- TRUE
-    
-    das.df <- das.df %>% 
-      select(-.data$effort_seg_pre, -.data$idx) %>% 
-      mutate(effort_seg = cumsum(effort.seg), 
-             seg_idx = paste(i, .data$effort_seg, sep = "_"))
-    
-    
-    #------------------------------------------------------
-    ### Calculate lengths of effort segments
-    d <- das.df %>% 
-      group_by(.data$effort_seg) %>% 
-      summarise(sum_dist = sum(.data$dist_to_next))
-    
-    seg.lengths <- d$sum_dist
-    
-    #------------------------------------------------------
-    ### Get segdata and return
-    das.df.segdata <- airdas_segdata_avg(
-      as_airdas_df(das.df), seg.lengths, i
-    )
-    # TODO: rename avg?
-    
-    list(
-      das.df = das.df, seg.lengths = seg.lengths, 
-      das.df.segdata = das.df.segdata
-    )
-  }, x = x)
+  # Prep for parallel
+  call.x <- x
+  call.cond.names <- cond.names
+  call.seg.km.min <- seg.km.min
+  call.func1 <- airdas_segdata_avg
+  call.func2 <- as_airdas_df
+  
+  # Setup number of cores
+  if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
+  if(is.na(num.cores)) num.cores <- 1
+  num.cores <- max(1, num.cores)
+  num.cores <- min(parallel::detectCores() - 1, num.cores)
+  
+  # Use parallel to lapply through - modeled after rfPermute
+  cl <- swfscMisc::setupClusters(num.cores)
+  eff.list <- tryCatch({
+    if(is.null(cl)) { # Don't parallelize if num.cores == 1
+      lapply(
+        eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
+        call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
+        call.func1 = call.func1, call.func2 = call.func2
+      )
+      
+    } else { # Run lapply using parLapplyLB
+      parallel::clusterExport(
+        cl = cl,
+        varlist = c("call.x", "call.cond.names", "call.seg.km.min", 
+                    "call.func1", "call.func2"),
+        envir = environment()
+      )
+      parallel::parLapplyLB(
+        cl, eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
+        call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
+        call.func1 = call.func1, call.func2 = call.func2
+      )
+    }
+  }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
   
   
   #----------------------------------------------------------------------------

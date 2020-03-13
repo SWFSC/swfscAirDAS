@@ -5,9 +5,6 @@
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'   or a data frame that can be coerced to a \code{airdas_df} object
 #' 
-#' @importFrom dplyr %>% .data arrange bind_rows case_when filter left_join mutate select
-#' @importFrom rlang !!
-#'
 #' @details AirDAS events contain specific information in the 'Data#' columns,
 #'   with the information depending on the event code for that row.
 #'   This function extracts relevant data for sighting events, and returns a

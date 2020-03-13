@@ -16,9 +16,10 @@ test_that("airdas_read output has expected column names and classes", {
     Data5 = "character",
     Data6 = "character",
     Data7 = "character",
-    EventNum = "integer",
+    EventNum = "character",
     file_das = "character",
-    line_num = "integer"
+    line_num = "integer",
+    file_type = "character"
   )
   
   expect_identical(exp.class, lapply(y.read, class))
@@ -65,9 +66,10 @@ test_that("airdas_process output has expected column names and classes", {
     Data6 = "character",
     Data7 = "character",
     EffortDot = "logical", 
-    EventNum = "integer",
+    EventNum = "character",
     file_das = "character",
-    line_num = "integer"
+    line_num = "integer",
+    file_type = "character"
   )
   
   expect_identical(exp.class, lapply(y.proc, class))
@@ -83,7 +85,7 @@ test_that("airdas_sight output has expected column names and classes", {
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
-    "EffortDot", "EventNum", "file_das", "line_num", 
+    "EffortDot", "EventNum", "file_das", "line_num", "file_type", 
     "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )
@@ -101,7 +103,7 @@ test_that("airdas_sight output has expected column names and classes with an ext
     "Event", "DateTime", "Lat", "Lon", "OnEffort", 
     "Trans", "Bft", "CCover", "Jelly", "HorizSun", "HKR", "Haze", "Kelp", "RedTide", 
     "AltFt", "SpKnot",  "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
-    "EffortDot", "EventNum", "file_das", "line_num", "testrr", 
+    "EffortDot", "EventNum", "file_das", "line_num", "file_type", "testrr", 
     "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
     "TurtleSizeFt", "TurtleDirection", "TurtleTail"
   )

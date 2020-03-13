@@ -10,7 +10,14 @@ airdas_chop_equal(x, ...)
 
 \method{airdas_chop_equal}{data.frame}(x, ...)
 
-\method{airdas_chop_equal}{airdas_df}(x, seg.km, randpicks.load = NULL, ...)
+\method{airdas_chop_equal}{airdas_df}(
+  x,
+  seg.km,
+  randpicks.load = NULL,
+  dist.method = NULL,
+  num.cores = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -26,6 +33,14 @@ see the Details section below}
 filename of past randpicks output to load and use 
 (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
 \code{NULL} if new randpicks values should be generated}
+
+\item{dist.method}{character; see \code{\link{airdas_effort}}.
+Default is \code{NULL} since these distances should have already been
+calculated in \code{\link{airdas_effort}}}
+
+\item{num.cores}{Number of CPUs to over which to distribute computations.
+Defaults to \code{NULL} which uses one fewer than the number of cores
+reported by \code{\link[parallel]{detectCores}}}
 }
 \value{
 List of three data frames:
@@ -95,10 +110,8 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   specify \code{row.names = FALSE} so that the CSV file only has two columns.
   For an example randpicks file, see 
   \code{system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")}
-  
-  If the column \code{dist_from_prev} does not exist 
-  (it should be calculated and added to \code{x} in \code{\link{airdas_effort}}), 
-  then the distance between the lat/lon points of subsequent events 
-  is calculated using \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}.
+
+  If the column \code{dist_from_prev} does not exist, the distance between
+  subsequent events is calculated as described in \code{\link{airdas_effort}}
 }
 \keyword{internal}

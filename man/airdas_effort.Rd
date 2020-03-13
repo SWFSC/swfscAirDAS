@@ -10,7 +10,7 @@ airdas_effort(x, ...)
 
 \method{airdas_effort}{data.frame}(x, ...)
 
-\method{airdas_effort}{airdas_df}(x, method, sp.codes, ...)
+\method{airdas_effort}{airdas_df}(x, method, sp.codes, dist.method = "vincenty", ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
@@ -22,6 +22,12 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 Can be "equallength" or "condition" (case-sensitive)}
 
 \item{sp.codes}{character; species code(s) to include in segdata}
+
+\item{dist.method}{character;
+method to use to calculate distance between lat/lon coordinates.
+Can be "greatcircle" to use the great circle distance method (TODO - add ref),
+or one of "lawofcosines", "haversine", or "vincenty" to use
+\code{\link[swfscMisc]{distance}}. Default is "vincenty"}
 }
 \value{
 List of three data frames: 
@@ -71,30 +77,30 @@ This is the top-level function for chopping processed AirDAS data
   Siteinfo, which contains all sightings in \code{x} (see below), 
   contains a column ('included') that indicates whether or not the sighting was
   included in the segdata counts.
+  
+  All on effort events must not have \code{NA} Lat or Lon values; 
+  remember that in \code{\link{airdas_process}}, S Lat/Lon values
+  were passed to 1 events. 
+  TODO: Should this function verbosely remove these events?
 
-  The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
-  calculate the distance (in km) between the lat/lon points of subsequent events.
+  The distance between the lat/lon points of subsequent events
+  is calculated using the method specified in \code{dist.method}
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-
 y.proc <- airdas_process(y)
-airdas_effort(
-  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-  seg.km = 3
-)
 
 # Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-  seg.km = 3, randpicks.load = y.rand
+  seg.km = 3, randpicks.load = y.rand, num.cores = 1
 )
 
 # Using "condition" method
 airdas_effort(
   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-  seg.km.min = 0.05
+  seg.km.min = 0.05, num.cores = 1
 )
 
 }

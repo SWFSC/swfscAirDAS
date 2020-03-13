@@ -25,6 +25,7 @@ as_airdas_df.airdas_df <- function(x) x
 #' @name as_airdas_df
 #' @export
 as_airdas_df.data.frame <- function(x) {
+  # Check that columns have correct names and classes
   exp.class <- list(
     Event = "character",
     DateTime = c("POSIXct", "POSIXt"),
@@ -59,9 +60,10 @@ as_airdas_df.data.frame <- function(x) {
     Data6 = "character",
     Data7 = "character",
     EffortDot = "logical", 
-    EventNum = "integer",
+    EventNum = "character",
     file_das = "character",
-    line_num = "integer"
+    line_num = "integer",
+    file_type = "character"
   )
   exp.class.names <- names(exp.class)
   
@@ -81,17 +83,34 @@ as_airdas_df.data.frame <- function(x) {
     }
   }
   
-  if (any(is.na(x$Lat) | is.na(x$Lon) | is.na(x$DateTime)))
+  # Check that all of OnEffort is either TRUE/FALSE; no NAs
+  if (any(is.na(x$OnEffort))) 
+    stop("The following rows have OnEffort values of NA, ", 
+         "and thus this object cannot be coerced to an airdas_df object: ", 
+         paste(x$line_num[is.na(x$OnEffort)], collapse = ", "))
+  
+  # Check for no datetime/lat/lon NAs in on-effort events
+  x.oneff <- x[x$OnEffort, ]
+  if (any(is.na(x.oneff$Lat) | is.na(x.oneff$Lon) | is.na(x.oneff$DateTime)))
     stop("The following rows have NA values in the Lat, Lon, and/or DateTime columns, ", 
          "and thus this object cannot be coerced to an airdas_df object: ", 
-         paste(sort(unique(c(which(is.na(x$Lat)), which(is.na(x$Lon))))), 
+         paste(sort(unique(c(x.oneff$line_num[is.na(x.oneff$Lat)], 
+                             x.oneff$line_num[is.na(x.oneff$Lon)], 
+                             x.oneff$line_num[is.na(x.oneff$DateTime)]))), 
                collapse = ", "))
   
-  
+  # Check for no deleted events
   if (any(x$Event == "#"))
     warning("This airdas_df object has some deleted events, meaning ", 
             "some \"#\" events. Should these be removed?")
   
+  # Check that file_type column has an expected value
+  file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
+  if (!(length(unique(x$file_type)) & all(x$file_type %in% file.type.acc)))
+    stop("The file_type column values must be 1) all the same and 2) one of: ", 
+         paste(file.type.acc, collapse = ", "))
+  
+  # Add class and return
   class(x) <- c("airdas_df", setdiff(class(x), "airdas_df"))
   
   x

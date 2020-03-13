@@ -13,15 +13,13 @@
 #' @param days.gap.full numeric of length 1; 
 #'   time gap (in days) used to identify when a 'full reset; is performed, 
 #'   i.e. when all info (transect number and propogated info) is reset. 
-#'   Default is 12 hours
-#' @param gap.message logical; should messages be printed detailing which row(s) of the 
-#'   output data frame were partially or fully reset?
+#'   Default is 12 hours; must be greater than \code{days.gap.part}
+#' @param gap.message logical; default is \code{FALSE}.
+#'   Indicates if messages should be printed detailing which row(s) of the 
+#'   output data frame were partially or fully reset
 #' @param reset.tvpaw logical; default is \code{TRUE}.
 #'   Indicates if state/condition information should be reset to \code{NA}
-#'   when beginning a new transect. See details
-#'   
-#' @importFrom dplyr %>% select
-#' @importFrom rlang !!
+#'   when beginning a new transect. See Details section
 #'
 #' @details If \code{x} is a character, it is assumed to be a filepath 
 #'   and first passed to \code{\link{airdas_read}}.
@@ -44,6 +42,9 @@
 #'       and O/E events turn effort off. 
 #'       T/R events themselves will be on effort, while O/E events will be off effort.
 #'       The 'EffortDot' column is ignored
+#'     \item 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
+#'     \item Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
+#'     \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec') values are converted to lower case
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
 #'   
@@ -81,6 +82,8 @@
 #'     Viewing condition - right inside  \tab VRI      \tab Event: V; Column: Data4\cr
 #'     Viewing condition - right outside \tab VRO      \tab Event: V; Column: Data5\cr
 #'   }
+#'   
+#'   Warnings are printed with line numbers of unexpected event codes
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -117,6 +120,11 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   #----------------------------------------------------------------------------
   # Input checks
   das.df <- x
+  file.type <- unique(x$file_type)
+  
+  if (length(file.type) != 1)
+    stop("Error: Inconsistent file type in x")
+  
   stopifnot(
     # .airdas_format_check(das.df, "process"), 
     length(days.gap.part) == 1, 
@@ -126,9 +134,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     inherits(gap.message, "logical")
   )
   
-  if (days.gap.part > days.gap.full) {
+  if (days.gap.part > days.gap.full) 
     stop("days.gap.part must be less than or equal to days.gap.full")
-  }
   
   
   #----------------------------------------------------------------------------
@@ -142,9 +149,11 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   event.1 <- which(das.df$Event == 1)
   stopifnot(all(event.1 > 1))
   
-  das.df$Lat[event.1] <- das.df$Lat[event.1 - 1]
-  das.df$Lon[event.1] <- das.df$Lon[event.1 - 1]
-  das.df$DateTime[event.1] <- das.df$DateTime[event.1 - 1]
+  if (length(event.1) > 0) {
+    das.df$Lat[event.1] <- das.df$Lat[event.1 - 1]
+    das.df$Lon[event.1] <- das.df$Lon[event.1 - 1]
+    das.df$DateTime[event.1] <- das.df$DateTime[event.1 - 1]
+  }
   
   
   #----------------------------------------------------------------------------
@@ -161,9 +170,11 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   idx.reset.full <- c(1, which(time.diff > days.gap.full))
   
   if (gap.message) {
-    message("A 'partial reset' was performed at the following row indicies of the output data frame: ", 
+    message("A 'partial reset' was performed at the following row indicies ", 
+            "of the output data frame: ", 
             idx.reset.part)
-    message("A 'full reset' was performed at the following row indicies of the output data frame: ", 
+    message("A 'full reset' was performed at the following row indicies ", 
+            "of the output data frame: ", 
             idx.reset.full)
   }
   
@@ -183,6 +194,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   init.val <- as.numeric(rep(NA, nDAS))
   event.na <- -9999
   
+  
   event.A <- das.df$Event == "A"
   event.E <- das.df$Event == "E"
   event.O <- das.df$Event == "O"
@@ -192,11 +204,19 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   event.V <- das.df$Event == "V"
   event.W <- das.df$Event == "W"
   
-  Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
-  CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
-  Jelly    <- .airdas_process_num(init.val, das.df, "Data4", event.W, event.na)
-  HorizSun <- .airdas_process_num(init.val, das.df, "Data5", event.W, event.na)
   HKR      <- .airdas_process_chr(init.val, das.df, "Data1", event.W, event.na)
+  CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
+  Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
+  Jelly    <- switch(file.type, 
+                     turtle = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     init.val)
+  HorizSun <- switch(file.type, 
+                     phocoena = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     turtle = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     init.val)
+  VertSun  <- switch(file.type, 
+                     phocoena = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     init.val)
   
   ObsL <- .airdas_process_chr(init.val, das.df, "Data1", event.P, event.na)
   ObsB <- .airdas_process_chr(init.val, das.df, "Data2", event.P, event.na)
@@ -232,7 +252,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   for (i in seq_len(nDAS)) {
     # Reset data when necessary
     if (i %in% idx.reset.part) {
-      LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastHKR <-
+      LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastVertSun <- LastHKR <-
         LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- LastEff <- NA
     }
@@ -242,17 +262,18 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     if (i %in% idx.reset.full) LastTrans <- NA
     
     if ((i %in% idx.eff) & reset.tvpaw) {
-      LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastHKR <-
+      LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastVertSun <- LastHKR <-
         LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- NA
     }
     
     # Set/pass along 'carry-over info'
-    if (is.na(Bft[i]))      Bft[i] <- LastBft           else LastBft <- Bft[i]           #Beaufort
+    if (is.na(HKR[i]))      HKR[i] <- LastHKR           else LastHKR <- HKR[i]           #Haze/Kelp/Red tide
     if (is.na(CCover[i]))   CCover[i] <- LastCCover     else LastCCover <- CCover[i]     #Cloud cover
+    if (is.na(Bft[i]))      Bft[i] <- LastBft           else LastBft <- Bft[i]           #Beaufort
     if (is.na(Jelly[i]))    Jelly[i] <- LastJelly       else LastJelly <- Jelly[i]       #Jellyfish
     if (is.na(HorizSun[i])) HorizSun[i] <- LastHorizSun else LastHorizSun <- HorizSun[i] # Horizontal sun
-    if (is.na(HKR[i]))      HKR[i] <- LastHKR           else LastHKR <- HKR[i]           #Haze/Kelp/Red tide
+    if (is.na(VertSun[i]))  VertSun[i] <- LastVertSun   else LastVertSun <- VertSun[i]   # Vertical sun
     if (is.na(ObsL[i]))     ObsL[i] <- LastObsL         else LastObsL <- ObsL[i]         #Observer - left
     if (is.na(ObsB[i]))     ObsB[i] <- LastObsB         else LastObsB <- ObsB[i]         #Observer - belly
     if (is.na(ObsR[i]))     ObsR[i] <- LastObsR         else LastObsR <- ObsR[i]         #Observer - right
@@ -271,7 +292,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   # Post-processing
   tmp <- list(
     Bft = Bft, CCover = CCover, Jelly = Jelly, HorizSun = HorizSun, HKR = HKR, 
-    Haze = grepl("h", HKR, ignore.case = TRUE), Kelp = grepl("h", HKR, ignore.case = TRUE), 
+    Haze = grepl("h", HKR, ignore.case = TRUE) | grepl("y", HKR, ignore.case = TRUE), 
+    Kelp = grepl("h", HKR, ignore.case = TRUE), 
     RedTide = grepl("r", HKR, ignore.case = TRUE), 
     AltFt = AltFt, SpKnot = SpKnot, 
     ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
@@ -285,6 +307,28 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     j
   })
   
+  # Coerce NA OnEffort values to FALSE
+  tmp$OnEffort <- ifelse(is.na(tmp$OnEffort), FALSE, tmp$OnEffort)
+  
+  # Convert values to lower case
+  tmp$HKR <- tolower(tmp$HKR)
+  tmp[c("ObsL", "ObsB", "ObsR", "Rec")] <- tolower(tmp[c("ObsL", "ObsB", "ObsR", "Rec")])
+  tmp[c("VLI", "VLO", "VB", "VRI", "VRO")] <- tolower(tmp[c("VLI", "VLO", "VB", "VRI", "VRO")])
+
+    
+  #----------------------------------------------------------------------------
+  # Warning check for accepted event codes
+  event.acc <- c("*", 1, "A", "C", "E", "O", "P", "R", "s", "S", "t", 
+                 "T", "V", "W")
+  if (!all(das.df$Event %in% event.acc))
+    warning(paste0("Expected event codes (case sensitive): ",
+                   paste(event.acc, collapse = ", "), "\n"),
+            "The following lines of the input file ",
+            "(NOT necessarily the row numbers of output) ",
+            "contain unexpected event codes:\n",
+            paste(das.df$line_num[!(das.df$Event %in% event.acc)], 
+                  collapse = ", "))
+  
   
   #----------------------------------------------------------------------------
   cols.toreturn <- c(
@@ -293,7 +337,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     "AltFt", "SpKnot", 
     "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
-    "EffortDot", "EventNum", "file_das", "line_num"
+    "EffortDot", "EventNum", "file_das", "line_num", "file_type"
   )
   
   as_airdas_df(

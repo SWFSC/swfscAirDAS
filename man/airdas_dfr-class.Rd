@@ -19,10 +19,15 @@ The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
   \code{airdas_dfr} object. It is \bold{strongly} recommended to pass an object of class \code{airdas_dfr} to
   \code{\link{airdas_process}} before subsetting, e.g. for events from a certain date range.
 }
-\section{Properties of \code{airdas_dfr}}{
+\section{Properties of \code{airdas_dfr} objects}{
 
 
   Objects of class \code{airdas_dfr} have a class attribute of \code{c("airdas_dfr", "data.frame")}.
+  They must have a column \code{file_type} where all values are 1) the same and 
+  2) one of: "turtle", "caretta", "survey", or "phocoena" 
+  (case sensitive; see \code{\link{airdas_read}} for more details). 
+  \code{airdas_dfr} objects also must not have any \code{NA} event codes.
+  
   In addition, they must have the following column names and classes:
   \tabular{ll}{
     \emph{Column name} \tab \emph{Column class}\cr
@@ -38,9 +43,10 @@ The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
     Data5 \tab "character"\cr
     Data6 \tab "character"\cr
     Data7 \tab "character"\cr
-    EventNum \tab "integer"\cr
-    file_das \tab "character"\cr
-    line_num \tab "integer"\cr
+    EventNum  \tab "character"\cr
+    file_das  \tab "character"\cr
+    line_num  \tab "integer"\cr
+    file_type \tab "character"\cr
   }
 }
 

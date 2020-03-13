@@ -4,10 +4,17 @@
 \alias{airdas_check}
 \title{Check AirDAS file}
 \usage{
-airdas_check(file, file.out = NULL)
+airdas_check(file, file.type = "turtle", skip = 0, file.out = NULL)
 }
 \arguments{
 \item{file}{filename(s) of one or more AirDAS files}
+
+\item{file.type}{character; indicates the program used to create \code{file}.
+Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive).
+Default is "turtle". Passed to \code{\link{airdas_read}}}
+
+\item{skip}{integer: see \code{\link[readr]{read_fwf}}. Default is 0. 
+Passed to \code{\link{airdas_read}}}
 
 \item{file.out}{filename to which to write the error log; 
 default is \code{NULL}}
@@ -16,10 +23,10 @@ default is \code{NULL}}
 A data frame with five columns that list information about errors found 
 in the AirDAS files: the file name, line number, 
 index (row number) from the \code{airdas_read(file)} data frame, 
-'ID' (columns 4-39 from the DAS file), and description of the issue
+'ID' (pre-Data# columns from the DAS file), and description of the issue
 
 If \code{file.out} is not \code{NULL}, then the error log is also
-written to a text file
+written to a text/csv file
 }
 \description{
 Check that AirDAS file has accepted formatting and values
@@ -35,10 +42,10 @@ Checks that the following is true:
 
 \tabular{llll}{
   \emph{Item} \tab \emph{Event} \tab \emph{Column} \tab \emph{Requirement}\cr
-  Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank)\cr
+  Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
   Altitude \tab A \tab Data1 \tab Can be converted to a numeric value\cr
   Speed    \tab A \tab Data2 \tab Can be converted to a numeric value\cr
-  HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, or NA (blank)\cr
+  HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
   Percent overcast \tab W \tab Data2 \tab Can be converted to a numeric value\cr
   Beaufort         \tab W \tab Data3 \tab Can be converted to a numeric value\cr
   Jellyfish        \tab W \tab Data4 \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr

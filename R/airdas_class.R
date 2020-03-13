@@ -1,7 +1,3 @@
-#' @importFrom methods setOldClass
-#' @exportClass airdas_dfr
-setOldClass("airdas_dfr")
-
 #' \code{airdas_dfr} class
 #'
 #' @description The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
@@ -18,9 +14,14 @@ setOldClass("airdas_dfr")
 #'   \code{airdas_dfr} object. It is \bold{strongly} recommended to pass an object of class \code{airdas_dfr} to
 #'   \code{\link{airdas_process}} before subsetting, e.g. for events from a certain date range.
 #'
-#' @section Properties of \code{airdas_dfr}:
+#' @section Properties of \code{airdas_dfr} objects:
 #'
 #'   Objects of class \code{airdas_dfr} have a class attribute of \code{c("airdas_dfr", "data.frame")}.
+#'   They must have a column \code{file_type} where all values are 1) the same and 
+#'   2) one of: "turtle", "caretta", "survey", or "phocoena" 
+#'   (case sensitive; see \code{\link{airdas_read}} for more details). 
+#'   \code{airdas_dfr} objects also must not have any \code{NA} event codes.
+#'   
 #'   In addition, they must have the following column names and classes:
 #'   \tabular{ll}{
 #'     \emph{Column name} \tab \emph{Column class}\cr
@@ -36,9 +37,10 @@ setOldClass("airdas_dfr")
 #'     Data5 \tab "character"\cr
 #'     Data6 \tab "character"\cr
 #'     Data7 \tab "character"\cr
-#'     EventNum \tab "integer"\cr
-#'     file_das \tab "character"\cr
-#'     line_num \tab "integer"\cr
+#'     EventNum  \tab "character"\cr
+#'     file_das  \tab "character"\cr
+#'     line_num  \tab "integer"\cr
+#'     file_type \tab "character"\cr
 #'   }
 #'
 #' @name airdas_dfr-class
@@ -47,9 +49,6 @@ setOldClass("airdas_dfr")
 NULL
 
 
-
-#' @exportClass airdas_df
-setOldClass("airdas_df")
 
 #' \code{airdas_df} class
 #'
@@ -65,16 +64,23 @@ setOldClass("airdas_df")
 #'   or \code{\link{as_airdas_df}}, and are intended to be passed directly to
 #'   DAS processing functions such as \code{\link{airdas_sight}}.
 #'
-#'   Subsetting, say for a specific date or cruise number, 
+#'   Subsetting, say for a specific date or transect number, 
 #'   or otherwise altering an object of class \code{airdas_df}
 #'   will cause the object to drop its \code{airdas_df} class attribute.
 #'   If this object is then passed to a DAS processing function such as \code{\link{airdas_sight}}, 
 #'   the function will try to coerce the object to a \code{airdas_df} object.
 #'
-#' @section Properties of \code{airdas_df}:
+#' @section Properties of \code{airdas_df} objects:
 #'
 #'   Objects of class \code{airdas_df} have a class attribute of \code{c("airdas_df", "data.frame")}.
-#'   In addition, they must have the following column names and classes:
+#'   All values in the OnEffort column must be \code{TRUE} or \code{FALSE} (no \code{NA} values).
+#'   All on effort events must have non-\code{NA} Lat/Lon/DateTime values, and 
+#'   there must be no events with a "#" event code (deleted event). 
+#'   Like \code{airdas_dfr} events, there must be a \code{file_type} column where all values are 
+#'   1) the same and 2) one of: "turtle", "caretta", "survey", or "phocoena" 
+#'   (case sensitive; see \code{\link{airdas_read}} for more details). 
+#'   
+#'   In addition, \code{airdas_df} objects must have the following column names and classes:
 #'   \tabular{ll}{
 #'     \emph{Column name} \tab \emph{Column class}\cr
 #'     Event     \tab "character"\cr
@@ -87,6 +93,7 @@ setOldClass("airdas_df")
 #'     CCover   \tab "numeric"\cr
 #'     Jelly    \tab "numeric"\cr
 #'     HorizSun \tab "numeric"\cr
+#'     VertSun  \tab "numeric"\cr
 #'     HKR      \tab "character"\cr
 #'     Haze     \tab "logical"\cr
 #'     Kelp     \tab "logical"\cr
@@ -110,9 +117,10 @@ setOldClass("airdas_df")
 #'     Data6 \tab "character"\cr
 #'     Data7 \tab "character"\cr
 #'     EffortDot \tab "logical"\cr
-#'     EventNum \tab "integer"\cr
-#'     file_das \tab "character"\cr
-#'     line_num \tab "integer"\cr
+#'     EventNum  \tab "character"\cr
+#'     file_das  \tab "character"\cr
+#'     line_num  \tab "integer"\cr
+#'     file_type \tab "character"\cr
 #'   }
 #'
 #' @name airdas_df-class

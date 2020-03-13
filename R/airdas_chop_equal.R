@@ -6,17 +6,18 @@
 #'   or a data frame that can be coerced to a \code{airdas_df} object. 
 #'   This data must be filtered for 'OnEffort' events; 
 #'   see the Details section below
+#' @param ... ignored
 #' @param seg.km numeric; target segment length in kilometers
 #' @param randpicks.load character or \code{NULL}; if character, 
 #'   filename of past randpicks output to load and use 
 #'   (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
 #'   \code{NULL} if new randpicks values should be generated
-#' @param ... ignored
-#' 
-#' @importFrom dplyr %>% .data between filter left_join mutate select
-#' @importFrom stats runif
-#' @importFrom swfscMisc distance
-#' @importFrom utils head read.csv
+#' @param dist.method character; see \code{\link{airdas_effort}}.
+#'   Default is \code{NULL} since these distances should have already been
+#'   calculated in \code{\link{airdas_effort}}
+#' @param num.cores Number of CPUs to over which to distribute computations.
+#'   Defaults to \code{NULL} which uses one fewer than the number of cores
+#'   reported by \code{\link[parallel]{detectCores}}
 #' 
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "equallength" method is specified. 
@@ -72,11 +73,9 @@
 #'   specify \code{row.names = FALSE} so that the CSV file only has two columns.
 #'   For an example randpicks file, see 
 #'   \code{system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")}
-#'   
-#'   If the column \code{dist_from_prev} does not exist 
-#'   (it should be calculated and added to \code{x} in \code{\link{airdas_effort}}), 
-#'   then the distance between the lat/lon points of subsequent events 
-#'   is calculated using \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}.
+#'
+#'   If the column \code{dist_from_prev} does not exist, the distance between
+#'   subsequent events is calculated as described in \code{\link{airdas_effort}}
 #'      
 #' @return List of three data frames:
 #' \itemize{
@@ -102,7 +101,9 @@ airdas_chop_equal.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_equal
 #' @export
-airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
+airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, 
+                                        dist.method = NULL, num.cores = NULL, 
+                                        ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (missing(seg.km))
@@ -116,20 +117,12 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
-    if (any(is.na(x$Lat)) | any(is.na(x$Lon))) {
-      stop("Error in airdas_chop_equal: Some unexpected events ",
-           "(i.e. not one of ?, 1, 2, 3, 4, 5, 6, 7, 8) ",
-           "have NA values in the Lat and/or Lon columns, ",
-           "and thus the distance between each point cannot be determined")
-    }
-    dist.from.prev <- mapply(function(x1, y1, x2, y2) {
-      distance(y1, x1, y2, x2, units = "km", method = "vincenty")
-    },
-    x1 = head(x$Lon, -1), y1 = head(x$Lat, -1),
-    x2 = x$Lon[-1], y2 = x$Lat[-1], 
-    SIMPLIFY = TRUE)
+    if (is.null(dist.method))
+      stop("If the distance between consectutive points (events) ",
+           "has not already been calculated, ",
+           "then you must provide a valid argument for dist.method")
     
-    x$dist_from_prev <- c(NA, dist.from.prev)
+    x$dist_from_prev <- .dist_from_prev(x, dist.method)
   }
   
   
@@ -174,89 +167,44 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   
   
   #----------------------------------------------------------------------------
-  # For each continuous effort section, get segment lengths and segdata
-  eff.list <- lapply(eff.uniq, function(i, x, seg.km, r.pos) {
-    #------------------------------------------------------
-    ### Get lengths of effort segments
-    # Prep
-    das.df <- filter(x, .data$cont_eff_section == i)
-    pos <- r.pos[i]
-    
-    das.df$dist_from_prev[1] <- 0 #Ignore distance from last effort
-    
-    seg.dist <- sum(das.df$dist_from_prev)
-    seg.dist.mod <- seg.dist %% seg.km
-    
-    # Determine segment lengths
-    if (.equal(seg.dist, 0)) {
-      # If current segment length is 0 and there are other events, throw warning
-      if (nrow(das.df) > 2) 
-        warning("The length of continuous effort section ", i, " was zero, ", 
-                "and there were events between start and end points", 
-                immediate. = TRUE)
+  # Parallel thorugh each continuous effort section,
+  #   getting segment lengths and segdata
+  call.x <- x
+  call.seg.km <- seg.km
+  call.r.pos <- r.pos
+  call.func1 <- airdas_segdata_avg
+  call.func2 <- as_airdas_df
+  
+  # Setup number of cores
+  if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
+  if(is.na(num.cores)) num.cores <- 1
+  num.cores <- max(1, num.cores)
+  num.cores <- min(parallel::detectCores() - 1, num.cores)
+  
+  
+  cl <- swfscMisc::setupClusters(num.cores)
+  eff.list <- tryCatch({
+    if(is.null(cl)) { # Don't parallelize if num.cores == 1
+      lapply(
+        eff.uniq, .chop_equal_eff,
+        call.x = call.x, call.seg.km = call.seg.km, call.r.pos = call.r.pos,
+        call.func1 = call.func1, call.func2 = call.func2
+      )
       
-      # EAB makes a 0.1km segment if it includes a sighting - ?
-      seg.lengths <- 0
-      pos <- NA
-      
-    } else {
-      if (.less_equal(seg.dist, seg.km)) {
-        # If current segment length is less than target length,
-        #   only make one segment
-        n.subseg <- 1
-        if (is.null(pos)) pos <- NA
-        seg.lengths <- seg.dist
-        
-      } else if (.greater_equal(seg.dist.mod, (seg.km / 2))) {
-        # If current segment length is greater than the target length and
-        #   remainder is greater than or equal to half of the target length,
-        #   the remainder is its own (randomly placed) segment
-        n.subseg <- ceiling(seg.dist/seg.km)
-        if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
-        if (is.na(pos) | !between(pos, 1, n.subseg)) 
-          stop("Randpicks value is not in proper range")
-        seg.lengths <- rep(seg.km, n.subseg)
-        seg.lengths[pos] <- seg.dist.mod
-        
-      } else if (.less(seg.dist.mod, (seg.km / 2))) {
-        # If current segment length is greater than the target length and
-        #   remainder is less than half of the target length,
-        #   the remainder added to a random segment
-        n.subseg <- floor(seg.dist/seg.km)
-        if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
-        if (is.na(pos) | !between(pos, 1, n.subseg)) 
-          stop("Randpicks value is not in proper range")
-        seg.lengths <- rep(seg.km, n.subseg)
-        seg.lengths[pos] <- seg.km + seg.dist.mod
-        
-      } else {
-        stop("Error in airdas_chop_equal() - unrecognized effort situation. ", 
-             "Please report this as an issue")
-      }
+    } else { # Run lapply using parLapplyLB
+      parallel::clusterExport(
+        cl = cl,
+        varlist = c("call.x", "call.seg.km", "call.r.pos", 
+                    "call.func1", "call.func2"),
+        envir = environment()
+      )
+      parallel::parLapplyLB(
+        cl, eff.uniq, .chop_equal_eff,
+        call.x = call.x, call.seg.km = call.seg.km, call.r.pos = call.r.pos,
+        call.func1 = call.func1, call.func2 = call.func2
+      )
     }
-    
-    
-    #------------------------------------------------------
-    ### Assign each event to a segment
-    subseg.cumsum <- cumsum(seg.lengths)
-    das.cumsum <- cumsum(das.df$dist_from_prev)
-    
-    das.df$effort_seg <- findInterval(
-      round(das.cumsum, 4), round(c(-1, subseg.cumsum), 4),
-      left.open = TRUE, rightmost.closed = TRUE
-    )
-    das.df$seg_idx <- paste0(i, "_", das.df$effort_seg)
-    
-    
-    #------------------------------------------------------
-    ### Get segdata, and return
-    das.df.segdata <- airdas_segdata_avg(
-      as_airdas_df(das.df), seg.lengths, i
-    )
-    
-    list(das.df = das.df, seg.lengths = seg.lengths, pos = pos, 
-         das.df.segdata = das.df.segdata)
-  }, x = x, seg.km = seg.km, r.pos = r.pos)
+  }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
   
   
   #----------------------------------------------------------------------------
@@ -289,3 +237,166 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, ...) {
   # Return
   list(as_airdas_df(x.eff), segdata, randpicks)
 }
+
+
+###############################################################################
+# .airdas_chop_equal_eff <- function(i, call.x, call.seg.km, call.r.pos) {
+#   #------------------------------------------------------
+#   ### Get lengths of effort segments
+#   # Prep
+#   das.df <- filter(call.x, .data$cont_eff_section == i)
+#   pos <- call.r.pos[i]
+#   
+#   das.df$dist_from_prev[1] <- 0 #Ignore distance from last effort
+#   
+#   seg.dist <- sum(das.df$dist_from_prev)
+#   seg.dist.mod <- seg.dist %% call.seg.km
+#   
+#   # Determine segment lengths
+#   if (.equal(seg.dist, 0)) {
+#     # If current segment length is 0 and there are other events, throw warning
+#     if (nrow(das.df) > 2)
+#       warning("The length of continuous effort section ", i, " was zero, ",
+#               "and there were events between start and end points",
+#               immediate. = TRUE)
+#     
+#     # EAB makes a 0.1km segment if it includes a sighting - ?
+#     seg.lengths <- 0
+#     pos <- NA
+#     
+#   } else {
+#     if (.less_equal(seg.dist, call.seg.km)) {
+#       # If current segment length is less than target length,
+#       #   only make one segment
+#       n.subseg <- 1
+#       if (is.null(pos)) pos <- NA
+#       seg.lengths <- seg.dist
+#       
+#     } else if (.greater_equal(seg.dist.mod, (call.seg.km / 2))) {
+#       # If current segment length is greater than the target length and
+#       #   remainder is greater than or equal to half of the target length,
+#       #   the remainder is its own (randomly placed) segment
+#       n.subseg <- ceiling(seg.dist/call.seg.km)
+#       if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
+#       if (is.na(pos) | !between(pos, 1, n.subseg))
+#         stop("Randpicks value is not in proper range")
+#       seg.lengths <- rep(call.seg.km, n.subseg)
+#       seg.lengths[pos] <- seg.dist.mod
+#       
+#     } else if (.less(seg.dist.mod, (call.seg.km / 2))) {
+#       # If current segment length is greater than the target length and
+#       #   remainder is less than half of the target length,
+#       #   the remainder added to a random segment
+#       n.subseg <- floor(seg.dist/call.seg.km)
+#       if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
+#       if (is.na(pos) | !between(pos, 1, n.subseg))
+#         stop("Randpicks value is not in proper range")
+#       seg.lengths <- rep(call.seg.km, n.subseg)
+#       seg.lengths[pos] <- call.seg.km + seg.dist.mod
+#       
+#     } else {
+#       stop("Error in das_chop_equal() - unrecognized effort situation. ",
+#            "Please report this as an issue")
+#     }
+#   }
+#   
+#   #------------------------------------------------------
+#   ### Assign each event to a segment
+#   subseg.cumsum <- cumsum(seg.lengths)
+#   das.cumsum <- cumsum(das.df$dist_from_prev)
+#   
+#   das.df$effort_seg <- findInterval(
+#     round(das.cumsum, 4), round(c(-1, subseg.cumsum), 4),
+#     left.open = TRUE, rightmost.closed = TRUE
+#   )
+#   das.df$seg_idx <- paste0(i, "_", das.df$effort_seg)
+#   
+#   
+#   #------------------------------------------------------
+#   ### Get segdata, and return
+#   das.df.segdata <- airdas_segdata_avg(as_airdas_df(das.df), seg.lengths, i)
+#   
+#   list(das.df = das.df, seg.lengths = seg.lengths, pos = pos,
+#        das.df.segdata = das.df.segdata)
+# }
+# 
+# # .airdas_chop_equal_eff <- function(i, call.x, call.seg.km, call.r.pos) {
+# #   #------------------------------------------------------
+# #   ### Get lengths of effort segments
+# #   # Prep
+# #   das.df <- filter(call.x, .data$cont_eff_section == i)
+# #   pos <- call.r.pos[i]
+# #   
+# #   das.df$dist_from_prev[1] <- 0 #Ignore distance from last effort
+# #   
+# #   seg.dist <- sum(das.df$dist_from_prev)
+# #   seg.dist.mod <- seg.dist %% call.seg.km
+# #   
+# #   # Determine segment lengths
+# #   if (.equal(seg.dist, 0)) {
+# #     # If current segment length is 0 and there are other events, throw warning
+# #     if (nrow(das.df) > 2) 
+# #       warning("The length of continuous effort section ", i, " was zero, ", 
+# #               "and there were events between start and end points", 
+# #               immediate. = TRUE)
+# #     
+# #     # EAB makes a 0.1km segment if it includes a sighting - ?
+# #     seg.lengths <- 0
+# #     pos <- NA
+# #     
+# #   } else {
+# #     if (.less_equal(seg.dist, call.seg.km)) {
+# #       # If current segment length is less than target length,
+# #       #   only make one segment
+# #       n.subseg <- 1
+# #       if (is.null(pos)) pos <- NA
+# #       seg.lengths <- seg.dist
+# #       
+# #     } else if (.greater_equal(seg.dist.mod, (call.seg.km / 2))) {
+# #       # If current segment length is greater than the target length and
+# #       #   remainder is greater than or equal to half of the target length,
+# #       #   the remainder is its own (randomly placed) segment
+# #       n.subseg <- ceiling(seg.dist/call.seg.km)
+# #       if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
+# #       if (is.na(pos) | !between(pos, 1, n.subseg)) 
+# #         stop("Randpicks value is not in proper range")
+# #       seg.lengths <- rep(call.seg.km, n.subseg)
+# #       seg.lengths[pos] <- seg.dist.mod
+# #       
+# #     } else if (.less(seg.dist.mod, (call.seg.km / 2))) {
+# #       # If current segment length is greater than the target length and
+# #       #   remainder is less than half of the target length,
+# #       #   the remainder added to a random segment
+# #       n.subseg <- floor(seg.dist/call.seg.km)
+# #       if (is.null(pos)) pos <- ceiling(runif(1, 0, 1) * n.subseg)
+# #       if (is.na(pos) | !between(pos, 1, n.subseg)) 
+# #         stop("Randpicks value is not in proper range")
+# #       seg.lengths <- rep(call.seg.km, n.subseg)
+# #       seg.lengths[pos] <- call.seg.km + seg.dist.mod
+# #       
+# #     } else {
+# #       stop("Error in airdas_chop_equal() - unrecognized effort situation. ", 
+# #            "Please report this as an issue")
+# #     }
+# #   }
+# #   
+# #   
+# #   #------------------------------------------------------
+# #   ### Assign each event to a segment
+# #   subseg.cumsum <- cumsum(seg.lengths)
+# #   das.cumsum <- cumsum(das.df$dist_from_prev)
+# #   
+# #   das.df$effort_seg <- findInterval(
+# #     round(das.cumsum, 4), round(c(-1, subseg.cumsum), 4),
+# #     left.open = TRUE, rightmost.closed = TRUE
+# #   )
+# #   das.df$seg_idx <- paste0(i, "_", das.df$effort_seg)
+# #   
+# #   
+# #   #------------------------------------------------------
+# #   ### Get segdata, and return
+# #   das.df.segdata <- airdas_segdata_avg(as_airdas_df(das.df), seg.lengths, i)
+# #   
+# #   list(das.df = das.df, seg.lengths = seg.lengths, pos = pos, 
+# #        das.df.segdata = das.df.segdata)
+# # }

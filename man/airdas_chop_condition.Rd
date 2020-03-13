@@ -10,7 +10,13 @@ airdas_chop_condition(x, ...)
 
 \method{airdas_chop_condition}{data.frame}(x, ...)
 
-\method{airdas_chop_condition}{airdas_df}(x, seg.km.min = 0.1, ...)
+\method{airdas_chop_condition}{airdas_df}(
+  x,
+  seg.km.min = 0.1,
+  dist.method = NULL,
+  num.cores = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -22,6 +28,14 @@ see the Details section below}
 
 \item{seg.km.min}{numeric; minimum allowable segment length (in kilometers).
 Default is 0.1. See the Details section below for more information}
+
+\item{dist.method}{character; see \code{\link{airdas_effort}}.
+Default is \code{NULL} since these distances should have already been
+calculated in \code{\link{airdas_effort}}}
+
+\item{num.cores}{Number of CPUs to over which to distribute computations.
+Defaults to \code{NULL} which uses one fewer than the number of cores
+reported by \code{\link[parallel]{detectCores}}}
 }
 \value{
 List of two data frames:
@@ -71,6 +85,9 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   Note that the above rule for 'combining' condition changes that have the same location 
   into a single segment (such as a 'TVPAW' series of events) 
   is followed even if \code{seg.km.min = 0}.
+
+  If the column \code{dist_from_prev} does not exist, the distance between
+  subsequent events is calculated as described in \code{\link{airdas_effort}}
   
   Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
   that doesn't average conditions?

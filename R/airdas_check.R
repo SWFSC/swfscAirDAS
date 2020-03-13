@@ -3,11 +3,13 @@
 #' Check that AirDAS file has accepted formatting and values
 #'
 #' @param file filename(s) of one or more AirDAS files
+#' @param file.type character; indicates the program used to create \code{file}.
+#'   Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive).
+#'   Default is "turtle". Passed to \code{\link{airdas_read}}
+#' @param skip integer: see \code{\link[readr]{read_fwf}}. Default is 0. 
+#'   Passed to \code{\link{airdas_read}}
 #' @param file.out filename to which to write the error log; 
 #'   default is \code{NULL}
-#'
-#' @importFrom dplyr left_join select
-#' @importFrom utils write.csv
 #'
 #' @details
 #' Checks that the following is true:
@@ -20,10 +22,10 @@
 #'
 #' \tabular{llll}{
 #'   \emph{Item} \tab \emph{Event} \tab \emph{Column} \tab \emph{Requirement}\cr
-#'   Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank)\cr
+#'   Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
 #'   Altitude \tab A \tab Data1 \tab Can be converted to a numeric value\cr
 #'   Speed    \tab A \tab Data2 \tab Can be converted to a numeric value\cr
-#'   HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, or NA (blank)\cr
+#'   HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
 #'   Percent overcast \tab W \tab Data2 \tab Can be converted to a numeric value\cr
 #'   Beaufort         \tab W \tab Data3 \tab Can be converted to a numeric value\cr
 #'   Jellyfish        \tab W \tab Data4 \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
@@ -51,25 +53,28 @@
 #' A data frame with five columns that list information about errors found 
 #' in the AirDAS files: the file name, line number, 
 #' index (row number) from the \code{airdas_read(file)} data frame, 
-#' 'ID' (columns 4-39 from the DAS file), and description of the issue
+#' 'ID' (pre-Data# columns from the DAS file), and description of the issue
 #'
 #' If \code{file.out} is not \code{NULL}, then the error log is also
-#' written to a text file
+#' written to a text/csv file
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' airdas_check(y)
 #'
 #' @export
-airdas_check <- function(file, file.out = NULL) {
+airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) {
   error.out <- data.frame(
     File = NA, LineNum = NA, Idx = NA, ID = NA, Description = NA,
     stringsAsFactors = FALSE
   )
   
-  x <- airdas_read(file)
-  x.proc <- airdas_process(x)
-  x.lines <- do.call(c, lapply(file, function(i) substr(readLines(i), 4, 39)))
+  x <- suppressWarnings(airdas_read(file, file.type = file.type, skip = skip))
+  x.proc <- suppressWarnings(airdas_process(x))
+  
+  id.idx <- switch(file.type, phocoena = 45, turtle = 39, 39)
+  x.lines <- do.call(c, lapply(file, function(i) substr(readLines(i), 1, id.idx)))
+  if (skip > 0) x.lines <- x.lines[-c(1:skip)]
   
   stopifnot(nrow(x) == length(x.lines))
   
@@ -89,28 +94,30 @@ airdas_check <- function(file, file.out = NULL) {
   
   #----------------------------------------------------------------------------
   ### Check that effort dot matches effort determined by T/R to E/O events
-  x.all <- left_join(
-    select(x, .data$Event, .data$file_das, .data$line_num, 
-           .data$EffortDot), 
-    select(x.proc, .data$Event, .data$file_das, .data$line_num, 
-           .data$EffortDot, .data$OnEffort), 
-    by = c("Event", "file_das", "line_num", "EffortDot")
-  )
-  tmp.which <- which(is.na(x.all$OnEffort))
-  stopifnot(
-    nrow(x) == nrow(x.all), 
-    all(x$Event[tmp.which] == "#")
-  )
-  x.all$OnEffort[tmp.which] <- x.all$OnEffort[tmp.which-1]
-  
-  # 1 events do not have effort dots
-  e.which <- which((x.all$OnEffort != x.all$EffortDot) & (x.all$Event != 1))
-  
-  error.out <- rbind(
-    error.out,
-    list(x$file_das[e.which], x$line_num[e.which], e.which, x.lines[e.which], 
-         rep("Effort dot does not match T/R to O/E effort", length(e.which)))
-  )
+  if (file.type == "turtle") {
+    x.all <- left_join(
+      select(x, .data$Event, .data$file_das, .data$line_num, 
+             .data$EffortDot), 
+      select(x.proc, .data$Event, .data$file_das, .data$line_num, 
+             .data$EffortDot, .data$OnEffort), 
+      by = c("Event", "file_das", "line_num", "EffortDot")
+    )
+    tmp.which <- which(is.na(x.all$OnEffort))
+    stopifnot(
+      nrow(x) == nrow(x.all), 
+      all(x$Event[tmp.which] == "#")
+    )
+    x.all$OnEffort[tmp.which] <- x.all$OnEffort[tmp.which-1]
+    
+    # 1 events do not have effort dots
+    e.which <- which((x.all$OnEffort != x.all$EffortDot) & (x.all$Event != 1))
+    
+    error.out <- rbind(
+      error.out,
+      list(x$file_das[e.which], x$line_num[e.which], e.which, x.lines[e.which], 
+           rep("Effort dot does not match T/R to O/E effort", length(e.which)))
+    )
+  }
   
   
   #----------------------------------------------------------------------------
@@ -122,8 +129,10 @@ airdas_check <- function(file, file.out = NULL) {
   #   and "txt".event code'.'data# column' for the txt to go in error.out
   
   # Viewing conditions
-  idx.V <- .check_character(x, "V", paste0("Data", 1:5), c("e", "g", "o", "p", NA))
+  patt <- c("e", "g", "o", "p")
+  idx.V <- .check_character(x, "V", paste0("Data", 1:5), c(patt, toupper(patt), NA))
   txt.V <- "A viewing condition (Data1-5 of V events) is not one of: e, g, p, o, or NA"
+  rm(patt)
   
   # Altitude
   idx.A.1 <- .check_numeric(x, "A", "Data1")
@@ -135,10 +144,12 @@ airdas_check <- function(file, file.out = NULL) {
   
   # HKR
   x.tmp <- x
-  x.tmp$Data1[x.tmp$Event == "W"] <- sub("n", "", sub("r", "", sub("k", "", sub("h", "", x.tmp$Data1[x.tmp$Event == "W"]))))
+  patt <- c("h", "k", "r", "n", "y") #y means h in early years
+  x.tmp$Data1 <- .gsub_multi(c(patt, toupper(patt)), "", x.tmp$Data1)
+  
   idx.W.1 <- .check_character(as_airdas_dfr(x.tmp), "W", "Data1", c("", NA))
   txt.W.1 <- "HKR (Data1 of W events) has a character that is not one of: n, h, k, r, or NA"
-  rm(x.tmp)
+  rm(x.tmp, patt)
   
   # Percent overcast
   idx.W.2 <- .check_numeric(x, "W", "Data2")
@@ -149,15 +160,42 @@ airdas_check <- function(file, file.out = NULL) {
   txt.W.3 <- "Beaufort (Data3 of W events) cannot be converted to a numeric"
   
   # Jellyfish
-  idx.W.4 <- .check_character(x, "W", "Data4", c(0, 1, 2, 3, NA))
-  txt.W.4 <- "Jellyfish code (Data4 of W events) is not one of 0, 1, 2, 3, or NA"
+  txt.jelly <- "Jellyfish code (Data4 of W events) is not one of 0, 1, 2, 3, or NA"
+  idx.jelly <- if (file.type == "turtle") {
+    .check_character(x, "W", "Data4", c(0, 1, 2, 3, NA))
+  } else {
+    integer(0)
+  }
   
   # Horizontal sun
-  idx.W.5 <- .check_character(x, "W", "Data5", c(0:12, NA))
-  txt.W.5 <- paste("Horizontal sun (Data5 of W events) is not one of", 
-                   paste(c(0:12, NA), collapse = ", "))
-  idx.W.5b <- .check_numeric(x, "W", "Data5")
-  txt.W.5b <- "Horizontal sun (Data5 of W events) cannot be converted to a numeric"
+  if (file.type == "phocoena") {
+    idx.hsun <- .check_character(x, "W", "Data4", c(0:12, sprintf("0%d", 0:12), NA))
+    idx.hsun.b <- .check_numeric(x, "W", "Data4")
+    txt.hsun <- paste("Horizontal sun (Data4 of W events) is not one of", 
+                      paste(c(0:12, NA), collapse = ", "))
+    txt.hsun.b <- "Horizontal sun (Data4 of W events) cannot be converted to a numeric"
+    
+  } else if (file.type == "turtle") {
+    idx.hsun <- .check_character(x, "W", "Data5", c(0:12, sprintf("0%d", 0:12), NA))
+    idx.hsun.b <- .check_numeric(x, "W", "Data5")
+    txt.hsun <- paste("Horizontal sun (Data5 of W events) is not one of", 
+                      paste(c(0:12, NA), collapse = ", "))
+    txt.hsun.b <- "Horizontal sun (Data5 of W events) cannot be converted to a numeric"
+    
+  } else {
+    idx.hsun <- idx.hsun.b <- integer(0)
+  }
+  
+  # Vertical sun
+  txt.vsun <- paste("Vertical sun (Data5 of W events) is not one of", 
+                    paste(c(0:3, NA), collapse = ", "))
+  txt.vsun.b <- "Vertical sun (Data5 of W events) cannot be converted to a numeric"
+  if (file.type == "phocoena") {
+    idx.vsun <- .check_character(x, "W", "Data5", c(0:3, sprintf("0%d", 0:3), NA))
+    idx.vsun.b <- .check_numeric(x, "W", "Data5")
+  } else {
+    idx.vsun <- idx.vsun.b <- integer(0)
+  }
   
   # Observers
   idx.P <- .check_character_length(x, "P", c("Data1", "Data2", "Data3", "Data4"), 2)
@@ -173,15 +211,19 @@ airdas_check <- function(file, file.out = NULL) {
     .check_list(x, x.lines, idx.W.1, txt.W.1),
     .check_list(x, x.lines, idx.W.2, txt.W.2),
     .check_list(x, x.lines, idx.W.3, txt.W.3),
-    .check_list(x, x.lines, idx.W.4, txt.W.4),
-    .check_list(x, x.lines, idx.W.5, txt.W.5),
-    .check_list(x, x.lines, idx.W.5b, txt.W.5b),
+    .check_list(x, x.lines, idx.jelly, txt.jelly),
+    .check_list(x, x.lines, idx.hsun, txt.hsun),
+    .check_list(x, x.lines, idx.hsun.b, txt.hsun.b),
+    .check_list(x, x.lines, idx.vsun, txt.vsun),
+    .check_list(x, x.lines, idx.vsun.b, txt.vsun.b),
     .check_list(x, x.lines, idx.P, txt.P)
   )
   
   
   #----------------------------------------------------------------------------
   ### Check Data# columns for sightings data format
+  ### Phocoena data has no 1/s/t event codes, so can just leave those in
+  
   # Marine mammal sightings (SKM)
   idx.S.num <- .check_numeric(x, "S", paste0("Data", 3:4))
   txt.S.num <- paste(
@@ -252,3 +294,12 @@ airdas_check <- function(file, file.out = NULL) {
   
   to.return
 }
+
+
+
+# Function to remove multiple characters from the same string
+.gsub_multi <- function(pattern, replacement, x) {
+  for (i in pattern) x <- gsub(i, replacement, x)
+  x
+}
+

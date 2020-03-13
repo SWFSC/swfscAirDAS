@@ -2,18 +2,21 @@ Package: swfscAirDAS
 Title: Aerial DAS Data Processing Functions for the Southwest Fisheries Science Center
 Version: 0.0.0.9000
 Authors@R: person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
-Description: Process and summarize aerial survey DAS (AirDAS) data collected using the 
-    Southwest Fisheries Science Center (SWFSC) 'TURTLEP' program, or associated programs. 
-    A PDF with the AirDAS data format requirements is included in this package.
+Description: Process and summarize aerial survey DAS (AirDAS) data collected using one of the following 
+    Southwest Fisheries Science Center (SWFSC) programs: PHOCOENA, SURVEY, CARETTA, or TURTLE (such as TURTLEP or TURTLE 4D).
+    PDFs detailing the different AirDAS data formats are included in this package.
 URL: https://smwoodman.github.io/swfscAirDAS, https://github.com/smwoodman/swfscAirDAS
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues
 Depends: R (>= 3.5.0)
 Imports:
     dplyr, 
     lubridate, 
+    magrittr,
     methods,
+    parallel,
     readr, 
     rlang, 
+    swfscDAS,
     swfscMisc
 Suggests: 
     knitr,
@@ -22,5 +25,5 @@ Suggests:
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 VignetteBuilder: knitr

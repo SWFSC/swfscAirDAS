@@ -36,14 +36,15 @@ Default is 30 minutes; must be less than or equal to \code{days.gap.full}}
 \item{days.gap.full}{numeric of length 1; 
 time gap (in days) used to identify when a 'full reset; is performed, 
 i.e. when all info (transect number and propogated info) is reset. 
-Default is 12 hours}
+Default is 12 hours; must be greater than \code{days.gap.part}}
 
-\item{gap.message}{logical; should messages be printed detailing which row(s) of the 
-output data frame were partially or fully reset?}
+\item{gap.message}{logical; default is \code{FALSE}.
+Indicates if messages should be printed detailing which row(s) of the 
+output data frame were partially or fully reset}
 
 \item{reset.tvpaw}{logical; default is \code{TRUE}.
 Indicates if state/condition information should be reset to \code{NA}
-when beginning a new transect. See details}
+when beginning a new transect. See Details section}
 }
 \value{
 An \code{airdas_df} object, which is also a data frame.
@@ -73,6 +74,8 @@ An \code{airdas_df} object, which is also a data frame.
     Viewing condition - right inside  \tab VRI      \tab Event: V; Column: Data4\cr
     Viewing condition - right outside \tab VRO      \tab Event: V; Column: Data5\cr
   }
+  
+  Warnings are printed with line numbers of unexpected event codes
 }
 \description{
 Process AirDAS data (the output of \code{\link{airdas_read}}), 
@@ -100,6 +103,9 @@ If \code{x} is a character, it is assumed to be a filepath
       and O/E events turn effort off. 
       T/R events themselves will be on effort, while O/E events will be off effort.
       The 'EffortDot' column is ignored
+    \item 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
+    \item Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
+    \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec') values are converted to lower case
     \item Missing values are \code{NA} rather than \code{-1}
   }
   

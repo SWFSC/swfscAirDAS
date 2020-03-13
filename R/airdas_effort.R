@@ -7,11 +7,12 @@
 #' @param method character; method to use to chop AirDAS data into effort segments
 #'   Can be "equallength" or "condition" (case-sensitive)
 #' @param sp.codes character; species code(s) to include in segdata
+#' @param dist.method character;
+#'   method to use to calculate distance between lat/lon coordinates.
+#'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
+#'   or one of "lawofcosines", "haversine", or "vincenty" to use
+#'   \code{\link[swfscMisc]{distance}}. Default is "vincenty"
 #' @param ... arguments passed to the chopping function specified using \code{method}
-#' 
-#' @importFrom dplyr %>% between bind_cols filter full_join group_by left_join summarise
-#' @importFrom swfscMisc distance
-#' @importFrom utils head
 #' 
 #' @details This is the top-level function for chopping processed AirDAS data 
 #'   into modeling segments (henceforth 'segments'), and assigning sightings 
@@ -43,9 +44,14 @@
 #'   Siteinfo, which contains all sightings in \code{x} (see below), 
 #'   contains a column ('included') that indicates whether or not the sighting was
 #'   included in the segdata counts.
+#'   
+#'   All on effort events must not have \code{NA} Lat or Lon values; 
+#'   remember that in \code{\link{airdas_process}}, S Lat/Lon values
+#'   were passed to 1 events. 
+#'   TODO: Should this function verbosely remove these events?
 #' 
-#'   The function \code{\link[swfscMisc]{distance}}, \code{method = "vincenty"}, is used to
-#'   calculate the distance (in km) between the lat/lon points of subsequent events.
+#'   The distance between the lat/lon points of subsequent events
+#'   is calculated using the method specified in \code{dist.method}
 #' 
 #' @return List of three data frames: 
 #'   \itemize{
@@ -62,24 +68,19 @@
 #' 
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' 
 #' y.proc <- airdas_process(y)
-#' airdas_effort(
-#'   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-#'   seg.km = 3
-#' )
 #' 
 #' # Using "equallength" method
 #' y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 #' airdas_effort(
 #'   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-#'   seg.km = 3, randpicks.load = y.rand
+#'   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 #' )
 #' 
 #' # Using "condition" method
 #' airdas_effort(
 #'   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-#'   seg.km.min = 0.05
+#'   seg.km.min = 0.05, num.cores = 1
 #' )
 #' 
 #' @export
@@ -95,13 +96,16 @@ airdas_effort.data.frame <- function(x, ...) {
 
 #' @name airdas_effort
 #' @export
-airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
+airdas_effort.airdas_df <- function(x, method, sp.codes, 
+                                    dist.method = "vincenty", ...) {
   #----------------------------------------------------------------------------
   # Input checks
   methods.acc <- c("equallength", "condition")
   if (!(length(method) == 1 & (method %in% methods.acc))) 
     stop("method must be a string, and must be one of: ", 
          paste0("\"", paste(methods.acc, collapse = "\", \""), "\""))
+  
+  #Check for dist.method happens in .dist_from_prev()
   
   
   #----------------------------------------------------------------------------
@@ -114,21 +118,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, ...) {
   x.oneff <- x[x.oneff.which, ]
   rownames(x.oneff) <- NULL
   
-  # For each event, calculate distance to previous event
-  if (any(is.na(x.oneff$Lat)) | any(is.na(x.oneff$Lon))) {
-    stop("Error in airdas_effort: Some unexpected events ",
-         "(i.e. not one of ?, 1, 2, 3, 4, 5, 6, 7, 8) ",
-         "have NA values in the Lat and/or Lon columns, ",
-         "and thus the distance between each point cannot be determined")
-  }
-  dist.from.prev <- mapply(function(x1, y1, x2, y2) {
-    distance(y1, x1, y2, x2, units = "km", method = "vincenty")
-  },
-  x1 = head(x.oneff$Lon, -1), y1 = head(x.oneff$Lat, -1),
-  x2 = x.oneff$Lon[-1], y2 = x.oneff$Lat[-1], 
-  SIMPLIFY = TRUE)
-  
-  x.oneff$dist_from_prev <- c(NA, dist.from.prev)
+  x.oneff$dist_from_prev <- swfscDAS::.dist_from_prev(x.oneff, dist.method)
   
   
   #----------------------------------------------------------------------------

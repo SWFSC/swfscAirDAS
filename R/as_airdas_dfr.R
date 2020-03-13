@@ -23,6 +23,7 @@ as_airdas_dfr.airdas_dfr <- function(x) x
 #' @name as_airdas_dfr
 #' @export
 as_airdas_dfr.data.frame <- function(x) {
+  # Check that columns have correct names and classes
   exp.class <- list(
     Event = "character",
     EffortDot = "logical",
@@ -36,9 +37,10 @@ as_airdas_dfr.data.frame <- function(x) {
     Data5 = "character",
     Data6 = "character",
     Data7 = "character",
-    EventNum = "integer",
+    EventNum = "character",
     file_das = "character",
-    line_num = "integer"
+    line_num = "integer",
+    file_type = "character"
   )
   exp.class.names <- names(exp.class)
   
@@ -49,15 +51,28 @@ as_airdas_dfr.data.frame <- function(x) {
     x.curr <- x.class[[name.curr]]
     
     if (!identical(x.curr, exp.class[[i]])) {
-      stop("The provided object (x) cannot be coerced to an object of class airdas_dfr ",
+      stop("The provided data cannot be coerced to an object of class airdas_dfr ",
            "because it does not contain the correct columns. ",
-           "Specifically, it must contain a column with the name '", names(exp.class)[i], "' ",
-           "and class '", exp.class[[i]], "'\n",
+           "Specifically, it must contain a column with the name '", 
+           names(exp.class)[i], "' ", "and class '", exp.class[[i]], "'\n",
            "Was x created using airdas_read()? ", 
            "See `?as_airdas_dfr` or `?airdas_dfr-class` for more details.")
     }
   }
   
+  # Check that file_type column has an expected value
+  file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
+  if (!(length(unique(x$file_type)) & all(x$file_type %in% file.type.acc)))
+    stop("The file_type column values must be 1) all the same and 2) one of: ", 
+         paste(file.type.acc, collapse = ", "))
+  
+  # Check that no events are NA
+  if (any(is.na(x$Event)))
+    stop("The provided data cannot be coerced to an object of class airdas_dfr ",
+         "because the following line(s) have NA Event value(s):\n", 
+         paste(x$line_num[is.na(x$Event)], collapse = ", "))
+  
+  # Add class and return
   class(x) <- c("airdas_dfr", setdiff(class(x), "airdas_dfr"))
   
   x
