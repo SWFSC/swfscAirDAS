@@ -188,10 +188,10 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   
   # Vertical sun
   txt.vsun <- paste("Vertical sun (Data5 of W events) is not one of", 
-                    paste(c(0:3, NA), collapse = ", "))
+                    paste(c(0:4, NA), collapse = ", "))
   txt.vsun.b <- "Vertical sun (Data5 of W events) cannot be converted to a numeric"
   if (file.type == "phocoena") {
-    idx.vsun <- .check_character(x, "W", "Data5", c(0:3, sprintf("0%d", 0:3), NA))
+    idx.vsun <- .check_character(x, "W", "Data5", c(0:4, sprintf("0%d", 0:4), NA))
     idx.vsun.b <- .check_numeric(x, "W", "Data5")
   } else {
     idx.vsun <- idx.vsun.b <- integer(0)
