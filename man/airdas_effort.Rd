@@ -10,7 +10,7 @@ airdas_effort(x, ...)
 
 \method{airdas_effort}{data.frame}(x, ...)
 
-\method{airdas_effort}{airdas_df}(x, method, sp.codes, dist.method = "vincenty", ...)
+\method{airdas_effort}{airdas_df}(x, method, sp.codes, dist.method = "greatcircle", ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
@@ -28,7 +28,7 @@ Can be "equallength" or "condition" (case-sensitive) to use
 method to use to calculate distance between lat/lon coordinates.
 Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 or one of "lawofcosines", "haversine", or "vincenty" to use
-\code{\link[swfscMisc]{distance}}. Default is "vincenty"}
+\code{\link[swfscMisc]{distance}}. Default is "greatcircle"}
 }
 \value{
 List of three data frames: 

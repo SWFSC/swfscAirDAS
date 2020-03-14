@@ -12,7 +12,7 @@
 #'   method to use to calculate distance between lat/lon coordinates.
 #'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 #'   or one of "lawofcosines", "haversine", or "vincenty" to use
-#'   \code{\link[swfscMisc]{distance}}. Default is "vincenty"
+#'   \code{\link[swfscMisc]{distance}}. Default is "greatcircle"
 #' @param ... arguments passed to the chopping function specified using \code{method}
 #' 
 #' @details This is the top-level function for chopping processed AirDAS data 
@@ -98,7 +98,7 @@ airdas_effort.data.frame <- function(x, ...) {
 #' @name airdas_effort
 #' @export
 airdas_effort.airdas_df <- function(x, method, sp.codes, 
-                                    dist.method = "vincenty", ...) {
+                                    dist.method = "greatcircle", ...) {
   #----------------------------------------------------------------------------
   # Input checks
   methods.acc <- c("equallength", "condition")

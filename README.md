@@ -36,9 +36,21 @@ devtools::install_github("smwoodman/swfscAirDAS")
 
 ## AirDAS format
 
-You can [download the
-PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format.pdf)
-describing the AirDAS data format requirements of `swfscAirDAS`.
+`swfscAirDAS` accepts AirDAS data from several different programs, and
+thus in several different formats: PHOCOENA, SURVEY (in the future),
+CARETTA, and TURTLE. You can download PDFs describing these formats at
+the following links:
+
+  - [PHOCOENA data format
+    PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf)
+  - [CARETTA data format
+    PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf)
+  - [TURTLE data format
+    PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf)
+
+These PDFs are also included in the package; see
+[`airdas_format_pdf`](https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html)
+for more details.
 
 ## Usage
 

@@ -29,7 +29,7 @@ An \code{airdas_dfr} object, which is also a data frame, with AirDAS data read i
     DateTime  \tab POSIXct   \tab combination of 'Date' and 'Time' columns, with time zone \code{tz}\cr
     Lat       \tab numeric   \tab 'Latitude' columns converted to decimal degrees in range [-90, 90]\cr
     Lon       \tab numeric   \tab 'Longitude' columns converted to decimal degrees in range [-180, 180]\cr
-    Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (rows where 'Event' is not "C" )\cr
+    Data#     \tab character \tab leading/trailing whitespace trimmed for non-comment events (i.e. where 'Event' is not "C" )\cr
     file_das  \tab character \tab base filename, extracted from the \code{file} argument\cr
     line_num  \tab integer   \tab line number of each data row\cr
     file_type \tab character \tab \code{file.type} argument
