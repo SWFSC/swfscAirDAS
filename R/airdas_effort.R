@@ -7,7 +7,8 @@
 #' @param method character; method to use to chop AirDAS data into effort segments
 #'   Can be "equallength" or "condition" (case-sensitive) to use 
 #'   \code{\link{airdas_chop_equal}} or \code{\link{airdas_chop_condition}}, respectively
-#' @param sp.codes character; species code(s) to include in segdata
+#' @param sp.codes character; species code(s) to include in segdata. 
+#'   These code(s) will be converted to lower case to match \code{\link{airdas_sight}} 
 #' @param dist.method character;
 #'   method to use to calculate distance between lat/lon coordinates.
 #'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
@@ -111,6 +112,9 @@ airdas_effort.airdas_df <- function(x, method, sp.codes,
   
   #----------------------------------------------------------------------------
   # Prep
+  # Convert species codes to lower case
+  sp.codes <- tolower(sp.codes)
+  
   # Filter for and number continuous effort sections
   #   'on effort + 1' is to capture O/E event
   x.oneff.which <- sort(unique(c(which(x$OnEffort), which(x$OnEffort) + 1)))

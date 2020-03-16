@@ -31,7 +31,7 @@ Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
     Standard sighting                 \tab SightStd \tab Logical; described in Details\cr
     Mixed species sighting            \tab Mixed    \tab Logical\cr
     Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
-    Species                           \tab Sp\cr
+    Species                           \tab Sp       \tab All values converted to lower case\cr
     Species-specific group size       \tab GsSp\cr
     Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events\cr
     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
@@ -52,6 +52,9 @@ AirDAS events contain specific information in the 'Data#' columns,
   See \code{\link{airdas_format_pdf}} for more information about the expected
   events and event formats, depending on the file type.
   
+  All species codes are converted to lower case using 
+  \code{\link[base:chartr]{tolower}}.
+   
   Abbreviations used in column names include: Gs = group size, Sp = species, 
   Mixed = mixed species (multi-species) sighting.#' 
   A 'standard sighting' ('SightStd' in output data frame) is a sighting 

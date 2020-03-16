@@ -22,7 +22,8 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 Can be "equallength" or "condition" (case-sensitive) to use 
 \code{\link{airdas_chop_equal}} or \code{\link{airdas_chop_condition}}, respectively}
 
-\item{sp.codes}{character; species code(s) to include in segdata}
+\item{sp.codes}{character; species code(s) to include in segdata. 
+These code(s) will be converted to lower case to match \code{\link{airdas_sight}}}
 
 \item{dist.method}{character;
 method to use to calculate distance between lat/lon coordinates.
