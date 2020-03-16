@@ -148,7 +148,7 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
       z.curr <- z[z$Event == i, ]
       z.vec <- z.curr[[j]]
       
-      z.out <- c(z.out, z.curr$idx[(nchar(z.vec) != len.accepted) & !is.na(z.vec)])
+      z.out <- c(z.out, z.curr$idx[!(nchar(z.vec) %in% len.accepted) & !is.na(z.vec)])
     }
   }
   

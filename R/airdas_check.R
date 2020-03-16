@@ -33,10 +33,14 @@
 #'   Horizontal sun   \tab W \tab Data5 \tab Must be one of 0:12, or NA (blank)\cr
 #'   Observers        \tab P \tab Data1-4 \tab Each entry must be two characters\cr
 #'   Sighting (mammal) \tab S \tab Data3-4 \tab Can be converted to a numeric value\cr
+#'   Sighting (mammal) \tab S \tab Data \tab Species code has exactly one or two characters\cr
+#'   Sighting (mammal) \tab S \tab Data \tab Observer code has exactly one or two characters\cr
 #'   Sighting info     \tab 1 \tab Data5-7 \tab Can be converted to a numeric value\cr
 #'   Sighting info     \tab 1 \tab Data1-4 \tab These columns must be NA (blank)\cr
 #'   Resight \tab s \tab Data2   \tab Can be converted to a numeric value\cr
 #'   Resight \tab s \tab Data3-7 \tab These columns must be NA (blank)\cr
+#'   Turtle sighting \tab t \tab Data \tab Species code has exactly one or two characters\cr
+#'   Turtle sighting \tab t \tab Data \tab Observer code has exactly one or two characters\cr
 #'   Turtle sighting \tab t \tab Data2, 4-5 \tab Can be converted to a numeric value\cr
 #'   Turtle sighting \tab t \tab Data6 \tab Must be one of y, n, u, or NA (blank)\cr
 #'   Turtle sighting \tab t \tab Data7 \tab This column must be NA (blank)\cr
@@ -230,6 +234,22 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
     "A Data3-4 column(s) for S events cannot be converted to a numeric"
   )
   
+  if (file.type == "phocoena") {
+    idx.S.sp <- .check_character_length(x, "S", "Data2", 1:2)
+    txt.S.sp <- "A species code (Data2 of S events) is not one or two characters"
+  } else {
+    idx.S.sp <- .check_character_length(x, "S", paste0("Data", 5:7), 1:2)
+    txt.S.sp <- "A species code (Data5, Data6, and Data7 of S events) is not one or two characters"
+  }
+  
+  if (file.type == "phocoena") {
+    idx.S.obs <- .check_character_length(x, "S", "Data5", 1:2)
+    txt.S.obs <- "The sighting observer code (Data5 of S events) is not one or two characters"
+  } else {
+    idx.S.obs <- .check_character_length(x, "S", "Data2", 1:2)
+    txt.S.obs <- "The sighting observer code (Data2 of S events) is not one or two characters"
+  }
+  
   # Multi-species info (1)
   idx.1.num <- .check_numeric(x, "1", paste0("Data", 5:7)) #3:9
   txt.1.num <- paste(
@@ -249,30 +269,65 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   txt.s.na <- "A Data3-7 column(s) for s events is not NA (blank)"
   
   # Turtle
-  idx.t.num <- .check_numeric(x, "t", paste0("Data", c(2, 4, 5)))
-  txt.t.num <- paste(
-    "A Data2/4-5 column(s) for t events cannot be converted to a numeric"
-  )
-  
-  idx.t.6 <- .check_character(x, "t", "Data6", c("y", "n", "u", NA))
-  txt.t.6 <- paste(
-    "Turtle tail visible (Data6 of t events) is not one of y, n, u, or NA"
-  )
-  
-  idx.t.na <- .check_character(x, "t", paste0("Data", 7), c(NA))
-  txt.t.na <- "The Data7 column for t events is not NA (blank)"
+  if (file.type == "turtle") {
+    # Turtle - TURTLE
+    idx.t.obs <- .check_character_length(x, "t", "Data1", 1:2)
+    txt.t.obs <- "The turtle sighting observer code (Data1 of t events) is not one or two characters"
+    
+    idx.t.sp <- .check_character_length(x, "t", "Data3", 2)
+    txt.t.sp <- "The turtle species code (Data3 of t events) is not two characters"
+    
+    idx.t.num <- .check_numeric(x, "t", paste0("Data", c(2, 4, 5)))
+    txt.t.num <- paste(
+      "A Data2/4-5 column(s) for t events cannot be converted to a numeric"
+    )
+    
+    idx.t.tail <- .check_character(x, "t", "Data6", c("y", "n", "u", NA))
+    txt.t.tail <- paste(
+      "Turtle tail visible (Data6 of t events) is not one of y, n, u, or NA"
+    )
+    
+    idx.t.na <- .check_character(x, "t", paste0("Data", 7), c(NA))
+    txt.t.na <- "The Data7 column for t events is not NA (blank)"
+    
+  } else {
+    # Turtle - CARETTA
+    # Not else if so that all is set to integer(0) for phocoena
+    idx.t.obs <- .check_character_length(x, "t", "Data2", 1:2)
+    txt.t.obs <- "The turtle sighting observer code (Data2 of t events) is not one or two characters"
+    
+    idx.t.sp <- .check_character_length(x, "t", "Data4", 2)
+    txt.t.sp <- "The turtle species code (Data4 of t events) is not two characters"
+    
+    idx.t.num <- .check_numeric(x, "t", paste0("Data", c(3, 5, 6)))
+    txt.t.num <- paste(
+      "A Data3/5-6 column(s) for t events cannot be converted to a numeric"
+    )
+    
+    idx.t.tail <- .check_character(x, "t", "Data7", c("y", "n", "u", NA))
+    txt.t.tail <- paste(
+      "Turtle tail visible (Data7 of t events) is not one of y, n, u, or NA"
+    )
+    
+    idx.t.na <- integer(0)
+    txt.t.na <- ""
+  }
   
   
   # Add to error.out
   error.out <- rbind(
     error.out,
     .check_list(x, x.lines, idx.S.num, txt.S.num),
+    .check_list(x, x.lines, idx.S.obs, txt.S.obs),
+    .check_list(x, x.lines, idx.S.sp, txt.S.sp),
     .check_list(x, x.lines, idx.1.num, txt.1.num),
     .check_list(x, x.lines, idx.1.na, txt.1.na),
     .check_list(x, x.lines, idx.s.num, txt.s.num),
     .check_list(x, x.lines, idx.s.na, txt.s.na),
+    .check_list(x, x.lines, idx.t.obs, txt.t.obs),
+    .check_list(x, x.lines, idx.t.sp, txt.t.sp),
     .check_list(x, x.lines, idx.t.num, txt.t.num),
-    .check_list(x, x.lines, idx.t.6, txt.t.6),
+    .check_list(x, x.lines, idx.t.tail, txt.t.tail),
     .check_list(x, x.lines, idx.t.na, txt.t.na)
   )
   

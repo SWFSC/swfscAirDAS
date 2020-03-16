@@ -53,10 +53,14 @@ Checks that the following is true:
   Horizontal sun   \tab W \tab Data5 \tab Must be one of 0:12, or NA (blank)\cr
   Observers        \tab P \tab Data1-4 \tab Each entry must be two characters\cr
   Sighting (mammal) \tab S \tab Data3-4 \tab Can be converted to a numeric value\cr
+  Sighting (mammal) \tab S \tab Data \tab Species code has exactly one or two characters\cr
+  Sighting (mammal) \tab S \tab Data \tab Observer code has exactly one or two characters\cr
   Sighting info     \tab 1 \tab Data5-7 \tab Can be converted to a numeric value\cr
   Sighting info     \tab 1 \tab Data1-4 \tab These columns must be NA (blank)\cr
   Resight \tab s \tab Data2   \tab Can be converted to a numeric value\cr
   Resight \tab s \tab Data3-7 \tab These columns must be NA (blank)\cr
+  Turtle sighting \tab t \tab Data \tab Species code has exactly one or two characters\cr
+  Turtle sighting \tab t \tab Data \tab Observer code has exactly one or two characters\cr
   Turtle sighting \tab t \tab Data2, 4-5 \tab Can be converted to a numeric value\cr
   Turtle sighting \tab t \tab Data6 \tab Must be one of y, n, u, or NA (blank)\cr
   Turtle sighting \tab t \tab Data7 \tab This column must be NA (blank)\cr
