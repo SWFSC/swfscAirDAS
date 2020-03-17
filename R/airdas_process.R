@@ -125,6 +125,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   # Input checks
   das.df <- x
   file.type <- unique(x$file_type)
+  if (length(file.type) != 1)
+    stop("Error in process file type - please report this as an issue.")
   
   if (length(file.type) != 1)
     stop("Error: Inconsistent file type in x")
@@ -212,11 +214,13 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
   Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
   Jelly    <- switch(file.type, 
-                     turtle = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     caretta = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     turtle  = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
                      init.val)
   HorizSun <- switch(file.type, 
                      phocoena = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
-                     turtle = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     caretta = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     turtle  = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
                      init.val)
   VertSun  <- switch(file.type, 
                      phocoena = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 

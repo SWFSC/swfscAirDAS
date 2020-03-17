@@ -124,7 +124,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes,
   rownames(x.oneff) <- NULL
   
   x.oneff$dist_from_prev <- swfscDAS::.dist_from_prev(x.oneff, dist.method)
-  
+
   
   #----------------------------------------------------------------------------
   # Chop and summarize effort using specified method

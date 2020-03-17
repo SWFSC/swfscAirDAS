@@ -41,10 +41,13 @@
 #'     Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
 #'     Species                           \tab Sp       \tab All values converted to lower case\cr
 #'     Species-specific group size       \tab GsSp\cr
-#'     Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events\cr
+#'     Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events; may be character or numeric\cr
 #'     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
 #'     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
 #'   }
+#'   
+#'   The TurtleSizeFt will be of class character is there is any CARETTA data in \code{x}, 
+#'   and of class numeric otherwise.
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -136,15 +139,19 @@ airdas_sight.airdas_df <- function(x) {
   ### 2) Extract sighting information based on file type
   sight.df.all <- bind_rows(
     .airdas_sight_phocoena(filter(sight.df, .data$file_type == "phocoena")), 
-    # .airdas_sight_turtle(filter(sight.df, .data$file_type == "caretta")), 
+    .airdas_sight_caretta(filter(sight.df, .data$file_type == "caretta")),
     .airdas_sight_turtle(filter(sight.df, .data$file_type == "turtle"))
   )
-
+  
+  # CARETTA data uses "l", "m", "s" code for TurtleSizeFt
+  if (!any(sight.df$file_type == "caretta")) 
+    sight.df.all$TurtleSizeFt <- as.numeric(sight.df.all$TurtleSizeFt)
+  
   #----------------------------------------------------------------------------
   # Join data frames and return
   sight.info %>% 
     left_join(sight.df.all, by = "idx") %>% 
-    mutate(Sp = tolower(Sp)) %>%
+    mutate(Sp = tolower(.data$Sp)) %>%
     select(-.data$idx)
 }
 
@@ -177,29 +184,33 @@ airdas_sight.airdas_df <- function(x) {
 
 # Extract sighting data from data created using CARETTA program
 .airdas_sight_caretta <- function(sight.df) {
+  if (!all(sight.df$Event %in% c("S", "t", "s")))
+    stop("Error in sight function - incorrect codes. ", 
+         "Please report this as an issue")
+  
   sight.info.all <- sight.df %>% 
-    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
+    mutate(SightNo = .data$Data1, 
            Obs = case_when(.data$Event == "S" ~ .data$Data2,
-                           .data$Event == "t" ~ .data$Data1), 
+                           .data$Event == "t" ~ .data$Data2), 
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
                                         .data$Event == "s" ~ .data$Data2, 
-                                        .data$Event == "t" ~ .data$Data2)), 
+                                        .data$Event == "t" ~ .data$Data3)), 
            SightStd = ifelse(.data$Event == "s", NA, 
                              .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)), 
            Sp = case_when(.data$Event == "S" ~ .data$Data5,
-                          .data$Event == "t" ~ .data$Data3), 
+                          .data$Event == "t" ~ .data$Data5), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
-                            .data$Event == "t" ~ 1), 
+                            .data$Event == "t" ~ as.numeric(.data$Data4)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
-                               .data$Event == "t" ~ 1)) %>% 
+                               .data$Event == "t" ~ .data$GsSp)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
            .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
-    mutate(TurtleSizeFt = as.numeric(.data$Data4), 
-           TurtleDirection = as.numeric(.data$Data5), 
-           TurtleTail = .data$Data6) %>% 
+    mutate(TurtleSizeFt = .data$Data6, 
+           TurtleDirection = NA, 
+           TurtleTail = .data$Data7) %>% 
     select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
            .data$TurtleTail)
   
@@ -209,6 +220,10 @@ airdas_sight.airdas_df <- function(x) {
 
 # Extract sighting data from data created using TURTLE program
 .airdas_sight_turtle <- function(sight.df) {
+  if (!all(sight.df$Event %in% c("S", "t", "s")))
+    stop("Error in sight function - incorrect codes. ", 
+         "Please report this as an issue")
+  
   sight.info.all <- sight.df %>% 
     mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
            Obs = case_when(.data$Event == "S" ~ .data$Data2,
@@ -229,7 +244,7 @@ airdas_sight.airdas_df <- function(x) {
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
-    mutate(TurtleSizeFt = as.numeric(.data$Data4), 
+    mutate(TurtleSizeFt = .data$Data4, 
            TurtleDirection = as.numeric(.data$Data5), 
            TurtleTail = .data$Data6) %>% 
     select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 

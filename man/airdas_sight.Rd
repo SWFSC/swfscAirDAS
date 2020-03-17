@@ -33,10 +33,13 @@ Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
     Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
     Species                           \tab Sp       \tab All values converted to lower case\cr
     Species-specific group size       \tab GsSp\cr
-    Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events\cr
+    Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events; may be character or numeric\cr
     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
   }
+  
+  The TurtleSizeFt will be of class character is there is any CARETTA data in \code{x}, 
+  and of class numeric otherwise.
 }
 \description{
 Extract sighting information from aerial DAS data

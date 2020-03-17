@@ -44,14 +44,14 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
     inherits(file, "character"),
     inherits(file.type, "character")
   )
-
+  
   if (length(file) < 1)
     stop("file must be a vector of one or more filename(s)")
   
   if (!all(file.exists(file)))
     stop("The supplied character string does not all name an existing file(s), ",
          "meaning file.exists(file) is FALSE")
-
+  
   
   # Call appropriate read function
   file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
@@ -64,14 +64,17 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
                       caretta = .airdas_read_turtle, 
                       turtle = .airdas_read_turtle)
   
-  do.call(rbind, lapply(file, call.read, skip = skip, tz = tz))
+  do.call(
+    rbind, 
+    lapply(file, call.read, skip = skip, tz = tz, file.type = file.type)
+  )
 }
 
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Read data from the PHOCOENA program
-.airdas_read_phocoena <- function(file, skip, tz) {
+.airdas_read_phocoena <- function(file, skip, tz, ...) {
   # Start and end (inclusive) column indices
   fwf.start <- c(1,3, 08,17, 26,27,30, 36,37,41, 47, 51,56,61,66,71,76,81)
   fwf.end   <- c(1,5, 15,24, 26,28,34, 36,39,45, 50, 55,60,65,70,75,80,NA)
@@ -102,14 +105,14 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
 
 #------------------------------------------------------------------------------
 # Read data from the SURVEY program
-.airdas_read_survey <- function(file, skip, tz) {
+.airdas_read_survey <- function(file, skip, tz, ...) {
   stop("This package does not yet support the SURVEY method")
 }
 
 
 #------------------------------------------------------------------------------
 # Read data from the CARETTA or TURTLE* program
-.airdas_read_turtle <- function(file, skip, tz) {
+.airdas_read_turtle <- function(file, skip, tz, file.type, ...) {
   # Start and end (inclusive) column indices
   fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 40,45,50,55,60,65,70)
   fwf.end   <- c(3,4,5, 11,18, 20,22,28, 30,33,39, 44,49,54,59,64,69,NA)
@@ -132,7 +135,7 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   x$Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
   
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
-  x$file_type <- "turtle"
+  x$file_type <- file.type
   
   .airdas_read_general(file, x, skip)
 }
