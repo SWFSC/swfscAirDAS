@@ -49,7 +49,7 @@
       if (inherits(z, c("numeric", "integer"))) {
         z + (dist.perc * curr.df[[k]][idx])
       } else if (inherits(z, "character")) {
-        paste(fn_uniqchars(paste0(z, curr.df[[k]][idx])), collapse = "")
+        paste(.fn_uniqchars(paste0(z, curr.df[[k]][idx])), collapse = "")
       } else if (inherits(z, "logical")) {
         browser()
       } else {

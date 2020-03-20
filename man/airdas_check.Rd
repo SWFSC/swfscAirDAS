@@ -51,28 +51,28 @@ Checks that the following is true:
   Altitude           \tab Can be converted to a numeric value, and is not NA\cr
   Speed              \tab Can be converted to a numeric value, and is not NA\cr
   HKR              \tab Characters must all be one of: n, h, k, r, or NA (blank). 
-    Not case sensitive; y is accepted for PHOCOENA data\cr
-  Percent overcast \tab Can be converted to a numeric value, and is between 0 and 100\cr
-  Beaufort         \tab Can be converted to a numeric value, and is between 0 and 9\cr
+    Not case sensitive; y is also accepted for PHOCOENA data\cr
+  Percent overcast \tab Can be converted to a whole number between 0 and 100\cr
+  Beaufort         \tab Can be converted to a whole number between 0 and 9\cr
   Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
-  Horizontal sun   \tab Can be converted to a numeric value, and must be one of 0:12, or NA (blank)\cr
-  Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
-  Observers        \tab Each entry must be two characters\cr
-  Observers        \tab No observer code can be used twice in the same P event\cr
+  Horizontal sun   \tab Must be one of 0:12, or NA (blank)\cr
+  Vertical sun     \tab Must be one of 0:4 or NA (blank)\cr
+  Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
   Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
-  Sighting (mammal) \tab Group is a whole number between 1 and 5000\cr
+  Sighting (mammal) \tab Group size is a whole number between 1 and 5000\cr
   Sighting (mammal) \tab Species code has exactly one or two characters\cr
   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
   Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
-  Sighting info     \tab Unused columns (including DateTime, Lat, and Lon) of a '1' event must be NA (blank)\cr
+  Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
   Resight           \tab Angle can be converted to a numeric value\cr
   Resight           \tab Unused resight columns must be NA (blank)\cr
-  Turtle sighting   \tab Species code has exactly one or two characters\cr
-  Turtle sighting   \tab Observer code has exactly one or two characters\cr
-  Turtle sighting   \tab Angle and travel direction can be converted to a numeric value\cr
+  Turtle sighting   \tab Angle is a whole number between -90 and 90\cr
+  Turtle sighting   \tab Group size is a whole number between 1 and 10 (only included in CARETTA data)\cr
+  Turtle sighting   \tab Species code has exactly two characters\cr
+  Turtle sighting   \tab Observer code has exactly two characters\cr
+  Turtle sighting   \tab Turtle size is a whole number between 1 and 9; one of s, m, l is also accepted for CARETTA data\cr
+  Turtle sighting   \tab Travel direction is a whole number between 0 and 360 (only included in TURTLE data)\cr
   Turtle sighting   \tab Tail visible must be one of y, n, u, or NA (blank). Case sensitive\cr
-  Turtle sighting   \tab In TURTLE data, number of turtles can be converted to a numeric value\cr
-  Turtle sighting   \tab In TURTLE data, turtle size can be converted to a numeric value\cr
   Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 }
 

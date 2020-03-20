@@ -24,7 +24,7 @@
 #' @importFrom stats na.omit runif
 #' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn.grcirclkm
 #' @importFrom swfscMisc bearing destination distance setupClusters
-#' @importFrom utils head read.csv write.csv 
+#' @importFrom utils head tail read.csv write.csv 
 #' 
 #' @keywords package
 NULL
