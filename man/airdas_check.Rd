@@ -68,7 +68,7 @@ Checks that the following is true:
   Resight           \tab Unused resight columns must be NA (blank)\cr
   Turtle sighting   \tab Angle is a whole number between -90 and 90\cr
   Turtle sighting   \tab Group size is a whole number between 1 and 10 (only included in CARETTA data)\cr
-  Turtle sighting   \tab Species code has exactly two characters\cr
+  Turtle sighting   \tab Species code has exactly two characters, and is one of dc, cc, lo, cm, uh, ut, or lv\cr
   Turtle sighting   \tab Observer code has exactly two characters\cr
   Turtle sighting   \tab Turtle size is a whole number between 1 and 9; one of s, m, l is also accepted for CARETTA data\cr
   Turtle sighting   \tab Travel direction is a whole number between 0 and 360 (only included in TURTLE data)\cr

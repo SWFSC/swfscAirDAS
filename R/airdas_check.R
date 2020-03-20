@@ -48,7 +48,7 @@
 #'   Resight           \tab Unused resight columns must be NA (blank)\cr
 #'   Turtle sighting   \tab Angle is a whole number between -90 and 90\cr
 #'   Turtle sighting   \tab Group size is a whole number between 1 and 10 (only included in CARETTA data)\cr
-#'   Turtle sighting   \tab Species code has exactly two characters\cr
+#'   Turtle sighting   \tab Species code has exactly two characters, and is one of dc, cc, lo, cm, uh, ut, or lv\cr
 #'   Turtle sighting   \tab Observer code has exactly two characters\cr
 #'   Turtle sighting   \tab Turtle size is a whole number between 1 and 9; one of s, m, l is also accepted for CARETTA data\cr
 #'   Turtle sighting   \tab Travel direction is a whole number between 0 and 360 (only included in TURTLE data)\cr
@@ -423,6 +423,11 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
     idx.t.sp <- .check_character_length(x, "t", paste0("Data", data.t.sp), 2)
     txt.t.sp <- "A turtle species code is not two characters"
     
+    t.codes <- tolower(c("DC","CC","LO","CM","UH","UT", "LV"))
+    idx.t.sp2 <- .check_character(x, "t", paste0("Data", data.t.sp), t.codes)
+    txt.t.sp2 <- paste("Turtle species codes must be one of:", 
+                       paste(t.codes, collapse = ", "))
+    
     # Observer
     data.t.obs <- switch(file.type, caretta = 2, turtle = 1)
     idx.t.obs <- .check_character_length(x, "t", paste0("Data", data.t.obs), 2)
@@ -473,6 +478,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
       .check_list(x, x.lines, idx.t.ang, txt.t.ang),
       .check_list(x, x.lines, idx.t.gs, txt.t.gs),
       .check_list(x, x.lines, idx.t.sp, txt.t.sp),
+      .check_list(x, x.lines, idx.t.sp2, txt.t.sp2),
       .check_list(x, x.lines, idx.t.obs, txt.t.obs),
       .check_list(x, x.lines, idx.t.size, txt.t.size),
       .check_list(x, x.lines, idx.t.dir, txt.t.dir),
