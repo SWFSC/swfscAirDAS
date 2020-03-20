@@ -66,7 +66,10 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   
   do.call(
     rbind, 
-    lapply(file, call.read, skip = skip, tz = tz, file.type = file.type)
+    lapply(file, function(i) {
+      x <- call.read(i, skip = skip, tz = tz, file.type = file.type)
+      .airdas_read_general(i, x, skip)
+    })
   )
 }
 
@@ -99,7 +102,8 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   x$EffortDot <- NA
   x$file_type <- "phocoena"
   
-  .airdas_read_general(file, x, skip)
+  # .airdas_read_general(file, x, skip)
+  x
 }
 
 
@@ -137,7 +141,8 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
   x$file_type <- file.type
   
-  .airdas_read_general(file, x, skip)
+  # .airdas_read_general(file, x, skip)
+  x
 }
 
 

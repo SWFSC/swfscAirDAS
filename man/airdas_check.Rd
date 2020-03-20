@@ -37,40 +37,46 @@ Checks that the following is true:
   \item Event codes are one of the following: 
     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
   \item The effort dot matches effort determined using T, R, O, and E events
-  \item And event/column pairs meet the following requirements:
+  \item All Data# columns, for events other than C events, are right-justified
+  \item All * events have NA (blank) Data# columns
+  \item Event/column pairs meet the following requirements:
 }
 
-\tabular{llll}{
-  \emph{Item} \tab \emph{Event} \tab \emph{Column} \tab \emph{Requirement}\cr
-  Viewing conditions  \tab V \tab Data1-5 \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
-  Altitude \tab A \tab Data1 \tab Can be converted to a numeric value\cr
-  Speed    \tab A \tab Data2 \tab Can be converted to a numeric value\cr
-  HKR              \tab W \tab Data1 \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
-  Percent overcast \tab W \tab Data2 \tab Can be converted to a numeric value\cr
-  Beaufort         \tab W \tab Data3 \tab Can be converted to a numeric value\cr
-  Jellyfish        \tab W \tab Data4 \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
-  Horizontal sun   \tab W \tab Data5 \tab Can be converted to a numeric value\cr
-  Horizontal sun   \tab W \tab Data5 \tab Must be one of 0:12, or NA (blank)\cr
-  Observers        \tab P \tab Data1-4 \tab Each entry must be two characters\cr
-  Sighting (mammal) \tab S \tab Data3-4 \tab Can be converted to a numeric value\cr
-  Sighting (mammal) \tab S \tab Data \tab Species code has exactly one or two characters\cr
-  Sighting (mammal) \tab S \tab Data \tab Observer code has exactly one or two characters\cr
-  Sighting info     \tab 1 \tab Data5-7 \tab Can be converted to a numeric value\cr
-  Sighting info     \tab 1 \tab Data1-4 \tab These columns must be NA (blank)\cr
-  Resight \tab s \tab Data2   \tab Can be converted to a numeric value\cr
-  Resight \tab s \tab Data3-7 \tab These columns must be NA (blank)\cr
-  Turtle sighting \tab t \tab Data \tab Species code has exactly one or two characters\cr
-  Turtle sighting \tab t \tab Data \tab Observer code has exactly one or two characters\cr
-  Turtle sighting \tab t \tab Data2, 4-5 \tab Can be converted to a numeric value\cr
-  Turtle sighting \tab t \tab Data6 \tab Must be one of y, n, u, or NA (blank)\cr
-  Turtle sighting \tab t \tab Data7 \tab This column must be NA (blank)\cr
+\tabular{ll}{
+  \emph{Item} \tab \emph{Requirement}\cr
+  Viewing conditions \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
+  Altitude           \tab Can be converted to a numeric value, and is not NA\cr
+  Speed              \tab Can be converted to a numeric value, and is not NA\cr
+  HKR              \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
+  Percent overcast \tab Can be converted to a numeric value, and is between 0 and 100\cr
+  Beaufort         \tab Can be converted to a numeric value, and is between 0 and 9\cr
+  Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
+  Horizontal sun   \tab Can be converted to a numeric value, and must be one of 0:12, or NA (blank)\cr
+  Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
+  Observers        \tab Each entry must be two characters\cr
+  Observers        \tab No observer code can be used twice in the same P event\cr
+  Sighting (mammal) \tab Angle and number of animals can be converted to a numeric value\cr
+  Sighting (mammal) \tab Species code has exactly one or two characters\cr
+  Sighting (mammal) \tab Observer code has exactly one or two characters\cr
+  Sighting info     \tab Species percentages can be converted to a numeric value\cr
+  Sighting info     \tab Unused columns of a '1' event must be NA (blank)\cr
+  Resight           \tab Angle can be converted to a numeric value\cr
+  Resight           \tab Unused resight columns must be NA (blank)\cr
+  Turtle sighting   \tab Species code has exactly one or two characters\cr
+  Turtle sighting   \tab Observer code has exactly one or two characters\cr
+  Turtle sighting   \tab Angle and travel direction can be converted to a numeric value\cr
+  Turtle sighting   \tab Tail visible must be one of y, n, u, or NA (blank). Case sensitive\cr
+  Turtle sighting   \tab In TURTLE data, number of turtles can be converted to a numeric value\cr
+  Turtle sighting   \tab In TURTLE data, turtle size can be converted to a numeric value\cr
+  Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 }
 
 Outstanding questions:
 \itemize{
   \item Are there supposed to be equal numbers of T/O and R/E events?
-  \item What else to add?
-  \item How to check that everything is right-justified?
+  \item For which conditions should NA not be allowed?
+  \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
+  \item Do checks for transect number?
 }
 }
 \examples{

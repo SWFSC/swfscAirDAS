@@ -68,6 +68,7 @@ x$Data4[which(x$Event == "W")[2]] <- 2
 
 # Manual addition of a '1', 't', "R", and 'E' events. And ending "O"
 x$Event[c(32, 34)] <- c("E", "R")
+x$EffortDot[c(32, 33)] <- FALSE
 
 c.txt <- " off effort to circle on unidentifed object"
 c.data <- str_sub(c.txt, seq(1, 31, by = 5), c(seq(5, 30, by = 5), -1))
@@ -80,14 +81,14 @@ x$Data4[13] <- 10
 x$Data6[13] <- "er"
 
 x.out <- x %>% 
-  add_row(Event = "C", EffortDot = TRUE, DateTime = x$DateTime[c.idx.after],
+  add_row(Event = "C", EffortDot = FALSE, DateTime = x$DateTime[c.idx.after],
           Lat = x$Lat[c.idx.after], Lon = x$Lon[c.idx.after],
           Data1 = c.data[1], Data2 = c.data[2], Data3 = c.data[3], Data4 = c.data[4], 
           Data5 = c.data[5], Data6 = c.data[6], Data7 = c.data[7],
           .after = c.idx.after) %>% 
   add_row(Event = "t", EffortDot = TRUE, DateTime = x$DateTime[t.idx.after],
           Lat = x$Lat[t.idx.after], Lon = x$Lon[t.idx.after], Data1 = "aa", 
-          Data2 = -20, Data3 = "dc", Data4 = 5, Data5 = 90, Data6 = "N", 
+          Data2 = -20, Data3 = "dc", Data4 = 5, Data5 = 90, Data6 = "n", 
           .after = t.idx.after) %>% 
   add_row(Event = 1, EffortDot = FALSE, Data5 = 80, Data6 = 20, 
           .after = 13) %>% #2nd for indices
@@ -97,6 +98,7 @@ x.out <- x %>%
   add_row(Event = "O", EffortDot = FALSE, DateTime = tail(x$DateTime, 1) + seconds(30), 
           Lat = tail(x$Lat, 1), Lon = tail(x$Lon, 1) + 0.02) %>% 
   mutate(EventNum = c(1:13, NA, 14:83))
+
 
 
 
