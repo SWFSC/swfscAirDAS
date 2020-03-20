@@ -18,6 +18,8 @@
 #'     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
 #'   \item The effort dot matches effort determined using T, R, O, and E events
 #'   \item A T or R event does not occur while already on effort
+#'   \item When the file ends, the data must be off effort and an O event
+#'     must have happened more recently than an E event to end the transect
 #'   \item All Data# columns, for events other than C events, are right-justified
 #'   \item All * events have NA (blank) Data# columns
 #'   \item Event/column pairs meet the following requirements:
@@ -28,7 +30,8 @@
 #'   Viewing conditions \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
 #'   Altitude           \tab Can be converted to a numeric value, and is not NA\cr
 #'   Speed              \tab Can be converted to a numeric value, and is not NA\cr
-#'   HKR              \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
+#'   HKR              \tab Characters must all be one of: n, h, k, r, or NA (blank). 
+#'     Not case sensitive; y is accepted for PHOCOENA data\cr
 #'   Percent overcast \tab Can be converted to a numeric value, and is between 0 and 100\cr
 #'   Beaufort         \tab Can be converted to a numeric value, and is between 0 and 9\cr
 #'   Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
@@ -36,11 +39,12 @@
 #'   Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
 #'   Observers        \tab Each entry must be two characters\cr
 #'   Observers        \tab No observer code can be used twice in the same P event\cr
-#'   Sighting (mammal) \tab Angle and number of animals can be converted to a numeric value\cr
+#'   Sighting (mammal) \tab Angle can be converted to a numeric value, and is a whole number between -90 and 90\cr
+#'   Sighting (mammal) \tab Group size can be converted to a numeric value, and is a whole number between 1 and 5000\cr
 #'   Sighting (mammal) \tab Species code has exactly one or two characters\cr
 #'   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
-#'   Sighting info     \tab Species percentages can be converted to a numeric value\cr
-#'   Sighting info     \tab Unused columns of a '1' event must be NA (blank)\cr
+#'   Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
+#'   Sighting info     \tab Unused columns (including DateTime, Lat, and Lon) of a '1' event must be NA (blank)\cr
 #'   Resight           \tab Angle can be converted to a numeric value\cr
 #'   Resight           \tab Unused resight columns must be NA (blank)\cr
 #'   Turtle sighting   \tab Species code has exactly one or two characters\cr
@@ -84,7 +88,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   x <- suppressWarnings(airdas_read(file, file.type = file.type, skip = skip))
   x.proc <- suppressWarnings(airdas_process(x))
   
-  id.idx <- switch(file.type, phocoena = 45, turtle = 39, 39)
+  id.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
   x.lines <- do.call(c, lapply(file, function(i) substr(readLines(i), 1, id.idx)))
   if (skip > 0) x.lines <- x.lines[-c(1:skip)]
   
@@ -137,9 +141,11 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   idx.tr <- which(x$Event %in% c("T", "R"))
   x.all.preTR <- x.all[idx.tr-1, ]
   tr.which <- x.all.preTR$idx[x.all.preTR$OnEffort] + 1
-
+  
   ### Check that data is ON effort before a E or O event
-  idx.eo <- which(x$Event %in% c("E", "O"))
+  idx.e <- which(x$Event == "E")
+  idx.o <- which(x$Event == "O")
+  idx.eo <- sort(c(idx.e, idx.o))
   x.all.preEO <- x.all[idx.eo-1, ]
   eo.which <- x.all.preEO$idx[!x.all.preEO$OnEffort] + 1
   
@@ -152,6 +158,22 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
     # list(x$file_das[eo.which], x$line_num[eo.which], eo.which, x.lines[eo.which], 
     #      rep("Attempt to end effort when already off effort", length(eo.which)))
   )
+  
+  
+  #----------------------------------------------------------------------------
+  ### Check that file ends off effort after an "O"
+  if (tail(x.all, 1)$OnEffort | (tail(idx.o, 1) < tail(idx.e, 1))) {
+    end.which <- nrow(x)
+    error.out <- rbind(
+      error.out,
+      list(x$file_das[end.which], x$line_num[end.which], end.which, 
+           x.lines[end.which], 
+           rep(paste("The file ends on effort,", 
+                     "and/or the last off effort event is an E rather than O"), 
+               length(end.which)))
+    )
+  }
+  
   
   #----------------------------------------------------------------------------
   ### Check that Data# columns are right-justifed for non-C events
@@ -193,10 +215,6 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   ### Check that value type of values in Data# columns are as expected for
   ###   columns that are added in das_process
   
-  # Variables are code named as "z".event code'.'data# column' for
-  #   line numbers with weird info,
-  #   and "txt".event code'.'data# column' for the txt to go in error.out
-  
   # "*" events have no data
   idx.star <- .check_character(x, "*", paste0("Data", 1:7), NA)
   txt.star <- "Position (*) events should have no data in the Data# columns"
@@ -219,8 +237,9 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   txt.A.nona <- "Altitude and speed (Data1-2 of A events) must not be NA"
   
   # HKR
+  patt <- c("h", "k", "r", "n")
+  if (file.type == "phocoena") patt <- c(patt, "y") #y means h in early years
   x.tmp <- x
-  patt <- c("h", "k", "r", "n", "y") #y means h in early years
   x.tmp$Data1 <- .gsub_multi(c(patt, toupper(patt)), "", x.tmp$Data1)
   
   idx.W.1 <- .check_character(as_airdas_dfr(x.tmp), "W", "Data1", c("", NA))
@@ -321,47 +340,101 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   ### Check Data# columns for sightings data format
   ### Phocoena data has no 1/s/t event codes, so can just leave those in
   
-  # Marine mammal sightings (SKM)
-  idx.S.num <- .check_numeric(x, "S", paste0("Data", 3:4))
-  txt.S.num <- paste(
-    "A Data3-4 column(s) for S events cannot be converted to a numeric"
-  )
+  ### Marine mammal sightings (SKM)
+  # Angle
+  data.skm.ang <- switch(file.type, caretta = 3, phocoena = 4, turtle = 3)
+  idx.S.ang <- .check_numeric(x, "S", paste0("Data", data.skm.ang))
+  txt.S.ang <- "Angle cannot be converted to a numeric"
   
-  if (file.type == "phocoena") {
-    idx.S.sp <- .check_character_length(x, "S", "Data2", 1:2)
-    txt.S.sp <- "A species code (Data2 of S events) is not one or two characters"
-  } else {
-    idx.S.sp <- .check_character_length(x, "S", paste0("Data", 5:7), 1:2)
-    txt.S.sp <- "A species code (Data5, Data6, and Data7 of S events) is not one or two characters"
-  }
+  ang.acc <- c(-90:90, sprintf("%03d", -9:-1), sprintf("%02d", 0:9), NA)
+  idx.S.ang.b <- .check_character(x, "S", paste0("Data", data.skm.ang), ang.acc)
+  txt.S.ang.b <- "Angle must be between -90 and 90"
   
-  if (file.type == "phocoena") {
-    idx.S.obs <- .check_character_length(x, "S", "Data5", 1:2)
-    txt.S.obs <- "The sighting observer code (Data5 of S events) is not one or two characters"
-  } else {
-    idx.S.obs <- .check_character_length(x, "S", "Data2", 1:2)
-    txt.S.obs <- "The sighting observer code (Data2 of S events) is not one or two characters"
-  }
+  # Group size
+  data.skm.gs <- switch(file.type, caretta = 4, phocoena = 3, turtle = 4)
+  idx.S.gs <- .check_numeric(x, "S", paste0("Data", data.skm.gs))
+  txt.S.gs <- "Group size cannot be converted to a numeric"
   
-  # Multi-species info (1)
+  gs.acc <- c(1:5000, sprintf("%02d", 1:5000), NA)
+  idx.S.gs.b <- .check_numeric(x, "S", paste0("Data", data.skm.gs))
+  txt.S.gs.b <- "Group size must be between 1 and 5000"
+  
+  # Species code(s)
+  data.skm.sp <- switch(file.type, caretta = 5:7, phocoena = 2, turtle = 5:7)
+  idx.S.sp <- .check_character_length(x, "S", paste0("Data", data.skm.sp), 1:2)
+  txt.S.sp <- "A species code is not one or two characters"
+  
+  # Observer
+  data.skm.obs <- switch(file.type, caretta = 2, phocoena = 5, turtle = 2)
+  idx.S.obs <- .check_character_length(x, "S", paste0("Data", data.skm.obs), 1:2)
+  txt.S.obs <- "The sighting observer code is not one or two characters"
+  
+  ### Multi-species info (1)
+  # TODO: equal number of percentages and species codes?
+  # Percentages are numeric
   idx.1.num <- .check_numeric(x, "1", paste0("Data", 5:7)) #3:9
   txt.1.num <- paste(
     "A Data5-7 column(s) for a 1 event cannot be converted to a numeric"
   )
   
+  # If percentages are numeric, do they sum to 100?
+  if (length(idx.1.num) == 0) {
+    x.1 <- x %>% mutate(idx = seq_along(.data$Event)) %>% filter(.data$Event == "1")
+    x.1.data <- select(x.1, Data5, Data6, Data7)
+    x.1.which <- apply(x.1.data, 1, function(i) {
+      !isTRUE(all.equal(100, sum(as.numeric(i), na.rm = TRUE)))
+    })
+    
+    idx.1.sum <- x.1$idx[x.1.which]
+    txt.1.sum <- "The species percentages do not sum to 100"
+    rm(x.1, x.1.data, x.1.which)
+    
+  } else {
+    idx.1.sum <- integer(0)
+    txt.1.sum <- "The species percentages do not sum to 100"
+  }
+  
+  # Are other 1 event columns NA
   idx.1.na <- .check_character(x, "1", paste0("Data", 1:4), c(NA))
   txt.1.na <- "A Data1-4 column(s) for a 1 event is not NA (blank)"
-  
-  # Resights (s)
-  idx.s.num <- .check_numeric(x, "s", "Data2")
-  txt.s.num <- paste(
-    "The Data2 column for s events cannot be converted to a numeric"
+
+  idx.1.na2 <- .check_character(x, "1", c("DateTime", "Lat", "Lon"), c(NA))
+  txt.1.na2 <- "One of DateTime, Lat, or Lon for a 1 event is not NA (blank)"
+    
+  ### Resights (s)
+  idx.s.ang <- .check_numeric(x, "s", "Data2")
+  txt.s.ang <- paste(
+    "The Data2 column for s events (angle) cannot be converted to a numeric"
   )
+  
+  idx.s.ang.b <- .check_character(x, "s", "Data2", ang.acc)
+  txt.s.ang.b <- "Angle must be between -90 and 90"
   
   idx.s.na <- .check_character(x, "s", paste0("Data", 3:7), c(NA))
   txt.s.na <- "A Data3-7 column(s) for s events is not NA (blank)"
   
-  # Turtle
+  
+  # Add to error.out
+  error.out <- rbind(
+    error.out,
+    .check_list(x, x.lines, idx.S.ang, txt.S.ang),
+    .check_list(x, x.lines, idx.S.ang.b, txt.S.ang.b),
+    .check_list(x, x.lines, idx.S.gs, txt.S.gs),
+    .check_list(x, x.lines, idx.S.gs.b, txt.S.gs.b),
+    .check_list(x, x.lines, idx.S.obs, txt.S.obs),
+    .check_list(x, x.lines, idx.S.sp, txt.S.sp),
+    .check_list(x, x.lines, idx.1.num, txt.1.num),
+    .check_list(x, x.lines, idx.1.sum, txt.1.sum),
+    .check_list(x, x.lines, idx.1.na, txt.1.na),
+    .check_list(x, x.lines, idx.1.na2, txt.1.na2),
+    .check_list(x, x.lines, idx.s.ang, txt.s.ang),
+    .check_list(x, x.lines, idx.s.ang.b, txt.s.ang.b),
+    .check_list(x, x.lines, idx.s.na, txt.s.na)
+  )
+  
+  
+  #----------------------------------------------------------------------------
+  ### Turtle
   if (file.type == "turtle") {
     # Turtle - TURTLE
     idx.t.obs <- .check_character_length(x, "t", "Data1", 1:2)
@@ -410,13 +483,6 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   # Add to error.out
   error.out <- rbind(
     error.out,
-    .check_list(x, x.lines, idx.S.num, txt.S.num),
-    .check_list(x, x.lines, idx.S.obs, txt.S.obs),
-    .check_list(x, x.lines, idx.S.sp, txt.S.sp),
-    .check_list(x, x.lines, idx.1.num, txt.1.num),
-    .check_list(x, x.lines, idx.1.na, txt.1.na),
-    .check_list(x, x.lines, idx.s.num, txt.s.num),
-    .check_list(x, x.lines, idx.s.na, txt.s.na),
     .check_list(x, x.lines, idx.t.obs, txt.t.obs),
     .check_list(x, x.lines, idx.t.sp, txt.t.sp),
     .check_list(x, x.lines, idx.t.num, txt.t.num),

@@ -37,6 +37,9 @@ Checks that the following is true:
   \item Event codes are one of the following: 
     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
   \item The effort dot matches effort determined using T, R, O, and E events
+  \item A T or R event does not occur while already on effort
+  \item When the file ends, the data must be off effort and an O event
+    must have happened more recently than an E event to end the transect
   \item All Data# columns, for events other than C events, are right-justified
   \item All * events have NA (blank) Data# columns
   \item Event/column pairs meet the following requirements:
@@ -47,7 +50,8 @@ Checks that the following is true:
   Viewing conditions \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
   Altitude           \tab Can be converted to a numeric value, and is not NA\cr
   Speed              \tab Can be converted to a numeric value, and is not NA\cr
-  HKR              \tab Characters must all be one of: n, h, k, r, y, or NA (blank). Not case sensitive\cr
+  HKR              \tab Characters must all be one of: n, h, k, r, or NA (blank). 
+    Not case sensitive; y is accepted for PHOCOENA data\cr
   Percent overcast \tab Can be converted to a numeric value, and is between 0 and 100\cr
   Beaufort         \tab Can be converted to a numeric value, and is between 0 and 9\cr
   Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
@@ -55,7 +59,8 @@ Checks that the following is true:
   Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
   Observers        \tab Each entry must be two characters\cr
   Observers        \tab No observer code can be used twice in the same P event\cr
-  Sighting (mammal) \tab Angle and number of animals can be converted to a numeric value\cr
+  Sighting (mammal) \tab Angle can be converted to a numeric value, and is a whole number between -90 and 90\cr
+  Sighting (mammal) \tab Group size can be converted to a numeric value, and is a whole number between 1 and 5000\cr
   Sighting (mammal) \tab Species code has exactly one or two characters\cr
   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
   Sighting info     \tab Species percentages can be converted to a numeric value\cr
@@ -75,6 +80,7 @@ Outstanding questions:
 \itemize{
   \item Are there supposed to be equal numbers of T/O and R/E events?
   \item For which conditions should NA not be allowed?
+  \item For which sighting data bits should NA not be allowed?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
   \item Do checks for transect number?
 }

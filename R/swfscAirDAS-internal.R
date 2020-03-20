@@ -27,13 +27,13 @@
 
 ### Extract unique (and sorted) characters from a string
 # stackoverflow.com/questions/31814548
-fn_uniqchars <- function(x) sort(unique(strsplit(x, "")[[1]]))
+.fn_uniqchars <- function(x) sort(unique(strsplit(x, "")[[1]]))
 
 
 ### Keep running sum of data (conditions) multiplied by distance ratio
 # Requires that names of cond.list elements are the same as
 #   the column names in curr.df
-fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
+.fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   stopifnot(
     all(names(data.list) %in% names(curr.df)), 
     idx <= nrow(curr.df)#, 
@@ -109,7 +109,7 @@ fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
   
   stopifnot(
     inherits(z, "airdas_dfr"),
-    z.col %in% paste0("Data", 1:7)
+    z.col %in% c(paste0("Data", 1:7), "DateTime", "Lat", "Lon")
   )
   
   z$idx <- seq_len(nrow(z))
