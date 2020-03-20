@@ -39,8 +39,8 @@
 #'   Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
 #'   Observers        \tab Each entry must be two characters\cr
 #'   Observers        \tab No observer code can be used twice in the same P event\cr
-#'   Sighting (mammal) \tab Angle can be converted to a numeric value, and is a whole number between -90 and 90\cr
-#'   Sighting (mammal) \tab Group size can be converted to a numeric value, and is a whole number between 1 and 5000\cr
+#'   Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
+#'   Sighting (mammal) \tab Group is a whole number between 1 and 5000\cr
 #'   Sighting (mammal) \tab Species code has exactly one or two characters\cr
 #'   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
 #'   Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
@@ -161,7 +161,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   
   
   #----------------------------------------------------------------------------
-  ### Check that file ends off effort after an "O"
+  ### Check that file ends off effort, and after an "O" rather than "E" event
+  if (length(idx.e) == 0) idx.e <- 0 # In case file has no E events
   if (tail(x.all, 1)$OnEffort | (tail(idx.o, 1) < tail(idx.e, 1))) {
     end.which <- nrow(x)
     error.out <- rbind(
@@ -194,7 +195,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   ) %>% 
     select(-.data$DateTime) %>% 
     filter(!(.data$Event %in% c("C", "*"))) %>% 
-    select(starts_with("Data"))
+    select(starts_with("Data")) %>% 
+    mutate(Data7 = substr(.data$Data7, 1, 5))
   
   x.tmp.which <- lapply(1:7, function(i) {
     x1 <- trimws(x.tmp.noc.data[[i]], which = "left")
@@ -260,34 +262,25 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   txt.bft1 <- "Beaufort (Data3 of W events) cannot be converted to a numeric"
   
   idx.bft2 <- .check_character(x, "W", "Data3", c(0:9, NA))
-  txt.bft2 <- "Beaufort (Data3 of W events) must be a whole number between"
+  txt.bft2 <- "Beaufort (Data3 of W events) must be a whole number between 0 and 9"
   
   # Jellyfish
   txt.jelly <- "Jellyfish code (Data4 of W events) is not one of 0, 1, 2, 3, or NA"
-  idx.jelly <- if (file.type == "turtle") {
-    .check_character(x, "W", "Data4", c(0, 1, 2, 3, NA))
-  } else {
+  idx.jelly <- if (file.type == "phocoena") {
     integer(0)
+  } else {
+    .check_character(x, "W", "Data4", c(0, 1, 2, 3, NA))
   }
   
   # Horizontal sun
-  if (file.type == "phocoena") {
-    idx.hsun <- .check_character(x, "W", "Data4", c(0:12, sprintf("0%d", 0:12), NA))
-    idx.hsun.b <- .check_numeric(x, "W", "Data4")
-    txt.hsun <- paste("Horizontal sun (Data4 of W events) is not one of", 
-                      paste(c(0:12, NA), collapse = ", "))
-    txt.hsun.b <- "Horizontal sun (Data4 of W events) cannot be converted to a numeric"
-    
-  } else if (file.type == "turtle") {
-    idx.hsun <- .check_character(x, "W", "Data5", c(0:12, sprintf("0%d", 0:12), NA))
-    idx.hsun.b <- .check_numeric(x, "W", "Data5")
-    txt.hsun <- paste("Horizontal sun (Data5 of W events) is not one of", 
-                      paste(c(0:12, NA), collapse = ", "))
-    txt.hsun.b <- "Horizontal sun (Data5 of W events) cannot be converted to a numeric"
-    
-  } else {
-    idx.hsun <- idx.hsun.b <- integer(0)
-  }
+  data.hsun <- switch(file.type, caretta = 5, phocoena = 4, turtle = 5)
+  acc.hsun <- c(0:12, sprintf("0%d", 0:12), NA)
+  
+  idx.hsun <- .check_character(x, "W", paste0("Data", data.hsun), acc.hsun)
+  idx.hsun.b <- .check_numeric(x, "W", "Data4")
+  txt.hsun <- paste("Horizontal sun is not one of", 
+                    paste(c(0:12, NA), collapse = ", "))
+  txt.hsun.b <- "Horizontal sun cannot be converted to a numeric"
   
   # Vertical sun
   txt.vsun <- paste("Vertical sun (Data5 of W events) is not one of", 
@@ -356,7 +349,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   txt.S.gs <- "Group size cannot be converted to a numeric"
   
   gs.acc <- c(1:5000, sprintf("%02d", 1:5000), NA)
-  idx.S.gs.b <- .check_numeric(x, "S", paste0("Data", data.skm.gs))
+  idx.S.gs.b <- .check_character(x, "S", paste0("Data", data.skm.gs), gs.acc)
   txt.S.gs.b <- "Group size must be between 1 and 5000"
   
   # Species code(s)
@@ -397,10 +390,10 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   # Are other 1 event columns NA
   idx.1.na <- .check_character(x, "1", paste0("Data", 1:4), c(NA))
   txt.1.na <- "A Data1-4 column(s) for a 1 event is not NA (blank)"
-
+  
   idx.1.na2 <- .check_character(x, "1", c("DateTime", "Lat", "Lon"), c(NA))
   txt.1.na2 <- "One of DateTime, Lat, or Lon for a 1 event is not NA (blank)"
-    
+  
   ### Resights (s)
   idx.s.ang <- .check_numeric(x, "s", "Data2")
   txt.s.ang <- paste(
@@ -435,60 +428,97 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   
   #----------------------------------------------------------------------------
   ### Turtle
-  if (file.type == "turtle") {
-    # Turtle - TURTLE
-    idx.t.obs <- .check_character_length(x, "t", "Data1", 1:2)
-    txt.t.obs <- "The turtle sighting observer code (Data1 of t events) is not one or two characters"
+  
+  if (file.type != "phocoena") {
+    # Angle
+    data.t.ang <- switch(file.type, caretta = 3, turtle = 2)
+    idx.t.ang <- .check_numeric(x, "t", paste0("Data", data.t.ang))
+    txt.t.ang <- "Turtle angle cannot be converted to a numeric"
     
-    idx.t.sp <- .check_character_length(x, "t", "Data3", 2)
-    txt.t.sp <- "The turtle species code (Data3 of t events) is not two characters"
+    idx.t.ang.b <- .check_character(x, "t", paste0("Data", data.t.ang), ang.acc)
+    txt.t.ang.b <- "Turtle angle must be between -90 and 90"
     
-    idx.t.num <- .check_numeric(x, "t", paste0("Data", c(2, 4, 5)))
-    txt.t.num <- paste(
-      "A Data2/4-5 column(s) for t events cannot be converted to a numeric"
-    )
+    # Group size
+    idx.t.gs <- integer(0)
+    idx.t.gs.b <- integer(0)
+    txt.t.gs <- "Turtle group size cannot be converted to a numeric"
+    txt.t.gs.b <- "Turtle group size must be between 1 and 5000"
     
-    idx.t.tail <- .check_character(x, "t", "Data6", c("y", "n", "u", NA))
-    txt.t.tail <- paste(
-      "Turtle tail visible (Data6 of t events) is not one of y, n, u, or NA"
-    )
+    if (file.type == "caretta") { #TURTLE doesn't have group size field
+      data.t.gs <- 4
+      idx.t.gs <- .check_numeric(x, "t", paste0("Data", data.t.gs))
+      idx.t.gs.b <- .check_character(x, "t", paste0("Data", data.t.gs), gs.acc)
+    }
     
-    idx.t.na <- .check_character(x, "t", paste0("Data", 7), c(NA))
-    txt.t.na <- "The Data7 column for t events is not NA (blank)"
+    # Species code(s)
+    data.t.sp <- switch(file.type, caretta = 5, turtle = 3)
+    idx.t.sp <- .check_character_length(x, "t", paste0("Data", data.t.sp), 2)
+    txt.t.sp <- "A turtle species code is not two characters"
     
-  } else {
-    # Turtle - CARETTA
-    # Not else if so that all is set to integer(0) for phocoena
-    idx.t.obs <- .check_character_length(x, "t", "Data2", 1:2)
-    txt.t.obs <- "The turtle sighting observer code (Data2 of t events) is not one or two characters"
+    # Observer
+    data.t.obs <- switch(file.type, caretta = 2, turtle = 1)
+    idx.t.obs <- .check_character_length(x, "t", paste0("Data", data.t.obs), 2)
+    txt.t.obs <- "The turtle sighting observer code is not two characters"
     
-    idx.t.sp <- .check_character_length(x, "t", "Data5", 2)
-    txt.t.sp <- "The turtle species code (Data5 of t events) is not two characters"
+    # Turtle size
+    idx.t.size <- idx.t.size.b <- integer(0)
+    txt.t.size <- txt.t.size.b <- ""
+    data.t.size <- switch(file.type, caretta = 6, turtle = 4)
+    acc.size <- 1:9
     
-    idx.t.num <- .check_numeric(x, "t", paste0("Data", c(3, 4)))
-    txt.t.num <- paste(
-      "A Data3-4 column(s) for t events cannot be converted to a numeric"
-    )
+    if (file.type == "caretta") {
+      acc.size <- c(acc.size, "s", "m", "l")
+      idx.t.size <- .check_character(x, "t", paste0("Data", data.t.size), acc.size)
+      txt.t.size <- paste("Turtle size must be either a whole number between 1 and 9,", 
+                          "or one of s, m, or l")
+      
+    } else if (file.type == "turtle") {
+      idx.t.size <- .check_character(x, "t", paste0("Data", data.t.size), acc.size)
+      txt.t.size <- "Turtle size must be a whole number between 1 and 9"
+    }
     
-    idx.t.tail <- .check_character(x, "t", "Data7", c("y", "n", "u", NA))
-    txt.t.tail <- paste(
-      "Turtle tail visible (Data7 of t events) is not one of y, n, u, or NA"
-    )
     
+    # Travel direction
+    idx.t.dir <- integer(0)
+    idx.t.dir.b <- integer(0)
+    txt.t.dir <- "Turtle travel direction cannot be converted to a numeric"
+    txt.t.dir.b <- "Turtle travel direction must be between 0 and 360"
+    
+    if (file.type == "turtle") { #CARETTA doesn't have travel direction field
+      dir.acc <- 0:360
+      idx.t.dir <- .check_numeric(x, "t", paste0("Data", 5))
+      idx.t.dir.b <- .check_character(x, "t", paste0("Data", 5), dir.acc)
+    }
+    
+    # Tail visible
+    data.t.tail <- switch(file.type, caretta = 7, turtle = 6)
+    idx.t.tail <- .check_character(x, "t", paste0("Data", data.t.tail), c("y", "n", "u", NA))
+    txt.t.tail <- "Turtle tail visible is not one of y, n, u, or NA"
+    
+    # NA check 
     idx.t.na <- integer(0)
-    txt.t.na <- ""
+    txt.t.na <- "The Data7 column for TURTLE t events is not NA (blank)"
+    if (file.type == "turtle") {
+      idx.t.na <- .check_character(x, "t", paste0("Data", 7), c(NA))
+    }
+    
+    
+    # Add to error.out
+    error.out <- rbind(
+      error.out,
+      .check_list(x, x.lines, idx.t.ang, txt.t.ang),
+      .check_list(x, x.lines, idx.t.ang.b, txt.t.ang.b),
+      .check_list(x, x.lines, idx.t.gs, txt.t.gs),
+      .check_list(x, x.lines, idx.t.gs.b, txt.t.gs.b),
+      .check_list(x, x.lines, idx.t.sp, txt.t.sp),
+      .check_list(x, x.lines, idx.t.obs, txt.t.obs),
+      .check_list(x, x.lines, idx.t.size, txt.t.size),
+      .check_list(x, x.lines, idx.t.dir, txt.t.dir),
+      .check_list(x, x.lines, idx.t.dir.b, txt.t.dir.b),
+      .check_list(x, x.lines, idx.t.tail, txt.t.tail),
+      .check_list(x, x.lines, idx.t.na, txt.t.na)
+    )
   }
-  
-  
-  # Add to error.out
-  error.out <- rbind(
-    error.out,
-    .check_list(x, x.lines, idx.t.obs, txt.t.obs),
-    .check_list(x, x.lines, idx.t.sp, txt.t.sp),
-    .check_list(x, x.lines, idx.t.num, txt.t.num),
-    .check_list(x, x.lines, idx.t.tail, txt.t.tail),
-    .check_list(x, x.lines, idx.t.na, txt.t.na)
-  )
   
   
   #----------------------------------------------------------------------------

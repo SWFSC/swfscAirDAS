@@ -59,12 +59,12 @@ Checks that the following is true:
   Vertical sun     \tab Can be converted to a numeric value, and must be one of 0:4 or NA (blank)\cr
   Observers        \tab Each entry must be two characters\cr
   Observers        \tab No observer code can be used twice in the same P event\cr
-  Sighting (mammal) \tab Angle can be converted to a numeric value, and is a whole number between -90 and 90\cr
-  Sighting (mammal) \tab Group size can be converted to a numeric value, and is a whole number between 1 and 5000\cr
+  Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
+  Sighting (mammal) \tab Group is a whole number between 1 and 5000\cr
   Sighting (mammal) \tab Species code has exactly one or two characters\cr
   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
-  Sighting info     \tab Species percentages can be converted to a numeric value\cr
-  Sighting info     \tab Unused columns of a '1' event must be NA (blank)\cr
+  Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
+  Sighting info     \tab Unused columns (including DateTime, Lat, and Lon) of a '1' event must be NA (blank)\cr
   Resight           \tab Angle can be converted to a numeric value\cr
   Resight           \tab Unused resight columns must be NA (blank)\cr
   Turtle sighting   \tab Species code has exactly one or two characters\cr
