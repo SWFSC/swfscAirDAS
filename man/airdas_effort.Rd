@@ -19,8 +19,9 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 \item{...}{arguments passed to the chopping function specified using \code{method}}
 
 \item{method}{character; method to use to chop AirDAS data into effort segments
-Can be "equallength" or "condition" (case-sensitive) to use 
-\code{\link{airdas_chop_equal}} or \code{\link{airdas_chop_condition}}, respectively}
+Can be "condition", "equallength", or "section" (case-sensitive) to use 
+\code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
+or \code{\link{airdas_chop_section}}, respectively}
 
 \item{sp.codes}{character; species code(s) to include in segdata. 
 These code(s) will be converted to lower case to match \code{\link{airdas_sight}}}
@@ -35,7 +36,8 @@ or one of "lawofcosines", "haversine", or "vincenty" to use
 List of three data frames: 
   \itemize{
     \item segdata: one row for every segment, and columns for information including
-      unique segment number, start/end/midpoint coordinates, conditions (e.g. Beaufort), 
+      unique segment number, event code that started the associated continuous effort section, 
+      start/end/midpoint coordinates, conditions (e.g. Beaufort), 
       and number of sightings and number of animals on that segment for every species 
       indicated in \code{sp.codes}. 
     \item siteinfo: details for all sightings in \code{x}, including: 
@@ -60,18 +62,23 @@ This is the top-level function for chopping processed AirDAS data
   where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
   and then passed to the chopping function specified using \code{method}. 
 
-  Currently, two chopping methods are available: "equallength" and "condition". 
+  Currently, the following chopping methods are available: 
+  "condition", "equallength", and "section". 
+  When using the "condition" method, effort sections are chopped into segments
+  every time a condition changes, 
+  therby ensuring that the conditions are consistent across the entire segment.
+  See \code{\link{airdas_chop_condition}} for more details about this method, 
+  including arguments that must be passed to it via \code{...}.
+  
   The "equallength" method consists of
   chopping effort sections into equal-length segments of length \code{seg.km}, 
   and doing a weighted average of the conditions for the length of that segment. 
   See \code{\link{airdas_chop_equal}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
-  When using the "condition" method, effort sections are chopped into segments
-  every time a condition changes, 
-  therby ensuring that the conditions are consistent across the entire segment.
-  See \code{\link{airdas_chop_condition}} for more details about this method, 
-  including arguments that must be passed to it via \code{...}.
+  The "section" method involves 'chopping' the effort into continuous effort sections,
+  i.e. each continuous effort section is a single effort segment.
+  See \code{\link{airdas_chop_section}} for more details about this method.
   
   The sightings included in the segdata counts are filtered as follows: 
   Beaufort is less than or equal to five, the declination angle is less than 78, 
@@ -92,6 +99,12 @@ This is the top-level function for chopping processed AirDAS data
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
+# Using "condition" method
+airdas_effort(
+  y.proc, method = "condition", sp.codes = c("mn", "bm"), 
+  seg.km.min = 0.05, num.cores = 1
+)
+
 # Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
@@ -99,10 +112,10 @@ airdas_effort(
   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 )
 
-# Using "condition" method
+# Using "section" method
 airdas_effort(
-  y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-  seg.km.min = 0.05, num.cores = 1
+  y.proc, method = "section", sp.codes = c("mn", "bm"), 
+  num.cores = 1
 )
 
 }

@@ -8,10 +8,11 @@
 #'   see the Details section below
 #' @param ... ignored
 #' @param seg.km numeric; target segment length in kilometers
-#' @param randpicks.load character or \code{NULL}; if character, 
-#'   filename of past randpicks output to load and use 
+#' @param randpicks.load character, data frame, or \code{NULL}. 
+#'   If character, must be filename of past randpicks output to load and use 
 #'   (passed to \code{file} argument of \code{\link[utils:read.table]{read.csv}}).
-#'   \code{NULL} if new randpicks values should be generated
+#'   If data frame, randpicks values will be extracted from the data frame.
+#'   If \code{NULL}, new randpicks values will be generated
 #' @param dist.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
@@ -111,7 +112,7 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
          "method. See `?airdas_chop_equal` for more details")
   
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
-    stop("x must be filtered for on effort events; see `?airdas_shop_equal")
+    stop("x must be filtered for on effort events; see `?airdas_chop_equal")
   
   
   #----------------------------------------------------------------------------
@@ -134,14 +135,21 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
             "randpicks values will be generated")
     
   } else {
-    randpicks.df <- read.csv(randpicks.load)
+    randpicks.df <- if (inherits(randpicks.load, "data.frame")) {
+      randpicks.load
+    } else if (inherits(randpicks.load, "character")){
+      read.csv(randpicks.load)
+    } else {
+      stop("randpicks.load must either be a data frame or ", 
+           "file path (character)")
+    }
     
     if (all(c("effort_section", "randpicks") %in% names(randpicks.df))) {
       r.eff.sect <- randpicks.df$effort_section
       r.pos <- randpicks.df$randpicks
       
     } else {
-      warning("For the provided randpicks CSV file, it is assumed that ", 
+      warning("For the provided randpicks, it is assumed that ", 
               "the first column is the continuous effort section numbers, ", 
               "and the second column is the randpick values for that ", 
               "continuous effort section", 
