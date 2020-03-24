@@ -55,30 +55,34 @@ Checks that the following is true:
 \tabular{ll}{
   \emph{Item} \tab \emph{Requirement}\cr
   Viewing conditions \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
-  Altitude           \tab Can be converted to a numeric value, and is not NA\cr
-  Speed              \tab Can be converted to a numeric value, and is not NA\cr
-  HKR              \tab Characters must all be one of: n, h, k, r, or NA (blank). 
+  Altitude         \tab Can be converted to a numeric value, and is not NA\cr
+  Speed            \tab Can be converted to a numeric value, and is not NA\cr
+  HKR              \tab Characters must consist of: n, h, k, r, or NA (blank). 
     Not case sensitive; y is also accepted for PHOCOENA data\cr
-  Percent overcast \tab Can be converted to a whole number between 0 and 100\cr
-  Beaufort         \tab Can be converted to a whole number between 0 and 9\cr
+  Percent overcast \tab Must be a whole number between 0 and 100\cr
+  Beaufort         \tab Must be a whole number between 0 and 9\cr
   Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
   Horizontal sun   \tab Must be one of 0:12, or NA (blank)\cr
   Vertical sun     \tab Must be one of 0:4 or NA (blank)\cr
   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
-  Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
-  Sighting (mammal) \tab Group size is a whole number between 1 and 5000\cr
-  Sighting (mammal) \tab Species code has exactly two characters\cr
-  Sighting (mammal) \tab Observer code has exactly two characters\cr
-  Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
+  Sighting (mammal) \tab Angle must be a whole number between -90 and 90\cr
+  Sighting (mammal) \tab Group size must be a whole number between 1 and 5000\cr
+  Sighting (mammal) \tab Species code(s) must be exactly two characters\cr
+  Sighting (mammal) \tab Observer code must be exactly two characters\cr
+  Sighting info     \tab Species percentages can be converted to numeric values, and sum to 100\cr
   Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
+  Sighting info     \tab Every S code with multiple species has a 1 code immediately after it\cr
+  Sighting info     \tab For every 1 code with n non-NA sighting percentages, 
+    the event before is an S event with n non-NA species codes\cr
   Resight           \tab Angle can be converted to a numeric value\cr
-  Resight           \tab Unused resight columns must be NA (blank)\cr
-  Turtle sighting   \tab Angle is a whole number between -90 and 90\cr
-  Turtle sighting   \tab Group size is a whole number between 1 and 10 (only included in CARETTA data)\cr
-  Turtle sighting   \tab Species code has exactly two characters, and is one of dc, cc, lo, cm, uh, ut, or lv\cr
-  Turtle sighting   \tab Observer code has exactly two characters\cr
-  Turtle sighting   \tab Turtle size is a whole number between 1 and 9; one of s, m, l is also accepted for CARETTA data\cr
-  Turtle sighting   \tab Travel direction is a whole number between 0 and 360 (only included in TURTLE data)\cr
+  Resight           \tab Unused resight columns (Data3-7) must be NA (blank)\cr
+  Turtle sighting   \tab Angle must be a whole number between -90 and 90\cr
+  Turtle sighting   \tab Group size must be a whole number between 1 and 10 (only included in CARETTA data)\cr
+  Turtle sighting   \tab Species code must be exactly two characters, and one of dc, cc, lo, cm, uh, ut, or lv\cr
+  Turtle sighting   \tab Observer code must be exactly two characters\cr
+  Turtle sighting   \tab Turtle size must be a whole number between 1 and 9; 
+    one of s, m, l is also accepted for CARETTA data\cr
+  Turtle sighting   \tab Travel direction must be a whole number between 0 and 360 (only included in TURTLE data)\cr
   Turtle sighting   \tab Tail visible must be one of y, n, u, or NA (blank). Case sensitive\cr
   Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 }
@@ -89,6 +93,7 @@ Outstanding questions/todo:
   \item For which sighting data bits should NAs not be allowed (e.g. Obs, angle, sp, Gs)?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
   \item Do checks for transect number?
+  \item Should description items be grouped together by line number?
   \item todo: Check that sighting observer is one of currently listed observers
   \item todo: Check that sighting observer side matches angle +/-
   \item todo: some way to load spcodes.dat to check species codes?
