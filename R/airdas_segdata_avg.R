@@ -12,8 +12,9 @@
 #' @param eff.id numeric; the ID of \code{x} (the current continuous effort section)
 #' @param ... ignored
 #' 
-#' @details This function should be called by \code{\link{airdas_chop_equal}};
-#'   users should (nearly always) not call it themselves.
+#' @details This function should be called by one of the airdas_chop functions, 
+#'   e.g. \code{\link{airdas_chop_equal}}, meaning
+#'   users should work to avoid calling it themselves.
 #'   It loops through the events in \code{x}, calculating and storing relevant
 #'   information for each modeling segment as it goes. 
 #'   Because \code{x} is a continuous effort section, it must begin with 
@@ -44,6 +45,8 @@
 #'   and in \code{\link{airdas_effort}}
 #' 
 #' @keywords internal
+#' 
+#' @seealso airdas_segdata_max
 #' 
 #' @export
 airdas_segdata_avg <- function(x, ...) UseMethod("airdas_segdata_avg")

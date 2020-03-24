@@ -71,4 +71,7 @@ all.equal(y.eff1, y.eff2)
 }
 
 }
+\seealso{
+airdas_chop_condition, airdas_chop_equal
+}
 \keyword{internal}

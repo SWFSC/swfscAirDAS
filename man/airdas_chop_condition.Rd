@@ -92,4 +92,7 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
   that doesn't average conditions?
 }
+\seealso{
+airdas_chop_equal, airdas_chop_section
+}
 \keyword{internal}

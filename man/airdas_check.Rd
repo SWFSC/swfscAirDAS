@@ -83,12 +83,16 @@ Checks that the following is true:
   Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 }
 
-Outstanding questions:
+Outstanding questions/todo:
 \itemize{
   \item For which conditions should NA not be allowed?
-  \item For which sighting data bits should NA not be allowed?
+  \item For which sighting data bits should NAs not be allowed (e.g. Obs, angle, sp, Gs)?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
   \item Do checks for transect number?
+  \item todo: Check that sighting observer is one of currently listed observers
+  \item todo: Check that sighting observer side matches angle +/-
+  \item todo: some way to load spcodes.dat to check species codes?
+  \item todo: Check for equal number of non-NA species codes and percentages (including 1 sp code for no 1 event)
 }
 }
 \examples{

@@ -34,8 +34,9 @@ Data frame with the segdata information described above
 Summarize AirDAS effort data by effort segment, while averaging conditions
 }
 \details{
-This function should be called by \code{\link{airdas_chop_equal}};
-  users should (nearly always) not call it themselves.
+This function should be called by one of the airdas_chop functions, 
+  e.g. \code{\link{airdas_chop_equal}}, meaning
+  users should work to avoid calling it themselves.
   It loops through the events in \code{x}, calculating and storing relevant
   information for each modeling segment as it goes. 
   Because \code{x} is a continuous effort section, it must begin with 
@@ -61,5 +62,8 @@ This function should be called by \code{\link{airdas_chop_equal}};
   
   \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}} 
   are used to calculate the segment start, mid, and end points.
+}
+\seealso{
+airdas_segdata_max
 }
 \keyword{internal}

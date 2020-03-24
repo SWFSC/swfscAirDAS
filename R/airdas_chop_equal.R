@@ -89,6 +89,8 @@
 #' 
 #' @keywords internal
 #' 
+#' @seealso airdas_chop_condition, airdas_chop_section
+#' 
 #' @export
 airdas_chop_equal <- function(x, ...) UseMethod("airdas_chop_equal")
 
