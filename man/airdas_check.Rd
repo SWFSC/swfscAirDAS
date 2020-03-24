@@ -27,7 +27,6 @@ index (row number) from the \code{airdas_read(file)} data frame,
 This data frame is sorted by the 'Description' column. 
 If there are multiple issues with the same line, the issue descriptions
 are concatenated together using \code{paste(..., collapse = "; ")}
-
 If \code{file.out} is not \code{NULL}, then the error log is also
 written to a text/csv file
 }
@@ -68,7 +67,10 @@ Checks that the following is true:
   Sighting (mammal) \tab Angle must be a whole number between -90 and 90\cr
   Sighting (mammal) \tab Group size must be a whole number between 1 and 5000\cr
   Sighting (mammal) \tab Species code(s) must be exactly two characters\cr
-  Sighting (mammal) \tab Observer code must be exactly two characters\cr
+  Sighting (mammal) \tab Observer code must be exactly two characters, and one of the current observers 
+    as specified by the most recent P event\cr
+  Sighting (mammal) \tab Angle must be negative if sighting made by left observer, 
+    and positive if made by right observer\cr   
   Sighting info     \tab Species percentages can be converted to numeric values, and sum to 100\cr
   Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
   Sighting info     \tab Every S code with multiple species has a 1 code immediately after it\cr
@@ -91,13 +93,11 @@ Outstanding questions/todo:
 \itemize{
   \item For which conditions should NA not be allowed?
   \item For which sighting data bits should NAs not be allowed (e.g. Obs, angle, sp, Gs)?
+    Does this depend on on/off effort?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
   \item Do checks for transect number?
   \item Should description items be grouped together by line number?
-  \item todo: Check that sighting observer is one of currently listed observers
-  \item todo: Check that sighting observer side matches angle +/-
   \item todo: some way to load spcodes.dat to check species codes?
-  \item todo: Check for equal number of non-NA species codes and percentages (including 1 sp code for no 1 event)
 }
 }
 \examples{

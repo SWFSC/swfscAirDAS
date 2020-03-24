@@ -53,10 +53,10 @@ rm(sight.curr)
 # Jitter P event data
 p.which <- which(x$Event == "P")
 stopifnot(length(p.which) == 2)
-x$Data1[p.which] <- c("aa", "cc")
-x$Data2[p.which] <- "bb"
-x$Data3[p.which] <- c("cc", "aa")
-x$Data4[p.which] <- "dd"
+x$Data1[p.which] <- "aa"
+x$Data2[p.which] <- c("bb", "dd")
+x$Data3[p.which] <- "cc"
+x$Data4[p.which] <- c("dd", "bb")
 rm(p.which)
 
 # Jitter transect number
