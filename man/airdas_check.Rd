@@ -23,7 +23,10 @@ default is \code{NULL}}
 A data frame with five columns that list information about errors found 
 in the AirDAS files: the file name, line number, 
 index (row number) from the \code{airdas_read(file)} data frame, 
-'ID' (pre-Data# columns from the DAS file), and description of the issue
+'ID' (pre-Data# columns from the DAS file), and description of the issue. 
+This data frame is sorted by the 'Description' column. 
+If there are multiple issues with the same line, the issue descriptions
+are concatenated together using \code{paste(..., collapse = "; ")}
 
 If \code{file.out} is not \code{NULL}, then the error log is also
 written to a text/csv file
@@ -37,11 +40,15 @@ Checks that the following is true:
   \item Event codes are one of the following: 
     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
   \item The effort dot matches effort determined using T, R, O, and E events
+  \item There is an O event between each T event, and vice versa, i.e. 
+    the data does not sart a new transect while still on a transect and
+    does not end a transect when already not on a transect
   \item A T or R event does not occur while already on effort
-  \item When the file ends, the data must be off effort and an O event
-    must have happened more recently than an E event to end the transect
-  \item All Data# columns, for events other than C events, are right-justified
-  \item All * events have NA (blank) Data# columns
+  \item An E event does not occur while already off effort
+  \item When the file ends, the data must be off effort and not still on a transect 
+    (i.e. an O event must occurred more recently than a T event)
+  \item All Data# columns for non-C events are right-justified
+  \item The following events have NA (blank) Data# columns: *, R, E, O
   \item Event/column pairs meet the following requirements:
 }
 
@@ -60,8 +67,8 @@ Checks that the following is true:
   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
   Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
   Sighting (mammal) \tab Group size is a whole number between 1 and 5000\cr
-  Sighting (mammal) \tab Species code has exactly one or two characters\cr
-  Sighting (mammal) \tab Observer code has exactly one or two characters\cr
+  Sighting (mammal) \tab Species code has exactly two characters\cr
+  Sighting (mammal) \tab Observer code has exactly two characters\cr
   Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
   Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
   Resight           \tab Angle can be converted to a numeric value\cr
@@ -78,7 +85,6 @@ Checks that the following is true:
 
 Outstanding questions:
 \itemize{
-  \item Are there supposed to be equal numbers of T/O and R/E events?
   \item For which conditions should NA not be allowed?
   \item For which sighting data bits should NA not be allowed?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?

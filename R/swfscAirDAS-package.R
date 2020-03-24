@@ -14,8 +14,9 @@
 #' @author Sam Woodman \email{sam.woodman@@noaa.gov}
 #' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
-#' @importFrom dplyr arrange between bind_cols bind_rows case_when everything
-#' @importFrom dplyr filter full_join group_by left_join mutate select starts_with summarise
+#' @importFrom dplyr arrange between bind_cols bind_rows case_when 
+#' @importFrom dplyr everything filter full_join group_by left_join mutate 
+#' @importFrom dplyr select slice starts_with summarise ungroup
 #' @importFrom lubridate year month day tz
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterExport detectCores parLapplyLB stopCluster

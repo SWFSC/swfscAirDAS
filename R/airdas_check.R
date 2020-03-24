@@ -17,11 +17,15 @@
 #'   \item Event codes are one of the following: 
 #'     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
 #'   \item The effort dot matches effort determined using T, R, O, and E events
+#'   \item There is an O event between each T event, and vice versa, i.e. 
+#'     the data does not sart a new transect while still on a transect and
+#'     does not end a transect when already not on a transect
 #'   \item A T or R event does not occur while already on effort
-#'   \item When the file ends, the data must be off effort and an O event
-#'     must have happened more recently than an E event to end the transect
-#'   \item All Data# columns, for events other than C events, are right-justified
-#'   \item All * events have NA (blank) Data# columns
+#'   \item An E event does not occur while already off effort
+#'   \item When the file ends, the data must be off effort and not still on a transect 
+#'     (i.e. an O event must occurred more recently than a T event)
+#'   \item All Data# columns for non-C events are right-justified
+#'   \item The following events have NA (blank) Data# columns: *, R, E, O
 #'   \item Event/column pairs meet the following requirements:
 #' }
 #'
@@ -40,8 +44,8 @@
 #'   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
 #'   Sighting (mammal) \tab Angle is a whole number between -90 and 90\cr
 #'   Sighting (mammal) \tab Group size is a whole number between 1 and 5000\cr
-#'   Sighting (mammal) \tab Species code has exactly one or two characters\cr
-#'   Sighting (mammal) \tab Observer code has exactly one or two characters\cr
+#'   Sighting (mammal) \tab Species code has exactly two characters\cr
+#'   Sighting (mammal) \tab Observer code has exactly two characters\cr
 #'   Sighting info     \tab Species percentages can be converted to a numeric value, and sum to 100\cr
 #'   Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
 #'   Resight           \tab Angle can be converted to a numeric value\cr
@@ -56,20 +60,26 @@
 #'   Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 #' }
 #'
-#' Outstanding questions:
+#' Outstanding questions/todo:
 #' \itemize{
-#'   \item Are there supposed to be equal numbers of T/O and R/E events?
 #'   \item For which conditions should NA not be allowed?
-#'   \item For which sighting data bits should NA not be allowed?
+#'   \item For which sighting data bits should NAs not be allowed (e.g. Obs, angle, sp, Gs)?
 #'   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
 #'   \item Do checks for transect number?
+#'   \item todo: Check that sighting observer is one of currently listed observers
+#'   \item todo: Check that sighting observer side matches angle +/-
+#'   \item todo: some way to load spcodes.dat to check species codes?
+#'   \item todo: Check for equal number of non-NA species codes and percentages (including 1 sp code for no 1 event)
 #' }
 #'
 #' @return 
 #' A data frame with five columns that list information about errors found 
 #' in the AirDAS files: the file name, line number, 
 #' index (row number) from the \code{airdas_read(file)} data frame, 
-#' 'ID' (pre-Data# columns from the DAS file), and description of the issue
+#' 'ID' (pre-Data# columns from the DAS file), and description of the issue. 
+#' This data frame is sorted by the 'Description' column. 
+#' If there are multiple issues with the same line, the issue descriptions
+#' are concatenated together using \code{paste(..., collapse = "; ")}
 #'
 #' If \code{file.out} is not \code{NULL}, then the error log is also
 #' written to a text/csv file
@@ -86,10 +96,17 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   )
   
   x <- suppressWarnings(airdas_read(file, file.type = file.type, skip = skip))
-  x.proc <- suppressWarnings(airdas_process(x))
+  x$idx <- seq_along(x$Event)
+  x <- as_airdas_dfr(x)
   
-  id.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
-  x.lines <- do.call(c, lapply(file, function(i) substr(readLines(i), 1, id.idx)))
+  x.proc <- suppressWarnings(airdas_process(x)) %>% 
+    left_join(select(x, line_num, idx), by = "line_num")
+  x.proc <- as_airdas_df(x.proc)
+  
+  id.lines.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
+  x.lines <- do.call(
+    c, lapply(file, function(i) substr(readLines(i), 1, id.lines.idx))
+  )
   if (skip > 0) x.lines <- x.lines[-c(1:skip)]
   
   stopifnot(nrow(x) == length(x.lines))
@@ -102,116 +119,120 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   ev.which <- which(!(x$Event %in% event.acc))
   error.out <- rbind(
     error.out,
-    list(x$file_das[ev.which], x$line_num[ev.which], ev.which, 
-         x.lines[ev.which],
-         rep("The event code is not recognized", length(ev.which)))
+    .check_list(x, x.lines, ev.which, "The event code is not recognized")
   )
   
   
   #----------------------------------------------------------------------------
   ### Check that effort dot matches effort determined by T/R to E/O events
-  x.all <- left_join(
-    select(x, .data$Event, .data$file_das, .data$line_num, 
-           .data$EffortDot), 
-    select(x.proc, .data$Event, .data$file_das, .data$line_num, 
-           .data$EffortDot, .data$OnEffort), 
-    by = c("Event", "file_das", "line_num", "EffortDot")
-  ) %>% 
-    mutate(idx = seq_along(.data$Event))
-  
-  tmp.which <- which(is.na(x.all$OnEffort))
-  stopifnot(
-    nrow(x) == nrow(x.all), 
-    all(x$Event[tmp.which] == "#")
-  )
-  x.all$OnEffort[tmp.which] <- x.all$OnEffort[tmp.which-1]
-  
-  # 1 events do not have effort dots
-  e.which <- which((x.all$OnEffort != x.all$EffortDot) & (x.all$Event != 1))
-  
-  error.out <- rbind(
-    error.out,
-    list(x$file_das[e.which], x$line_num[e.which], e.which, x.lines[e.which], 
-         rep("Effort dot does not match T/R to O/E effort", length(e.which)))
-  )
+  ###   PHOCOENA data has no effort dots
+  if (file.type != "phocoena") {
+    x.proc.no1 <- x.proc[x.proc$Event != 1, ] #1 events do not have effort dots
+    edot.which <- x.proc.no1$idx[(x.proc.no1$OnEffort != x.proc.no1$EffortDot)]
+    
+    error.out <- rbind(
+      error.out,
+      .check_list(x, x.lines, edot.which, 
+                  "Effort dot does not match T/R to O/E effort")
+    )
+    rm(x.proc.no1)
+  }
   
   
   #----------------------------------------------------------------------------
-  ### Check that data is OFF effort before a T or R event
-  idx.tr <- which(x$Event %in% c("T", "R"))
-  x.all.preTR <- x.all[idx.tr-1, ]
-  tr.which <- x.all.preTR$idx[x.all.preTR$OnEffort] + 1
+  ### Check that: 
+  ###   1) there are not consecutive T or O events
+  x.trans <- x[x$Event %in% c("T", "O"), ]
+  x.trans.str <- paste(x.trans$Event, collapse = "")
+  d.t <- gregexpr("TT", x.trans.str)[[1]]
+  d.o <- gregexpr("OO", x.trans.str)[[1]]
   
-  ### Check that data is ON effort before a E or O event
-  idx.e <- which(x$Event == "E")
-  idx.o <- which(x$Event == "O")
-  idx.eo <- sort(c(idx.e, idx.o))
-  x.all.preEO <- x.all[idx.eo-1, ]
-  eo.which <- x.all.preEO$idx[!x.all.preEO$OnEffort] + 1
+  t.which <- x.trans$idx[d.t[d.t != -1] + 1]
+  o.which <- x.trans$idx[d.o[d.o != -1] + 1]
   
-  rm(x.all.preTR, x.all.preEO)
+  ### 2) data is OFF effort before a T or R event
+  # idx.tr <- which(x$Event %in% c("T", "R"))
+  # x.all.preTR <- x.all[idx.tr-1, ]
+  # tr.which <- x.all.preTR$idx[x.all.preTR$OnEffort] + 1
+  idx.proc.tr <- which(x.proc$Event %in% c("T", "R"))
+  x.proc.preTR <- x.proc[idx.proc.tr - 1, ]
+  tr.which <- x.proc.preTR$idx[x.proc.preTR$OnEffort] + 1
+  
+  ### 3) data is ON effort before an E event (O event after E is ok)
+  idx.proc.e <- which(x.proc$Event == "E")
+  x.proc.preE <- x.proc[idx.proc.e - 1, ]
+  e.which <- x.proc.preE$idx[!x.proc.preE$OnEffort] + 1
+  
+  rm(x.proc.preTR, x.proc.preE)
+  
   
   error.out <- rbind(
     error.out,
-    list(x$file_das[tr.which], x$line_num[tr.which], tr.which, x.lines[tr.which], 
-         rep("Attempt to resume effort when already on effort", length(tr.which)))#, 
-    # list(x$file_das[eo.which], x$line_num[eo.which], eo.which, x.lines[eo.which], 
-    #      rep("Attempt to end effort when already off effort", length(eo.which)))
+    .check_list(x, x.lines, t.which, 
+                paste("Duplicate T event: there is no O event between", 
+                      "this T event and the previous T event")), 
+    .check_list(x, x.lines, o.which, 
+                paste("Duplicate O event: there is no T event between", 
+                      "this O event and the previous O event")), 
+    .check_list(x, x.lines, tr.which, 
+                "Attempt to resume effort (T/R event) when already on effort"),
+    .check_list(x, x.lines, e.which, 
+                "Attempt to end effort (E event) when already off effort")
   )
   
   
   #----------------------------------------------------------------------------
   ### Check that file ends off effort, and after an "O" rather than "E" event
-  if (length(idx.e) == 0) idx.e <- 0 # In case file has no E events
-  if (tail(x.all, 1)$OnEffort | (tail(idx.o, 1) < tail(idx.e, 1))) {
+  idx.proc.o <- which(x.proc$Event == "O")
+  if (length(idx.proc.e) == 0) idx.proc.e <- 0 # In case file has no E events
+  if (tail(x.proc, 1)$OnEffort | (tail(idx.proc.o, 1) < tail(idx.proc.e, 1))) {
     end.which <- nrow(x)
+    
     error.out <- rbind(
       error.out,
-      list(x$file_das[end.which], x$line_num[end.which], end.which, 
-           x.lines[end.which], 
-           rep(paste("The file ends on effort,", 
-                     "and/or the last off effort event is an E rather than O"), 
-               length(end.which)))
+      .check_list(x, x.lines, end.which, 
+                  paste("The file ends on effort, and/or the", 
+                        "last off effort event is an E rather than O"))
     )
   }
   
   
   #----------------------------------------------------------------------------
-  ### Check that Data# columns are right-justifed for non-C events
-  x.noc <- x %>% 
-    mutate(idx = seq_along(.data$Event)) %>% 
-    filter(!(.data$Event %in% c("C", "*")))
+  ### Check that Data# columns are right-justifed for selected events
+  event.tofilt <- c("C", "*", "R", "E", "O", "#")
+  x.filt <- x %>% 
+    filter(!(.data$Event %in% event.tofilt))
   
   call.read <- switch(
     file.type, phocoena = .airdas_read_phocoena, survey = .airdas_read_survey,
     caretta = .airdas_read_turtle, turtle = .airdas_read_turtle
   )
   
-  x.tmp.noc.data <- do.call(
+  x.tmp.filt.data <- do.call(
     rbind, 
     lapply(file, function(i) {
       call.read(i, skip = skip, tz = "UTC", file.type = file.type)
     })
   ) %>% 
     select(-.data$DateTime) %>% 
-    filter(!(.data$Event %in% c("C", "*"))) %>% 
+    filter(!(.data$Event %in% event.tofilt)) %>% 
     select(starts_with("Data")) %>% 
     mutate(Data7 = substr(.data$Data7, 1, 5))
   
   x.tmp.which <- lapply(1:7, function(i) {
-    x1 <- trimws(x.tmp.noc.data[[i]], which = "left")
-    x2 <- trimws(x.tmp.noc.data[[i]], which = "both")
+    x1 <- trimws(x.tmp.filt.data[[i]], which = "left")
+    x2 <- trimws(x.tmp.filt.data[[i]], which = "both")
     which(x1 != x2)
   })
   
-  r.which <- x.noc$idx[sort(unique(unlist(x.tmp.which)))]
+  r.which <- x.filt$idx[sort(unique(unlist(x.tmp.which)))]
   error.out <- rbind(
     error.out,
-    list(x$file_das[r.which], x$line_num[r.which], r.which, x.lines[r.which], 
-         rep("Data column(s) are not right-justified", length(r.which)))
+    .check_list(x, x.lines, r.which, "Data column(s) are not right-justified")
   )
   
-  rm(x.noc, call.read, x.tmp.noc.data, x.tmp.which)
+  rm(event.tofilt, x.filt, call.read, x.tmp.filt.data, x.tmp.which)
+  
   
   #----------------------------------------------------------------------------
   ### Check that value type of values in Data# columns are as expected for
@@ -219,9 +240,9 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   ###   Note that for fields with specific number requirements, 
   ###   a separate check_numeric() is not necessary
   
-  # "*" events have no data
-  idx.star <- .check_character(x, "*", paste0("Data", 1:7), NA)
-  txt.star <- "Position (*) events should have no data in the Data# columns"
+  # "*", R, E, and O events have no data
+  idx.na <- .check_character(x, c("*", "R", "E", "O"), paste0("Data", 1:7), NA)
+  txt.na <- "R, E, O, and * events should have no data in the Data# columns"
   
   
   # Viewing conditions
@@ -304,7 +325,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   # Add text to error.out as needed and return
   error.out <- rbind(
     error.out,
-    .check_list(x, x.lines, idx.star, txt.star),
+    .check_list(x, x.lines, idx.na, txt.na),
     .check_list(x, x.lines, idx.V, txt.V),
     .check_list(x, x.lines, idx.A.1, txt.A.1),
     .check_list(x, x.lines, idx.A.2, txt.A.2),
@@ -339,14 +360,17 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   
   # Species code(s)
   data.skm.sp <- switch(file.type, caretta = 5:7, phocoena = 2, turtle = 5:7)
-  idx.S.sp <- .check_character_length(x, "S", paste0("Data", data.skm.sp), 1:2)
-  txt.S.sp <- "A species code is not one or two characters"
+  idx.S.sp <- .check_character_length(x, "S", paste0("Data", data.skm.sp), 2)
+  txt.S.sp <- "A species code is not exactly two characters"
   
   # Observer
   data.skm.obs <- switch(file.type, caretta = 2, phocoena = 5, turtle = 2)
-  idx.S.obs <- .check_character_length(x, "S", paste0("Data", data.skm.obs), 1:2)
-  txt.S.obs <- "The sighting observer code is not one or two characters"
+  idx.S.obs <- .check_character_length(x, "S", paste0("Data", data.skm.obs), 2)
+  txt.S.obs <- "The sighting observer code is not exactly two characters"
   
+  # # Observer - check that is one of entered observers
+  # idx.obs.pos <- .check_sight_obs(x.proc, "S", paste0("Data", data.skm.obs))
+
   ### Multi-species info (1)  
   # TODO: equal number of percentages and species codes?
   # Percentages are numeric
@@ -489,7 +513,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   
   
   #----------------------------------------------------------------------------
-  # Remove first line and return
+  #----------------------------------------------------------------------------
+  ### Remove first line and return
   if (nrow(error.out) == 1) {
     to.return <- data.frame(
       File = NA, LineNum = NA, Idx = NA, ID = NA, 
@@ -497,9 +522,14 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
       stringsAsFactors = FALSE
     )
   } else {
-    to.return <- error.out[-1, ]
+    to.return <- error.out %>% 
+      slice(-1) %>% 
+      # group_by(File, LineNum, Idx, ID) %>% 
+      # summarise(Description = paste(Description, collapse = "; ")) %>% 
+      # ungroup() %>% 
+      arrange(Description)
   }
-  row.names(to.return) <- seq_len(nrow(to.return))
+  row.names(to.return) <- NULL
   
   if (!is.null(file.out)) write.csv(to.return, file = file.out)
   
