@@ -100,7 +100,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   x <- as_airdas_dfr(x)
   
   x.proc <- suppressWarnings(airdas_process(x)) %>% 
-    left_join(select(x, line_num, idx), by = "line_num")
+    left_join(select(x, .data$line_num, .data$idx), by = "line_num")
   x.proc <- as_airdas_df(x.proc)
   
   id.lines.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
@@ -313,7 +313,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   idx.P <- .check_character_length(x, "P", c("Data1", "Data2", "Data3", "Data4"), 2)
   txt.P <- "An observer entry (Data1-4 of P events) is not two characters"
   
-  x.p <- x %>% mutate(idx = seq_along(.data$Event)) %>% filter(.data$Event == "P")
+  x.p <- x %>% filter(.data$Event == "P")
   x.p.data <- select(x.p, .data$Data1, .data$Data2, .data$Data3, .data$Data4)
   x.p.which <- apply(x.p.data, 1, function(i) any(duplicated(na.omit(i))))
   
@@ -380,7 +380,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   # If percentages are numeric, do they sum to 100?
   txt.1.sum <- "The species percentages do not sum to 100"
   if (length(idx.1.num) == 0) {
-    x.1 <- x %>% mutate(idx = seq_along(.data$Event)) %>% filter(.data$Event == "1")
+    x.1 <- x %>% filter(.data$Event == "1")
     x.1.data <- select(x.1, .data$Data5, .data$Data6, .data$Data7)
     x.1.which <- apply(x.1.data, 1, function(i) {
       !isTRUE(all.equal(100, sum(as.numeric(i), na.rm = TRUE)))
@@ -524,10 +524,10 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   } else {
     to.return <- error.out %>% 
       slice(-1) %>% 
-      # group_by(File, LineNum, Idx, ID) %>% 
-      # summarise(Description = paste(Description, collapse = "; ")) %>% 
+      # group_by(.data$File, .data$LineNum, .data$Idx, .data$ID) %>% 
+      # summarise(Description = paste(.data$Description, collapse = "; ")) %>% 
       # ungroup() %>% 
-      arrange(Description)
+      arrange(.data$Description)
   }
   row.names(to.return) <- NULL
   
