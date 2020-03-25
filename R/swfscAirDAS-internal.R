@@ -1,74 +1,6 @@
 # Internal, helper functions for swfscAirDAS
 
 ###############################################################################
-# Helper functions for airdas_process
-.airdas_process_num <- function(init.val, das.df, col.name, event.curr, event.na) {
-  toreturn <- init.val
-  toreturn[event.curr] <- ifelse(
-    is.na(as.numeric(das.df[event.curr, col.name])),
-    event.na, as.numeric(das.df[event.curr, col.name])
-  )
-  
-  toreturn
-}
-
-.airdas_process_chr <- function(init.val, das.df, col.name, event.curr, event.na) {
-  toreturn <- init.val
-  toreturn[event.curr] <- ifelse(
-    is.na(das.df[event.curr, col.name]),
-    event.na, das.df[event.curr, col.name]
-  )
-  
-  toreturn
-}
-
-###############################################################################
-# Helper functions for airdas_segdata_
-
-### Extract unique (and sorted) characters from a string
-# stackoverflow.com/questions/31814548
-.fn_uniqchars <- function(x) sort(unique(strsplit(x, "")[[1]]))
-
-
-### Keep running sum of data (conditions) multiplied by distance ratio
-# Requires that names of cond.list elements are the same as
-#   the column names in curr.df
-.fn_aggr_conditions <- function(data.list, curr.df, idx, dist.perc) {
-  stopifnot(
-    all(names(data.list) %in% names(curr.df)), 
-    idx <= nrow(curr.df)#, 
-    # dist.perc >= 0
-  )
-  
-  if (is.na(dist.perc)) {
-    lapply(data.list, function(i) NA)
-    
-  } else if (dist.perc != 0) {
-    tmp <- lapply(names(data.list), function(k, dist.perc) {
-      z <- data.list[[k]]
-      if (inherits(z, c("numeric", "integer"))) {
-        z + (dist.perc * curr.df[[k]][idx])
-      } else if (inherits(z, "character")) {
-        paste(.fn_uniqchars(paste0(z, curr.df[[k]][idx])), collapse = "")
-      } else if (inherits(z, "logical")) {
-        stop(".fn_aggr_conditions error - _segdata_ cannot average logical data. ", 
-             "Please report this as an issue")
-      } else {
-        stop(".fn_aggr_conditions error - unrecognized data class. ", 
-             "Please report this as an issue")
-      }
-    }, dist.perc = dist.perc)
-    
-    names(tmp) <- names(data.list)
-    tmp
-    
-  } else {
-    data.list
-  }
-}
-
-
-###############################################################################
 # Functions for doing < / > / <= / >= comparisons with floating points
 .less <- function(x, y) {
   stopifnot(length(y) == 1)
@@ -256,7 +188,7 @@
 }
 
 
-# TODO
+# Provide output in format expected by airdas_check()
 .check_list <- function(z1, z2, z3, z4) {
   # z1: x
   # z2: x.lines

@@ -107,7 +107,7 @@ airdas_segdata_avg.airdas_df <- function(x, seg.lengths, eff.id, ...) {
   
   # Store condition data in list for organization and readability
   conditions.list.init <- list(
-    Bft = 0, CCover = 0, AltFt = 0, SpKnot = 0, Jelly = 0, #HKR = "",
+    Bft = 0, CCover = 0, AltFt = 0, SpKnot = 0, Jelly = 0, 
     Haze = 0, Kelp = 0, RedTide = 0
   )
   

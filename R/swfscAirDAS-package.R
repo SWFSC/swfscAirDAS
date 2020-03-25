@@ -14,16 +14,14 @@
 #' @author Sam Woodman \email{sam.woodman@@noaa.gov}
 #' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
-#' @importFrom dplyr arrange between bind_cols bind_rows case_when 
-#' @importFrom dplyr everything filter full_join group_by left_join mutate 
-#' @importFrom dplyr select slice starts_with summarise ungroup
+#' @importFrom dplyr arrange between bind_cols bind_rows case_when everything filter full_join group_by left_join mutate select slice starts_with summarise ungroup
 #' @importFrom lubridate year month day tz
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterExport detectCores parLapplyLB stopCluster
 #' @importFrom readr cols col_character read_fwf fwf_positions
 #' @importFrom rlang !! .data
 #' @importFrom stats na.omit runif
-#' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn.grcirclkm
+#' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn_aggr_conditions .fn.grcirclkm .process_chr .process_num
 #' @importFrom swfscMisc bearing destination distance setupClusters
 #' @importFrom utils head tail read.csv write.csv 
 #' 

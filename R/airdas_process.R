@@ -210,37 +210,37 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   event.V <- das.df$Event == "V"
   event.W <- das.df$Event == "W"
   
-  HKR      <- .airdas_process_chr(init.val, das.df, "Data1", event.W, event.na)
-  CCover   <- .airdas_process_num(init.val, das.df, "Data2", event.W, event.na)
-  Bft      <- .airdas_process_num(init.val, das.df, "Data3", event.W, event.na)
+  HKR      <- .process_chr(init.val, das.df, "Data1", event.W, event.na)
+  CCover   <- .process_num(init.val, das.df, "Data2", event.W, event.na)
+  Bft      <- .process_num(init.val, das.df, "Data3", event.W, event.na)
   Jelly    <- switch(file.type, 
-                     caretta = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
-                     turtle  = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     caretta = .process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     turtle  = .process_num(init.val, das.df, "Data4", event.W, event.na), 
                      init.val)
   HorizSun <- switch(file.type, 
-                     phocoena = .airdas_process_num(init.val, das.df, "Data4", event.W, event.na), 
-                     caretta = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
-                     turtle  = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     phocoena = .process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     caretta = .process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     turtle  = .process_num(init.val, das.df, "Data5", event.W, event.na), 
                      init.val)
   VertSun  <- switch(file.type, 
-                     phocoena = .airdas_process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     phocoena = .process_num(init.val, das.df, "Data5", event.W, event.na), 
                      init.val)
   
-  ObsL <- .airdas_process_chr(init.val, das.df, "Data1", event.P, event.na)
-  ObsB <- .airdas_process_chr(init.val, das.df, "Data2", event.P, event.na)
-  ObsR <- .airdas_process_chr(init.val, das.df, "Data3", event.P, event.na)
-  Rec <-  .airdas_process_chr(init.val, das.df, "Data4", event.P, event.na)
+  ObsL <- .process_chr(init.val, das.df, "Data1", event.P, event.na)
+  ObsB <- .process_chr(init.val, das.df, "Data2", event.P, event.na)
+  ObsR <- .process_chr(init.val, das.df, "Data3", event.P, event.na)
+  Rec <-  .process_chr(init.val, das.df, "Data4", event.P, event.na)
   
-  AltFt  <- .airdas_process_num(init.val, das.df, "Data1", event.A, event.na)
-  SpKnot <- .airdas_process_num(init.val, das.df, "Data2", event.A, event.na)
+  AltFt  <- .process_num(init.val, das.df, "Data1", event.A, event.na)
+  SpKnot <- .process_num(init.val, das.df, "Data2", event.A, event.na)
   
-  VLI <- .airdas_process_chr(init.val, das.df, "Data1", event.V, event.na)
-  VLO <- .airdas_process_chr(init.val, das.df, "Data2", event.V, event.na)
-  VB  <- .airdas_process_chr(init.val, das.df, "Data3", event.V, event.na)
-  VRI <- .airdas_process_chr(init.val, das.df, "Data4", event.V, event.na)
-  VRO <- .airdas_process_chr(init.val, das.df, "Data5", event.V, event.na)
+  VLI <- .process_chr(init.val, das.df, "Data1", event.V, event.na)
+  VLO <- .process_chr(init.val, das.df, "Data2", event.V, event.na)
+  VB  <- .process_chr(init.val, das.df, "Data3", event.V, event.na)
+  VRI <- .process_chr(init.val, das.df, "Data4", event.V, event.na)
+  VRO <- .process_chr(init.val, das.df, "Data5", event.V, event.na)
   
-  Trans <- .airdas_process_chr(init.val, das.df, "Data1", event.T, event.na)
+  Trans <- .process_chr(init.val, das.df, "Data1", event.T, event.na)
   Trans[event.O] <- event.na
   
   Eff <- as.logical(init.val)
