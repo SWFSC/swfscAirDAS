@@ -133,8 +133,7 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
   call.cond.names <- cond.names
   call.seg.km.min <- seg.km.min
   call.func1 <- airdas_segdata_avg
-  call.func2 <- as_airdas_df
-  
+
   # Setup number of cores
   if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
   if(is.na(num.cores)) num.cores <- 1
@@ -148,20 +147,20 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
       lapply(
         eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
         call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
-        call.func1 = call.func1, call.func2 = call.func2
+        call.func1 = call.func1
       )
       
     } else { # Run lapply using parLapplyLB
       parallel::clusterExport(
         cl = cl,
         varlist = c("call.x", "call.cond.names", "call.seg.km.min", 
-                    "call.func1", "call.func2"),
+                    "call.func1"),
         envir = environment()
       )
       parallel::parLapplyLB(
         cl, eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
         call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
-        call.func1 = call.func1, call.func2 = call.func2
+        call.func1 = call.func1
       )
     }
   }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)
