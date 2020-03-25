@@ -1,10 +1,12 @@
 #' Process and summarize aerial survey DAS data
 #'
 #' This package contains functions designed for processing and analyzing 
-#' aerial survey DAS data (AirDAS) generated using the TURTLEP program (or associated programs) 
-#' by the Southwest Fisheries Science Center. 
-#' Functionality includes reading AirDAS data into a data frame, 
-#' processing this data (extracting state and condition information for each AirDAS event), 
+#' aerial survey DAS data (AirDAS) collected using one of the following 
+#' Southwest Fisheries Science Center (SWFSC) programs: 
+#' PHOCOENA, SURVEY, CARETTA, or TURTLE (such as TURTLEP or TURTLE 4D).
+#' Functionality includes checking AirDAS data for dat entry errors, 
+#' reading AirDAS data into a data frame, processing this data 
+#' (extracting state and condition information for each AirDAS event), 
 #' and summarizing sighting and effort information.
 #'
 #' @name swfscAirDAS-package

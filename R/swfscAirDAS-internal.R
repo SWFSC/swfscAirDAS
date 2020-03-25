@@ -1,35 +1,31 @@
 # Internal, helper functions for swfscAirDAS
 
 ###############################################################################
-# Functions for doing < / > / <= / >= comparisons with floating points
+# Functions for doing accurate numeric comparisons with floating points
+# Same as the swfscDAS internals
 .less <- function(x, y) {
   stopifnot(length(y) == 1)
   vapply(x, function(i) {(i < y) & !isTRUE(all.equal(i, y))}, as.logical(1))
-  # (x < y) & !isTRUE(all.equal(x, y))
 }
 
 .greater <- function(x, y) {
   stopifnot(length(y) == 1)
   vapply(x, function(i) {(i > y) & !isTRUE(all.equal(i, y))}, as.logical(1))
-  # (x > y) & !isTRUE(all.equal(x, y))
 }
 
 .less_equal <- function(x, y) {
   stopifnot(length(y) == 1)
   vapply(x, function(i) {(i < y) | isTRUE(all.equal(i, y))}, as.logical(1))
-  # (x < y) | isTRUE(all.equal(x, y))
 }
 
 .greater_equal <- function(x, y) {
   stopifnot(length(y) == 1)
   vapply(x, function(i) {(i > y) | isTRUE(all.equal(i, y))}, as.logical(1))
-  # (x > y) | isTRUE(all.equal(x, y))
 }
 
 .equal <- function(x, y) {
   stopifnot(length(y) == 1)
   vapply(x, function(i) isTRUE(all.equal(i, y)), as.logical(1))
-  # isTRUE(all.equal(x, y))
 }
 
 
@@ -155,36 +151,6 @@
   }
   
   sort(unique(z.out))
-}
-
-
-# Check that specified...
-.check_sight_obs <- function(z, event.code, z.col) {
-  # z: airdas_df object - need process observer values
-  # event.code: character; event code by which to filter z
-  # z.col: Column which to check; must be one of the Data# columns
-  ### Output: indices of z that is NA
-  
-  stopifnot(
-    inherits(z, "airdas_df"),
-    z.col %in% paste0("Data", 1:7),
-    "idx" %in% names(z)
-  )
-  
-  z.out <- c()
-  browser()
-  
-  z2 <- z %>% 
-    filter(.data$Event == event.code) %>% 
-    select(.data$idx, .data$OnEffort, 
-           .data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, Obs = !!z.col)
-  
-  z2$obs_out <- unlist(apply(z2, 1, function(i) {
-    obs <- i["Obs"]
-    ifelse(is.na(obs), NA, which(obs == i[c("ObsL", "ObsB", "ObsR", "Rec")]))
-  }))
-  
-  z2
 }
 
 
