@@ -12,7 +12,8 @@ airdas_chop_condition(x, ...)
 
 \method{airdas_chop_condition}{airdas_df}(
   x,
-  seg.km.min = 0.1,
+  conditions,
+  seg.min.km = 0.1,
   dist.method = NULL,
   num.cores = NULL,
   ...
@@ -26,16 +27,16 @@ see the Details section below}
 
 \item{...}{ignored}
 
-\item{seg.km.min}{numeric; minimum allowable segment length (in kilometers).
+\item{conditions}{see \code{\link{airdas_effort}}}
+
+\item{seg.min.km}{numeric; minimum allowable segment length (in kilometers).
 Default is 0.1. See the Details section below for more information}
 
 \item{dist.method}{character; see \code{\link{airdas_effort}}.
 Default is \code{NULL} since these distances should have already been
 calculated in \code{\link{airdas_effort}}}
 
-\item{num.cores}{Number of CPUs to over which to distribute computations.
-Defaults to \code{NULL} which uses one fewer than the number of cores
-reported by \code{\link[parallel]{detectCores}}}
+\item{num.cores}{See \code{\link{airdas_effort}}}
 }
 \value{
 List of two data frames:
@@ -58,7 +59,7 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   in \code{x} into modeling segments (henceforth 'segments') by 
   creating a new segment every time a condition changes. 
   Each effort section runs from a T/R event to its corresponding E/O event. 
-  After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
+  After chopping, \code{\link{airdas_segdata}} is called to get relevant  
   segdata information for each segment.
   
   Changes in the following conditions trigger a new segment:
@@ -71,9 +72,9 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   (i.e. all of the events in the event series) that happened during 
   the series of events (i.e. at the same location). 
   
-  In addition, (almost) all segments whose length is less than \code{seg.km.min}
+  In addition, (almost) all segments whose length is less than \code{seg.min.km}
   are combined with the segment immediately following them to ensure that the length
-  of (almost) all segments is at least \code{seg.km.min}. 
+  of (almost) all segments is at least \code{seg.min.km}. 
   This allows users to account for situations where multiple conditions, 
   such as Beaufort and the viewing conditions, change in rapid succession, say 0.05 km apart.
   When segments are combined, a warning is thrown and the conditions are averaged together 
@@ -84,13 +85,10 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   
   Note that the above rule for 'combining' condition changes that have the same location 
   into a single segment (such as a 'TVPAW' series of events) 
-  is followed even if \code{seg.km.min = 0}.
+  is followed even if \code{seg.min.km = 0}.
 
   If the column \code{dist_from_prev} does not exist, the distance between
   subsequent events is calculated as described in \code{\link{airdas_effort}}
-  
-  Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
-  that doesn't average conditions?
 }
 \seealso{
 airdas_chop_equal, airdas_chop_section

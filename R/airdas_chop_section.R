@@ -7,12 +7,11 @@
 #'   This data must be filtered for 'OnEffort' events; 
 #'   see the Details section below
 #' @param ... ignored
+#' @param conditions see \code{\link{airdas_effort}}
 #' @param dist.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
-#' @param num.cores Number of CPUs to over which to distribute computations.
-#'   Defaults to \code{NULL} which uses one fewer than the number of cores
-#'   reported by \code{\link[parallel]{detectCores}}
+#' @param num.cores See \code{\link{airdas_effort}}
 #' 
 #' @details This function is simply a wrapper for \code{\link{airdas_chop_equal}}.
 #'   It calls \code{\link{airdas_chop_equal}}, with \code{seg.km} set to a 
@@ -68,7 +67,7 @@ airdas_chop_section.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_section
 #' @export
-airdas_chop_section.airdas_df <- function(x, dist.method = NULL, 
+airdas_chop_section.airdas_df <- function(x, conditions, dist.method = NULL, 
                                           num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
@@ -104,6 +103,7 @@ airdas_chop_section.airdas_df <- function(x, dist.method = NULL,
   # Call airdas_chop_equal using max section length + 1
   airdas_chop_equal(
     x %>% select(-.data$cont_eff_section), 
+    conditions = conditions, 
     seg.km = max(x.summ$dist_sum) + 1, randpicks.load = randpicks.df, 
     num.cores = num.cores  
   )

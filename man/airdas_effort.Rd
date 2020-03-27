@@ -10,7 +10,15 @@ airdas_effort(x, ...)
 
 \method{airdas_effort}{data.frame}(x, ...)
 
-\method{airdas_effort}{airdas_df}(x, method, sp.codes, dist.method = "greatcircle", ...)
+\method{airdas_effort}{airdas_df}(
+  x,
+  method,
+  sp.codes,
+  conditions = NULL,
+  dist.method = "greatcircle",
+  num.cores = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
@@ -26,11 +34,22 @@ or \code{\link{airdas_chop_section}}, respectively}
 \item{sp.codes}{character; species code(s) to include in segdata. 
 These code(s) will be converted to lower case to match \code{\link{airdas_sight}}}
 
+\item{conditions}{character vector of names of conditions to include in segdata output.
+These values must be column names from the output of \code{\link{airdas_process}},
+e.g. 'Bft', 'CCover', etc.
+If \code{method == "condition"}, then these also are the conditions which
+trigger segment chopping when they change.}
+
 \item{dist.method}{character;
 method to use to calculate distance between lat/lon coordinates.
 Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 or one of "lawofcosines", "haversine", or "vincenty" to use
 \code{\link[swfscMisc]{distance}}. Default is "greatcircle"}
+
+\item{num.cores}{Number of CPUs to over which to distribute computations.
+Defaults to \code{NULL}, which uses one fewer than the number of cores
+reported by \code{\link[parallel]{detectCores}}
+Using 1 core likely will be faster for smaller datasets}
 }
 \value{
 List of three data frames: 
@@ -61,6 +80,8 @@ This is the top-level function for chopping processed AirDAS data
   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
   where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
   and then passed to the chopping function specified using \code{method}. 
+  All on effort events must not have \code{NA} Lat or Lon values; 
+  note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 
   Currently, the following chopping methods are available: 
   "condition", "equallength", and "section". 
@@ -86,11 +107,6 @@ This is the top-level function for chopping processed AirDAS data
   Siteinfo, which contains all sightings in \code{x} (see below), 
   contains a column ('included') that indicates whether or not the sighting was
   included in the segdata counts.
-  
-  All on effort events must not have \code{NA} Lat or Lon values; 
-  remember that in \code{\link{airdas_process}}, S Lat/Lon values
-  were passed to 1 events. 
-  TODO: Should this function verbosely remove these events?
 
   The distance between the lat/lon points of subsequent events
   is calculated using the method specified in \code{dist.method}
@@ -102,13 +118,14 @@ y.proc <- airdas_process(y)
 # Using "condition" method
 airdas_effort(
   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-  seg.km.min = 0.05, num.cores = 1
+  conditions = "Bft", seg.min.km = 0.05, num.cores = 1
 )
 
 # Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
+  conditions = c("Bft", "CCover"), 
   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 )
 

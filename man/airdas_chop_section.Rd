@@ -10,7 +10,7 @@ airdas_chop_section(x, ...)
 
 \method{airdas_chop_section}{data.frame}(x, ...)
 
-\method{airdas_chop_section}{airdas_df}(x, dist.method = NULL, num.cores = NULL, ...)
+\method{airdas_chop_section}{airdas_df}(x, conditions, dist.method = NULL, num.cores = NULL, ...)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -20,13 +20,13 @@ see the Details section below}
 
 \item{...}{ignored}
 
+\item{conditions}{see \code{\link{airdas_effort}}}
+
 \item{dist.method}{character; see \code{\link{airdas_effort}}.
 Default is \code{NULL} since these distances should have already been
 calculated in \code{\link{airdas_effort}}}
 
-\item{num.cores}{Number of CPUs to over which to distribute computations.
-Defaults to \code{NULL} which uses one fewer than the number of cores
-reported by \code{\link[parallel]{detectCores}}}
+\item{num.cores}{See \code{\link{airdas_effort}}}
 }
 \value{
 See \code{\link{airdas_chop_equal}}. 

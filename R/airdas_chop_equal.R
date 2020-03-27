@@ -7,6 +7,7 @@
 #'   This data must be filtered for 'OnEffort' events; 
 #'   see the Details section below
 #' @param ... ignored
+#' @param conditions see \code{\link{airdas_effort}}
 #' @param seg.km numeric; target segment length in kilometers
 #' @param randpicks.load character, data frame, or \code{NULL}. 
 #'   If character, must be filename of past randpicks output to load and use 
@@ -16,9 +17,7 @@
 #' @param dist.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
-#' @param num.cores Number of CPUs to over which to distribute computations.
-#'   Defaults to \code{NULL} which uses one fewer than the number of cores
-#'   reported by \code{\link[parallel]{detectCores}}
+#' @param num.cores See \code{\link{airdas_effort}}
 #' 
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "equallength" method is specified. 
@@ -28,7 +27,7 @@
 #'   This function chops each continuous effort section (henceforth 'effort sections') 
 #'   in \code{x} into modeling segments (henceforth 'segments') of equal length. 
 #'   Each effort section runs from a "T"/"R" event to its corresponding "E"/"O" event. 
-#'   After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
+#'   After chopping, \code{\link{airdas_segdata}} is called to get relevant  
 #'   segdata information for each segment.
 #' 
 #'   When chopping the effort sections in segments of length \code{seg.km}, 
@@ -104,7 +103,8 @@ airdas_chop_equal.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_equal
 #' @export
-airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL, 
+airdas_chop_equal.airdas_df <- function(x, conditions, seg.km, 
+                                        randpicks.load = NULL, 
                                         dist.method = NULL, num.cores = NULL, 
                                         ...) {
   #----------------------------------------------------------------------------
@@ -115,6 +115,8 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
   
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_chop_equal")
+  
+  # TODO: conditions check
   
   
   #----------------------------------------------------------------------------
@@ -180,11 +182,11 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
   # Parallel thorugh each continuous effort section,
   #   getting segment lengths and segdata
   call.x <- x
+  call.conditions <- conditions
   call.seg.km <- seg.km
   call.r.pos <- r.pos
-  call.func1 <- airdas_segdata_avg
-  call.func2 <- as_airdas_df
-  
+  call.func1 <- airdas_segdata
+
   # Setup number of cores
   if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
   if(is.na(num.cores)) num.cores <- 1
@@ -197,21 +199,23 @@ airdas_chop_equal.airdas_df <- function(x, seg.km, randpicks.load = NULL,
     if(is.null(cl)) { # Don't parallelize if num.cores == 1
       lapply(
         eff.uniq, .chop_equal_eff,
-        call.x = call.x, call.seg.km = call.seg.km, call.r.pos = call.r.pos,
-        call.func1 = call.func1, call.func2 = call.func2
+        call.x = call.x, call.conditions = call.conditions, 
+        call.seg.km = call.seg.km, call.r.pos = call.r.pos,
+        call.func1 = call.func1
       )
       
     } else { # Run lapply using parLapplyLB
       parallel::clusterExport(
         cl = cl,
-        varlist = c("call.x", "call.seg.km", "call.r.pos", 
-                    "call.func1", "call.func2"),
+        varlist = c("call.x", "call.conditions", "call.seg.km", "call.r.pos", 
+                    "call.func1"),
         envir = environment()
       )
       parallel::parLapplyLB(
         cl, eff.uniq, .chop_equal_eff,
-        call.x = call.x, call.seg.km = call.seg.km, call.r.pos = call.r.pos,
-        call.func1 = call.func1, call.func2 = call.func2
+        call.x = call.x, call.conditions = call.conditions, 
+        call.seg.km = call.seg.km, call.r.pos = call.r.pos,
+        call.func1 = call.func1
       )
     }
   }, finally = if(!is.null(cl)) parallel::stopCluster(cl) else NULL)

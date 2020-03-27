@@ -10,11 +10,20 @@
 #'   or \code{\link{airdas_chop_section}}, respectively
 #' @param sp.codes character; species code(s) to include in segdata. 
 #'   These code(s) will be converted to lower case to match \code{\link{airdas_sight}} 
+#' @param conditions character vector of names of conditions to include in segdata output.
+#'   These values must be column names from the output of \code{\link{airdas_process}},
+#'   e.g. 'Bft', 'CCover', etc.
+#'   If \code{method == "condition"}, then these also are the conditions which
+#'   trigger segment chopping when they change.
 #' @param dist.method character;
 #'   method to use to calculate distance between lat/lon coordinates.
 #'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 #'   or one of "lawofcosines", "haversine", or "vincenty" to use
 #'   \code{\link[swfscMisc]{distance}}. Default is "greatcircle"
+#' @param num.cores Number of CPUs to over which to distribute computations.
+#'   Defaults to \code{NULL}, which uses one fewer than the number of cores
+#'   reported by \code{\link[parallel]{detectCores}}
+#'   Using 1 core likely will be faster for smaller datasets
 #' @param ... arguments passed to the chopping function specified using \code{method}
 #' 
 #' @details This is the top-level function for chopping processed AirDAS data 
@@ -27,6 +36,8 @@
 #'   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
 #'   where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
 #'   and then passed to the chopping function specified using \code{method}. 
+#'   All on effort events must not have \code{NA} Lat or Lon values; 
+#'   note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 #' 
 #'   Currently, the following chopping methods are available: 
 #'   "condition", "equallength", and "section". 
@@ -52,11 +63,6 @@
 #'   Siteinfo, which contains all sightings in \code{x} (see below), 
 #'   contains a column ('included') that indicates whether or not the sighting was
 #'   included in the segdata counts.
-#'   
-#'   All on effort events must not have \code{NA} Lat or Lon values; 
-#'   remember that in \code{\link{airdas_process}}, S Lat/Lon values
-#'   were passed to 1 events. 
-#'   TODO: Should this function verbosely remove these events?
 #' 
 #'   The distance between the lat/lon points of subsequent events
 #'   is calculated using the method specified in \code{dist.method}
@@ -82,13 +88,14 @@
 #' # Using "condition" method
 #' airdas_effort(
 #'   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-#'   seg.km.min = 0.05, num.cores = 1
+#'   conditions = "Bft", seg.min.km = 0.05, num.cores = 1
 #' )
 #' 
 #' # Using "equallength" method
 #' y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 #' airdas_effort(
 #'   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
+#'   conditions = c("Bft", "CCover"), 
 #'   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 #' )
 #' 
@@ -111,16 +118,39 @@ airdas_effort.data.frame <- function(x, ...) {
 
 #' @name airdas_effort
 #' @export
-airdas_effort.airdas_df <- function(x, method, sp.codes, 
-                                    dist.method = "greatcircle", ...) {
+airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL, 
+                                    dist.method = "greatcircle", 
+                                    num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
+  
+  # Method
   methods.acc <- c("condition", "equallength", "section")
   if (!(length(method) == 1 & (method %in% methods.acc))) 
     stop("method must be a string, and must be one of: ", 
          paste0("\"", paste(methods.acc, collapse = "\", \""), "\""))
   
   #Check for dist.method happens in .dist_from_prev()
+  
+  # Conditions
+  conditions.acc <- c(
+    "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+    "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
+    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO"
+  )
+  
+  if (is.null(conditions)) {
+    conditions <- c(
+      "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+      "Haze", "Kelp", "RedTide", "AltFt", "SpKnot"
+    )
+    
+  } else {
+    if (!all(conditions %in% conditions.acc))
+      stop("Please ensure all components of the conditions argument are ",
+           "one of the following accepted values:\n",
+           paste(conditions.acc, collapse  = ", "))
+  }
   
   
   #----------------------------------------------------------------------------
@@ -136,28 +166,25 @@ airdas_effort.airdas_df <- function(x, method, sp.codes,
   x.oneff <- x[x.oneff.which, ]
   rownames(x.oneff) <- NULL
   
-  x.oneff$dist_from_prev <- swfscDAS::.dist_from_prev(x.oneff, dist.method)
+  x.oneff$dist_from_prev <- .dist_from_prev(x.oneff, dist.method)
   
   
   #----------------------------------------------------------------------------
   # Chop and summarize effort using specified method
-  if (method == "condition") {
-    eff.list <- airdas_chop_condition(as_airdas_df(x.oneff), ...)
-    x.eff <- eff.list[[1]]
-    segdata <- eff.list[[2]]
-    randpicks <- NULL
+  eff.list <- if (method == "condition") {
+    airdas_chop_condition(as_airdas_df(x.oneff), conditions = conditions, 
+                          num.cores = num.cores, ...)
   } else if (method == "equallength") {
-    eff.list <- airdas_chop_equal(as_airdas_df(x.oneff), ...)
-    x.eff <- eff.list[[1]]
-    segdata <- eff.list[[2]]
-    randpicks <- eff.list[[3]]
-    
+    airdas_chop_equal(as_airdas_df(x.oneff), conditions = conditions, 
+                      num.cores = num.cores, ...)
   } else if (method == "section") {
-    eff.list <- airdas_chop_section(as_airdas_df(x.oneff), ...)
-    x.eff <- eff.list[[1]]
-    segdata <- eff.list[[2]]
-    randpicks <- eff.list[[3]]
+    airdas_chop_section(as_airdas_df(x.oneff), conditions = conditions, 
+                        num.cores = num.cores, ...)
   }
+  
+  x.eff <- eff.list[[1]]
+  segdata <- eff.list[[2]]
+  randpicks <- eff.list[[3]]
   
   x.eff.names <- c(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", "Bft", 

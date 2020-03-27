@@ -7,14 +7,13 @@
 #'   This data must be filtered for 'OnEffort' events; 
 #'   see the Details section below
 #' @param ... ignored
-#' @param seg.km.min numeric; minimum allowable segment length (in kilometers).
+#' @param conditions see \code{\link{airdas_effort}}
+#' @param seg.min.km numeric; minimum allowable segment length (in kilometers).
 #'   Default is 0.1. See the Details section below for more information
 #' @param dist.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
-#' @param num.cores Number of CPUs to over which to distribute computations.
-#'   Defaults to \code{NULL} which uses one fewer than the number of cores
-#'   reported by \code{\link[parallel]{detectCores}}
+#' @param num.cores See \code{\link{airdas_effort}}
 #'   
 #' @details This function is intended to only be called by \code{\link{airdas_effort}} 
 #'   when the "condition" method is specified. 
@@ -25,7 +24,7 @@
 #'   in \code{x} into modeling segments (henceforth 'segments') by 
 #'   creating a new segment every time a condition changes. 
 #'   Each effort section runs from a T/R event to its corresponding E/O event. 
-#'   After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
+#'   After chopping, \code{\link{airdas_segdata}} is called to get relevant  
 #'   segdata information for each segment.
 #'   
 #'   Changes in the following conditions trigger a new segment:
@@ -38,9 +37,9 @@
 #'   (i.e. all of the events in the event series) that happened during 
 #'   the series of events (i.e. at the same location). 
 #'   
-#'   In addition, (almost) all segments whose length is less than \code{seg.km.min}
+#'   In addition, (almost) all segments whose length is less than \code{seg.min.km}
 #'   are combined with the segment immediately following them to ensure that the length
-#'   of (almost) all segments is at least \code{seg.km.min}. 
+#'   of (almost) all segments is at least \code{seg.min.km}. 
 #'   This allows users to account for situations where multiple conditions, 
 #'   such as Beaufort and the viewing conditions, change in rapid succession, say 0.05 km apart.
 #'   When segments are combined, a warning is thrown and the conditions are averaged together 
@@ -51,13 +50,10 @@
 #'   
 #'   Note that the above rule for 'combining' condition changes that have the same location 
 #'   into a single segment (such as a 'TVPAW' series of events) 
-#'   is followed even if \code{seg.km.min = 0}.
+#'   is followed even if \code{seg.min.km = 0}.
 #'
 #'   If the column \code{dist_from_prev} does not exist, the distance between
 #'   subsequent events is calculated as described in \code{\link{airdas_effort}}
-#'   
-#'   Outstanding question: should das_segdata_avg be used, i.e. do we need a different function 
-#'   that doesn't average conditions?
 #'   
 #' @return List of two data frames:
 #' \itemize{
@@ -83,7 +79,7 @@ airdas_chop_condition.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_condition
 #' @export
-airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1, 
+airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1, 
                                             dist.method = NULL, 
                                             num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
@@ -91,13 +87,15 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_chop_condition")
   
-  if (!inherits(seg.km.min, c("integer", "numeric")))
-    stop("When using the \"condition\" method, seg.km.min must be a numeric. ",
+  if (!inherits(seg.min.km, c("integer", "numeric")))
+    stop("When using the \"condition\" method, seg.min.km must be a numeric. ",
          "See `?airdas_chop_condition` for more details")
   
-  if (!.greater_equal(seg.km.min, 0))
-    stop("seg.km.min must be greater than or equal to 0; ", 
+  if (!.greater_equal(seg.min.km, 0))
+    stop("seg.min.km must be greater than or equal to 0; ", 
          "see `?airdas_chop_condition")
+  
+  # TODO: conditions check.?
   
   
   #----------------------------------------------------------------------------
@@ -123,16 +121,16 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
   x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
   eff.uniq <- unique(x$cont_eff_section)
   
-  cond.names <- c(
-    "Bft", "CCover", "Jelly", "HorizSun", "Haze", "Kelp", "RedTide", 
-    "AltFt", "SpKnot", "VLI", "VLO", "VB", "VRI", "VRO"
-  )
+  # cond.names <- c(
+  #   "Bft", "CCover", "Jelly", "HorizSun", "Haze", "Kelp", "RedTide", 
+  #   "AltFt", "SpKnot", "VLI", "VLO", "VB", "VRI", "VRO"
+  # )
   
   # Prep for parallel
   call.x <- x
-  call.cond.names <- cond.names
-  call.seg.km.min <- seg.km.min
-  call.func1 <- airdas_segdata_avg
+  call.conditions <- conditions
+  call.seg.min.km <- seg.min.km
+  call.func1 <- airdas_segdata
 
   # Setup number of cores
   if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
@@ -146,20 +144,20 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
     if(is.null(cl)) { # Don't parallelize if num.cores == 1
       lapply(
         eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
-        call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
+        call.conditions = call.conditions, call.seg.min.km = call.seg.min.km,
         call.func1 = call.func1
       )
       
     } else { # Run lapply using parLapplyLB
       parallel::clusterExport(
         cl = cl,
-        varlist = c("call.x", "call.cond.names", "call.seg.km.min", 
+        varlist = c("call.x", "call.conditions", "call.seg.min.km", 
                     "call.func1"),
         envir = environment()
       )
       parallel::parLapplyLB(
         cl, eff.uniq, swfscDAS::.chop_condition_eff, call.x = call.x,
-        call.cond.names = call.cond.names, call.seg.km.min = call.seg.km.min,
+        call.conditions = call.conditions, call.seg.min.km = call.seg.min.km,
         call.func1 = call.func1
       )
     }
@@ -192,5 +190,5 @@ airdas_chop_condition.airdas_df <- function(x, seg.km.min = 0.1,
   
   #----------------------------------------------------------------------------
   # Return
-  list(as_airdas_df(x.eff), segdata)
+  list(as_airdas_df(x.eff), segdata, NULL)
 }

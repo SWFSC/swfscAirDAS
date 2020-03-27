@@ -23,7 +23,7 @@
 #' @importFrom readr cols col_character read_fwf fwf_positions
 #' @importFrom rlang !! .data
 #' @importFrom stats na.omit runif
-#' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn_aggr_conditions .fn.grcirclkm .process_chr .process_num
+#' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn.grcirclkm .process_chr .process_num .segdata_aggr .segdata_proc
 #' @importFrom swfscMisc bearing destination distance setupClusters
 #' @importFrom utils head tail read.csv write.csv 
 #' 

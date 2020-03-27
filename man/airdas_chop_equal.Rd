@@ -12,6 +12,7 @@ airdas_chop_equal(x, ...)
 
 \method{airdas_chop_equal}{airdas_df}(
   x,
+  conditions,
   seg.km,
   randpicks.load = NULL,
   dist.method = NULL,
@@ -27,6 +28,8 @@ see the Details section below}
 
 \item{...}{ignored}
 
+\item{conditions}{see \code{\link{airdas_effort}}}
+
 \item{seg.km}{numeric; target segment length in kilometers}
 
 \item{randpicks.load}{character, data frame, or \code{NULL}. 
@@ -39,9 +42,7 @@ If \code{NULL}, new randpicks values will be generated}
 Default is \code{NULL} since these distances should have already been
 calculated in \code{\link{airdas_effort}}}
 
-\item{num.cores}{Number of CPUs to over which to distribute computations.
-Defaults to \code{NULL} which uses one fewer than the number of cores
-reported by \code{\link[parallel]{detectCores}}}
+\item{num.cores}{See \code{\link{airdas_effort}}}
 }
 \value{
 List of three data frames:
@@ -65,7 +66,7 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   This function chops each continuous effort section (henceforth 'effort sections') 
   in \code{x} into modeling segments (henceforth 'segments') of equal length. 
   Each effort section runs from a "T"/"R" event to its corresponding "E"/"O" event. 
-  After chopping, \code{\link{airdas_segdata_avg}} is called to get relevant  
+  After chopping, \code{\link{airdas_segdata}} is called to get relevant  
   segdata information for each segment.
 
   When chopping the effort sections in segments of length \code{seg.km}, 
