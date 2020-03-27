@@ -90,7 +90,7 @@ This is the top-level function for chopping processed AirDAS data
   \code{"condition"}, \code{"equallength"}, and \code{"section"}. 
   When using the \code{"condition"} method, effort sections are chopped 
   into segments every time a condition changes, 
-  therby ensuring that the conditions are consistent across the entire segment.
+  thereby ensuring that the conditions are consistent across the entire segment.
   See \code{\link{airdas_chop_condition}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
@@ -113,7 +113,7 @@ This is the top-level function for chopping processed AirDAS data
 
   The distance between the lat/lon points of subsequent events
   is calculated using the method specified in \code{dist.method}
-  See \code{\link{das_sight}} for how the sightings are processed.
+  See \code{\link{airdas_sight}} for how the sightings are processed.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")

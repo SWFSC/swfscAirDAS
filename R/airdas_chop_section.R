@@ -23,7 +23,7 @@
 #'   
 #'   To summarize data by transect rather than continuous effort section, 
 #'   see vignette TODO. 
-#'   In short, if looking to group by indivdual transects, use 
+#'   In short, if looking to group by individual transects, use 
 #'   \code{segdata$transect_idx <- cumsum(segdat$event == "T")} 
 #'   to create a column with a transect index. 
 #'   Then you can use \code{\link[dplyr]{group_by}(transect_idx)} and 

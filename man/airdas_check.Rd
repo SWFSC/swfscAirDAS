@@ -40,7 +40,7 @@ Checks that the following is true:
     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
   \item The effort dot matches effort determined using T, R, O, and E events
   \item There is an O event between each T event, and vice versa, i.e. 
-    the data does not sart a new transect while still on a transect and
+    the data does not start a new transect while still on a transect and
     does not end a transect when already not on a transect
   \item A T or R event does not occur while already on effort
   \item An E event does not occur while already off effort
