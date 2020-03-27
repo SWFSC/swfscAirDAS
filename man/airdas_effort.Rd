@@ -15,7 +15,7 @@ airdas_effort(x, ...)
   method,
   sp.codes,
   conditions = NULL,
-  dist.method = "greatcircle",
+  dist.method = "vincenty",
   num.cores = NULL,
   ...
 )
@@ -46,7 +46,7 @@ trigger segment chopping when they change.}
 method to use to calculate distance between lat/lon coordinates.
 Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 or one of "lawofcosines", "haversine", or "vincenty" to use
-\code{\link[swfscMisc]{distance}}. Default is "greatcircle"}
+\code{\link[swfscMisc]{distance}}. Default is "vincenty"}
 
 \item{num.cores}{Number of CPUs to over which to distribute computations.
 Defaults to \code{NULL}, which uses one fewer than the number of cores

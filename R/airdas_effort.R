@@ -20,7 +20,7 @@
 #'   method to use to calculate distance between lat/lon coordinates.
 #'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
 #'   or one of "lawofcosines", "haversine", or "vincenty" to use
-#'   \code{\link[swfscMisc]{distance}}. Default is "greatcircle"
+#'   \code{\link[swfscMisc]{distance}}. Default is "vincenty"
 #' @param num.cores Number of CPUs to over which to distribute computations.
 #'   Defaults to \code{NULL}, which uses one fewer than the number of cores
 #'   reported by \code{\link[parallel]{detectCores}}
@@ -123,7 +123,7 @@ airdas_effort.data.frame <- function(x, ...) {
 #' @name airdas_effort
 #' @export
 airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL, 
-                                    dist.method = "greatcircle", 
+                                    dist.method = "vincenty", 
                                     num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
