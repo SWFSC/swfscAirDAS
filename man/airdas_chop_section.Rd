@@ -50,8 +50,7 @@ This function is simply a wrapper for \code{\link{airdas_chop_equal}}.
   \code{segdata$transect_idx <- cumsum(segdat$event == "T")} 
   to create a column with a transect index. 
   Then you can use \code{\link[dplyr]{group_by}(transect_idx)} and 
-  \code{\link[dplyr]{summarise}}
-  to summarise the desired data by transect
+  \code{\link[dplyr]{summarise}} to summarise the desired data by transect
 }
 \examples{
 \dontrun{

@@ -15,8 +15,7 @@ airdas_segdata(x, ...)
 \arguments{
 \item{x}{\code{airdas_df} object, 
 or a data frame that can be coerced to a \code{airdas_df} object.
-Must must be filtered for 'OnEffort' events and 
-contain a single continuous effort section of AirDAS data; 
+Must contain a single continuous effort section of AirDAS data; 
 see the Details section below}
 
 \item{...}{ignored}
@@ -43,9 +42,9 @@ Data frame with the segdata information described above
 Summarize AirDAS effort data by effort segment, while averaging conditions
 }
 \details{
-This function should be called by one of the airdas_chop functions, 
-  e.g. \code{\link{airdas_chop_equal}}, meaning
-  users should work to avoid calling it themselves.
+This function was designed to be called by one of the airdas_chop_ functions, 
+  e.g. \code{\link{airdas_chop_equal}}, and thus 
+  users should avoid calling it themselves.
   It loops through the events in \code{x}, calculating and storing relevant
   information for each modeling segment as it goes. 
   Because \code{x} is a continuous effort section, it must begin with 
@@ -53,25 +52,32 @@ This function should be called by one of the airdas_chop functions,
 
   For each segment, this function reports the 
   segment ID, transect code, the start/end/midpoints (lat/lon), segment length, 
-  year, month, day, time, observers, and average conditions.
-  
+  year, month, day, time, observers, 
+  and average conditions (which are specified by \code{conditions}).
   The segment ID is designated as \code{eff_id} _ index of the modeling segment.
   Thus, if \code{section.id} is \code{1}, then the segment ID for 
   the second segment from \code{x} is \code{"1_2"}.
   
-  The average condition values are calculated as a weighted average by distance, 
-  and reported for the following:
-  Beaufort, cloud cover, altitude in feet, aircraft speed in knots, jellyfish code, 
-  and the percentage of the segment with each of haze, kelp, and red tide. 
-  For logical columns such as Haze, the reported value is the percentage 
-  (in decimals) of the segment in which that condition was \code{TRUE}.   
-  Transect number and file name are also also incldued in the segdata output;
-  these values are (should be) all consistent across the whole effort section,
-  and thus across all segments in \code{x}.
+  When \code{segdata.method} is \code{"avg"}, the condition values are
+  calculated as a weighted average by distance.
+  The reported value for logical columns (e.g. Haze) is the percentage
+  (in decimals) of the segment in which that condition was \code{TRUE}.
+  For character columns, the reported value for each segment is
+  the unique value(s) present in the segment, with \code{NA}s omitted,
+  pasted together via \code{paste(..., collapse = "; ")}.
+  When \code{segdata.method} is \code{"maxdist"}, the reported values
+  are, for each condition, the value recorded for the longest distance
+  during that segment (with \code{NA}s omitted).
+
+  Transect code, file name, and vent code that started the continuous effort section 
+  are also included in the segdata output.
+  These values (excluding \code{NA}s) must be consistent across the
+  entire effort section, and thus across all segments in \code{x};
+  a warning is printed if there are any inconsistencies.
   
-  \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}}, 
-  method = "vincenty",
-  are used to help calculate the segment start, mid, and end points.
+  \code{\link[swfscMisc]{bearing}} and \code{\link[swfscMisc]{destination}}
+  are used to calculate the segment start, mid, and end points,
+  with \code{method = "vincenty"}.
 }
 \seealso{
 airdas_segdata_max

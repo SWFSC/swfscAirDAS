@@ -5,7 +5,8 @@
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'  or a data frame that can be coerced to a \code{airdas_df} object
 #' @param method character; method to use to chop AirDAS data into effort segments
-#'   Can be "condition", "equallength", or "section" (case-sensitive) to use 
+#'   Can be \code{"condition"}, \code{"equallength"}, 
+#'   or \code{"section"} (case-sensitive) to use 
 #'   \code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
 #'   or \code{\link{airdas_chop_section}}, respectively
 #' @param sp.codes character; species code(s) to include in segdata. 
@@ -24,7 +25,8 @@
 #'   Defaults to \code{NULL}, which uses one fewer than the number of cores
 #'   reported by \code{\link[parallel]{detectCores}}
 #'   Using 1 core likely will be faster for smaller datasets
-#' @param ... arguments passed to the chopping function specified using \code{method}
+#' @param ... arguments passed to the chopping function specified using \code{method},
+#'   such as \code{seg.km} or \code{seg.min.km}
 #' 
 #' @details This is the top-level function for chopping processed AirDAS data 
 #'   into modeling segments (henceforth 'segments'), and assigning sightings 
@@ -39,33 +41,34 @@
 #'   All on effort events must not have \code{NA} Lat or Lon values; 
 #'   note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 #' 
-#'   Currently, the following chopping methods are available: 
-#'   "condition", "equallength", and "section". 
-#'   When using the "condition" method, effort sections are chopped into segments
-#'   every time a condition changes, 
+#'   The following chopping methods are currently available: 
+#'   \code{"condition"}, \code{"equallength"}, and \code{"section"}. 
+#'   When using the \code{"condition"} method, effort sections are chopped 
+#'   into segments every time a condition changes, 
 #'   therby ensuring that the conditions are consistent across the entire segment.
 #'   See \code{\link{airdas_chop_condition}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
 #'   
-#'   The "equallength" method consists of
+#'   The \code{"equallength"} method consists of
 #'   chopping effort sections into equal-length segments of length \code{seg.km}, 
 #'   and doing a weighted average of the conditions for the length of that segment. 
 #'   See \code{\link{airdas_chop_equal}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
 #'   
-#'   The "section" method involves 'chopping' the effort into continuous effort sections,
+#'   The \code{"section"} method involves 'chopping' the effort into continuous effort sections,
 #'   i.e. each continuous effort section is a single effort segment.
 #'   See \code{\link{airdas_chop_section}} for more details about this method.
 #'   
 #'   The sightings included in the segdata counts are filtered as follows: 
 #'   Beaufort is less than or equal to five, the declination angle is less than 78, 
 #'   it is a standard sighting, and the sighting was made while on effort. 
-#'   Siteinfo, which contains all sightings in \code{x} (see below), 
-#'   contains a column ('included') that indicates whether or not the sighting was
-#'   included in the segdata counts.
+#'   Included sightings are those with a \code{TRUE} value in the 'included'
+#'   column in siteinfo (described below).
+#'   TODO: Allow user to specify this.
 #' 
 #'   The distance between the lat/lon points of subsequent events
 #'   is calculated using the method specified in \code{dist.method}
+#'   See \code{\link{das_sight}} for how the sightings are processed.
 #' 
 #' @return List of three data frames: 
 #'   \itemize{
@@ -78,7 +81,8 @@
 #'       the unique segment number it is associated with, segment mid points (lat/lon), 
 #'       and whether the sighting was included in the segdata counts (column \code{included}), 
 #'       in addition to the other output information described in \code{\link{airdas_sight}}.
-#'     \item randpicks: see \code{\link{airdas_chop_equal}}
+#'     \item randpicks: see \code{\link{airdas_chop_equal}}. 
+#'       \code{NULL} if using "condition" method.
 #'   }
 #' 
 #' @examples
@@ -180,6 +184,8 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
   } else if (method == "section") {
     airdas_chop_section(as_airdas_df(x.oneff), conditions = conditions, 
                         num.cores = num.cores, ...)
+  } else {
+    stop("method is not an accepted value")
   }
   
   x.eff <- eff.list[[1]]
