@@ -36,8 +36,9 @@
 #'     (i.e. an O event must occurred more recently than a T event)
 #'   \item All Data# columns for non-C events are right-justified
 #'   \item NAs are allowed for all data values when off effort except:
-#'     altitude, speed, species , and group size
+#'     altitude, speed, species, and group size
 #'   \item The following events have NA (blank) Data# columns: *, R, E, O
+#'   \item For PHOCOENA data, all non-C events have NA (blank) Data6 and Data7 columns
 #'   \item Event/column pairs meet the following requirements:
 #' }
 #'
@@ -48,14 +49,14 @@
 #'   Speed            \tab Can be converted to a numeric value, and is not NA\cr
 #'   HKR              \tab Characters must consist of: n, h, k, r, or NA (blank). 
 #'     Not case sensitive; y is also accepted for PHOCOENA data\cr
-#'   Percent overcast \tab Must be a whole number between 0 and 100\cr
+#'   Percent overcast \tab Must be a whole number between 0 and 100 (leading zeros are ok)\cr
 #'   Beaufort         \tab Must be a whole number between 0 and 9\cr
-#'   Jellyfish        \tab Must be one of 0, 1, 2, 3, or NA (blank)\cr
-#'   Horizontal sun   \tab Must be one of 0:12, or NA (blank)\cr
-#'   Vertical sun     \tab Must be one of 0:4 or NA (blank)\cr
+#'   Jellyfish        \tab Must be one of 0, 1, 2, or 3\cr
+#'   Horizontal sun   \tab Must be one of 0:12 (leading zeros are ok)\cr
+#'   Vertical sun     \tab Must be one of 0:4 (leading zeros are ok)\cr
 #'   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
-#'   Sighting (mammal) \tab Angle must be a whole number between -90 and 90\cr
-#'   Sighting (mammal) \tab Group size must be a whole number between 1 and 5000\cr
+#'   Sighting (mammal) \tab Angle must be a whole number between -90 and 90 (leading zeros are ok)\cr
+#'   Sighting (mammal) \tab Group size must be a whole number between 1 and 5000 (leading zeros are ok)\cr
 #'   Sighting (mammal) \tab Species codes must be specified in sp.codes, and the first must not be \code{NA}\cr
 #'   Sighting (mammal) \tab Observer code must be exactly two characters, and one of the current observers 
 #'     as specified by the most recent P event\cr
@@ -66,15 +67,17 @@
 #'   Sighting info     \tab Every S code with multiple species has a 1 code immediately after it\cr
 #'   Sighting info     \tab For every 1 code with n non-NA sighting percentages, 
 #'     the event before is an S event with n non-NA species codes\cr
-#'   Resight           \tab Angle can be converted to a numeric value\cr
+#'   Resight           \tab Angle can be converted to a numeric value (leading zeros are ok)\cr
 #'   Resight           \tab Unused resight columns (Data3-7) must be NA (blank)\cr
-#'   Turtle sighting   \tab Angle must be a whole number between -90 and 90\cr
-#'   Turtle sighting   \tab Group size must be a whole number between 1 and 10 (only included in CARETTA data)\cr
+#'   Turtle sighting   \tab Angle must be a whole number between -90 and 90 (leading zeros are ok)\cr
+#'   Turtle sighting   \tab Group size must be a whole number between 1 and 10 
+#'     (only included in CARETTA data; leading zeros are ok))\cr
 #'   Turtle sighting   \tab Species code must be not \code{NA} and specified in sp.codes\cr
 #'   Turtle sighting   \tab Observer code must be exactly two characters\cr
-#'   Turtle sighting   \tab Turtle size must be a whole number between 1 and 9; 
+#'   Turtle sighting   \tab Turtle size must be a whole number between 1 and 9 (leading zeros are ok); 
 #'     one of s, m, l is also accepted for CARETTA data\cr
-#'   Turtle sighting   \tab Travel direction must be a whole number between 0 and 360 (only included in TURTLE data)\cr
+#'   Turtle sighting   \tab Travel direction must be a whole number between 0 and 360 
+#'     (only included in TURTLE data; leading zeros are ok))\cr
 #'   Turtle sighting   \tab Tail visible must be one of y, n, u, or NA (blank). Case sensitive\cr
 #'   Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
 #' }
@@ -286,10 +289,20 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   
   
   #----------------------------------------------------------------------------
+  #----------------------------------------------------------------------------
   ### Check that value type of values in Data# columns are as expected for
   ###   columns that are added in das_process
   ###   Note that for fields with specific number requirements, 
   ###   a separate check_numeric() is not necessary
+  
+  # If PHOCOENA data, nothing in Data6-7 columns for all but C events
+  txt.na.phoc <- paste("For PHOCOENA data, Data6 and Data7 columns should be NA", 
+                       "for all but C events")
+  idx.na.phoc <- if (file.type == "phocoena") {
+    .check_isna(x.proc, event.acc[!(event.acc %in% "C")], paste0("Data", 6:7))
+  } else {
+    integer(0)
+  }
   
   # "*", R, E, and O events have no data
   idx.na <- .check_isna(x.proc, c("*", "R", "E", "O"), paste0("Data", 1:7))
@@ -326,7 +339,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   rm(x.tmp, patt)
   
   # Percent overcast; no check_numeric() needed
-  cc.num <- c(as.character(0:100), sprintf("%02d", 0:100))
+  cc.num <- c(as.character(0:100), sprintf("%02d", 0:100), sprintf("%03d", 0:100))
   idx.cc <- .check_character(x.proc, "W", "Data2", cc.num, 2)
   txt.cc <- "Percent overcast (Data2 of W events) must be a whole number between 0 and 100"
   rm(cc.num)
@@ -376,7 +389,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   # Add text to error.out as needed and return
   error.out <- rbind(
     error.out,
-    .check_list(x, x.lines, idx.na, txt.na),
+    .check_list(x, x.lines, idx.na.phoc, txt.na.phoc),
     .check_list(x, x.lines, idx.view, txt.view),
     .check_list(x, x.lines, idx.alt, txt.alt),
     .check_list(x, x.lines, idx.spd, txt.spd),
@@ -408,7 +421,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   data.s.gs <- paste0(
     "Data", switch(file.type, caretta = 4, phocoena = 3, turtle = 4)
   )
-  gs.acc <- c(1:5000, sprintf("%02d", 1:5000))
+  gs.acc <- c(1:5000, sprintf("%02d", 1:9), sprintf("%03d", 1:99))
   idx.s.gs <- .check_character(x.proc, "S", data.s.gs, gs.acc, 1)
   txt.s.gs <- "Group size must be a whole number between 1 and 5000"
   
@@ -577,7 +590,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     
     # Group size
     idx.t.gs <- if (file.type == "caretta") { #TURTLE doesn't have group size field
-      .check_character(x.proc, "t", "Data4", 1:10, 1)
+      .check_character(x.proc, "t", "Data4", c(1:10, sprintf("%02d", 1:9)), 1)
     } else { #Must be TURTLE
       integer(0)
     }
@@ -595,7 +608,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     
     # Turtle size
     data.t.size <- switch(file.type, caretta = 6, turtle = 4)
-    acc.size <- 1:9
+    acc.size <- c(1:9, sprintf("%02d", 1:9))
     
     if (file.type == "caretta") {
       acc.size <- c(acc.size, "s", "m", "l")
@@ -610,7 +623,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     
     # Travel direction
     idx.t.dir <- if (file.type == "turtle") {
-      .check_character(x.proc, "t", paste0("Data", 5), 0:360, 2)
+      acc.dir <- c(0:360, sprintf("%02d", 0:9), sprintf("%03d", 0:99))
+      .check_character(x.proc, "t", paste0("Data", 5), acc.dir, 2)
     } else {
       integer(0)
     }
