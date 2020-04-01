@@ -9,14 +9,14 @@
 #' @param skip integer: see \code{\link[readr]{read_fwf}}. Default is 0. 
 #'   Passed to \code{\link{airdas_read}}
 #' @param file.out character; filename to which to write the error log. 
-#'   Default is \code{NULL}
+#'   Should be a text or CSV file. Default is \code{NULL}
 #' @param sp.codes character; filename of .dat file from which to read 
 #'   accepted species codes. 
 #'   If \code{NULL}, default (internal) file will be used. 
 #'   Default is \code{NULL}
 #' @param print.transect logical; indicates if a table with all the 
-#'   transect numbers in the \code{x} should be printed. 
-#'   Default is \code{TRUE}
+#'   transect numbers in the \code{x} should be printed using
+#'   \code{\link[base]{table}}. Default is \code{TRUE}
 #'
 #' @details
 #' The default (internal) \code{sp.codes} file is located at 
@@ -92,8 +92,14 @@
 #' This data frame is sorted by the 'Description' column. 
 #' If there are multiple issues with the same line, the issue descriptions
 #' are concatenated together using \code{paste(..., collapse = "; ")}
+#' 
+#' If \code{print.transect} is \code{TRUE}, then the output of 
+#' \code{table(x$Data1[x$Event == "T"], useNA = "always")}, 
+#' where \code{x} is the output of \code{airdas_read(file, ...)} 
+#' is printed
+#' 
 #' If \code{file.out} is not \code{NULL}, then the error log is also
-#' written to a text/csv file
+#' written to the file (e.g., a .txt or .csv file) specified by \code{file.out}
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -275,7 +281,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   ### Print transect codes
   if (print.transect) {
     cat("Transects:", collapse = "")
-    print(table(x$Data1[x$Event == "T"]))
+    print(table(x$Data1[x$Event == "T"], useNA = "always"))
   }
   
   
@@ -662,12 +668,3 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   
   to.return
 }
-
-
-
-# Function to remove multiple characters from the same string
-.gsub_multi <- function(pattern, replacement, x) {
-  for (i in pattern) x <- gsub(i, replacement, x)
-  x
-}
-

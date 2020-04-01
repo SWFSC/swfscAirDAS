@@ -32,6 +32,13 @@
 ###############################################################################
 # Helper functions for airdas_check
 
+# Remove multiple characters from the same string
+.gsub_multi <- function(pattern, replacement, x) {
+  for (i in pattern) x <- gsub(i, replacement, x)
+  x
+}
+
+
 # Check that specified values can be convereted to a numeric
 .check_numeric <- function(z, event.code, z.col) {
   # z: airdas_df object

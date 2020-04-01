@@ -24,7 +24,7 @@ Default is "turtle". Passed to \code{\link{airdas_read}}}
 Passed to \code{\link{airdas_read}}}
 
 \item{file.out}{character; filename to which to write the error log. 
-Default is \code{NULL}}
+Should be a text or CSV file. Default is \code{NULL}}
 
 \item{sp.codes}{character; filename of .dat file from which to read 
 accepted species codes. 
@@ -32,8 +32,8 @@ If \code{NULL}, default (internal) file will be used.
 Default is \code{NULL}}
 
 \item{print.transect}{logical; indicates if a table with all the 
-transect numbers in the \code{x} should be printed. 
-Default is \code{TRUE}}
+transect numbers in the \code{x} should be printed using
+\code{\link[base]{table}}. Default is \code{TRUE}}
 }
 \value{
 A data frame with five columns that list information about errors found 
@@ -43,8 +43,14 @@ index (row number) from the \code{airdas_read(file)} data frame,
 This data frame is sorted by the 'Description' column. 
 If there are multiple issues with the same line, the issue descriptions
 are concatenated together using \code{paste(..., collapse = "; ")}
+
+If \code{print.transect} is \code{TRUE}, then the output of 
+\code{table(x$Data1[x$Event == "T"], useNA = "always")}, 
+where \code{x} is the output of \code{airdas_read(file, ...)} 
+is printed
+
 If \code{file.out} is not \code{NULL}, then the error log is also
-written to a text/csv file
+written to the file (e.g., a .txt or .csv file) specified by \code{file.out}
 }
 \description{
 Check that AirDAS file has accepted formatting and values
