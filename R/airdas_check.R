@@ -8,13 +8,21 @@
 #'   Default is "turtle". Passed to \code{\link{airdas_read}}
 #' @param skip integer: see \code{\link[readr]{read_fwf}}. Default is 0. 
 #'   Passed to \code{\link{airdas_read}}
-#' @param file.out filename to which to write the error log; 
-#'   default is \code{NULL}
+#' @param file.out character; filename to which to write the error log. 
+#'   Default is \code{NULL}
+#' @param sp.codes character; filename of .dat file from which to read 
+#'   accepted species codes. 
+#'   If \code{NULL}, default (internal) file will be used. 
+#'   Default is \code{NULL}
 #' @param print.transect logical; indicates if a table with all the 
-#'   transect numbers in the \code{x} should be printed
+#'   transect numbers in the \code{x} should be printed. 
+#'   Default is \code{TRUE}
 #'
 #' @details
-#' Checks that the following is true:
+#' The default (internal) \code{sp.codes} file is located at 
+#' \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
+#' 
+#' This function checks that the following is true:
 #' \itemize{
 #'   \item Event codes are one of the following: 
 #'     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
@@ -48,7 +56,7 @@
 #'   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
 #'   Sighting (mammal) \tab Angle must be a whole number between -90 and 90\cr
 #'   Sighting (mammal) \tab Group size must be a whole number between 1 and 5000\cr
-#'   Sighting (mammal) \tab Species code(s) must be exactly two characters\cr
+#'   Sighting (mammal) \tab Species codes must be specified in sp.codes, and the first must not be \code{NA}\cr
 #'   Sighting (mammal) \tab Observer code must be exactly two characters, and one of the current observers 
 #'     as specified by the most recent P event\cr
 #'   Sighting (mammal) \tab Angle must be negative if sighting made by left observer, 
@@ -62,7 +70,7 @@
 #'   Resight           \tab Unused resight columns (Data3-7) must be NA (blank)\cr
 #'   Turtle sighting   \tab Angle must be a whole number between -90 and 90\cr
 #'   Turtle sighting   \tab Group size must be a whole number between 1 and 10 (only included in CARETTA data)\cr
-#'   Turtle sighting   \tab Species code must be exactly two characters, and one of dc, cc, lo, cm, uh, ut, or lv\cr
+#'   Turtle sighting   \tab Species code must be not \code{NA} and specified in sp.codes\cr
 #'   Turtle sighting   \tab Observer code must be exactly two characters\cr
 #'   Turtle sighting   \tab Turtle size must be a whole number between 1 and 9; 
 #'     one of s, m, l is also accepted for CARETTA data\cr
@@ -74,8 +82,6 @@
 #' Outstanding questions/todo:
 #' \itemize{
 #'   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
-#'   \item Do checks for transect number?
-#'   \item todo: some way to load spcodes.dat to check species codes?
 #' }
 #'
 #' @return 
@@ -95,9 +101,9 @@
 #'
 #' @export
 airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL, 
-                         print.transect = TRUE) {
+                         sp.codes = NULL, print.transect = TRUE) {
   #----------------------------------------------------------------------------
-  ### Prep
+  ### Read and process file
   error.out <- data.frame(
     File = NA, LineNum = NA, Idx = NA, ID = NA, Description = NA,
     stringsAsFactors = FALSE
@@ -118,6 +124,27 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   if (skip > 0) x.lines <- x.lines[-c(1:skip)]
   
   stopifnot(nrow(x) == length(x.lines))
+  
+  
+  #----------------------------------------------------------------------------
+  ### Process sp.codes file
+  if (is.null(sp.codes)) 
+    sp.codes <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
+  
+  sp.acc.df <- read_fwf(
+    sp.codes, 
+    col_positions = fwf_positions(start = c(1, 10, 43), end = c(6, 42, NA)),
+    col_types = cols(.default = col_character()),
+    trim_ws = TRUE, skip = 3, skip_empty_rows = FALSE
+  )
+  
+  sp.acc <- sp.acc.df[[1]]
+  sp.acc.all <- c(sp.acc, toupper(sp.acc))
+  
+  if (!all(nchar(sp.acc) == 2))
+    warning("Some species codes from sp.codes are not two charcters. ", 
+            "Did you load the correct species code .dat file?", 
+            immediate. = TRUE)
   
   
   #----------------------------------------------------------------------------
@@ -247,7 +274,7 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   #----------------------------------------------------------------------------
   ### Print transect codes
   if (print.transect) {
-    print("Transects:")
+    cat("Transects:", collapse = "")
     print(table(x$Data1[x$Event == "T"]))
   }
   
@@ -265,19 +292,19 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   
   # Viewing conditions
   patt <- c("e", "g", "o", "p")
-  idx.V <- .check_character(x.proc, "V", paste0("Data", 1:5), c(patt, toupper(patt)), 2)
-  txt.V <- "Viewing conditions (Data1-5 of V events) must be one of: e, g, p, or o"
+  idx.view <- .check_character(x.proc, "V", paste0("Data", 1:5), c(patt, toupper(patt)), 2)
+  txt.view <- "Viewing conditions (Data1-5 of V events) must be one of: e, g, p, or o"
   rm(patt)
   
   # Altitude and altitude
-  idx.A.1 <- .check_numeric(x.proc, "A", "Data1")
-  txt.A.1 <- "Altitude (Data1 of A events) cannot be converted to a numeric"
+  idx.alt <- .check_numeric(x.proc, "A", "Data1")
+  txt.alt <- "Altitude (Data1 of A events) cannot be converted to a numeric"
   
-  idx.A.2 <- .check_numeric(x.proc, "A", "Data2")
-  txt.A.2 <- "Speed (Data2 of A events) cannot be converted to a numeric"
+  idx.spd <- .check_numeric(x.proc, "A", "Data2")
+  txt.spd <- "Speed (Data2 of A events) cannot be converted to a numeric"
   
-  idx.A.nona <- .check_nona(x.proc, "A", c("Data1", "Data2"))
-  txt.A.nona <- "Altitude and speed (Data1-2 of A events) must not be NA"
+  idx.altspd.nona <- .check_nona(x.proc, "A", c("Data1", "Data2"))
+  txt.altspd.nona <- "Altitude and speed (Data1-2 of A events) must not be NA"
   
   # HKR
   patt <- c("h", "k", "r", "n")
@@ -322,14 +349,14 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   txt.vsun <- paste("Vertical sun (Data5 of W events) must be one of", 
                     paste(c(0:4, NA), collapse = ", "))
   idx.vsun <- if (file.type == "phocoena") {
-    .check_character(x.proc, "W", "Data5", c(0:4, sprintf("%02d", 0:4)), TRUE)
+    .check_character(x.proc, "W", "Data5", c(0:4, sprintf("%02d", 0:4)), 2)
   } else {
     integer(0)
   }
   
   # Observers
-  idx.P <- .check_character_length(x.proc, "P", c("Data1", "Data2", "Data3", "Data4"), 2, 3)
-  txt.P <- "Observer entries (Data1-4 of P events) must be exactly two characters"
+  idx.obs <- .check_character_length(x.proc, "P", c("Data1", "Data2", "Data3", "Data4"), 2, 3)
+  txt.obs <- "Observer entries (Data1-4 of P events) must be exactly two characters"
   
   x.p <- x %>% filter(.data$Event == "P")
   x.p.data <- select(x.p, .data$Data1, .data$Data2, .data$Data3, .data$Data4)
@@ -344,17 +371,17 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   error.out <- rbind(
     error.out,
     .check_list(x, x.lines, idx.na, txt.na),
-    .check_list(x, x.lines, idx.V, txt.V),
-    .check_list(x, x.lines, idx.A.1, txt.A.1),
-    .check_list(x, x.lines, idx.A.2, txt.A.2),
-    .check_list(x, x.lines, idx.A.nona, txt.A.nona),
+    .check_list(x, x.lines, idx.view, txt.view),
+    .check_list(x, x.lines, idx.alt, txt.alt),
+    .check_list(x, x.lines, idx.spd, txt.spd),
+    .check_list(x, x.lines, idx.altspd.nona, txt.altspd.nona),
     .check_list(x, x.lines, idx.hkr, txt.hkr),
     .check_list(x, x.lines, idx.cc, txt.cc),
     .check_list(x, x.lines, idx.bft, txt.bft),
     .check_list(x, x.lines, idx.jelly, txt.jelly),
     .check_list(x, x.lines, idx.hsun, txt.hsun),
     .check_list(x, x.lines, idx.vsun, txt.vsun),
-    .check_list(x, x.lines, idx.P, txt.P), 
+    .check_list(x, x.lines, idx.obs, txt.obs), 
     .check_list(x, x.lines, idx.obs.dup, txt.obs.dup)
   )
   
@@ -368,37 +395,39 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     "Data", switch(file.type, caretta = 3, phocoena = 4, turtle = 3)
   )
   ang.acc <- c(-90:90, sprintf("%03d", -9:-1), sprintf("%02d", 0:9))
-  idx.S.ang <- .check_character(x.proc, "S", data.s.ang, ang.acc, 2)
-  txt.S.ang <- "Angle must be a whole number between -90 and 90"
+  idx.s.ang <- .check_character(x.proc, "S", data.s.ang, ang.acc, 2)
+  txt.s.ang <- "Angle must be a whole number between -90 and 90"
   
   # Group size
   data.s.gs <- paste0(
     "Data", switch(file.type, caretta = 4, phocoena = 3, turtle = 4)
   )
   gs.acc <- c(1:5000, sprintf("%02d", 1:5000))
-  idx.S.gs <- .check_character(x.proc, "S", data.s.gs, gs.acc, 1)
-  txt.S.gs <- "Group size must be a whole number between 1 and 5000"
+  idx.s.gs <- .check_character(x.proc, "S", data.s.gs, gs.acc, 1)
+  txt.s.gs <- "Group size must be a whole number between 1 and 5000"
   
-  # Species code(s)
-  # TODO - use SpCodesAirDAS.dat
-  data.s.sp <- paste0(
-    "Data", switch(file.type, caretta = 5:7, phocoena = 2, turtle = 5:7)
-  )
-  idx.S.sp <- .check_character_length(x.proc, "S", data.s.sp, 2, 3)
-  txt.S.sp <- "Species code(s) must be exactly two characters"
+  # Species codes
+  data.s.sp1 <- paste0("Data", switch(file.type, caretta = 5, phocoena = 2, turtle = 5))
+  data.s.sp <- paste0("Data", switch(file.type, caretta = 5:7, phocoena = 2, turtle = 5:7))
+  
+  idx.s.sp1 <- x$idx[is.na(x[[data.s.sp1]]) & x$Event == "S"]
+  txt.s.sp1 <- "The first species entry for an S event must not be NA"
+  
+  idx.s.sp <- .check_character(x.proc, "S", data.s.sp, sp.acc.all, 3)
+  txt.s.sp <- "Species codes that are not NA must be specified in sp.codes"
   
   # Observer
   data.s.obs <- paste0(
     "Data", switch(file.type, caretta = 2, phocoena = 5, turtle = 2)
   )
-  idx.S.obs <- .check_character_length(x.proc, "S", data.s.obs, 2, 2)
-  txt.S.obs <- "Sighting observer code must be exactly two characters"
+  idx.s.obs <- .check_character_length(x.proc, "S", data.s.obs, 2, 2)
+  txt.s.obs <- "Sighting observer code must be exactly two characters"
   
   # Sighting observer code is one of currently listed observers (what about "ZZ"??)
   #   Only checks sighting observers w/exactly 2 characters
   obs.code <- x.proc %>% 
     filter(.data$Event == "S", 
-           !(.data$idx %in% idx.S.obs)) %>% 
+           !(.data$idx %in% idx.s.obs)) %>% 
     select(.data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, 
            obs_curr = !!data.s.obs, .data$idx, angle_curr = !!data.s.ang) %>% 
     mutate(s_obs_code = case_when(.data$obs_curr == .data$ObsL ~ 1, 
@@ -406,8 +435,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
                                   .data$obs_curr == .data$ObsR ~ 3, 
                                   .data$obs_curr == .data$Rec ~ 4))
   
-  idx.S.obs.code <- obs.code$idx[is.na(obs.code$s_obs_code)]
-  txt.S.obs.code <- paste(
+  idx.s.obs.code <- obs.code$idx[is.na(obs.code$s_obs_code)]
+  txt.s.obs.code <- paste(
     "Sighting observer codes with two characters must be one of", 
     "the current observers, as specified by the most recent P event"
   )
@@ -416,15 +445,15 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   #   and positive if right observer. 
   #   Only checks for idx w/out previous angle/obs issue, and for non-NA angles
   ang.lr <- obs.code %>% 
-    filter(!(.data$idx %in% c(idx.S.obs.code, idx.S.ang)), 
+    filter(!(.data$idx %in% c(idx.s.obs.code, idx.s.ang)), 
            !is.na(.data$angle_curr)) %>% 
     mutate(angle_curr = as.numeric(.data$angle_curr), 
            angle_issue1 = .data$angle_curr > 0 & .data$s_obs_code == 1, 
            angle_issue2 = .data$angle_curr < 0 & .data$s_obs_code == 3, 
            angle_issue = .data$angle_issue1 | .data$angle_issue2)
   
-  idx.S.anglr <- ang.lr$idx[ang.lr$angle_issue]
-  txt.S.anglr <- paste(
+  idx.s.anglr <- ang.lr$idx[ang.lr$angle_issue]
+  txt.s.anglr <- paste(
     "Sighting angle is positive with right observer sighting,", 
     "or negative with left observer sighting"
   )
@@ -435,12 +464,13 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   #--------------------------------------------------------
   error.out <- rbind(
     error.out,
-    .check_list(x, x.lines, idx.S.ang, txt.S.ang),
-    .check_list(x, x.lines, idx.S.gs, txt.S.gs),
-    .check_list(x, x.lines, idx.S.sp, txt.S.sp), 
-    .check_list(x, x.lines, idx.S.obs, txt.S.obs), 
-    .check_list(x, x.lines, idx.S.obs.code, txt.S.obs.code), 
-    .check_list(x, x.lines, idx.S.anglr, txt.S.anglr)
+    .check_list(x, x.lines, idx.s.ang, txt.s.ang),
+    .check_list(x, x.lines, idx.s.gs, txt.s.gs),
+    .check_list(x, x.lines, idx.s.sp1, txt.s.sp1), 
+    .check_list(x, x.lines, idx.s.sp, txt.s.sp), 
+    .check_list(x, x.lines, idx.s.obs, txt.s.obs), 
+    .check_list(x, x.lines, idx.s.obs.code, txt.s.obs.code), 
+    .check_list(x, x.lines, idx.s.anglr, txt.s.anglr)
   )
   
   
@@ -505,11 +535,11 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     
     #------------------------------------------------------
     ### Resights (s)
-    idx.s.ang <- .check_character(x.proc, "s", "Data2", ang.acc, 2)
-    txt.s.ang <- "Angle must be a whole number between -90 and 90"
+    idx.sre.ang <- .check_character(x.proc, "s", "Data2", ang.acc, 2)
+    txt.sre.ang <- "Angle must be a whole number between -90 and 90"
     
-    idx.s.na <- .check_isna(x, "s", paste0("Data", 3:7))
-    txt.s.na <- "Data3-7 column(s) for s events must be NA (blank)"
+    idx.sre.na <- .check_isna(x, "s", paste0("Data", 3:7))
+    txt.sre.na <- "Data3-7 column(s) for s events must be NA (blank)"
     
     
     #------------------------------------------------------
@@ -522,8 +552,8 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
       .check_list(x, x.lines, idx.1.na2, txt.1.na2),
       .check_list(x, x.lines, idx.mult.s, txt.mult.s),
       .check_list(x, x.lines, idx.mult.1, txt.mult.1),
-      .check_list(x, x.lines, idx.s.ang, txt.s.ang),
-      .check_list(x, x.lines, idx.s.na, txt.s.na)
+      .check_list(x, x.lines, idx.sre.ang, txt.sre.ang),
+      .check_list(x, x.lines, idx.sre.na, txt.sre.na)
     )
     
     rm(x.s, x.1)
@@ -540,21 +570,17 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
     txt.t.ang <- "Turtle angle must be a whole number between -90 and 90"
     
     # Group size
-    
     idx.t.gs <- if (file.type == "caretta") { #TURTLE doesn't have group size field
-      .check_character(x, "t", "Data4", 1:10, 1)
+      .check_character(x.proc, "t", "Data4", 1:10, 1)
     } else { #Must be TURTLE
       integer(0)
     }
     txt.t.gs <- "Turtle group size must be a whole number between 1 and 10"
     
-    # Species code(s)
-    # TODO - use SpCodesAirDAS.dat
-    data.t.sp <- switch(file.type, caretta = 5, turtle = 3)
-    t.codes <- tolower(c("DC","CC","LO","CM","UH","UT", "LV"))
-    idx.t.sp <- .check_character(x.proc, "t", paste0("Data", data.t.sp), t.codes, 1)
-    txt.t.sp <- paste("Turtle species codes must be one of:", 
-                      paste(t.codes, collapse = ", "))
+    # Turtle species code
+    data.t.sp <- paste0("Data", switch(file.type, caretta = 5, turtle = 3))
+    idx.t.sp <- .check_character(x.proc, "t", data.t.sp, sp.acc.all, 1)
+    txt.t.sp <- "Turtle species codes must not be NA and be specified in sp.codes"
     
     # Observer
     data.t.obs <- switch(file.type, caretta = 2, turtle = 1)

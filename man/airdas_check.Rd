@@ -9,6 +9,7 @@ airdas_check(
   file.type = "turtle",
   skip = 0,
   file.out = NULL,
+  sp.codes = NULL,
   print.transect = TRUE
 )
 }
@@ -22,11 +23,17 @@ Default is "turtle". Passed to \code{\link{airdas_read}}}
 \item{skip}{integer: see \code{\link[readr]{read_fwf}}. Default is 0. 
 Passed to \code{\link{airdas_read}}}
 
-\item{file.out}{filename to which to write the error log; 
-default is \code{NULL}}
+\item{file.out}{character; filename to which to write the error log. 
+Default is \code{NULL}}
+
+\item{sp.codes}{character; filename of .dat file from which to read 
+accepted species codes. 
+If \code{NULL}, default (internal) file will be used. 
+Default is \code{NULL}}
 
 \item{print.transect}{logical; indicates if a table with all the 
-transect numbers in the \code{x} should be printed}
+transect numbers in the \code{x} should be printed. 
+Default is \code{TRUE}}
 }
 \value{
 A data frame with five columns that list information about errors found 
@@ -43,7 +50,10 @@ written to a text/csv file
 Check that AirDAS file has accepted formatting and values
 }
 \details{
-Checks that the following is true:
+The default (internal) \code{sp.codes} file is located at 
+\code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
+
+This function checks that the following is true:
 \itemize{
   \item Event codes are one of the following: 
     #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
@@ -77,7 +87,7 @@ Checks that the following is true:
   Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
   Sighting (mammal) \tab Angle must be a whole number between -90 and 90\cr
   Sighting (mammal) \tab Group size must be a whole number between 1 and 5000\cr
-  Sighting (mammal) \tab Species code(s) must be exactly two characters\cr
+  Sighting (mammal) \tab Species codes must be specified in sp.codes, and the first must not be \code{NA}\cr
   Sighting (mammal) \tab Observer code must be exactly two characters, and one of the current observers 
     as specified by the most recent P event\cr
   Sighting (mammal) \tab Angle must be negative if sighting made by left observer, 
@@ -91,7 +101,7 @@ Checks that the following is true:
   Resight           \tab Unused resight columns (Data3-7) must be NA (blank)\cr
   Turtle sighting   \tab Angle must be a whole number between -90 and 90\cr
   Turtle sighting   \tab Group size must be a whole number between 1 and 10 (only included in CARETTA data)\cr
-  Turtle sighting   \tab Species code must be exactly two characters, and one of dc, cc, lo, cm, uh, ut, or lv\cr
+  Turtle sighting   \tab Species code must be not \code{NA} and specified in sp.codes\cr
   Turtle sighting   \tab Observer code must be exactly two characters\cr
   Turtle sighting   \tab Turtle size must be a whole number between 1 and 9; 
     one of s, m, l is also accepted for CARETTA data\cr
@@ -103,8 +113,6 @@ Checks that the following is true:
 Outstanding questions/todo:
 \itemize{
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
-  \item Do checks for transect number?
-  \item todo: some way to load spcodes.dat to check species codes?
 }
 }
 \examples{
