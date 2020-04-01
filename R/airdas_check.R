@@ -10,6 +10,8 @@
 #'   Passed to \code{\link{airdas_read}}
 #' @param file.out filename to which to write the error log; 
 #'   default is \code{NULL}
+#' @param print.transect logical; indicates if a table with all the 
+#'   transect numbers in the \code{x} should be printed
 #'
 #' @details
 #' Checks that the following is true:
@@ -92,7 +94,10 @@
 #' airdas_check(y)
 #'
 #' @export
-airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) {
+airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL, 
+                         print.transect = TRUE) {
+  #----------------------------------------------------------------------------
+  ### Prep
   error.out <- data.frame(
     File = NA, LineNum = NA, Idx = NA, ID = NA, Description = NA,
     stringsAsFactors = FALSE
@@ -237,6 +242,14 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL) 
   )
   
   rm(event.tofilt, x.filt, call.read, x.tmp.filt.data, x.tmp.which)
+  
+  
+  #----------------------------------------------------------------------------
+  ### Print transect codes
+  if (print.transect) {
+    print("Transects:")
+    print(table(x$Data1[x$Event == "T"]))
+  }
   
   
   #----------------------------------------------------------------------------

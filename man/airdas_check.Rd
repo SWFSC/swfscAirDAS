@@ -4,7 +4,13 @@
 \alias{airdas_check}
 \title{Check AirDAS file}
 \usage{
-airdas_check(file, file.type = "turtle", skip = 0, file.out = NULL)
+airdas_check(
+  file,
+  file.type = "turtle",
+  skip = 0,
+  file.out = NULL,
+  print.transect = TRUE
+)
 }
 \arguments{
 \item{file}{filename(s) of one or more AirDAS files}
@@ -18,6 +24,9 @@ Passed to \code{\link{airdas_read}}}
 
 \item{file.out}{filename to which to write the error log; 
 default is \code{NULL}}
+
+\item{print.transect}{logical; indicates if a table with all the 
+transect numbers in the \code{x} should be printed}
 }
 \value{
 A data frame with five columns that list information about errors found 
