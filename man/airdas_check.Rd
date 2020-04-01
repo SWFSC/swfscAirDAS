@@ -47,6 +47,8 @@ Checks that the following is true:
   \item When the file ends, the data must be off effort and not still on a transect 
     (i.e. an O event must occurred more recently than a T event)
   \item All Data# columns for non-C events are right-justified
+  \item NAs are allowed for all data values when off effort except:
+    altitude, speed, species , and group size
   \item The following events have NA (blank) Data# columns: *, R, E, O
   \item Event/column pairs meet the following requirements:
 }
@@ -91,12 +93,8 @@ Checks that the following is true:
 
 Outstanding questions/todo:
 \itemize{
-  \item For which conditions should NA not be allowed?
-  \item For which sighting data bits should NAs not be allowed (e.g. Obs, angle, sp, Gs)?
-    Does this depend on on/off effort?
   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
   \item Do checks for transect number?
-  \item Should description items be grouped together by line number?
   \item todo: some way to load spcodes.dat to check species codes?
 }
 }
