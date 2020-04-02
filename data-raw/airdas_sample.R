@@ -88,16 +88,26 @@ x.out <- x %>%
           .after = c.idx.after) %>% 
   add_row(Event = "t", EffortDot = TRUE, DateTime = x$DateTime[t.idx.after],
           Lat = x$Lat[t.idx.after], Lon = x$Lon[t.idx.after], Data1 = "aa", 
-          Data2 = -20, Data3 = "dc", Data4 = 5, Data5 = 90, Data6 = "n", 
+          Data2 = "-20", Data3 = "dc", Data4 = "5", Data5 = "90", Data6 = "n", 
           .after = t.idx.after) %>% 
-  add_row(Event = 1, EffortDot = FALSE, Data5 = 80, Data6 = 20, 
+  add_row(Event = "1", EffortDot = FALSE, Data5 = "80", Data6 = "20", 
           .after = 13) %>% #2nd for indices
   add_row(Event = "s", EffortDot = TRUE, DateTime = x$DateTime[s.idx.after],
           Lat = x$Lat[s.idx.after], Lon = x$Lon[s.idx.after], Data1 = "25", 
-          Data2 = -70) %>% 
+          Data2 = "-70") %>% 
   add_row(Event = "O", EffortDot = FALSE, DateTime = tail(x$DateTime, 1) + seconds(30), 
           Lat = tail(x$Lat, 1), Lon = tail(x$Lon, 1) + 0.02) %>% 
-  mutate(EventNum = c(1:13, NA, 14:83))
+  add_row(Event = "C", EffortDot = FALSE, DateTime = x$DateTime[1], 
+          Lat = x$Lat[1], Lon = x$Lon[1], 
+          Data1 = " Not ", Data2 = "recor", Data3 = "ding ", Data4 = "molas", 
+          .before = 1) %>% 
+  add_row(Event = "C", EffortDot = FALSE, DateTime = x$DateTime[1], 
+          Lat = x$Lat[1], Lon = x$Lon[1], 
+          Data1 = " Reco", Data2 = "rder:", Data3 = " dd", 
+          .before = 1) %>% 
+  mutate(file_type = "turtle", 
+         EventNum = append(head(seq_along(.data$Event), -1), NA, 
+                           after = (which(.data$Event == 1) - 1)))
 
 
 
