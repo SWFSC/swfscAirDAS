@@ -67,8 +67,8 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   do.call(
     rbind, 
     lapply(file, function(i) {
-      x <- call.read(i, skip = skip, tz = tz, file.type = file.type)
-      .airdas_read_general(i, x, skip)
+      x <- call.read(file = i, skip = skip, tz = tz)
+      .airdas_read_general(file = i, x = x, file.type = file.type, skip = skip)
     })
   )
 }
@@ -90,19 +90,16 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
     trim_ws = FALSE, skip = skip, skip_empty_rows = FALSE
   )) 
   
-  names(x) <- c("Event", "EventNum", "Date", "Time",
-                "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", "Alt", 
-                "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7")
+  names(x) <- c(
+    "Event", "EventNum", "Date", "Time",
+    "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", "Alt", 
+    "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7"
+  )
   
-  # Process dt/lat/lon data, and send to .airdas_general() for final processing
+  # Process specifics
   x$DateTime <- strptime(paste(x$Date, x$Time), "%m/%d/%y %H:%M:%S", tz = tz)
-  x$Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
-  x$Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
-  
   x$EffortDot <- NA
-  x$file_type <- "phocoena"
   
-  # .airdas_read_general(file, x, skip)
   x
 }
 
@@ -116,7 +113,7 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
 
 #------------------------------------------------------------------------------
 # Read data from the CARETTA or TURTLE* program
-.airdas_read_turtle <- function(file, skip, tz, file.type, ...) {
+.airdas_read_turtle <- function(file, skip, tz, ...) {
   # Start and end (inclusive) column indices
   fwf.start <- c(1,4,5, 06,13, 20,21,24, 30,31,35, 40,45,50,55,60,65,70)
   fwf.end   <- c(3,4,5, 11,18, 20,22,28, 30,33,39, 44,49,54,59,64,69,NA)
@@ -129,27 +126,41 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
     trim_ws = FALSE, skip = skip, skip_empty_rows = FALSE
   )) 
   
-  names(x) <- c("EventNum", "Event", "EffortDot", "Time", "Date",
-                "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", 
-                "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7")
+  names(x) <- c(
+    "EventNum", "Event", "EffortDot", "Time", "Date",
+    "Lat1", "Lat2", "Lat3", "Lon1", "Lon2", "Lon3", 
+    "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7"
+  )
   
-  # Process dt/lat/lon data, and send to .airdas_general() for final processing
+  # Process specifics
   x$DateTime <- strptime(paste(x$Date, x$Time), "%m%d%y %H%M%S", tz = tz)
-  x$Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
-  x$Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
-  
   x$EffortDot <- ifelse(is.na(x$EffortDot), FALSE, TRUE)
-  x$file_type <- file.type
   
-  # .airdas_read_general(file, x, skip)
   x
 }
 
 
 #------------------------------------------------------------------------------
 # Portion of internal read function consistent across read methods
-.airdas_read_general <- function(file, x, skip) {
-  #x: data frame from method-specific airdas_read function
+.airdas_read_general <- function(file, x, file.type, skip) {
+  # x: data frame from method-specific airdas_read function
+  # Note: do not need to do NA checks for Lat/Lon/DateTime because NA values
+  #   are not allowed in these columns for an airdas_df object
+  
+  # Process 1
+  x$Lat <- ifelse(x$Lat1 == "N", 1, -1) * (as.numeric(x$Lat2) + as.numeric(x$Lat3)/60)
+  x$Lon <- ifelse(x$Lon1 == "E", 1, -1) * (as.numeric(x$Lon2) + as.numeric(x$Lon3)/60)
+  
+  # Check for if lines should be skipped
+  if (sum(c((is.na(x$Event[1]) | x$Event[1] == "C"), 
+            is.na(x$DateTime[1]), 
+            is.na(c(x$Lon[1], x$Lat[1])))) > 3)
+    warning("The data in row 1 appears to be improperly formatted; ", 
+            "should you use the skip argument? See `?airdas_read`",
+            immediate. = TRUE)
+  
+  # Process 2
+  x$file_type <- file.type
   file_das  <- basename(file)
   line_num  <- as.integer(seq_along(x$Event) + skip)
   

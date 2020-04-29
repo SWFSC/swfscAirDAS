@@ -123,16 +123,10 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
 { 
   #----------------------------------------------------------------------------
   # Input checks
-  das.df <- x
   file.type <- unique(x$file_type)
-  if (length(file.type) != 1)
-    stop("Error in process file type - please report this as an issue.")
-  
-  if (length(file.type) != 1)
-    stop("Error: Inconsistent file type in x")
+  if (length(file.type) != 1) stop("Error: Inconsistent file type in x")
   
   stopifnot(
-    # .airdas_format_check(das.df, "process"), 
     length(days.gap.part) == 1, 
     length(days.gap.full) == 1, 
     inherits(days.gap.part, c("integer", "numeric")), 
@@ -143,32 +137,34 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   if (days.gap.part > days.gap.full) 
     stop("days.gap.part must be less than or equal to days.gap.full")
   
+  # Check that there are no Event columns with NA is done in as_airdas_dfr
+  
   
   #----------------------------------------------------------------------------
   # Remove '#' (deleted) events
-  das.df <- das.df[das.df$Event != "#", ]
-  rownames(das.df) <- NULL
+  x <- x[x$Event != "#", ]
+  rownames(x) <- NULL
   
   
   #----------------------------------------------------------------------------
   # Fill in Lat/Lon/DateTime of '1' events
-  event.1 <- which(das.df$Event == 1)
+  event.1 <- which(x$Event == 1)
   stopifnot(all(event.1 > 1))
   
   if (length(event.1) > 0) {
-    das.df$Lat[event.1] <- das.df$Lat[event.1 - 1]
-    das.df$Lon[event.1] <- das.df$Lon[event.1 - 1]
-    das.df$DateTime[event.1] <- das.df$DateTime[event.1 - 1]
+    x$Lat[event.1] <- x$Lat[event.1 - 1]
+    x$Lon[event.1] <- x$Lon[event.1 - 1]
+    x$DateTime[event.1] <- x$DateTime[event.1 - 1]
   }
   
   
   #----------------------------------------------------------------------------
   ### Determine new days for reset of columns
-  nDAS <- nrow(das.df)
+  nDAS <- nrow(x)
   
-  dt.na <- is.na(das.df$DateTime)
+  dt.na <- is.na(x$DateTime)
   time.diff <- rep(NA, nDAS)
-  time.diff[!dt.na] <- c(NA, abs(diff(das.df$DateTime[!dt.na]))) / (60*60*24)
+  time.diff[!dt.na] <- c(NA, abs(diff(x$DateTime[!dt.na]))) / (60*60*24)
   
   # Soft reset (not transect num) for time gaps > days.gap.part
   idx.reset.part <- c(1, which(time.diff > days.gap.part))
@@ -189,7 +185,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
             "check days.gap.. arguments?", immediate. = TRUE)
   }
   
-  if (!all(which(!duplicated(das.df$file_das)) %in% idx.reset.part)) {
+  if (!all(which(!duplicated(x$file_das)) %in% idx.reset.part)) {
     warning("Warning: not all new flight row indices were new file indices", 
             immediate. = TRUE)
   }
@@ -201,46 +197,46 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   event.na <- -9999
   
   
-  event.A <- das.df$Event == "A"
-  event.E <- das.df$Event == "E"
-  event.O <- das.df$Event == "O"
-  event.P <- das.df$Event == "P"
-  event.R <- das.df$Event == "R"
-  event.T <- das.df$Event == "T"
-  event.V <- das.df$Event == "V"
-  event.W <- das.df$Event == "W"
+  event.A <- x$Event == "A"
+  event.E <- x$Event == "E"
+  event.O <- x$Event == "O"
+  event.P <- x$Event == "P"
+  event.R <- x$Event == "R"
+  event.T <- x$Event == "T"
+  event.V <- x$Event == "V"
+  event.W <- x$Event == "W"
   
-  HKR      <- .process_chr(init.val, das.df, "Data1", event.W, event.na)
-  CCover   <- .process_num(init.val, das.df, "Data2", event.W, event.na)
-  Bft      <- .process_num(init.val, das.df, "Data3", event.W, event.na)
+  HKR      <- .process_chr(init.val, x, "Data1", event.W, event.na)
+  CCover   <- .process_num(init.val, x, "Data2", event.W, event.na)
+  Bft      <- .process_num(init.val, x, "Data3", event.W, event.na)
   Jelly    <- switch(file.type, 
-                     caretta = .process_num(init.val, das.df, "Data4", event.W, event.na), 
-                     turtle  = .process_num(init.val, das.df, "Data4", event.W, event.na), 
+                     caretta = .process_num(init.val, x, "Data4", event.W, event.na), 
+                     turtle  = .process_num(init.val, x, "Data4", event.W, event.na), 
                      init.val)
   HorizSun <- switch(file.type, 
-                     phocoena = .process_num(init.val, das.df, "Data4", event.W, event.na), 
-                     caretta = .process_num(init.val, das.df, "Data5", event.W, event.na), 
-                     turtle  = .process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     phocoena = .process_num(init.val, x, "Data4", event.W, event.na), 
+                     caretta = .process_num(init.val, x, "Data5", event.W, event.na), 
+                     turtle  = .process_num(init.val, x, "Data5", event.W, event.na), 
                      init.val)
   VertSun  <- switch(file.type, 
-                     phocoena = .process_num(init.val, das.df, "Data5", event.W, event.na), 
+                     phocoena = .process_num(init.val, x, "Data5", event.W, event.na), 
                      init.val)
   
-  ObsL <- .process_chr(init.val, das.df, "Data1", event.P, event.na)
-  ObsB <- .process_chr(init.val, das.df, "Data2", event.P, event.na)
-  ObsR <- .process_chr(init.val, das.df, "Data3", event.P, event.na)
-  Rec <-  .process_chr(init.val, das.df, "Data4", event.P, event.na)
+  ObsL <- .process_chr(init.val, x, "Data1", event.P, event.na)
+  ObsB <- .process_chr(init.val, x, "Data2", event.P, event.na)
+  ObsR <- .process_chr(init.val, x, "Data3", event.P, event.na)
+  Rec <-  .process_chr(init.val, x, "Data4", event.P, event.na)
   
-  AltFt  <- .process_num(init.val, das.df, "Data1", event.A, event.na)
-  SpKnot <- .process_num(init.val, das.df, "Data2", event.A, event.na)
+  AltFt  <- .process_num(init.val, x, "Data1", event.A, event.na)
+  SpKnot <- .process_num(init.val, x, "Data2", event.A, event.na)
   
-  VLI <- .process_chr(init.val, das.df, "Data1", event.V, event.na)
-  VLO <- .process_chr(init.val, das.df, "Data2", event.V, event.na)
-  VB  <- .process_chr(init.val, das.df, "Data3", event.V, event.na)
-  VRI <- .process_chr(init.val, das.df, "Data4", event.V, event.na)
-  VRO <- .process_chr(init.val, das.df, "Data5", event.V, event.na)
+  VLI <- .process_chr(init.val, x, "Data1", event.V, event.na)
+  VLO <- .process_chr(init.val, x, "Data2", event.V, event.na)
+  VB  <- .process_chr(init.val, x, "Data3", event.V, event.na)
+  VRI <- .process_chr(init.val, x, "Data4", event.V, event.na)
+  VRO <- .process_chr(init.val, x, "Data5", event.V, event.na)
   
-  Trans <- .process_chr(init.val, das.df, "Data1", event.T, event.na)
+  Trans <- .process_chr(init.val, x, "Data1", event.T, event.na)
   Trans[event.O] <- event.na
   
   Eff <- as.logical(init.val)
@@ -338,13 +334,13 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   # Warning check for accepted event codes
   event.acc <- c("*", 1, "A", "C", "E", "O", "P", "R", "s", "S", "t", 
                  "T", "V", "W")
-  if (!all(das.df$Event %in% event.acc))
+  if (!all(x$Event %in% event.acc))
     warning(paste0("Expected event codes (case sensitive): ",
                    paste(event.acc, collapse = ", "), "\n"),
-            "The following lines of the input file ",
+            "The following line(s) of the input file ",
             "(NOT necessarily the row numbers of output) ",
             "contain unexpected event codes:\n",
-            paste(das.df$line_num[!(das.df$Event %in% event.acc)], 
+            paste(x$line_num[!(x$Event %in% event.acc)], 
                   collapse = ", "))
   
   
@@ -359,7 +355,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   )
   
   as_airdas_df(
-    data.frame(das.df, tmp, stringsAsFactors = FALSE, row.names = 1:nrow(das.df)) %>%
+    data.frame(x, tmp, stringsAsFactors = FALSE, row.names = 1:nrow(x)) %>%
       select(!!cols.toreturn)
   )
 }

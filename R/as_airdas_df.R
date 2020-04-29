@@ -86,15 +86,15 @@ as_airdas_df.data.frame <- function(x) {
   
   # Check that all of OnEffort is either TRUE/FALSE; no NAs
   if (any(is.na(x$OnEffort))) 
-    stop("The following rows have OnEffort values of NA, ", 
+    stop("The following line(s) have OnEffort values of NA, ", 
          "and thus this object cannot be coerced to an airdas_df object: ", 
          paste(x$line_num[is.na(x$OnEffort)], collapse = ", "))
   
   # Check for no datetime/lat/lon NAs in on-effort events
   x.oneff <- x[x$OnEffort, ]
   if (any(is.na(x.oneff$Lat) | is.na(x.oneff$Lon) | is.na(x.oneff$DateTime)))
-    stop("The following rows have NA values in the Lat, Lon, and/or DateTime columns, ", 
-         "and thus this object cannot be coerced to an airdas_df object: ", 
+    stop("The following line(s) have NA values in the Lat, Lon, and/or DateTime columns; ", 
+         "should this object be coerced to an airdas_df object? Lines:\n", 
          paste(sort(unique(c(x.oneff$line_num[is.na(x.oneff$Lat)], 
                              x.oneff$line_num[is.na(x.oneff$Lon)], 
                              x.oneff$line_num[is.na(x.oneff$DateTime)]))), 
