@@ -105,8 +105,10 @@
 #' written to the file (e.g., a .txt or .csv file) specified by \code{file.out}
 #'
 #' @examples
+#' \dontrun{
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' airdas_check(y)
+#' }
 #'
 #' @export
 airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL, 

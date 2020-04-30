@@ -125,7 +125,9 @@ Outstanding questions/todo:
 }
 }
 \examples{
+\dontrun{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 airdas_check(y)
+}
 
 }
