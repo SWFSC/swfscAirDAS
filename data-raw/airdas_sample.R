@@ -104,7 +104,17 @@ x.out <- x %>%
   add_row(Event = "C", EffortDot = FALSE, DateTime = x$DateTime[1], 
           Lat = x$Lat[1], Lon = x$Lon[1], 
           Data1 = " Reco", Data2 = "rder:", Data3 = " dd", 
-          .before = 1) %>% 
+          .before = 1)
+
+x.out2 <- x.out  %>% 
+  add_row(Event = "C", EffortDot = x.out$EffortDot[10], 
+          DateTime = x.out$DateTime[10] + seconds(1), 
+          Lat = x.out$Lat[10], Lon = x.out$Lon[10], Data1 = " 2 cp",
+          .after = 10) %>% 
+  add_row(Event = "C", EffortDot = x.out$EffortDot[44], 
+          DateTime = x.out$DateTime[44] + seconds(1), 
+          Lat = x.out$Lat[44], Lon = x.out$Lon[44], Data1 = " fb2s", Data2 = " fb1m",
+          .after = 45) %>% 
   mutate(file_type = "turtle", 
          EventNum = append(head(seq_along(.data$Event), -1), NA, 
                            after = (which(.data$Event == 1) - 1)))
@@ -113,10 +123,10 @@ x.out <- x %>%
 
 
 # Checks
-identical(order(na.omit(x.out$DateTime)), sort(order(na.omit(x.out$DateTime))))
+identical(order(na.omit(x.out2$DateTime)), sort(order(na.omit(x.out2$DateTime))))
 
 ### Write to das file
 # raw_airdas_fwf(x, "data-raw/airdas_strawman_test.das", data7len = 5)
-raw_airdas_fwf(x.out, "inst/airdas_sample.das", data7len = 15)
+raw_airdas_fwf(x.out2, "inst/airdas_sample.das", data7len = 15)
 
 ###############################################################################

@@ -17,8 +17,10 @@ Imports:
     parallel,
     readr, 
     rlang, 
+    stringr,
     swfscDAS,
-    swfscMisc
+    swfscMisc, 
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,

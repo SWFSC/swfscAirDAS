@@ -20,40 +20,61 @@ airdas_process_comments(x)
 or a data frame that can be coerced to a \code{airdas_dfr} object}
 }
 \value{
-\code{x} with the following columns added: 
-  Misc1 (one of FB/Mola/JF/CP), Misc2 (s/m/l/C/M/E/O), and Value
+\code{x}, with the following columns added: 
+  \itemize{
+    \item comment_str: the full comment string
+    \item Misc1: level one descriptor, e.g. "Fish ball" or "Jellyfish"
+    \item Misc2: level two descriptor, e.g. s, m, or c (see Details section for key)
+    \item Value: Associated count or percentage
+    \item flag_check: logical indicating if the comment string was longer 
+      than an expected number of characters, and thus should be manually inspected 
+  }
 }
 \description{
 Extract miscellaneous information recorded in AirDAS data comments
 }
 \details{
-Extract information about fish balls, molas, jellyfish, 
-  and crab pots.
-  See any of the AirDAS format PDFs, \code{\link{airdas_format_pdf}}, 
-  for information about format requirements.
+Historically, project-specific or miscellaneous data have been 
+  recorded in AirDAS comments using specific formats and character codes. 
+  This functions identifies and extracts this data from the comment 
+  text strings. Current supported data types are: 
+  fish balls, molas, jellyfish, and crab pots. 
+  See any of the AirDAS format PDFs (\code{\link{airdas_format_pdf}}) 
+  for information about the specific codes and formats used to
+  record this data. All comments are converted to lower case for processing 
+  to avoid missing data.
   
-  These different codes contain (at most)
+  These different codes contain (at most) 
   a level one descriptor (e.g. fish ball or crab pot), 
-  a level 2 descriptor (e.g. small, medium, or a jellyfish species), 
-  and a value (count or percentage). 
+  a level two descriptor (e.g. size or jellyfish species), 
+  and a value (a count or percentage). 
+  Thus, the extracted data are returned together in this structure. 
+  The output data frame is long data, i.e. it has one piece of information per line.
+  For instance, if the comment is "fb1s fb1m", then the output data frame
+  will have one line for the small fish ball and one for the medium fish ball. 
+  See Value section for more details.
   
-  The following codes are used in the output for the level one and two descriptors:
+  Currently this function only recognizes mola data recorded using the 
+  "m1", "m2", and "m3" codes (small, medium, and large mola, respectively). 
+  Thus, "mola" is not recognized and processed.
+  
+  The following codes are used for the level two descriptors: 
   \tabular{lr}{
     \emph{Description} \tab \emph{Code}\cr
-    Fish ball \tab FB\cr
-    Mola mola \tab Mola\cr
-    Jellyfish \tab JF\cr
-    Crab pot  \tab CP\cr
     Small  \tab s\cr
     Medium \tab m\cr
     Large  \tab l\cr
-    Chrysaora  \tab C\cr
-    Moon jelly \tab M\cr
-    Egg yolk   \tab E\cr
-    Other      \tab O\cr
+    Unknown  \tab u\cr
+    Chrysaora  \tab c\cr
+    Moon jelly \tab m\cr
+    Egg yolk   \tab e\cr
+    Other      \tab o\cr
   }
 }
 \examples{
-#TODO
+y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y.proc <- airdas_process(y)
+
+d <- airdas_process_comments(y.proc)
 
 }
