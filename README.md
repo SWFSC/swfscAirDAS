@@ -30,8 +30,34 @@ estimation.
 You can install `swfscAirDAS` from [GitHub](https://github.com) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("smwoodman/swfscAirDAS")
+# install.packages("remotes")
+# Install remote dependency
+remotes::install_github("smwoodman/swfscDAS")
+#> Using github PAT from envvar GITHUB_PAT
+#> Downloading GitHub repo smwoodman/swfscDAS@master
+#> 
+#>          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION' ...  v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION'
+#>       -  preparing 'swfscDAS':
+#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information
+#>       -  checking for LF line-endings in source and make files and shell scripts
+#>       -  checking for empty or unneeded directories
+#>       -  building 'swfscDAS_0.0.0.9000.tar.gz'
+#>      
+#> 
+
+# Install package
+remotes::install_github("smwoodman/swfscAirDAS")
+#> Using github PAT from envvar GITHUB_PAT
+#> Downloading GitHub repo smwoodman/swfscAirDAS@master
+#> 
+#>          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...     checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...   v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' (345ms)
+#>       -  preparing 'swfscAirDAS':
+#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information
+#>       -  checking for LF line-endings in source and make files and shell scripts
+#>       -  checking for empty or unneeded directories
+#>       -  building 'swfscAirDAS_0.0.0.9000.tar.gz'
+#>      
+#> 
 ```
 
 ## AirDAS format
@@ -58,9 +84,11 @@ First, you must read and process the AirDAS data
 
 ``` r
 library(swfscAirDAS)
+#> Registered S3 method overwritten by 'spatstat':
+#>   method     from
+#>   print.boxx cli
 # Get file paths of sample files included in the package
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 
 # Read and process AirDAS file, i.e. read AirDAS data into a data frame and add info columns
 y.read <- airdas_read(y)
@@ -87,25 +115,35 @@ condition changes.
 # Summarize sighting information
 y.sight <- airdas_sight(y.proc)
 
-# # Chop and summarize effort using "equallength" method
-# y.eff <- airdas_effort(
-#   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-#   seg.km = 3, randpicks.load = y.eff.randpicks
-# )
-# y.eff.segdata <- y.eff[[1]]
-# y.eff.siteinfo <- y.eff[[2]]
-# y.eff.randpicks <- y.eff[[3]]
-# 
-# # Chop and summarize effort using "condition" method
-# y.eff.cond <- airdas_effort(
-#   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-#   seg.km.min = 0.05
-# )
+# Chop and summarize effort using "equallength" method
+y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+
+y.eff <- airdas_effort(
+  y.proc, method = "equallength", sp.codes = c("mn", "bm"),
+  seg.km = 3, randpicks.load = y.eff.randpicks, 
+  num.cores = 1
+)
+y.eff.segdata <- y.eff[[1]]
+y.eff.siteinfo <- y.eff[[2]]
+y.eff.randpicks <- y.eff[[3]]
+
+# Chop and summarize effort using "condition" method
+y.eff.cond <- airdas_effort(
+  y.proc, method = "condition", sp.codes = c("mn", "bm"),
+  seg.min.km = 0.05, num.cores = 1
+)
 ```
 
 You can also check that your AirDAS data has accepted formatting and
-values:
+values, as well as extract data from comments:
 
 ``` r
-# airdas_check(y)
+# Check formatting
+y.check <- airdas_check(y, print.transect = FALSE)
+
+# Paste comments back together
+y.comments <- airdas_comments(y.proc)
+
+# Extract data from comments
+y.comments.data <- airdas_process_comments(y.proc)
 ```

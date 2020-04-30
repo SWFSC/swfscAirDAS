@@ -13,7 +13,8 @@
 #'   These code(s) will be converted to lower case to match \code{\link{airdas_sight}} 
 #' @param conditions character vector of names of conditions to include in segdata output.
 #'   These values must be column names from the output of \code{\link{airdas_process}},
-#'   e.g. 'Bft', 'CCover', etc.
+#'   e.g. 'Bft', 'CCover', etc. The default is \code{NULL}, 
+#'   in which case all relevant conditions will be included.
 #'   If \code{method == "condition"}, then these also are the conditions which
 #'   trigger segment chopping when they change.
 #' @param dist.method character;

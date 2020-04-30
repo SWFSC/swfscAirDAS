@@ -28,9 +28,13 @@ This package contains functions designed for processing and analyzing aerial sur
 
 You can install `swfscAirDAS` from [GitHub](https://github.com) with:
 
-``` r
-# install.packages("devtools")
-devtools::install_github("smwoodman/swfscAirDAS")
+```{r}
+# install.packages("remotes")
+# Install remote dependency
+remotes::install_github("smwoodman/swfscDAS")
+
+# Install package
+remotes::install_github("smwoodman/swfscAirDAS")
 ```
 
 ## AirDAS format
@@ -51,7 +55,6 @@ First, you must read and process the AirDAS data
 library(swfscAirDAS)
 # Get file paths of sample files included in the package
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 
 # Read and process AirDAS file, i.e. read AirDAS data into a data frame and add info columns
 y.read <- airdas_read(y)
@@ -73,25 +76,34 @@ After processing, you can summarize the processed AirDAS data. There are two ava
 # Summarize sighting information
 y.sight <- airdas_sight(y.proc)
 
-# # Chop and summarize effort using "equallength" method
-# y.eff <- airdas_effort(
-#   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-#   seg.km = 3, randpicks.load = y.eff.randpicks
-# )
-# y.eff.segdata <- y.eff[[1]]
-# y.eff.siteinfo <- y.eff[[2]]
-# y.eff.randpicks <- y.eff[[3]]
-# 
-# # Chop and summarize effort using "condition" method
-# y.eff.cond <- airdas_effort(
-#   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-#   seg.km.min = 0.05
-# )
+# Chop and summarize effort using "equallength" method
+y.eff.randpicks <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+
+y.eff <- airdas_effort(
+  y.proc, method = "equallength", sp.codes = c("mn", "bm"),
+  seg.km = 3, randpicks.load = y.eff.randpicks, 
+  num.cores = 1
+)
+y.eff.segdata <- y.eff[[1]]
+y.eff.siteinfo <- y.eff[[2]]
+y.eff.randpicks <- y.eff[[3]]
+
+# Chop and summarize effort using "condition" method
+y.eff.cond <- airdas_effort(
+  y.proc, method = "condition", sp.codes = c("mn", "bm"),
+  seg.min.km = 0.05, num.cores = 1
+)
 ```
 
-You can also check that your AirDAS data has accepted formatting and values:
+You can also check that your AirDAS data has accepted formatting and values, as well as extract data from comments:
 
 ```{r, eval=FALSE}
-# airdas_check(y)
-```
+# Check formatting
+y.check <- airdas_check(y, print.transect = FALSE)
 
+# Paste comments back together
+y.comments <- airdas_comments(y.proc)
+
+# Extract data from comments
+y.comments.data <- airdas_process_comments(y.proc)
+```
