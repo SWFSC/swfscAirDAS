@@ -79,8 +79,34 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>You can install <code>swfscAirDAS</code> from <a href="https://github.com">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("devtools")</span>
-<span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu">install_github</span>(<span class="st">"smwoodman/swfscAirDAS"</span>)</pre></div>
+<div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
+<span class="co"># Install remote dependency</span>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"smwoodman/swfscDAS"</span>)
+<span class="co">#&gt; Using github PAT from envvar GITHUB_PAT</span>
+<span class="co">#&gt; Downloading GitHub repo smwoodman/swfscDAS@master</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION' ...  v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION'</span>
+<span class="co">#&gt;       -  preparing 'swfscDAS':</span>
+<span class="co">#&gt;    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information</span>
+<span class="co">#&gt;       -  checking for LF line-endings in source and make files and shell scripts</span>
+<span class="co">#&gt;       -  checking for empty or unneeded directories</span>
+<span class="co">#&gt;       -  building 'swfscDAS_0.0.0.9000.tar.gz'</span>
+<span class="co">#&gt;      </span>
+<span class="co">#&gt; </span>
+
+<span class="co"># Install package</span>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"smwoodman/swfscAirDAS"</span>)
+<span class="co">#&gt; Using github PAT from envvar GITHUB_PAT</span>
+<span class="co">#&gt; Downloading GitHub repo smwoodman/swfscAirDAS@master</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...     checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...   v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' (345ms)</span>
+<span class="co">#&gt;       -  preparing 'swfscAirDAS':</span>
+<span class="co">#&gt;    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information</span>
+<span class="co">#&gt;       -  checking for LF line-endings in source and make files and shell scripts</span>
+<span class="co">#&gt;       -  checking for empty or unneeded directories</span>
+<span class="co">#&gt;       -  building 'swfscAirDAS_0.0.0.9000.tar.gz'</span>
+<span class="co">#&gt;      </span>
+<span class="co">#&gt; </span></pre></div>
 </div>
 <div id="airdas-format" class="section level2">
 <h2 class="hasAnchor">
@@ -98,9 +124,11 @@
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>First, you must read and process the AirDAS data</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">swfscAirDAS</span>)
+<span class="co">#&gt; Registered S3 method overwritten by 'spatstat':</span>
+<span class="co">#&gt;   method     from</span>
+<span class="co">#&gt;   print.boxx cli</span>
 <span class="co"># Get file paths of sample files included in the package</span>
 <span class="no">y</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"airdas_sample.das"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"swfscAirDAS"</span>)
-<span class="no">y.eff.randpicks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"airdas_sample_randpicks.csv"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"swfscAirDAS"</span>)
 
 <span class="co"># Read and process AirDAS file, i.e. read AirDAS data into a data frame and add info columns</span>
 <span class="no">y.read</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_read.html">airdas_read</a></span>(<span class="no">y</span>)
@@ -114,22 +142,32 @@
 <div class="sourceCode" id="cb4"><pre class="r"><span class="co"># Summarize sighting information</span>
 <span class="no">y.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_sight.html">airdas_sight</a></span>(<span class="no">y.proc</span>)
 
-<span class="co"># # Chop and summarize effort using "equallength" method</span>
-<span class="co"># y.eff &lt;- airdas_effort(</span>
-<span class="co">#   y.proc, method = "equallength", sp.codes = c("mn", "bm"), </span>
-<span class="co">#   seg.km = 3, randpicks.load = y.eff.randpicks</span>
-<span class="co"># )</span>
-<span class="co"># y.eff.segdata &lt;- y.eff[[1]]</span>
-<span class="co"># y.eff.siteinfo &lt;- y.eff[[2]]</span>
-<span class="co"># y.eff.randpicks &lt;- y.eff[[3]]</span>
-<span class="co"># </span>
-<span class="co"># # Chop and summarize effort using "condition" method</span>
-<span class="co"># y.eff.cond &lt;- airdas_effort(</span>
-<span class="co">#   y.proc, method = "condition", sp.codes = c("mn", "bm"), </span>
-<span class="co">#   seg.km.min = 0.05</span>
-<span class="co"># )</span></pre></div>
-<p>You can also check that your AirDAS data has accepted formatting and values:</p>
-<div class="sourceCode" id="cb5"><pre class="r"># airdas_check(y)</pre></div>
+<span class="co"># Chop and summarize effort using "equallength" method</span>
+<span class="no">y.eff.randpicks</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"airdas_sample_randpicks.csv"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"swfscAirDAS"</span>)
+
+<span class="no">y.eff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_effort.html">airdas_effort</a></span>(
+  <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"equallength"</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>, <span class="st">"bm"</span>),
+  <span class="kw">seg.km</span> <span class="kw">=</span> <span class="fl">3</span>, <span class="kw">randpicks.load</span> <span class="kw">=</span> <span class="no">y.eff.randpicks</span>,
+  <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
+)
+<span class="no">y.eff.segdata</span> <span class="kw">&lt;-</span> <span class="no">y.eff</span><span class="kw">[[</span><span class="fl">1</span>]]
+<span class="no">y.eff.siteinfo</span> <span class="kw">&lt;-</span> <span class="no">y.eff</span><span class="kw">[[</span><span class="fl">2</span>]]
+<span class="no">y.eff.randpicks</span> <span class="kw">&lt;-</span> <span class="no">y.eff</span><span class="kw">[[</span><span class="fl">3</span>]]
+
+<span class="co"># Chop and summarize effort using "condition" method</span>
+<span class="no">y.eff.cond</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_effort.html">airdas_effort</a></span>(
+  <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"condition"</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>, <span class="st">"bm"</span>),
+  <span class="kw">seg.min.km</span> <span class="kw">=</span> <span class="fl">0.05</span>, <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
+)</pre></div>
+<p>You can also check that your AirDAS data has accepted formatting and values, as well as extract data from comments:</p>
+<div class="sourceCode" id="cb5"><pre class="r"><span class="co"># Check formatting</span>
+<span class="no">y.check</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_check.html">airdas_check</a></span>(<span class="no">y</span>, <span class="kw">print.transect</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+
+<span class="co"># Paste comments back together</span>
+<span class="no">y.comments</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_comments.html">airdas_comments</a></span>(<span class="no">y.proc</span>)
+
+<span class="co"># Extract data from comments</span>
+<span class="no">y.comments.data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/airdas_process_comments.html">airdas_process_comments</a></span>(<span class="no">y.proc</span>)</pre></div>
 </div>
 </div>
   </div>
