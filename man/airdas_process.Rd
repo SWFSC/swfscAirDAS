@@ -58,7 +58,7 @@ An \code{airdas_df} object, which is also a data frame.
     Transect code                     \tab Trans\cr
     Beaufort sea state                \tab Bft\cr
     Percent overcast (cloud cover)    \tab CCover\cr
-    Jellyfish code                    \tab Trans \tab not in PHOCOENA data\cr
+    Jellyfish code                    \tab Jelly \tab not in PHOCOENA data\cr
     Horizontal sun (clock system)     \tab HorizSun\cr
     Vertical sun (clock system)       \tab VertSun \tab only in PHOCOENA data\cr
     Haze/Kelp/Red tide code           \tab HKR\cr

@@ -4,7 +4,7 @@
 #' aerial survey DAS data (AirDAS) collected using one of the following 
 #' Southwest Fisheries Science Center (SWFSC) programs: 
 #' PHOCOENA, SURVEY, CARETTA, or TURTLE (such as TURTLEP or TURTLE 4D).
-#' Functionality includes checking AirDAS data for dat entry errors, 
+#' Functionality includes checking AirDAS data for data entry errors, 
 #' reading AirDAS data into a data frame, processing this data 
 #' (extracting state and condition information for each AirDAS event), 
 #' and summarizing sighting and effort information.
