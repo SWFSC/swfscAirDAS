@@ -665,11 +665,15 @@ airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL,
   #----------------------------------------------------------------------------
   ### Remove first line and return
   if (nrow(error.out) == 1) {
+    bevs <- c(
+      "beer!", "glass of wine!", "margarita!", "vodka soda!", "gin and tonic!"
+    )
     to.return <- data.frame(
       File = NA, LineNum = NA, Idx = NA, ID = NA, 
-      Description = "No errors found", 
+      Description = paste("No errors found, enjoy your", sample(bevs, 1)), 
       stringsAsFactors = FALSE
     )
+    
   } else {
     to.return <- error.out %>% 
       slice(-1) %>% 
