@@ -34,7 +34,7 @@ You can install `swfscAirDAS` from [GitHub](https://github.com) with:
 remotes::install_github("smwoodman/swfscDAS")
 
 # Install package
-remotes::install_github("smwoodman/swfscAirDAS")
+remotes::install_github("smwoodman/swfscAirDAS", build_vignettes = TRUE)
 ```
 
 ## AirDAS format
