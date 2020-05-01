@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Process comments in AirDAS data — airdas_process_comments • swfscAirDAS</title>
+<title>Process comments in AirDAS data — airdas_comments_process • swfscAirDAS</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Process comments in AirDAS data — airdas_process_comments" />
+<meta property="og:title" content="Process comments in AirDAS data — airdas_comments_process" />
 <meta property="og:description" content="Extract miscellaneous information recorded in AirDAS data comments" />
 
 
@@ -85,6 +85,9 @@
   </a>
 </li>
 <li>
+  <a href="../articles/swfscAirDAS.html">Get started</a>
+</li>
+<li>
   <a href="../reference/index.html">Reference</a>
 </li>
       </ul>
@@ -109,24 +112,24 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Process comments in AirDAS data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/R/airdas_process_comments.R'><code>R/airdas_process_comments.R</code></a></small>
-    <div class="hidden name"><code>airdas_process_comments.Rd</code></div>
+    <small class="dont-index">Source: <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/R/airdas_comments_process.R'><code>R/airdas_comments_process.R</code></a></small>
+    <div class="hidden name"><code>airdas_comments_process.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>Extract miscellaneous information recorded in AirDAS data comments</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_process_comments</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>airdas_process_comments</span>(<span class='no'>x</span>)
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
 
 <span class='co'># S3 method for airdas_dfr</span>
-<span class='fu'>airdas_process_comments</span>(<span class='no'>x</span>)
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
 
 <span class='co'># S3 method for airdas_df</span>
-<span class='fu'>airdas_process_comments</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -190,7 +193,7 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='no'>y.proc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='no'>y</span>)
 
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>airdas_process_comments</span>(<span class='no'>y.proc</span>)</div></pre>
+<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>airdas_comments_process</span>(<span class='no'>y.proc</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
