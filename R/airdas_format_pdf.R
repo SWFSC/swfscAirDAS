@@ -1,7 +1,7 @@
 #' Aerial DAS format requirements
 #'
-#' Access and save PDF documents describing the data format of the different file types
-#' supported by \code{swfscAirDAS}
+#' Access and save local PDF documents describing the data format of the 
+#' different file types supported by \code{swfscAirDAS}
 #'
 #' @param file character; the name of the file where the PDF will be saved
 #' @param file.type character; indicates which data format PDF to extract.

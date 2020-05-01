@@ -20,8 +20,8 @@ output of \code{\link[base:files]{file.copy}}:
   \code{TRUE} if writing of file was successful, and \code{FALSE} otherwise
 }
 \description{
-Access and save PDF documents describing the data format of the different file types
-supported by \code{swfscAirDAS}
+Access and save local PDF documents describing the data format of the 
+different file types supported by \code{swfscAirDAS}
 }
 \details{
 This function is a wrapper function for \code{\link[base:files]{file.copy}}. 
