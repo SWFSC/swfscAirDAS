@@ -28,7 +28,7 @@ This package contains functions designed for processing and analyzing aerial sur
 
 You can install `swfscAirDAS` from [GitHub](https://github.com) with:
 
-```{r}
+```{r, eval=FALSE}
 # install.packages("remotes")
 # Install remote dependency
 remotes::install_github("smwoodman/swfscDAS")
@@ -37,7 +37,7 @@ remotes::install_github("smwoodman/swfscDAS")
 remotes::install_github("smwoodman/swfscAirDAS", build_vignettes = TRUE)
 ```
 
-## AirDAS format
+## AirDAS format and checks
 
 `swfscAirDAS` accepts AirDAS data from several different programs, and thus in several different formats: PHOCOENA, SURVEY (in the future), CARETTA, and TURTLE. You can download PDFs describing these formats at the following links:
 
@@ -46,6 +46,8 @@ remotes::install_github("smwoodman/swfscAirDAS", build_vignettes = TRUE)
 * [TURTLE data format PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf)
 
 These PDFs are also included in the package; see [`airdas_format_pdf`](https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html) for more details.
+
+In addition, the package contains the function [`airdas_check`](https://smwoodman.github.io/swfscAirDAS/reference/airdas_check.html), which checks whether the provided file adheres to expected format of the provided file type. This function is designed to 1) be used for data QA/QC after performing a survey and 2) ensure the data format meets all of the assumptions made by the rest of the functions in the packge. A PDF describing the format checks is included in the package; you can also [`download the PDF here`](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf)
 
 ## Usage
 

@@ -33,34 +33,12 @@ You can install `swfscAirDAS` from [GitHub](https://github.com) with:
 # install.packages("remotes")
 # Install remote dependency
 remotes::install_github("smwoodman/swfscDAS")
-#> Using github PAT from envvar GITHUB_PAT
-#> Downloading GitHub repo smwoodman/swfscDAS@master
-#> 
-#>          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION' ...  v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION'
-#>       -  preparing 'swfscDAS':
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information
-#>       -  checking for LF line-endings in source and make files and shell scripts
-#>       -  checking for empty or unneeded directories
-#>       -  building 'swfscDAS_0.0.0.9000.tar.gz'
-#>      
-#> 
 
 # Install package
-remotes::install_github("smwoodman/swfscAirDAS")
-#> Using github PAT from envvar GITHUB_PAT
-#> Downloading GitHub repo smwoodman/swfscAirDAS@master
-#> 
-#>          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...     checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...   v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' (345ms)
-#>       -  preparing 'swfscAirDAS':
-#>    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information
-#>       -  checking for LF line-endings in source and make files and shell scripts
-#>       -  checking for empty or unneeded directories
-#>       -  building 'swfscAirDAS_0.0.0.9000.tar.gz'
-#>      
-#> 
+remotes::install_github("smwoodman/swfscAirDAS", build_vignettes = TRUE)
 ```
 
-## AirDAS format
+## AirDAS format and checks
 
 `swfscAirDAS` accepts AirDAS data from several different programs, and
 thus in several different formats: PHOCOENA, SURVEY (in the future),
@@ -78,15 +56,22 @@ These PDFs are also included in the package; see
 [`airdas_format_pdf`](https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html)
 for more details.
 
+In addition, the package contains the function
+[`airdas_check`](https://smwoodman.github.io/swfscAirDAS/reference/airdas_check.html),
+which checks whether the provided file adheres to expected format of the
+provided file type. This function is designed to 1) be used for data
+QA/QC after performing a survey and 2) ensure the data format meets all
+of the assumptions made by the rest of the functions in the packge. A
+PDF describing the format checks is included in the package; you can
+also [`download the PDF
+here`](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf)
+
 ## Usage
 
 First, you must read and process the AirDAS data
 
 ``` r
 library(swfscAirDAS)
-#> Registered S3 method overwritten by 'spatstat':
-#>   method     from
-#>   print.boxx cli
 # Get file paths of sample files included in the package
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 

@@ -22,13 +22,14 @@
 #' The default (internal) \code{sp.codes} file is located at 
 #' \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
 #' 
-#' See the file at \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, 
-#' for the checks performed by this function. 
-#' See the 'seealso' section for where you can download this file
+#' To see the checks performed by this function, 
+#' you can access the PDF locally at 
+#' \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, 
+#' or online at \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
 #'
 #' Outstanding questions/todo:
 #' \itemize{
-#'   \item Check for valid fish ball/mola/jelly/crab pot codes in comments?
+#'   \item Attempt to check for valid fish ball/mola/jelly/crab pot codes?
 #' }
 #'
 #' @return 
@@ -47,6 +48,8 @@
 #' 
 #' If \code{file.out} is not \code{NULL}, then the error log is also
 #' written to the file (e.g., a .txt or .csv file) specified by \code{file.out}
+#' 
+#' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
 #' @examples
 #' \dontrun{
