@@ -85,35 +85,13 @@
 <div class="sourceCode" id="cb1"><pre class="r"><span class="co"># install.packages("remotes")</span>
 <span class="co"># Install remote dependency</span>
 <span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"smwoodman/swfscDAS"</span>)
-<span class="co">#&gt; Using github PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Downloading GitHub repo smwoodman/swfscDAS@master</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION' ...  v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes17745511500f\smwoodman-swfscDAS-be67b16/DESCRIPTION'</span>
-<span class="co">#&gt;       -  preparing 'swfscDAS':</span>
-<span class="co">#&gt;    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information</span>
-<span class="co">#&gt;       -  checking for LF line-endings in source and make files and shell scripts</span>
-<span class="co">#&gt;       -  checking for empty or unneeded directories</span>
-<span class="co">#&gt;       -  building 'swfscDAS_0.0.0.9000.tar.gz'</span>
-<span class="co">#&gt;      </span>
-<span class="co">#&gt; </span>
 
 <span class="co"># Install package</span>
-<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"smwoodman/swfscAirDAS"</span>)
-<span class="co">#&gt; Using github PAT from envvar GITHUB_PAT</span>
-<span class="co">#&gt; Downloading GitHub repo smwoodman/swfscAirDAS@master</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt;          checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...     checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' ...   v  checking for file 'C:\Users\sam.woodman\AppData\Local\Temp\Rtmp0COFT2\remotes1774173b30ab\smwoodman-swfscAirDAS-16f67b7/DESCRIPTION' (345ms)</span>
-<span class="co">#&gt;       -  preparing 'swfscAirDAS':</span>
-<span class="co">#&gt;    checking DESCRIPTION meta-information ...     checking DESCRIPTION meta-information ...   v  checking DESCRIPTION meta-information</span>
-<span class="co">#&gt;       -  checking for LF line-endings in source and make files and shell scripts</span>
-<span class="co">#&gt;       -  checking for empty or unneeded directories</span>
-<span class="co">#&gt;       -  building 'swfscAirDAS_0.0.0.9000.tar.gz'</span>
-<span class="co">#&gt;      </span>
-<span class="co">#&gt; </span></pre></div>
+<span class="kw pkg">remotes</span><span class="kw ns">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span>(<span class="st">"smwoodman/swfscAirDAS"</span>, <span class="kw">build_vignettes</span> <span class="kw">=</span> <span class="fl">TRUE</span>)</pre></div>
 </div>
-<div id="airdas-format" class="section level2">
+<div id="airdas-format-and-checks" class="section level2">
 <h2 class="hasAnchor">
-<a href="#airdas-format" class="anchor"></a>AirDAS format</h2>
+<a href="#airdas-format-and-checks" class="anchor"></a>AirDAS format and checks</h2>
 <p><code>swfscAirDAS</code> accepts AirDAS data from several different programs, and thus in several different formats: PHOCOENA, SURVEY (in the future), CARETTA, and TURTLE. You can download PDFs describing these formats at the following links:</p>
 <ul>
 <li><a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf">PHOCOENA data format PDF</a></li>
@@ -121,15 +99,13 @@
 <li><a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf">TURTLE data format PDF</a></li>
 </ul>
 <p>These PDFs are also included in the package; see <a href="https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html"><code>airdas_format_pdf</code></a> for more details.</p>
+<p>In addition, the package contains the function <a href="https://smwoodman.github.io/swfscAirDAS/reference/airdas_check.html"><code>airdas_check</code></a>, which checks whether the provided file adheres to expected format of the provided file type. This function is designed to 1) be used for data QA/QC after performing a survey and 2) ensure the data format meets all of the assumptions made by the rest of the functions in the packge. A PDF describing the format checks is included in the package; you can also <a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf"><code>download the PDF here</code></a></p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>First, you must read and process the AirDAS data</p>
 <div class="sourceCode" id="cb2"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">swfscAirDAS</span>)
-<span class="co">#&gt; Registered S3 method overwritten by 'spatstat':</span>
-<span class="co">#&gt;   method     from</span>
-<span class="co">#&gt;   print.boxx cli</span>
 <span class="co"># Get file paths of sample files included in the package</span>
 <span class="no">y</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html">system.file</a></span>(<span class="st">"airdas_sample.das"</span>, <span class="kw">package</span> <span class="kw">=</span> <span class="st">"swfscAirDAS"</span>)
 
