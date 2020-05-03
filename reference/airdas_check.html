@@ -186,66 +186,8 @@ written to the file (e.g., a .txt or .csv file) specified by <code>file.out</cod
 
     <p>The default (internal) <code>sp.codes</code> file is located at 
 <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")</a></code>.</p>
-<p>This function checks that the following is true:</p><ul>
-<li><p>Event codes are one of the following: 
-    #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W</p></li>
-<li><p>The effort dot matches effort determined using T, R, O, and E events</p></li>
-<li><p>There is an O event between each T event, and vice versa, i.e. 
-    the data does not start a new transect while still on a transect and
-    does not end a transect when already not on a transect</p></li>
-<li><p>A T or R event does not occur while already on effort</p></li>
-<li><p>An E event does not occur while already off effort</p></li>
-<li><p>When the file ends, the data must be off effort and not still on a transect 
-    (i.e. an O event must occurred more recently than a T event)</p></li>
-<li><p>All Data# columns for non-C events are right-justified</p></li>
-<li><p>NAs are allowed for all data values when off effort except:
-    altitude, speed, species, and group size</p></li>
-<li><p>The following events have NA (blank) Data# columns: *, R, E, O</p></li>
-<li><p>For PHOCOENA data, all non-C events have NA (blank) Data6 and Data7 columns</p></li>
-<li><p>Event/column pairs meet the following requirements:</p></li>
-</ul>
-
-<table class='table'>
-<tr><td><em>Item</em></td><td><em>Requirement</em></td></tr>
-<tr><td>Viewing conditions</td><td>Must be one of: e, g, p, o, or NA (blank). Not case sensitive</td></tr>
-<tr><td>Altitude</td><td>Can be converted to a numeric value, and is not NA</td></tr>
-<tr><td>Speed</td><td>Can be converted to a numeric value, and is not NA</td></tr>
-<tr><td>HKR</td><td>Characters must consist of: n, h, k, r, or NA (blank). 
-    Not case sensitive; y is also accepted for PHOCOENA data</td></tr>
-<tr><td>Percent overcast</td><td>Must be a whole number between 0 and 100 (leading zeros are ok)</td></tr>
-<tr><td>Beaufort</td><td>Must be a whole number between 0 and 9</td></tr>
-<tr><td>Jellyfish</td><td>Must be one of 0, 1, 2, or 3</td></tr>
-<tr><td>Horizontal sun</td><td>Must be one of 0:12 (leading zeros are ok)</td></tr>
-<tr><td>Vertical sun</td><td>Must be one of 0:4 (leading zeros are ok)</td></tr>
-<tr><td>Observers</td><td>Each entry must be two characters, and no observer code can be used twice in the same P event</td></tr>
-<tr><td>Sighting (mammal)</td><td>Angle must be a whole number between -90 and 90 (leading zeros are ok)</td></tr>
-<tr><td>Sighting (mammal)</td><td>Group size must be a whole number between 1 and 5000 (leading zeros are ok)</td></tr>
-<tr><td>Sighting (mammal)</td><td>Species codes must be specified in sp.codes, and the first must not be <code>NA</code></td></tr>
-<tr><td>Sighting (mammal)</td><td>Observer code must be exactly two characters, and one of the current observers 
-    as specified by the most recent P event</td></tr>
-<tr><td>Sighting (mammal)</td><td>Angle must be negative if sighting made by left observer, 
-    and positive if made by right observer</td></tr>
-<tr><td>Sighting info</td><td>Species percentages can be converted to numeric values, and sum to 100</td></tr>
-<tr><td>Sighting info</td><td>Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)</td></tr>
-<tr><td>Sighting info</td><td>Every S code with multiple species has a 1 code immediately after it</td></tr>
-<tr><td>Sighting info</td><td>For every 1 code with n non-NA sighting percentages, 
-    the event before is an S event with n non-NA species codes</td></tr>
-<tr><td>Resight</td><td>Angle can be converted to a numeric value (leading zeros are ok)</td></tr>
-<tr><td>Resight</td><td>Unused resight columns (Data3-7) must be NA (blank)</td></tr>
-<tr><td>Turtle sighting</td><td>Angle must be a whole number between -90 and 90 (leading zeros are ok)</td></tr>
-<tr><td>Turtle sighting</td><td>Group size must be a whole number between 1 and 10 
-    (only included in CARETTA data; leading zeros are ok))</td></tr>
-<tr><td>Turtle sighting</td><td>Species code must be not <code>NA</code> and specified in sp.codes</td></tr>
-<tr><td>Turtle sighting</td><td>Observer code must be exactly two characters</td></tr>
-<tr><td>Turtle sighting</td><td>Turtle size must be a whole number between 1 and 9 (leading zeros are ok); 
-    one of s, m, l is also accepted for CARETTA data</td></tr>
-<tr><td>Turtle sighting</td><td>Travel direction must be a whole number between 0 and 360 
-    (only included in TURTLE data; leading zeros are ok))</td></tr>
-<tr><td>Turtle sighting</td><td>Tail visible must be one of y, n, u, or NA (blank). Case sensitive</td></tr>
-<tr><td>Turtle sighting</td><td>In TURTLE data, the Data7 column must be NA (blank)</td></tr>
-</table>
-
-
+<p>See <code><a href='https://rdrr.io/r/base/system.file.html'>system.file("AirDAS_check.pdf", package = "swfscAirDAS")</a></code>
+for the checks performed by this function</p>
 <p>Outstanding questions/todo:</p><ul>
 <li><p>Check for valid fish ball/mola/jelly/crab pot codes in comments?</p></li>
 </ul>
