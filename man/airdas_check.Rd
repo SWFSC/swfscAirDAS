@@ -59,65 +59,8 @@ Check that AirDAS file has accepted formatting and values
 The default (internal) \code{sp.codes} file is located at 
 \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
 
-This function checks that the following is true:
-\itemize{
-  \item Event codes are one of the following: 
-    #, *, 1, A, C, E, O, P, R, s, S, t, T, V, W
-  \item The effort dot matches effort determined using T, R, O, and E events
-  \item There is an O event between each T event, and vice versa, i.e. 
-    the data does not start a new transect while still on a transect and
-    does not end a transect when already not on a transect
-  \item A T or R event does not occur while already on effort
-  \item An E event does not occur while already off effort
-  \item When the file ends, the data must be off effort and not still on a transect 
-    (i.e. an O event must occurred more recently than a T event)
-  \item All Data# columns for non-C events are right-justified
-  \item NAs are allowed for all data values when off effort except:
-    altitude, speed, species, and group size
-  \item The following events have NA (blank) Data# columns: *, R, E, O
-  \item For PHOCOENA data, all non-C events have NA (blank) Data6 and Data7 columns
-  \item Event/column pairs meet the following requirements:
-}
-
-\tabular{ll}{
-  \emph{Item} \tab \emph{Requirement}\cr
-  Viewing conditions \tab Must be one of: e, g, p, o, or NA (blank). Not case sensitive\cr
-  Altitude         \tab Can be converted to a numeric value, and is not NA\cr
-  Speed            \tab Can be converted to a numeric value, and is not NA\cr
-  HKR              \tab Characters must consist of: n, h, k, r, or NA (blank). 
-    Not case sensitive; y is also accepted for PHOCOENA data\cr
-  Percent overcast \tab Must be a whole number between 0 and 100 (leading zeros are ok)\cr
-  Beaufort         \tab Must be a whole number between 0 and 9\cr
-  Jellyfish        \tab Must be one of 0, 1, 2, or 3\cr
-  Horizontal sun   \tab Must be one of 0:12 (leading zeros are ok)\cr
-  Vertical sun     \tab Must be one of 0:4 (leading zeros are ok)\cr
-  Observers        \tab Each entry must be two characters, and no observer code can be used twice in the same P event\cr
-  Sighting (mammal) \tab Angle must be a whole number between -90 and 90 (leading zeros are ok)\cr
-  Sighting (mammal) \tab Group size must be a whole number between 1 and 5000 (leading zeros are ok)\cr
-  Sighting (mammal) \tab Species codes must be specified in sp.codes, and the first must not be \code{NA}\cr
-  Sighting (mammal) \tab Observer code must be exactly two characters, and one of the current observers 
-    as specified by the most recent P event\cr
-  Sighting (mammal) \tab Angle must be negative if sighting made by left observer, 
-    and positive if made by right observer\cr   
-  Sighting info     \tab Species percentages can be converted to numeric values, and sum to 100\cr
-  Sighting info     \tab Unused columns (DateTime, Lat, Lon, and Data1-4) of a '1' event must be NA (blank)\cr
-  Sighting info     \tab Every S code with multiple species has a 1 code immediately after it\cr
-  Sighting info     \tab For every 1 code with n non-NA sighting percentages, 
-    the event before is an S event with n non-NA species codes\cr
-  Resight           \tab Angle can be converted to a numeric value (leading zeros are ok)\cr
-  Resight           \tab Unused resight columns (Data3-7) must be NA (blank)\cr
-  Turtle sighting   \tab Angle must be a whole number between -90 and 90 (leading zeros are ok)\cr
-  Turtle sighting   \tab Group size must be a whole number between 1 and 10 
-    (only included in CARETTA data; leading zeros are ok))\cr
-  Turtle sighting   \tab Species code must be not \code{NA} and specified in sp.codes\cr
-  Turtle sighting   \tab Observer code must be exactly two characters\cr
-  Turtle sighting   \tab Turtle size must be a whole number between 1 and 9 (leading zeros are ok); 
-    one of s, m, l is also accepted for CARETTA data\cr
-  Turtle sighting   \tab Travel direction must be a whole number between 0 and 360 
-    (only included in TURTLE data; leading zeros are ok))\cr
-  Turtle sighting   \tab Tail visible must be one of y, n, u, or NA (blank). Case sensitive\cr
-  Turtle sighting   \tab In TURTLE data, the Data7 column must be NA (blank)\cr
-}
+See \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}
+for the checks performed by this function
 
 Outstanding questions/todo:
 \itemize{
