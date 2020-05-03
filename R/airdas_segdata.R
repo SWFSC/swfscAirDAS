@@ -142,7 +142,8 @@ airdas_segdata.airdas_df <- function(x, conditions, segdata.method,
   
   #----------------------------------------------------------------------------
   segdata.all %>% 
-    select(.data$seg_idx, .data$event, .data$transect, 
+    select(.data$seg_idx, .data$section_id, .data$section_sub_id, 
+           .data$event, .data$transect, 
            .data$file, .data$stlin, .data$endlin, 
            .data$lat1, .data$lon1, .data$lat2, .data$lon2, 
            .data$mlat, .data$mlon, .data$dist, 

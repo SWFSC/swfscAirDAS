@@ -201,7 +201,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
     "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", 
-    "dist_from_prev", "cont_eff_section", "effort_seg", "seg_idx", "segnum"
+    "dist_from_prev", "cont_eff_section", "seg_idx", "segnum"
   )
   if (!identical(names(x.eff), x.eff.names))
     stop("Error in airdas_effort: names of x.eff. ", 
@@ -221,7 +221,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
     mutate(included = (.data$Bft <= 5 & abs(.data$Angle) <= 78 & 
                          .data$SightStd & .data$OnEffort), 
            included = ifelse(is.na(.data$included), FALSE, .data$included)) %>% 
-    select(-.data$dist_from_prev, -.data$cont_eff_section, -.data$effort_seg)
+    select(-.data$dist_from_prev, -.data$cont_eff_section)
   
   
   # Make data frame with nSI and ANI columns, and join it with segdata
@@ -247,11 +247,16 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
   siteinfo.forsegdata.df <- segdata.col1 %>% 
     bind_cols(siteinfo.forsegdata.list)
   
-  segdata <- segdata %>% 
-    left_join(siteinfo.forsegdata.df, by = "seg_idx")
-  
   
   #----------------------------------------------------------------------------
-  # Return list
+  # Format and return
+  segdata <- segdata %>% 
+    left_join(siteinfo.forsegdata.df, by = "seg_idx") %>% 
+    select(-.data$seg_idx)
+  
+  siteinfo <- siteinfo %>% 
+    select(-.data$seg_idx) %>%
+    select(.data$segnum, .data$mlat, .data$mlon, everything())
+  
   list(segdata = segdata, siteinfo = siteinfo, randpicks = randpicks)
 } 

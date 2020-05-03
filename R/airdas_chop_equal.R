@@ -236,7 +236,7 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
     do.call(rbind, lapply(eff.chop.list, function(i) i[["das.df.segdata"]])), 
     stringsAsFactors = FALSE
   ) %>%
-    mutate(segnum = seq_along(.data$seg_idx), 
+    mutate(segnum = seq_along(.data$file), 
            dist = round(.data$dist, 4)) %>%
     select(.data$segnum, .data$seg_idx, everything())
   
