@@ -20,7 +20,8 @@ airdas_comments_process(x)
 or a data frame that can be coerced to a \code{airdas_dfr} object}
 }
 \value{
-\code{x}, with the following columns added: 
+\code{x}, filtered for comments with recorded data, 
+  with the following columns added: 
   \itemize{
     \item comment_str: the full comment string
     \item Misc1: level one descriptor, e.g. "Fish ball" or "Jellyfish"
@@ -29,6 +30,9 @@ or a data frame that can be coerced to a \code{airdas_dfr} object}
     \item flag_check: logical indicating if the comment string was longer 
       than an expected number of characters, and thus should be manually inspected 
   }
+  
+ If there are no comments with recorded data in \code{x}, 
+ a message is printed and the function returns \code{NULL}
 }
 \description{
 Extract miscellaneous information recorded in AirDAS data comments

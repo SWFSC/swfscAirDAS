@@ -42,7 +42,8 @@
 #'     Other      \tab o\cr
 #'   }
 #'   
-#' @return \code{x}, with the following columns added: 
+#' @return \code{x}, filtered for comments with recorded data, 
+#'   with the following columns added: 
 #'   \itemize{
 #'     \item comment_str: the full comment string
 #'     \item Misc1: level one descriptor, e.g. "Fish ball" or "Jellyfish"
@@ -52,8 +53,8 @@
 #'       than an expected number of characters, and thus should be manually inspected 
 #'   }
 #'   
-#'    
-#'   
+#'  If there are no comments with recorded data in \code{x}, 
+#'  a message is printed and the function returns \code{NULL}   
 #' 
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -110,7 +111,7 @@ airdas_comments_process.airdas_df <- function(x) {
              Misc1 = "fish ball", 
              Misc2 = substr(.data$var_extract, 4, 4), 
              Value = suppressWarnings(as.numeric(substr(.data$var_extract, 3, 3))))
-
+    
     # Get data for 10+ fbs
     fb.5 <- x.c.fb %>% 
       mutate(var_extract = str_match_all(.data$str_lower, "fb(...)")) %>% 
@@ -195,8 +196,15 @@ airdas_comments_process.airdas_df <- function(x) {
   
   #----------------------------------------------------------------------------
   ### Return
-  df.out <- bind_rows(fb.df, mola.df, jelly.df, cp.df) %>% 
-    select(-.data$var_extract, -.data$DateTime, -.data$str_lower) %>% 
+  df.out <- bind_rows(fb.df, mola.df, jelly.df, cp.df) 
+  if (nrow(df.out) == 0) {
+    message("No comment-recorded data were in the provided object")
+  } else {
+    df.out <- df.out %>% select(-.data$var_extract)
+  }
+  
+  df.out <- df.out %>% 
+    select(-.data$DateTime, -.data$str_lower) %>% 
     arrange(.data$line_num) 
   
   right_join(x, df.out, by = c("file_das", "line_num"))
