@@ -1,6 +1,8 @@
+y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+y.proc <- airdas_process(y.read)
+
+
 test_that("functions return expected airdas_ classes", {
-  y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
-  y.proc <- airdas_process(y.read)
   y.sight <- airdas_sight(y.proc)
   
   expect_identical(c("airdas_dfr", "data.frame"), class(y.read))
@@ -10,9 +12,6 @@ test_that("functions return expected airdas_ classes", {
 
 
 test_that("as_airdas_ functions work as expected", {
-  y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
-  y.proc <- airdas_process(y.read)
-  
   y.read1 <- y.read2 <- y.read3 <- y.read
   y.read1$ttt <- 2
   y.read2$EffortDot <- "a"
@@ -37,4 +36,19 @@ test_that("as_airdas_ functions work as expected", {
   expect_error(as_airdas_df(y.proc[, 1:10]))
   expect_error(as_airdas_df(y.proc2))
   expect_identical(c("airdas_df", "data.frame"), class(as_airdas_df(y.proc3)))
+})
+
+
+test_that("can create airdas_dfr and airdas_df objects with zero rows", {
+  y.read0 <- y.read[integer(0), ]
+  y.proc0 <- y.proc[integer(0), ]
+  
+  y.proc0b <- y.proc[integer(0), 1:4]
+  
+  expect_identical(c("airdas_dfr", "data.frame"), class(as_airdas_dfr(y.read0)))
+  expect_identical(c("airdas_dfr", "data.frame"), class(as_airdas_dfr(y.proc0)))
+  expect_identical(c("airdas_df", "data.frame"), class(as_airdas_df(y.proc0)))
+  
+  expect_error(as_airdas_dfr(y.proc0b))
+  expect_error(as_airdas_df(y.proc0b))
 })
