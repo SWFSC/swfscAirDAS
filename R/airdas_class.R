@@ -9,16 +9,19 @@
 #'   \code{\link{airdas_read}} or \code{\link{as_airdas_dfr}}, 
 #'   and are intended to be passed directly to \code{\link{airdas_process}}.
 #'
-#'   Subsetting or otherwise altering an object of class \code{airdas_dfr} will cause the object to drop its
-#'   \code{airdas_dfr} class attribute. \code{\link{airdas_process}} will then try to coerce the object to a
+#'   Subsetting or otherwise altering an object of class \code{airdas_dfr} will cause 
+#'   the object to drop its \code{airdas_dfr} class attribute, although note that combining
+#'   two \code{airdas_dfr} objects using \code{\link[base:cbind]{rbind}} 
+#'   will return an object with a \code{airdas_dfr} class attribute.
+#'   \code{\link{airdas_process}} will then try to coerce the object to a
 #'   \code{airdas_dfr} object. It is \bold{strongly} recommended to pass an object of class \code{airdas_dfr} to
 #'   \code{\link{airdas_process}} before subsetting, e.g. for events from a certain date range.
 #'
 #' @section Properties of \code{airdas_dfr} objects:
 #'
 #'   Objects of class \code{airdas_dfr} have a class attribute of \code{c("airdas_dfr", "data.frame")}.
-#'   They must have a column \code{file_type} where all values are 1) the same and 
-#'   2) one of: "turtle", "caretta", "survey", or "phocoena" 
+#'   They must have a column \code{file_type} where all values are one of: 
+#'   "turtle", "caretta", "survey", or "phocoena" 
 #'   (case sensitive; see \code{\link{airdas_read}} for more details). 
 #'   \code{airdas_dfr} objects also must not have any \code{NA} event codes.
 #'   
@@ -66,7 +69,9 @@ NULL
 #'
 #'   Subsetting, say for a specific date or transect number, 
 #'   or otherwise altering an object of class \code{airdas_df}
-#'   will cause the object to drop its \code{airdas_df} class attribute.
+#'   will cause the object to drop its \code{airdas_df} class attribute, although note 
+#'   that combining two \code{airdas_df} objects using \code{\link[base:cbind]{rbind}} 
+#'   will return an object with a \code{airdas_df} class attribute.
 #'   If this object is then passed to a DAS processing function such as \code{\link{airdas_sight}}, 
 #'   the function will try to coerce the object to a \code{airdas_df} object.
 #'
@@ -76,9 +81,9 @@ NULL
 #'   All values in the OnEffort column must be \code{TRUE} or \code{FALSE} (no \code{NA} values).
 #'   All on effort events must have non-\code{NA} Lat/Lon/DateTime values, and 
 #'   there must be no events with a "#" event code (deleted event). 
-#'   Like \code{airdas_dfr} events, there must be a \code{file_type} column where all values are 
-#'   1) the same and 2) one of: "turtle", "caretta", "survey", or "phocoena" 
-#'   (case sensitive; see \code{\link{airdas_read}} for more details). 
+#'   Like \code{airdas_dfr} events, there must be a \code{file_type} column where 
+#'   all values are one of: "turtle", "caretta", "survey", or "phocoena" 
+#'   (case sensitive; see \code{\link{airdas_read}} for more details about file types). 
 #'   
 #'   In addition, \code{airdas_df} objects must have the following column names and classes:
 #'   \tabular{ll}{

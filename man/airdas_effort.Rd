@@ -15,7 +15,7 @@ airdas_effort(x, ...)
   method,
   sp.codes,
   conditions = NULL,
-  dist.method = "vincenty",
+  dist.method = "greatcircle",
   num.cores = NULL,
   ...
 )

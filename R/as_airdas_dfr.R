@@ -60,11 +60,10 @@ as_airdas_dfr.data.frame <- function(x) {
     }
   }
   
-  # TODO: They shouldn't all have to be the same
   # Check that file_type column has an expected value
   file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
-  if (!(length(unique(x$file_type)) <= 1 & all(x$file_type %in% file.type.acc)))
-    stop("The file_type column values must be 1) all the same and 2) one of: ", 
+  if (!all(x$file_type %in% file.type.acc))
+    stop("The file_type column values all must be one of: ", 
          paste(file.type.acc, collapse = ", "))
   
   # Check that no events are NA

@@ -84,6 +84,12 @@ as_airdas_df.data.frame <- function(x) {
     }
   }
   
+  # Check that no events are NA
+  if (any(is.na(x$Event)))
+    stop("The provided data cannot be coerced to an object of class airdas_df ",
+         "because the following line(s) have NA Event value(s):\n", 
+         paste(x$line_num[is.na(x$Event)], collapse = ", "))
+  
   # Check that all of OnEffort is either TRUE/FALSE; no NAs
   if (any(is.na(x$OnEffort))) 
     stop("The following line(s) have OnEffort values of NA, ", 
@@ -103,13 +109,12 @@ as_airdas_df.data.frame <- function(x) {
   # Check for no deleted events
   if (any(x$Event == "#"))
     warning("This airdas_df object has some deleted events, meaning ", 
-            "some \"#\" events. Should these be removed?")
+            "some \"#\" events. These should be removed")
   
-  # TODO: They shouldn't all have to be the same
   # Check that file_type column has an expected value
   file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
-  if (!(length(unique(x$file_type)) <= 1 & all(x$file_type %in% file.type.acc)))
-    stop("The file_type column values must be 1) all the same and 2) one of: ", 
+  if (!all(x$file_type %in% file.type.acc))
+    stop("The file_type column values all must be one of: ", 
          paste(file.type.acc, collapse = ", "))
   
   # Add class and return

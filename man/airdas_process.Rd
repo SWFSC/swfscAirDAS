@@ -90,6 +90,9 @@ Process AirDAS data (the output of \code{\link{airdas_read}}),
 If \code{x} is a character, it is assumed to be a filepath and 
   first passed to \code{\link{airdas_read}}. 
   This output is then processed.
+  
+  This function cannot handle concatenated airdas_dfr objects of multiple file types. 
+  In other words, AirDAS data must be processed and then concatenated.
      
   AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
   For instance, a 'W' event indicates when one or more weather conditions 

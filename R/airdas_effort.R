@@ -124,7 +124,7 @@ airdas_effort.data.frame <- function(x, ...) {
 #' @name airdas_effort
 #' @export
 airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL, 
-                                    dist.method = "vincenty", 
+                                    dist.method = "greatcircle", 
                                     num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks

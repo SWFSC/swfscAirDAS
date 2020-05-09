@@ -14,8 +14,11 @@ The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
   \code{\link{airdas_read}} or \code{\link{as_airdas_dfr}}, 
   and are intended to be passed directly to \code{\link{airdas_process}}.
 
-  Subsetting or otherwise altering an object of class \code{airdas_dfr} will cause the object to drop its
-  \code{airdas_dfr} class attribute. \code{\link{airdas_process}} will then try to coerce the object to a
+  Subsetting or otherwise altering an object of class \code{airdas_dfr} will cause 
+  the object to drop its \code{airdas_dfr} class attribute, although note that combining
+  two \code{airdas_dfr} objects using \code{\link[base:cbind]{rbind}} 
+  will return an object with a \code{airdas_dfr} class attribute.
+  \code{\link{airdas_process}} will then try to coerce the object to a
   \code{airdas_dfr} object. It is \bold{strongly} recommended to pass an object of class \code{airdas_dfr} to
   \code{\link{airdas_process}} before subsetting, e.g. for events from a certain date range.
 }
@@ -23,8 +26,8 @@ The \code{airdas_dfr} class is a subclass of \code{\link[base]{data.frame}},
 
 
   Objects of class \code{airdas_dfr} have a class attribute of \code{c("airdas_dfr", "data.frame")}.
-  They must have a column \code{file_type} where all values are 1) the same and 
-  2) one of: "turtle", "caretta", "survey", or "phocoena" 
+  They must have a column \code{file_type} where all values are one of: 
+  "turtle", "caretta", "survey", or "phocoena" 
   (case sensitive; see \code{\link{airdas_read}} for more details). 
   \code{airdas_dfr} objects also must not have any \code{NA} event codes.
   

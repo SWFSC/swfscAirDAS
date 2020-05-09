@@ -26,6 +26,9 @@
 #' @details If \code{x} is a character, it is assumed to be a filepath and 
 #'   first passed to \code{\link{airdas_read}}. 
 #'   This output is then processed.
+#'   
+#'   This function cannot handle concatenated airdas_dfr objects of multiple file types. 
+#'   In other words, AirDAS data must be processed and then concatenated.
 #'      
 #'   AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
 #'   For instance, a 'W' event indicates when one or more weather conditions 
@@ -124,7 +127,9 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
   #----------------------------------------------------------------------------
   # Input checks
   file.type <- unique(x$file_type)
-  if (length(file.type) != 1) stop("Error: Inconsistent file type in x")
+  if (length(file.type) != 1) 
+    stop("airdas_process can only data of a single file type. ", 
+         "Please process, and then concatenate files.")
   
   stopifnot(
     length(days.gap.part) == 1, 

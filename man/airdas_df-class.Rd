@@ -19,7 +19,9 @@ The \code{airdas_df} class is a subclass of \code{\link[base]{data.frame}},
 
   Subsetting, say for a specific date or transect number, 
   or otherwise altering an object of class \code{airdas_df}
-  will cause the object to drop its \code{airdas_df} class attribute.
+  will cause the object to drop its \code{airdas_df} class attribute, although note 
+  that combining two \code{airdas_df} objects using \code{\link[base:cbind]{rbind}} 
+  will return an object with a \code{airdas_df} class attribute.
   If this object is then passed to a DAS processing function such as \code{\link{airdas_sight}}, 
   the function will try to coerce the object to a \code{airdas_df} object.
 }
@@ -30,9 +32,9 @@ The \code{airdas_df} class is a subclass of \code{\link[base]{data.frame}},
   All values in the OnEffort column must be \code{TRUE} or \code{FALSE} (no \code{NA} values).
   All on effort events must have non-\code{NA} Lat/Lon/DateTime values, and 
   there must be no events with a "#" event code (deleted event). 
-  Like \code{airdas_dfr} events, there must be a \code{file_type} column where all values are 
-  1) the same and 2) one of: "turtle", "caretta", "survey", or "phocoena" 
-  (case sensitive; see \code{\link{airdas_read}} for more details). 
+  Like \code{airdas_dfr} events, there must be a \code{file_type} column where 
+  all values are one of: "turtle", "caretta", "survey", or "phocoena" 
+  (case sensitive; see \code{\link{airdas_read}} for more details about file types). 
   
   In addition, \code{airdas_df} objects must have the following column names and classes:
   \tabular{ll}{
