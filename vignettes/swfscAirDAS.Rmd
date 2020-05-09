@@ -126,7 +126,7 @@ A comment indicating whether or not something is being recorded will likely cont
 
 ```{r comm}
 y.comm <- airdas_comments(y.proc)
-head(y.comm, 4)
+glimpse(y.comm)
 
 str_subset(y.comm$comment_str, "record") #Could also use grepl() here
 ```
@@ -134,6 +134,6 @@ str_subset(y.comm$comment_str, "record") #Could also use grepl() here
 For 'systematic' comments, such as fish balls or crab pots, you can extract this data using `airdas_comments_process`
 
 ```{r comm2}
-airdas_comments_process(y.proc)
+glimpse(airdas_comments_process(y.proc))
 ```
 

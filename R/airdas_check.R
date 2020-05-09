@@ -30,6 +30,7 @@
 #' Outstanding questions/todo:
 #' \itemize{
 #'   \item Attempt to check for valid fish ball/mola/jelly/crab pot codes?
+#'   \item Add check for valid lat lon coordinates
 #' }
 #'
 #' @return 

@@ -20,9 +20,8 @@ airdas_comments(x)
 or a data frame that can be coerced to a \code{airdas_dfr} object}
 }
 \value{
-A data frame with the comment strings in column comment_str, 
-  as well as the following columns from \code{x}: 
-  file_das, line_num, and DateTime
+\code{x}, with the added column comment_str 
+  containing the concatenated comment strings
 }
 \description{
 Extract comments from \code{airdas_dfr} or \code{airdas_df} object

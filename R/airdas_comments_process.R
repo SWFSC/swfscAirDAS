@@ -92,7 +92,9 @@ airdas_comments_process.airdas_df <- function(x) {
   #----------------------------------------------------------------------------
   stopifnot(inherits(x, "airdas_df") | inherits(x, "airdas_dfr"))
   
-  x.c <- airdas_comments(x) %>% mutate(str_lower = tolower(.data$comment_str))
+  x.c <- airdas_comments(x) %>% 
+    select(.data$file_das, .data$line_num, .data$comment_str) %>% 
+    mutate(str_lower = tolower(.data$comment_str))
   df.na <- x.c %>% 
     mutate(Misc1 = NA, Misc2 = NA, Value = NA, flag_check = FALSE) %>% 
     slice(0)
@@ -204,7 +206,7 @@ airdas_comments_process.airdas_df <- function(x) {
   }
   
   df.out <- df.out %>% 
-    select(-.data$DateTime, -.data$str_lower) %>% 
+    select(-.data$str_lower) %>% 
     arrange(.data$line_num) 
   
   right_join(x, df.out, by = c("file_das", "line_num"))

@@ -67,6 +67,7 @@ or online at \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirD
 Outstanding questions/todo:
 \itemize{
   \item Attempt to check for valid fish ball/mola/jelly/crab pot codes?
+  \item Add check for valid lat lon coordinates
 }
 }
 \examples{

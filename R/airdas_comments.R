@@ -12,9 +12,8 @@
 #'   phrase "record" to determine what extra information (e.g. molas)
 #'   was being recorded vs ignored.
 #' 
-#' @return A data frame with the comment strings in column comment_str, 
-#'   as well as the following columns from \code{x}: 
-#'   file_das, line_num, and DateTime
+#' @return \code{x}, with the added column comment_str 
+#'   containing the concatenated comment strings
 #' 
 #' @examples 
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -45,21 +44,24 @@ airdas_comments.data.frame <- function(x) {
 #' @name airdas_comments
 #' @export
 airdas_comments.airdas_df <- function(x) {
-  airdas_comments(as_airdas_dfr(x))
+  as_airdas_df(.airdas_comments(x))
 }
 
 
 #' @name airdas_comments
 #' @export
 airdas_comments.airdas_dfr <- function(x) {
+  as_airdas_dfr(.airdas_comments(x))
+}
+
+
+.airdas_comments <- function(x) {
+  stopifnot(inherits(x, "airdas_df") | inherits(x, "airdas_dfr"))
+  
   x.c <- x[x$Event == "C", ]
   x.c.c <- apply(x.c[, paste0("Data", 1:7)], 1, function(i) {
     paste(na.omit(i), collapse = "")
   })
   
-  data.frame(
-    file_das = x.c$file_das, line_num = x.c$line_num, 
-    DateTime = x.c$DateTime, comment_str = x.c.c, 
-    stringsAsFactors = FALSE
-  )  
+  x.c %>% mutate(comment_str = x.c.c)
 }
