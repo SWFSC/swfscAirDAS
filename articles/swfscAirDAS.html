@@ -228,11 +228,11 @@
 <span class="no">y.eff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
   <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"condition"</span>, <span class="kw">seg.min.km</span> <span class="kw">=</span> <span class="fl">0</span>,
   <span class="kw">dist.method</span> <span class="kw">=</span> <span class="st">"greatcircle"</span>, <span class="kw">conditions</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"Bft"</span>, <span class="st">"CCover"</span>),
-  <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"bm"</span>, <span class="st">"dc"</span>),
   <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
 )
+<span class="no">y.eff.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort_sight.html">airdas_effort_sight</a></span>(<span class="no">y.eff</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"bm"</span>, <span class="st">"dc"</span>))
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff</span>$<span class="no">segdata</span>)
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">segdata</span>)
 <span class="co">#&gt; Rows: 7</span>
 <span class="co">#&gt; Columns: 26</span>
 <span class="co">#&gt; $ segnum         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7</span>
@@ -262,7 +262,7 @@
 <span class="co">#&gt; $ dc_nSI         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
 <span class="co">#&gt; $ dc_ANI         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff</span>$<span class="no">siteinfo</span>)
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">siteinfo</span>)
 <span class="co">#&gt; Rows: 28</span>
 <span class="co">#&gt; Columns: 46</span>
 <span class="co">#&gt; $ segnum          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 6,…</span>
@@ -310,17 +310,16 @@
 <span class="co">#&gt; $ TurtleSizeFt    &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
 <span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
 <span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span>
-<span class="co">#&gt; $ included        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span></pre></body></html></div>
+<span class="co">#&gt; $ included        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE,…</span></pre></body></html></div>
 <p>If you wanted to determine the number of humpback whales on each transect, for instance, you could do the following</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># 'Chop' the effort by continuous effort section</span>
 <span class="no">y.eff.section</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
-  <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"section"</span>,
-  <span class="kw">dist.method</span> <span class="kw">=</span> <span class="st">"greatcircle"</span>, <span class="kw">conditions</span> <span class="kw">=</span> <span class="kw">NULL</span>,
-  <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>),
+  <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"section"</span>, <span class="kw">dist.method</span> <span class="kw">=</span> <span class="st">"greatcircle"</span>, <span class="kw">conditions</span> <span class="kw">=</span> <span class="kw">NULL</span>,
   <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
 )
+<span class="no">y.eff.section.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort_sight.html">airdas_effort_sight</a></span>(<span class="no">y.eff.section</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>))
 
-<span class="no">y.eff.section</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span>
+<span class="no">y.eff.section.sight</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">transect_id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">.data</span>$<span class="no">event</span> <span class="kw">==</span> <span class="st">"T"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">transect_id</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">dist_sum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">dist</span>),

@@ -129,7 +129,6 @@
 <span class='fu'>airdas_effort</span>(
   <span class='no'>x</span>,
   <span class='no'>method</span>,
-  <span class='no'>sp.codes</span>,
   <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>dist.method</span> <span class='kw'>=</span> <span class='st'>"greatcircle"</span>,
   <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -156,11 +155,6 @@ Can be <code>"condition"</code>, <code>"equallength"</code>,
 or <code>"section"</code> (case-sensitive) to use 
 <code><a href='airdas_chop_condition.html'>airdas_chop_condition</a></code>, <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code>, 
 or <code><a href='airdas_chop_section.html'>airdas_chop_section</a></code>, respectively</p></td>
-    </tr>
-    <tr>
-      <th>sp.codes</th>
-      <td><p>character; species code(s) to include in segdata. 
-These code(s) will be converted to lower case to match <code><a href='airdas_sight.html'>airdas_sight</a></code></p></td>
     </tr>
     <tr>
       <th>conditions</th>
@@ -193,13 +187,11 @@ Using 1 core likely will be faster for smaller datasets</p></td>
     <p>List of three data frames:</p><ul>
 <li><p>segdata: one row for every segment, and columns for information including
       unique segment number, event code that started the associated continuous effort section, 
-      start/end/midpoint coordinates, conditions (e.g. Beaufort), 
-      and number of sightings and number of animals on that segment for every species 
-      indicated in <code>sp.codes</code>.</p></li>
+      start/end/midpoint coordinates, and conditions (e.g. Beaufort)</p></li>
 <li><p>siteinfo: details for all sightings in <code>x</code>, including: 
       the unique segment number it is associated with, segment mid points (lat/lon), 
-      and whether the sighting was included in the segdata counts (column <code>included</code>), 
-      in addition to the other output information described in <code><a href='airdas_sight.html'>airdas_sight</a></code>.</p></li>
+      the 'included' column described in the Details section,
+      and the output information described in <code><a href='airdas_sight.html'>airdas_sight</a></code></p></li>
 <li><p>randpicks: see <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code>. 
       <code>NULL</code> if using "condition" method.</p></li>
 </ul>
@@ -233,15 +225,19 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 <p>The <code>"section"</code> method involves 'chopping' the effort into continuous effort sections,
   i.e. each continuous effort section is a single effort segment.
   See <code><a href='airdas_chop_section.html'>airdas_chop_section</a></code> for more details about this method.</p>  
-<p>The sightings included in the segdata counts are filtered as follows: 
-  Beaufort is less than or equal to five, the declination angle is less than 78, 
-  it is a standard sighting, and the sighting was made while on effort. 
-  Included sightings are those with a <code>TRUE</code> value in the 'included'
-  column in siteinfo (described below).
-  TODO: Allow user to specify this.</p>
 <p>The distance between the lat/lon points of subsequent events
   is calculated using the method specified in <code>dist.method</code>
   See <code><a href='airdas_sight.html'>airdas_sight</a></code> for how the sightings are processed.</p>
+<p>The siteinfo data frame includes the column 'included',
+  which is used in <code><a href='airdas_effort_sight.html'>airdas_effort_sight</a></code> when summarizing
+  the number of sightings and animals for selected species.
+  <code><a href='airdas_effort_sight.html'>airdas_effort_sight</a></code> is a separate function to allow users to
+  personalize the included values as desired for their analysis.
+  By default, i.e. in the output of this function, 'included' is <code>TRUE</code> if:
+  the sighting was made when on effort, 
+  by it was a standard sighting (see <code><a href='airdas_sight.html'>airdas_sight</a></code>), 
+  in a Beaufort sea state less than or equal to five, 
+  and with a sighting angle less than or equal to 78.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
@@ -249,8 +245,8 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 
 <span class='co'># Using "condition" method</span>
 <span class='fu'>airdas_effort</span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"condition"</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>),
-  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='st'>"Bft"</span>, <span class='kw'>seg.min.km</span> <span class='kw'>=</span> <span class='fl'>0.05</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"condition"</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='st'>"Bft"</span>, <span class='kw'>seg.min.km</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
+  <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</div><div class='output co'>#&gt; $segdata
 #&gt;   segnum section_id section_sub_id event transect              file stlin
 #&gt; 1      1          1              1     T       T1 airdas_sample.das     3
@@ -266,20 +262,13 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 4     49 39.23317 -123.5143 39.23283 -123.6032 39.23245 -123.5588  7.6620
 #&gt; 5     78 39.22000 -123.6078 39.21683 -123.3605 39.21667 -123.4842 21.3146
 #&gt; 6     88 39.21683 -123.3605 39.21700 -123.2418 39.21700 -123.3011 10.2336
-#&gt;             mDateTime year month day    mtime maxdistBft bm_nSI bm_ANI mn_nSI
-#&gt; 1 2015-04-09 12:34:28 2015     4   9 12:34:28          1      3     11      5
-#&gt; 2 2015-04-09 12:37:58 2015     4   9 12:37:58          2      0      0      0
-#&gt; 3 2015-04-09 12:40:34 2015     4   9 12:40:34          2      0      0      0
-#&gt; 4 2015-04-09 12:42:25 2015     4   9 12:42:25          1      0      0      1
-#&gt; 5 2015-04-09 12:50:27 2015     4   9 12:50:27          1      3     13      1
-#&gt; 6 2015-04-09 12:55:47 2015     4   9 12:55:47          2      0      0      2
-#&gt;   mn_ANI
-#&gt; 1     23
-#&gt; 2      0
-#&gt; 3      0
-#&gt; 4      3
-#&gt; 5      6
-#&gt; 6     12
+#&gt;             mDateTime year month day    mtime maxdistBft
+#&gt; 1 2015-04-09 12:34:28 2015     4   9 12:34:28          1
+#&gt; 2 2015-04-09 12:37:58 2015     4   9 12:37:58          2
+#&gt; 3 2015-04-09 12:40:34 2015     4   9 12:40:34          2
+#&gt; 4 2015-04-09 12:42:25 2015     4   9 12:42:25          1
+#&gt; 5 2015-04-09 12:50:27 2015     4   9 12:50:27          1
+#&gt; 6 2015-04-09 12:55:47 2015     4   9 12:55:47          2
 #&gt; 
 #&gt; $siteinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
@@ -434,8 +423,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 <span class='co'># Using "equallength" method</span>
 <span class='no'>y.rand</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample_randpicks.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='fu'>airdas_effort</span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"equallength"</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>),
-  <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Bft"</span>, <span class='st'>"CCover"</span>),
+  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"equallength"</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Bft"</span>, <span class='st'>"CCover"</span>),
   <span class='kw'>seg.km</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>randpicks.load</span> <span class='kw'>=</span> <span class='no'>y.rand</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )</div><div class='output co'>#&gt; $segdata
 #&gt;    segnum section_id section_sub_id event transect              file stlin
@@ -484,52 +472,29 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 20     82 39.21667 -123.3294 39.21700 -123.3114 39.21691 -123.3203 1.5482
 #&gt; 21     83 39.21700 -123.3114 39.21728 -123.2766 39.21703 -123.2939 3.0000
 #&gt; 22     88 39.21728 -123.2766 39.21700 -123.2418 39.21700 -123.2591 3.0000
-#&gt;              mDateTime year month day    mtime avgBft avgCCover bm_nSI bm_ANI
-#&gt; 1  2015-04-09 12:31:27 2015     4   9 12:31:27   1.00     10.00      0      0
-#&gt; 2  2015-04-09 12:32:28 2015     4   9 12:32:28   1.00     10.00      1      4
-#&gt; 3  2015-04-09 12:33:30 2015     4   9 12:33:30   1.00     10.00      1      5
-#&gt; 4  2015-04-09 12:34:28 2015     4   9 12:34:28   1.00     10.00      0      0
-#&gt; 5  2015-04-09 12:35:28 2015     4   9 12:35:28   1.00     10.00      1      2
-#&gt; 6  2015-04-09 12:36:30 2015     4   9 12:36:30   1.00     10.00      0      0
-#&gt; 7  2015-04-09 12:37:30 2015     4   9 12:37:30   1.03     10.00      0      0
-#&gt; 8  2015-04-09 12:40:30 2015     4   9 12:40:30   2.00     15.02      0      0
-#&gt; 9  2015-04-09 12:41:30 2015     4   9 12:41:30   1.22     20.00      0      0
-#&gt; 10 2015-04-09 12:42:30 2015     4   9 12:42:30   1.00     20.00      0      0
-#&gt; 11 2015-04-09 12:43:21 2015     4   9 12:43:21   1.00     20.00      0      0
-#&gt; 12 2015-04-09 12:47:25 2015     4   9 12:47:25   1.00     20.00      0      0
-#&gt; 13 2015-04-09 12:48:30 2015     4   9 12:48:30   1.00     20.00      0      0
-#&gt; 14 2015-04-09 12:49:30 2015     4   9 12:49:30   1.00     20.00      0      0
-#&gt; 15 2015-04-09 12:50:30 2015     4   9 12:50:30   1.00     20.00      0      0
-#&gt; 16 2015-04-09 12:51:27 2015     4   9 12:51:27   1.00     20.00      0      0
-#&gt; 17 2015-04-09 12:52:24 2015     4   9 12:52:24   1.00     20.00      3     13
-#&gt; 18 2015-04-09 12:53:27 2015     4   9 12:53:27   1.00     20.00      0      0
-#&gt; 19 2015-04-09 12:54:30 2015     4   9 12:54:30   1.90     20.00      0      0
-#&gt; 20 2015-04-09 12:55:30 2015     4   9 12:55:30   2.00     20.00      0      0
-#&gt; 21 2015-04-09 12:56:20 2015     4   9 12:56:20   2.00     20.00      0      0
-#&gt; 22 2015-04-09 12:57:05 2015     4   9 12:57:05   2.00     20.00      0      0
-#&gt;    mn_nSI mn_ANI
-#&gt; 1       2     12
-#&gt; 2       2      7
-#&gt; 3       0      0
-#&gt; 4       0      0
-#&gt; 5       0      0
-#&gt; 6       1      4
-#&gt; 7       0      0
-#&gt; 8       0      0
-#&gt; 9       0      0
-#&gt; 10      1      3
-#&gt; 11      0      0
-#&gt; 12      0      0
-#&gt; 13      0      0
-#&gt; 14      0      0
-#&gt; 15      0      0
-#&gt; 16      1      6
-#&gt; 17      0      0
-#&gt; 18      0      0
-#&gt; 19      1      6
-#&gt; 20      1      6
-#&gt; 21      0      0
-#&gt; 22      0      0
+#&gt;              mDateTime year month day    mtime   avgBft avgCCover
+#&gt; 1  2015-04-09 12:31:27 2015     4   9 12:31:27 1.000000  10.00000
+#&gt; 2  2015-04-09 12:32:28 2015     4   9 12:32:28 1.000000  10.00000
+#&gt; 3  2015-04-09 12:33:30 2015     4   9 12:33:30 1.000000  10.00000
+#&gt; 4  2015-04-09 12:34:28 2015     4   9 12:34:28 1.000000  10.00000
+#&gt; 5  2015-04-09 12:35:28 2015     4   9 12:35:28 1.000000  10.00000
+#&gt; 6  2015-04-09 12:36:30 2015     4   9 12:36:30 1.000000  10.00000
+#&gt; 7  2015-04-09 12:37:30 2015     4   9 12:37:30 1.033724  10.00000
+#&gt; 8  2015-04-09 12:40:30 2015     4   9 12:40:30 2.000000  15.02091
+#&gt; 9  2015-04-09 12:41:30 2015     4   9 12:41:30 1.216574  20.00000
+#&gt; 10 2015-04-09 12:42:30 2015     4   9 12:42:30 1.000000  20.00000
+#&gt; 11 2015-04-09 12:43:21 2015     4   9 12:43:21 1.000000  20.00000
+#&gt; 12 2015-04-09 12:47:25 2015     4   9 12:47:25 1.000000  20.00000
+#&gt; 13 2015-04-09 12:48:30 2015     4   9 12:48:30 1.000000  20.00000
+#&gt; 14 2015-04-09 12:49:30 2015     4   9 12:49:30 1.000000  20.00000
+#&gt; 15 2015-04-09 12:50:30 2015     4   9 12:50:30 1.000000  20.00000
+#&gt; 16 2015-04-09 12:51:27 2015     4   9 12:51:27 1.000000  20.00000
+#&gt; 17 2015-04-09 12:52:24 2015     4   9 12:52:24 1.000000  20.00000
+#&gt; 18 2015-04-09 12:53:27 2015     4   9 12:53:27 1.000000  20.00000
+#&gt; 19 2015-04-09 12:54:30 2015     4   9 12:54:30 1.895145  20.00000
+#&gt; 20 2015-04-09 12:55:30 2015     4   9 12:55:30 2.000000  20.00000
+#&gt; 21 2015-04-09 12:56:20 2015     4   9 12:56:20 2.000000  20.00000
+#&gt; 22 2015-04-09 12:57:05 2015     4   9 12:57:05 2.000000  20.00000
 #&gt; 
 #&gt; $siteinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
@@ -685,10 +650,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 3              3         9
 #&gt; </div><div class='input'>
 <span class='co'># Using "section" method</span>
-<span class='fu'>airdas_effort</span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"section"</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>),
-  <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
-)</div><div class='output co'>#&gt; $segdata
+<span class='fu'>airdas_effort</span>(<span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"section"</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; $segdata
 #&gt;   segnum section_id section_sub_id event transect              file stlin
 #&gt; 1      1          1              1     T       T1 airdas_sample.das     3
 #&gt; 2      2          2              1     R       T1 airdas_sample.das    40
@@ -697,18 +659,14 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 1     37 39.2355 -123.1563 39.23400 -123.4047 39.23309 -123.2804 21.4029
 #&gt; 2     49 39.2340 -123.4915 39.23283 -123.6032 39.23275 -123.5388 11.1215
 #&gt; 3     88 39.2200 -123.6078 39.21700 -123.2418 39.21729 -123.4248 31.5482
-#&gt;             mDateTime year month day    mtime avgBft avgCCover avgJelly
-#&gt; 1 2015-04-09 12:34:29 2015     4   9 12:34:29   1.01     10.00     0.88
-#&gt; 2 2015-04-09 12:41:51 2015     4   9 12:41:51   1.31     18.66     0.00
-#&gt; 3 2015-04-09 12:52:10 2015     4   9 12:52:10   1.32     20.00     0.00
-#&gt;   avgHorizSun avgVertSun avgHaze avgKelp avgRedTide avgAltFt avgSpKnot bm_nSI
-#&gt; 1           6         NA       0       0       0.44   650.00     100.0      3
-#&gt; 2           6         NA       0       0       0.00   650.00     100.0      0
-#&gt; 3          12         NA       0       0       0.09   669.87      93.5      3
-#&gt;   bm_ANI mn_nSI mn_ANI
-#&gt; 1     11      5     23
-#&gt; 2      0      1      3
-#&gt; 3     13      3     18
+#&gt;             mDateTime year month day    mtime   avgBft avgCCover  avgJelly
+#&gt; 1 2015-04-09 12:34:29 2015     4   9 12:34:29 1.005362   10.0000 0.8757162
+#&gt; 2 2015-04-09 12:41:51 2015     4   9 12:41:51 1.311061   18.6569 0.0000000
+#&gt; 3 2015-04-09 12:52:10 2015     4   9 12:52:10 1.324381   20.0000 0.0000000
+#&gt;   avgHorizSun avgVertSun avgHaze avgKelp avgRedTide avgAltFt avgSpKnot
+#&gt; 1           6         NA       0       0 0.43785812 650.0000 100.00000
+#&gt; 2           6         NA       0       0 0.00000000 650.0000 100.00000
+#&gt; 3          12         NA       0       0 0.08556751 669.8738  93.50289
 #&gt; 
 #&gt; $siteinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
