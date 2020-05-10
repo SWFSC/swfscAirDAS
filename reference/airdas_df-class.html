@@ -53,7 +53,9 @@
   DAS processing functions such as airdas_sight.
 Subsetting, say for a specific date or transect number, 
   or otherwise altering an object of class airdas_df
-  will cause the object to drop its airdas_df class attribute.
+  will cause the object to drop its airdas_df class attribute, although note 
+  that combining two airdas_df objects using rbind 
+  will return an object with a airdas_df class attribute.
   If this object is then passed to a DAS processing function such as airdas_sight, 
   the function will try to coerce the object to a airdas_df object." />
 
@@ -145,7 +147,9 @@ Subsetting, say for a specific date or transect number,
   DAS processing functions such as <code><a href='airdas_sight.html'>airdas_sight</a></code>.</p>
 <p>Subsetting, say for a specific date or transect number, 
   or otherwise altering an object of class <code>airdas_df</code>
-  will cause the object to drop its <code>airdas_df</code> class attribute.
+  will cause the object to drop its <code>airdas_df</code> class attribute, although note 
+  that combining two <code>airdas_df</code> objects using <code><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></code> 
+  will return an object with a <code>airdas_df</code> class attribute.
   If this object is then passed to a DAS processing function such as <code><a href='airdas_sight.html'>airdas_sight</a></code>, 
   the function will try to coerce the object to a <code>airdas_df</code> object.</p>
     </div>
@@ -161,9 +165,9 @@ Subsetting, say for a specific date or transect number,
   All values in the OnEffort column must be <code>TRUE</code> or <code>FALSE</code> (no <code>NA</code> values).
   All on effort events must have non-<code>NA</code> Lat/Lon/DateTime values, and 
   there must be no events with a "#" event code (deleted event). 
-  Like <code>airdas_dfr</code> events, there must be a <code>file_type</code> column where all values are 
-  1) the same and 2) one of: "turtle", "caretta", "survey", or "phocoena" 
-  (case sensitive; see <code><a href='airdas_read.html'>airdas_read</a></code> for more details).</p>  
+  Like <code>airdas_dfr</code> events, there must be a <code>file_type</code> column where 
+  all values are one of: "turtle", "caretta", "survey", or "phocoena" 
+  (case sensitive; see <code><a href='airdas_read.html'>airdas_read</a></code> for more details about file types).</p>  
 <p>In addition, <code>airdas_df</code> objects must have the following column names and classes:</p><table class='table'>
 <tr><td><em>Column name</em></td><td><em>Column class</em></td></tr>
 <tr><td>Event</td><td>"character"</td></tr>

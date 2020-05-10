@@ -48,8 +48,11 @@
   Objects of class airdas_dfr are created by
   airdas_read or as_airdas_dfr, 
   and are intended to be passed directly to airdas_process.
-Subsetting or otherwise altering an object of class airdas_dfr will cause the object to drop its
-  airdas_dfr class attribute. airdas_process will then try to coerce the object to a
+Subsetting or otherwise altering an object of class airdas_dfr will cause 
+  the object to drop its airdas_dfr class attribute, although note that combining
+  two airdas_dfr objects using rbind 
+  will return an object with a airdas_dfr class attribute.
+  airdas_process will then try to coerce the object to a
   airdas_dfr object. It is strongly recommended to pass an object of class airdas_dfr to
   airdas_process before subsetting, e.g. for events from a certain date range." />
 
@@ -136,8 +139,11 @@ Subsetting or otherwise altering an object of class airdas_dfr will cause the ob
   Objects of class <code>airdas_dfr</code> are created by
   <code><a href='airdas_read.html'>airdas_read</a></code> or <code><a href='as_airdas_dfr.html'>as_airdas_dfr</a></code>, 
   and are intended to be passed directly to <code><a href='airdas_process.html'>airdas_process</a></code>.</p>
-<p>Subsetting or otherwise altering an object of class <code>airdas_dfr</code> will cause the object to drop its
-  <code>airdas_dfr</code> class attribute. <code><a href='airdas_process.html'>airdas_process</a></code> will then try to coerce the object to a
+<p>Subsetting or otherwise altering an object of class <code>airdas_dfr</code> will cause 
+  the object to drop its <code>airdas_dfr</code> class attribute, although note that combining
+  two <code>airdas_dfr</code> objects using <code><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></code> 
+  will return an object with a <code>airdas_dfr</code> class attribute.
+  <code><a href='airdas_process.html'>airdas_process</a></code> will then try to coerce the object to a
   <code>airdas_dfr</code> object. It is <b>strongly</b> recommended to pass an object of class <code>airdas_dfr</code> to
   <code><a href='airdas_process.html'>airdas_process</a></code> before subsetting, e.g. for events from a certain date range.</p>
     </div>
@@ -150,8 +156,8 @@ Subsetting or otherwise altering an object of class airdas_dfr will cause the ob
 
 
 <p>Objects of class <code>airdas_dfr</code> have a class attribute of <code><a href='https://rdrr.io/r/base/c.html'>c("airdas_dfr", "data.frame")</a></code>.
-  They must have a column <code>file_type</code> where all values are 1) the same and 
-  2) one of: "turtle", "caretta", "survey", or "phocoena" 
+  They must have a column <code>file_type</code> where all values are one of: 
+  "turtle", "caretta", "survey", or "phocoena" 
   (case sensitive; see <code><a href='airdas_read.html'>airdas_read</a></code> for more details). 
   <code>airdas_dfr</code> objects also must not have any <code>NA</code> event codes.</p>  
 <p>In addition, they must have the following column names and classes:</p><table class='table'>

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Process comments in AirDAS data — airdas_comments_process" />
-<meta property="og:description" content="Extract miscellaneous information recorded in AirDAS data comments" />
+<meta property="og:description" content="Extract miscellaneous information recorded in AirDAS data comments, i.e. comment-data" />
 
 
 
@@ -117,19 +117,19 @@
     </div>
 
     <div class="ref-description">
-    <p>Extract miscellaneous information recorded in AirDAS data comments</p>
+    <p>Extract miscellaneous information recorded in AirDAS data comments, i.e. comment-data</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
+    <pre class="usage"><span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for airdas_dfr</span>
-<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>, <span class='kw'>comment.format</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)
 
 <span class='co'># S3 method for airdas_df</span>
-<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>)</pre>
+<span class='fu'>airdas_comments_process</span>(<span class='no'>x</span>, <span class='kw'>comment.format</span> <span class='kw'>=</span> <span class='kw'>NULL</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -139,31 +139,60 @@
       <td><p><code>airdas_dfr</code> or <code>airdas_df</code> object, 
 or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>ignored</p></td>
+    </tr>
+    <tr>
+      <th>comment.format</th>
+      <td><p>list; default is <code>NULL</code>. 
+See the 'Using <code>comment.format</code>' section</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p><code>x</code>, with the following columns added:</p><ul>
+    <p><code>x</code>, filtered for comments with recorded data, 
+  with the following columns added:</p><ul>
 <li><p>comment_str: the full comment string</p></li>
-<li><p>Misc1: level one descriptor, e.g. "Fish ball" or "Jellyfish"</p></li>
-<li><p>Misc2: level two descriptor, e.g. s, m, or c (see Details section for key)</p></li>
-<li><p>Value: Associated count or percentage</p></li>
-<li><p>flag_check: logical indicating if the comment string was longer 
-      than an expected number of characters, and thus should be manually inspected</p></li>
+<li><p>Misc#: Some number of descriptor columns. There should be <code>n</code> columns, 
+      although the minimum number will be two columns</p></li>
+<li><p>Value: Associated count or percentage for TURTLE/PHOCOENA data</p></li>
+<li><p>flag_check: logical indicating if the TURTLE/PHOCOENA 
+      comment string was longer than an expected number of characters, 
+      and thus should be manually inspected</p></li>
 </ul>
-
+  
+<p>See the additional sections for more context. 
+  If <code>comment.format</code> is <code>NULL</code>, 
+  then the output data frame would two Misc# columns: 
+  a level one descriptor, e.g. "Fish ball" or "Jellyfish", 
+  and a level two descriptor, e.g. s, m, or c. 
+  However, if <code>comment.format$n</code> is say 4, then the output data frame would have
+  columns Misc1, Misc2, Misc3, and Misc4.</p>  
+<p>Messages are printed if either <code>comment.format</code> is not <code>NULL</code>
+  and not comment-data is identified using <code>comment.format</code>, or if 
+  <code>x</code> has TURTLE/PHOCOENA data but no TURTLE/PHOCOENA comment-data</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Historically, project-specific or miscellaneous data have been 
   recorded in AirDAS comments using specific formats and character codes. 
-  This functions identifies and extracts this data from the comment 
-  text strings. Current supported data types are: 
-  fish balls, molas, jellyfish, and crab pots. 
+  This functions identifies and extracts this data from the comment text strings. 
+  However, different data types have different comment-data formats. 
+  Specifically, TURTLE and PHOCOENA comment-data uses identifier codes 
+  that each signify a certain data pattern, while other comment-data
+  (usually that of CARETTA) uses data separated by some delimiter.</p>
+    <h2 class="hasAnchor" id="turtle-and-phocoena-comment-data"><a class="anchor" href="#turtle-and-phocoena-comment-data"></a>TURTLE and PHOCOENA comment-data</h2>
+
+    
+ 
+
+<p>Current supported data types are: fish balls, molas, jellyfish, and crab pots. 
   See any of the AirDAS format PDFs (<code><a href='airdas_format_pdf.html'>airdas_format_pdf</a></code>) 
   for information about the specific codes and formats used to
   record this data. All comments are converted to lower case for processing 
   to avoid missing data.</p>  
-<p>These different codes contain (at most) 
+<p>These different codes contain (at most):
   a level one descriptor (e.g. fish ball or crab pot), 
   a level two descriptor (e.g. size or jellyfish species), 
   and a value (a count or percentage). 
@@ -188,6 +217,27 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
 </table>
 
 
+    <h2 class="hasAnchor" id="using-comment-format"><a class="anchor" href="#using-comment-format"></a>Using <code>comment.format</code></h2>
+
+    
+ 
+
+<p><code>comment.format</code> allows the user to specify the comment-data format, 
+ assuming the data is separated by a delimiter. 
+ This list must contain three named elements:</p><ul>
+<li><p>n: A single number indicating the number of elements of data in each comment. 
+     Must equal the length of <code>type</code>. 
+     A comment must contain exactly this number of <code>sep</code> to be recognized as comment-data</p></li>
+<li><p>sep: A single string indicating the field separator string (delimiter). 
+     Values within each comment are separated by this string. 
+     Currently accepted values are ";" and ","</p></li>
+<li><p>type: A character vector of length <code>n</code> indicating the data type of 
+     each data element (column). 
+     All values must be one of: "character", "numeric", or "integer".</p></li>
+</ul>
+ 
+<p>For instance, for most CARETTA data <code>comment.format</code> should be 
+ <code><a href='https://rdrr.io/r/base/list.html'>list(n = 5, sep = ";", type = c("character", "character", "numeric", "numeric", "character"))</a></code></p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)

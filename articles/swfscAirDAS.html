@@ -338,37 +338,98 @@
 <p>In AirDAS data, comments are a catch-all field, meaning they are used to record information that does not fit neatly into the AirDAS framework. For instance, users will often enter a comment indicating if they are or are not recording extra information such as mola mola sightings. Again, this information is not recorded in a systematic way, but you can still use swfscAirDAS functions to determine this information.</p>
 <p>A comment indicating whether or not something is being recorded will likely contain “record” somewhere in the comment. Thus, you can use <code>airdas_comments</code> to extract comments, and then subset for comments that contain the pattern “record”.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">y.comm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_comments.html">airdas_comments</a></span>(<span class="no">y.proc</span>)
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.comm</span>, <span class="fl">4</span>)
-<span class="co">#&gt;             file_das line_num            DateTime          comment_str</span>
-<span class="co">#&gt; 1  airdas_sample.das        1 2015-04-09 12:30:59       Recorder: dd  </span>
-<span class="co">#&gt; 2  airdas_sample.das        2 2015-04-09 12:30:59  Not recording molas</span>
-<span class="co">#&gt; 11 airdas_sample.das       11 2015-04-09 12:31:48                 2 cp</span>
-<span class="co">#&gt; 22 airdas_sample.das       22 2015-04-09 12:34:56  streaky red tide</span>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.comm</span>)
+<span class="co">#&gt; Rows: 10</span>
+<span class="co">#&gt; Columns: 39</span>
+<span class="co">#&gt; $ Event       &lt;chr&gt; "C", "C", "C", "C", "C", "C", "C", "C", "C", "C"</span>
+<span class="co">#&gt; $ DateTime    &lt;dttm&gt; 2015-04-09 12:30:59, 2015-04-09 12:30:59, 2015-04-09 12:…</span>
+<span class="co">#&gt; $ Lat         &lt;dbl&gt; 39.23550, 39.23550, 39.23350, 39.23317, 39.23317, 39.2340…</span>
+<span class="co">#&gt; $ Lon         &lt;dbl&gt; -123.1563, -123.1563, -123.1857, -123.2968, -123.3178, -1…</span>
+<span class="co">#&gt; $ OnEffort    &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, …</span>
+<span class="co">#&gt; $ Trans       &lt;chr&gt; NA, NA, "T1", "T1", "T1", "T1", "T1", "T1", "T2", "T2"</span>
+<span class="co">#&gt; $ Bft         &lt;dbl&gt; NA, NA, 1, 1, 1, 2, 2, 1, 1, 2</span>
+<span class="co">#&gt; $ CCover      &lt;dbl&gt; NA, NA, 10, 10, 10, 10, 20, 20, 20, 20</span>
+<span class="co">#&gt; $ Jelly       &lt;dbl&gt; NA, NA, 0, 2, 2, 0, 0, 0, 0, 0</span>
+<span class="co">#&gt; $ HorizSun    &lt;dbl&gt; NA, NA, 6, 6, 6, 6, 6, 6, 12, 12</span>
+<span class="co">#&gt; $ VertSun     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
+<span class="co">#&gt; $ HKR         &lt;chr&gt; NA, NA, "n", "r", "r", "n", "n", "n", "n", "r"</span>
+<span class="co">#&gt; $ Haze        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span>
+<span class="co">#&gt; $ Kelp        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span>
+<span class="co">#&gt; $ RedTide     &lt;lgl&gt; FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FAL…</span>
+<span class="co">#&gt; $ AltFt       &lt;dbl&gt; NA, NA, 650, 650, 650, 650, 650, 650, 680, 680</span>
+<span class="co">#&gt; $ SpKnot      &lt;dbl&gt; NA, NA, 100, 100, 100, 100, 100, 100, 90, 90</span>
+<span class="co">#&gt; $ ObsL        &lt;chr&gt; NA, NA, "aa", "aa", "aa", "aa", "aa", "aa", "aa", "aa"</span>
+<span class="co">#&gt; $ ObsB        &lt;chr&gt; NA, NA, "bb", "bb", "bb", "bb", "bb", "bb", "dd", "dd"</span>
+<span class="co">#&gt; $ ObsR        &lt;chr&gt; NA, NA, "cc", "cc", "cc", "cc", "cc", "cc", "cc", "cc"</span>
+<span class="co">#&gt; $ Rec         &lt;chr&gt; NA, NA, "dd", "dd", "dd", "dd", "dd", "dd", "bb", "bb"</span>
+<span class="co">#&gt; $ VLI         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
+<span class="co">#&gt; $ VLO         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
+<span class="co">#&gt; $ VB          &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "p"</span>
+<span class="co">#&gt; $ VRI         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
+<span class="co">#&gt; $ VRO         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
+<span class="co">#&gt; $ Data1       &lt;chr&gt; " Reco", " Not ", " 2 cp", " stre", " shar", " off ", " w…</span>
+<span class="co">#&gt; $ Data2       &lt;chr&gt; "rder:", "recor", NA, "aky r", "k 11f", "effor", "r got",…</span>
+<span class="co">#&gt; $ Data3       &lt;chr&gt; " dd  ", "ding ", NA, "ed ti", "t    ", "t to ", " more",…</span>
+<span class="co">#&gt; $ Data4       &lt;chr&gt; NA, "molas", NA, "de   ", NA, "circl", " blue", NA, " gla…</span>
+<span class="co">#&gt; $ Data5       &lt;chr&gt; NA, NA, NA, NA, NA, "e on ", NA, NA, "e    ", NA</span>
+<span class="co">#&gt; $ Data6       &lt;chr&gt; NA, NA, NA, NA, NA, "unide", NA, NA, NA, NA</span>
+<span class="co">#&gt; $ Data7       &lt;chr&gt; NA, NA, NA, NA, NA, "ntifed object  ", NA, NA, NA, NA</span>
+<span class="co">#&gt; $ EffortDot   &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, …</span>
+<span class="co">#&gt; $ EventNum    &lt;chr&gt; "  1", "  2", " 11", " 21", " 24", " 37", " 41", " 45", "…</span>
+<span class="co">#&gt; $ file_das    &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.…</span>
+<span class="co">#&gt; $ line_num    &lt;int&gt; 1, 2, 11, 22, 25, 38, 42, 46, 73, 84</span>
+<span class="co">#&gt; $ file_type   &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "turtle…</span>
+<span class="co">#&gt; $ comment_str &lt;chr&gt; " Recorder: dd  ", " Not recording molas", " 2 cp", " str…</span>
 
 <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span>(<span class="no">y.comm</span>$<span class="no">comment_str</span>, <span class="st">"record"</span>) <span class="co">#Could also use grepl() here</span>
 <span class="co">#&gt; [1] " Not recording molas"</span></pre></body></html></div>
 <p>For ‘systematic’ comments, such as fish balls or crab pots, you can extract this data using <code>airdas_comments_process</code></p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>)
-<span class="co">#&gt;   Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
-<span class="co">#&gt; 1     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0</span>
-<span class="co">#&gt; 2     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0</span>
-<span class="co">#&gt; 3     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0</span>
-<span class="co">#&gt;   HorizSun VertSun HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR Rec VLI</span>
-<span class="co">#&gt; 1        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="co">#&gt; 2        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="co">#&gt; 3        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="co">#&gt;   VLO VB VRI VRO Data1 Data2 Data3 Data4 Data5 Data6 Data7 EffortDot EventNum</span>
-<span class="co">#&gt; 1   g  g   g   g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       11</span>
-<span class="co">#&gt; 2   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45</span>
-<span class="co">#&gt; 3   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45</span>
-<span class="co">#&gt;            file_das line_num file_type comment_str     Misc1 Misc2 Value</span>
-<span class="co">#&gt; 1 airdas_sample.das       11    turtle        2 cp  crab pot  &lt;NA&gt;     2</span>
-<span class="co">#&gt; 2 airdas_sample.das       46    turtle   fb2s fb1m fish ball     s     2</span>
-<span class="co">#&gt; 3 airdas_sample.das       46    turtle   fb2s fb1m fish ball     m     1</span>
-<span class="co">#&gt;   flag_check</span>
-<span class="co">#&gt; 1      FALSE</span>
-<span class="co">#&gt; 2      FALSE</span>
-<span class="co">#&gt; 3      FALSE</span></pre></body></html></div>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>))
+<span class="co">#&gt; Rows: 3</span>
+<span class="co">#&gt; Columns: 43</span>
+<span class="co">#&gt; $ Event       &lt;chr&gt; "C", "C", "C"</span>
+<span class="co">#&gt; $ DateTime    &lt;dttm&gt; 2015-04-09 12:31:48, 2015-04-09 12:42:01, 2015-04-09 12:…</span>
+<span class="co">#&gt; $ Lat         &lt;dbl&gt; 39.23350, 39.23267, 39.23267</span>
+<span class="co">#&gt; $ Lon         &lt;dbl&gt; -123.1857, -123.5433, -123.5433</span>
+<span class="co">#&gt; $ OnEffort    &lt;lgl&gt; TRUE, TRUE, TRUE</span>
+<span class="co">#&gt; $ Trans       &lt;chr&gt; "T1", "T1", "T1"</span>
+<span class="co">#&gt; $ Bft         &lt;dbl&gt; 1, 1, 1</span>
+<span class="co">#&gt; $ CCover      &lt;dbl&gt; 10, 20, 20</span>
+<span class="co">#&gt; $ Jelly       &lt;dbl&gt; 0, 0, 0</span>
+<span class="co">#&gt; $ HorizSun    &lt;dbl&gt; 6, 6, 6</span>
+<span class="co">#&gt; $ VertSun     &lt;dbl&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ HKR         &lt;chr&gt; "n", "n", "n"</span>
+<span class="co">#&gt; $ Haze        &lt;lgl&gt; FALSE, FALSE, FALSE</span>
+<span class="co">#&gt; $ Kelp        &lt;lgl&gt; FALSE, FALSE, FALSE</span>
+<span class="co">#&gt; $ RedTide     &lt;lgl&gt; FALSE, FALSE, FALSE</span>
+<span class="co">#&gt; $ AltFt       &lt;dbl&gt; 650, 650, 650</span>
+<span class="co">#&gt; $ SpKnot      &lt;dbl&gt; 100, 100, 100</span>
+<span class="co">#&gt; $ ObsL        &lt;chr&gt; "aa", "aa", "aa"</span>
+<span class="co">#&gt; $ ObsB        &lt;chr&gt; "bb", "bb", "bb"</span>
+<span class="co">#&gt; $ ObsR        &lt;chr&gt; "cc", "cc", "cc"</span>
+<span class="co">#&gt; $ Rec         &lt;chr&gt; "dd", "dd", "dd"</span>
+<span class="co">#&gt; $ VLI         &lt;chr&gt; "g", "g", "g"</span>
+<span class="co">#&gt; $ VLO         &lt;chr&gt; "g", "g", "g"</span>
+<span class="co">#&gt; $ VB          &lt;chr&gt; "g", "g", "g"</span>
+<span class="co">#&gt; $ VRI         &lt;chr&gt; "g", "g", "g"</span>
+<span class="co">#&gt; $ VRO         &lt;chr&gt; "g", "g", "g"</span>
+<span class="co">#&gt; $ Data1       &lt;chr&gt; " 2 cp", " fb2s", " fb2s"</span>
+<span class="co">#&gt; $ Data2       &lt;chr&gt; NA, " fb1m", " fb1m"</span>
+<span class="co">#&gt; $ Data3       &lt;chr&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ Data4       &lt;chr&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ Data5       &lt;chr&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ Data6       &lt;chr&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ Data7       &lt;chr&gt; NA, NA, NA</span>
+<span class="co">#&gt; $ EffortDot   &lt;lgl&gt; TRUE, TRUE, TRUE</span>
+<span class="co">#&gt; $ EventNum    &lt;chr&gt; " 11", " 45", " 45"</span>
+<span class="co">#&gt; $ file_das    &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.…</span>
+<span class="co">#&gt; $ line_num    &lt;int&gt; 11, 46, 46</span>
+<span class="co">#&gt; $ file_type   &lt;chr&gt; "turtle", "turtle", "turtle"</span>
+<span class="co">#&gt; $ comment_str &lt;chr&gt; " 2 cp", " fb2s fb1m", " fb2s fb1m"</span>
+<span class="co">#&gt; $ Misc1       &lt;chr&gt; "crab pot", "fish ball", "fish ball"</span>
+<span class="co">#&gt; $ Misc2       &lt;chr&gt; NA, "s", "m"</span>
+<span class="co">#&gt; $ Value       &lt;dbl&gt; 2, 2, 1</span>
+<span class="co">#&gt; $ flag_check  &lt;lgl&gt; FALSE, FALSE, FALSE</span></pre></body></html></div>
 </div>
   </div>
 

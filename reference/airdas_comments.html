@@ -143,9 +143,8 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with the comment strings in column comment_str, 
-  as well as the following columns from <code>x</code>: 
-  file_das, line_num, and DateTime</p>
+    <p><code>x</code>, with the added column comment_str 
+  containing the concatenated comment strings</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function recreates the comment strings by 
@@ -158,38 +157,59 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='no'>y.read</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_read.html'>airdas_read</a></span>(<span class='no'>y</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"turtle"</span>)
 
-<span class='fu'>airdas_comments</span>(<span class='no'>y.read</span>)</div><div class='output co'>#&gt;             file_das line_num            DateTime
-#&gt; 1  airdas_sample.das        1 2015-04-09 12:30:59
-#&gt; 2  airdas_sample.das        2 2015-04-09 12:30:59
-#&gt; 11 airdas_sample.das       11 2015-04-09 12:31:48
-#&gt; 22 airdas_sample.das       22 2015-04-09 12:34:56
-#&gt; 25 airdas_sample.das       25 2015-04-09 12:35:32
-#&gt; 38 airdas_sample.das       38 2015-04-09 12:38:00
-#&gt; 42 airdas_sample.das       42 2015-04-09 12:40:36
-#&gt; 46 airdas_sample.das       46 2015-04-09 12:42:01
-#&gt; 73 airdas_sample.das       73 2015-04-09 12:52:39
-#&gt; 84 airdas_sample.das       84 2015-04-09 12:56:43
-#&gt;                                      comment_str
-#&gt; 1                                 Recorder: dd  
-#&gt; 2                            Not recording molas
-#&gt; 11                                          2 cp
-#&gt; 22                           streaky red tide   
-#&gt; 25                                shark 11ft    
-#&gt; 38  off effort to circle on unidentifed object  
-#&gt; 42                           water got more blue
-#&gt; 46                                     fb2s fb1m
-#&gt; 73                      belly has some glare    
-#&gt; 84                           patchy red tide    </div><div class='input'>
+<span class='fu'>airdas_comments</span>(<span class='no'>y.read</span>)</div><div class='output co'>#&gt;    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3
+#&gt; 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  
+#&gt; 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding 
+#&gt; 3      C      TRUE 2015-04-09 12:31:48 39.23350 -123.1857  2 cp  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 4      C      TRUE 2015-04-09 12:34:56 39.23317 -123.2968  stre aky r ed ti
+#&gt; 5      C      TRUE 2015-04-09 12:35:32 39.23317 -123.3178  shar k 11f t    
+#&gt; 6      C     FALSE 2015-04-09 12:38:00 39.23400 -123.4047  off  effor t to 
+#&gt; 7      C      TRUE 2015-04-09 12:40:36 39.23317 -123.4960  wate r got  more
+#&gt; 8      C      TRUE 2015-04-09 12:42:01 39.23267 -123.5433  fb2s  fb1m  &lt;NA&gt;
+#&gt; 9      C      TRUE 2015-04-09 12:52:39 39.21700 -123.4072  bell y has  some
+#&gt; 10     C      TRUE 2015-04-09 12:56:43 39.21717 -123.2718  patc hy re d tid
+#&gt;    Data4 Data5 Data6           Data7 EventNum          file_das line_num
+#&gt; 1   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        1 airdas_sample.das        1
+#&gt; 2  molas  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        2 airdas_sample.das        2
+#&gt; 3   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       11 airdas_sample.das       11
+#&gt; 4  de     &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       21 airdas_sample.das       22
+#&gt; 5   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       24 airdas_sample.das       25
+#&gt; 6  circl e on  unide ntifed object         37 airdas_sample.das       38
+#&gt; 7   blue  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       41 airdas_sample.das       42
+#&gt; 8   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       45 airdas_sample.das       46
+#&gt; 9   glar e      &lt;NA&gt;            &lt;NA&gt;       72 airdas_sample.das       73
+#&gt; 10 e      &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       83 airdas_sample.das       84
+#&gt;    file_type                                   comment_str
+#&gt; 1     turtle                                Recorder: dd  
+#&gt; 2     turtle                           Not recording molas
+#&gt; 3     turtle                                          2 cp
+#&gt; 4     turtle                           streaky red tide   
+#&gt; 5     turtle                                shark 11ft    
+#&gt; 6     turtle  off effort to circle on unidentifed object  
+#&gt; 7     turtle                           water got more blue
+#&gt; 8     turtle                                     fb2s fb1m
+#&gt; 9     turtle                      belly has some glare    
+#&gt; 10    turtle                           patchy red tide    </div><div class='input'>
 <span class='co'># Extract all comments containing "record"</span>
 <span class='no'>y.comm</span> <span class='kw'>&lt;-</span> <span class='fu'>airdas_comments</span>(<span class='no'>y.read</span>)
-<span class='no'>y.comm</span>[<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"record"</span>, <span class='no'>y.comm</span>$<span class='no'>comment_str</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), ]</div><div class='output co'>#&gt;            file_das line_num            DateTime          comment_str
-#&gt; 1 airdas_sample.das        1 2015-04-09 12:30:59       Recorder: dd  
-#&gt; 2 airdas_sample.das        2 2015-04-09 12:30:59  Not recording molas</div><div class='input'>
+<span class='no'>y.comm</span>[<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"record"</span>, <span class='no'>y.comm</span>$<span class='no'>comment_str</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), ]</div><div class='output co'>#&gt;   Event EffortDot            DateTime     Lat       Lon Data1 Data2 Data3 Data4
+#&gt; 1     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Reco rder:  dd    &lt;NA&gt;
+#&gt; 2     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Not  recor ding  molas
+#&gt;   Data5 Data6 Data7 EventNum          file_das line_num file_type
+#&gt; 1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        1 airdas_sample.das        1    turtle
+#&gt; 2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        2 airdas_sample.das        2    turtle
+#&gt;            comment_str
+#&gt; 1       Recorder: dd  
+#&gt; 2  Not recording molas</div><div class='input'>
 <span class='co'># Extract all comments containing "record", but not "recorder"</span>
 <span class='no'>y.comm</span> <span class='kw'>&lt;-</span> <span class='fu'>airdas_comments</span>(<span class='no'>y.read</span>)
 <span class='no'>y.comm</span>[<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"record"</span>, <span class='no'>y.comm</span>$<span class='no'>comment_str</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>) <span class='kw'>&amp;</span>
-         !<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"recorder"</span>, <span class='no'>y.comm</span>$<span class='no'>comment_str</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), ]</div><div class='output co'>#&gt;            file_das line_num            DateTime          comment_str
-#&gt; 2 airdas_sample.das        2 2015-04-09 12:30:59  Not recording molas</div><div class='input'>
+         !<span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span>(<span class='st'>"recorder"</span>, <span class='no'>y.comm</span>$<span class='no'>comment_str</span>, <span class='kw'>ignore.case</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>), ]</div><div class='output co'>#&gt;   Event EffortDot            DateTime     Lat       Lon Data1 Data2 Data3 Data4
+#&gt; 2     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Not  recor ding  molas
+#&gt;   Data5 Data6 Data7 EventNum          file_das line_num file_type
+#&gt; 2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        2 airdas_sample.das        2    turtle
+#&gt;            comment_str
+#&gt; 2  Not recording molas</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
