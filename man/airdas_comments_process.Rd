@@ -7,48 +7,70 @@
 \alias{airdas_comments_process.airdas_df}
 \title{Process comments in AirDAS data}
 \usage{
-airdas_comments_process(x)
+airdas_comments_process(x, ...)
 
-\method{airdas_comments_process}{data.frame}(x)
+\method{airdas_comments_process}{data.frame}(x, ...)
 
-\method{airdas_comments_process}{airdas_dfr}(x)
+\method{airdas_comments_process}{airdas_dfr}(x, comment.format = NULL, ...)
 
-\method{airdas_comments_process}{airdas_df}(x)
+\method{airdas_comments_process}{airdas_df}(x, comment.format = NULL, ...)
 }
 \arguments{
 \item{x}{\code{airdas_dfr} or \code{airdas_df} object, 
 or a data frame that can be coerced to a \code{airdas_dfr} object}
+
+\item{...}{ignored}
+
+\item{comment.format}{list; default is \code{NULL}. 
+See the 'Using \code{comment.format}' section}
 }
 \value{
 \code{x}, filtered for comments with recorded data, 
   with the following columns added: 
   \itemize{
     \item comment_str: the full comment string
-    \item Misc1: level one descriptor, e.g. "Fish ball" or "Jellyfish"
-    \item Misc2: level two descriptor, e.g. s, m, or c (see Details section for key)
-    \item Value: Associated count or percentage
-    \item flag_check: logical indicating if the comment string was longer 
-      than an expected number of characters, and thus should be manually inspected 
+    \item Misc#: Some number of descriptor columns. There should be \code{n} columns, 
+      although the minimum number will be two columns
+    \item Value: Associated count or percentage for TURTLE/PHOCOENA data
+    \item flag_check: logical indicating if the TURTLE/PHOCOENA 
+      comment string was longer than an expected number of characters, 
+      and thus should be manually inspected 
   }
   
- If there are no comments with recorded data in \code{x}, 
- a message is printed and the function returns \code{NULL}
+  See the additional sections for more context. 
+  If \code{comment.format} is \code{NULL}, 
+  then the output data frame would two Misc# columns: 
+  a level one descriptor, e.g. "Fish ball" or "Jellyfish", 
+  and a level two descriptor, e.g. s, m, or c. 
+  However, if \code{comment.format$n} is say 4, then the output data frame would have
+  columns Misc1, Misc2, Misc3, and Misc4.
+  
+  Messages are printed if either \code{comment.format} is not \code{NULL}
+  and not comment-data is identified using \code{comment.format}, or if 
+  \code{x} has TURTLE/PHOCOENA data but no TURTLE/PHOCOENA comment-data
 }
 \description{
-Extract miscellaneous information recorded in AirDAS data comments
+Extract miscellaneous information recorded in AirDAS data comments, i.e. comment-data
 }
 \details{
 Historically, project-specific or miscellaneous data have been 
   recorded in AirDAS comments using specific formats and character codes. 
-  This functions identifies and extracts this data from the comment 
-  text strings. Current supported data types are: 
-  fish balls, molas, jellyfish, and crab pots. 
+  This functions identifies and extracts this data from the comment text strings. 
+  However, different data types have different comment-data formats. 
+  Specifically, TURTLE and PHOCOENA comment-data uses identifier codes 
+  that each signify a certain data pattern, while other comment-data
+  (usually that of CARETTA) uses data separated by some delimiter.
+}
+\section{TURTLE and PHOCOENA comment-data}{
+ 
+
+  Current supported data types are: fish balls, molas, jellyfish, and crab pots. 
   See any of the AirDAS format PDFs (\code{\link{airdas_format_pdf}}) 
   for information about the specific codes and formats used to
   record this data. All comments are converted to lower case for processing 
   to avoid missing data.
   
-  These different codes contain (at most) 
+  These different codes contain (at most):
   a level one descriptor (e.g. fish ball or crab pot), 
   a level two descriptor (e.g. size or jellyfish species), 
   and a value (a count or percentage). 
@@ -75,6 +97,29 @@ Historically, project-specific or miscellaneous data have been
     Other      \tab o\cr
   }
 }
+
+\section{Using \code{comment.format}}{
+ 
+
+ \code{comment.format} allows the user to specify the comment-data format, 
+ assuming the data is separated by a delimiter. 
+ This list must contain three named elements:
+ \itemize{
+   \item n: A single number indicating the number of elements of data in each comment. 
+     Must equal the length of \code{type}. 
+     A comment must contain exactly this number of \code{sep} to be recognized as comment-data
+   \item sep: A single string indicating the field separator string (delimiter). 
+     Values within each comment are separated by this string. 
+     Currently accepted values are ";" and ","
+   \item type: A character vector of length \code{n} indicating the data type of 
+     each data element (column). 
+     All values must be one of: "character", "numeric", or "integer".
+ }
+ 
+ For instance, for most CARETTA data \code{comment.format} should be 
+ \code{list(n = 5, sep = ";", type = c("character", "character", "numeric", "numeric", "character"))}
+}
+
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
