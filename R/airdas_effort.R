@@ -9,8 +9,6 @@
 #'   or \code{"section"} (case-sensitive) to use 
 #'   \code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
 #'   or \code{\link{airdas_chop_section}}, respectively
-#' @param sp.codes character; species code(s) to include in segdata. 
-#'   These code(s) will be converted to lower case to match \code{\link{airdas_sight}} 
 #' @param conditions character vector of names of conditions to include in segdata output.
 #'   These values must be column names from the output of \code{\link{airdas_process}},
 #'   e.g. 'Bft', 'CCover', etc. The default is \code{NULL}, 
@@ -60,28 +58,30 @@
 #'   i.e. each continuous effort section is a single effort segment.
 #'   See \code{\link{airdas_chop_section}} for more details about this method.
 #'   
-#'   The sightings included in the segdata counts are filtered as follows: 
-#'   Beaufort is less than or equal to five, the declination angle is less than 78, 
-#'   it is a standard sighting, and the sighting was made while on effort. 
-#'   Included sightings are those with a \code{TRUE} value in the 'included'
-#'   column in siteinfo (described below).
-#'   TODO: Allow user to specify this.
-#' 
 #'   The distance between the lat/lon points of subsequent events
 #'   is calculated using the method specified in \code{dist.method}
 #'   See \code{\link{airdas_sight}} for how the sightings are processed.
+#'
+#'   The siteinfo data frame includes the column 'included',
+#'   which is used in \code{\link{airdas_effort_sight}} when summarizing
+#'   the number of sightings and animals for selected species.
+#'   \code{\link{airdas_effort_sight}} is a separate function to allow users to
+#'   personalize the included values as desired for their analysis.
+#'   By default, i.e. in the output of this function, 'included' is \code{TRUE} if:
+#'   the sighting was made when on effort, 
+#'   by it was a standard sighting (see \code{\link{airdas_sight}}), 
+#'   in a Beaufort sea state less than or equal to five, 
+#'   and with a sighting angle less than or equal to 78.
 #' 
 #' @return List of three data frames: 
 #'   \itemize{
 #'     \item segdata: one row for every segment, and columns for information including
 #'       unique segment number, event code that started the associated continuous effort section, 
-#'       start/end/midpoint coordinates, conditions (e.g. Beaufort), 
-#'       and number of sightings and number of animals on that segment for every species 
-#'       indicated in \code{sp.codes}. 
+#'       start/end/midpoint coordinates, and conditions (e.g. Beaufort)
 #'     \item siteinfo: details for all sightings in \code{x}, including: 
 #'       the unique segment number it is associated with, segment mid points (lat/lon), 
-#'       and whether the sighting was included in the segdata counts (column \code{included}), 
-#'       in addition to the other output information described in \code{\link{airdas_sight}}.
+#'       the 'included' column described in the Details section,
+#'       and the output information described in \code{\link{airdas_sight}}
 #'     \item randpicks: see \code{\link{airdas_chop_equal}}. 
 #'       \code{NULL} if using "condition" method.
 #'   }
@@ -92,23 +92,19 @@
 #' 
 #' # Using "condition" method
 #' airdas_effort(
-#'   y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-#'   conditions = "Bft", seg.min.km = 0.05, num.cores = 1
+#'   y.proc, method = "condition", conditions = "Bft", seg.min.km = 0.05, 
+#'   num.cores = 1
 #' )
 #' 
 #' # Using "equallength" method
 #' y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 #' airdas_effort(
-#'   y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-#'   conditions = c("Bft", "CCover"), 
+#'   y.proc, method = "equallength", conditions = c("Bft", "CCover"), 
 #'   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 #' )
 #' 
 #' # Using "section" method
-#' airdas_effort(
-#'   y.proc, method = "section", sp.codes = c("mn", "bm"), 
-#'   num.cores = 1
-#' )
+#' airdas_effort(y.proc, method = "section", num.cores = 1)
 #'
 #' @export
 airdas_effort <- function(x, ...) UseMethod("airdas_effort")
@@ -123,8 +119,7 @@ airdas_effort.data.frame <- function(x, ...) {
 
 #' @name airdas_effort
 #' @export
-airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL, 
-                                    dist.method = "greatcircle", 
+airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = "greatcircle", 
                                     num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
@@ -160,9 +155,6 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
   
   #----------------------------------------------------------------------------
   # Prep
-  # Convert species codes to lower case
-  sp.codes <- tolower(sp.codes)
-  
   # Filter for and number continuous effort sections
   #   'on effort + 1' is to capture O/E event
   x.oneff.which <- sort(unique(c(which(x$OnEffort), which(x$OnEffort) + 1)))
@@ -213,7 +205,7 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
   
   
   #----------------------------------------------------------------------------
-  # Summarize sightings (based on siteinfo) and add applicable data to segdata
+  # Summarize sightings (based on siteinfo)
   siteinfo <- x.eff %>% 
     left_join(select(segdata, .data$segnum, .data$mlat, .data$mlon), 
               by = "segnum") %>% 
@@ -224,37 +216,10 @@ airdas_effort.airdas_df <- function(x, method, sp.codes, conditions = NULL,
     select(-.data$dist_from_prev, -.data$cont_eff_section)
   
   
-  # Make data frame with nSI and ANI columns, and join it with segdata
-  # TODO: Throw warning if element(s) of sp.codes are not in data?
-  sp.codes <- sort(sp.codes)
+  # And return - ready for airdas_effort_sightings
+  segdata <- segdata %>% select(-.data$seg_idx)
   
-  segdata.col1 <- select(segdata, .data$seg_idx)
-  siteinfo.forsegdata.list <- lapply(sp.codes, function(i, siteinfo, d1) {
-    d0 <- siteinfo %>% 
-      filter(.data$included, .data$Sp == i) %>% 
-      group_by(.data$seg_idx) %>% 
-      summarise(nSI = length(.data$Sp), 
-                ANI = sum(.data$GsSp))
-    
-    names(d0) <- c("seg_idx", paste0(i, "_", names(d0)[-1]))
-    
-    z <- full_join(d1, d0, by = "seg_idx") %>% select(-.data$seg_idx)
-    z[is.na(z)] <- 0
-    
-    z
-  }, siteinfo = siteinfo, d1 = segdata.col1)
-  
-  siteinfo.forsegdata.df <- segdata.col1 %>% 
-    bind_cols(siteinfo.forsegdata.list)
-  
-  
-  #----------------------------------------------------------------------------
-  # Format and return
-  segdata <- segdata %>% 
-    left_join(siteinfo.forsegdata.df, by = "seg_idx") %>% 
-    select(-.data$seg_idx)
-  
-  siteinfo <- siteinfo %>% 
+  siteinfo <- siteinfo %>%
     select(-.data$seg_idx) %>%
     select(.data$segnum, .data$mlat, .data$mlon, everything())
   

@@ -89,13 +89,13 @@ The `airdas_effort` function returns a list of three data frames: segdata, sitei
 y.eff <- airdas_effort(
   y.proc, method = "condition", seg.min.km = 0, 
   dist.method = "greatcircle", conditions = c("Bft", "CCover"), 
-  sp.codes = c("bm", "dc"), 
   num.cores = 1
 )
+y.eff.sight <- airdas_effort_sight(y.eff, sp.codes = c("bm", "dc"))
 
-glimpse(y.eff$segdata)
+glimpse(y.eff.sight$segdata)
 
-glimpse(y.eff$siteinfo)
+glimpse(y.eff.sight$siteinfo)
 ```
 
 If you wanted to determine the number of humpback whales on each transect, for instance, you could do the following
@@ -103,13 +103,12 @@ If you wanted to determine the number of humpback whales on each transect, for i
 ```{r eff2}
 # 'Chop' the effort by continuous effort section
 y.eff.section <- airdas_effort(
-  y.proc, method = "section", 
-  dist.method = "greatcircle", conditions = NULL, 
-  sp.codes = c("mn"), 
+  y.proc, method = "section", dist.method = "greatcircle", conditions = NULL, 
   num.cores = 1
 )
+y.eff.section.sight <- airdas_effort_sight(y.eff.section, sp.codes = c("mn"))
 
-y.eff.section[[1]] %>% 
+y.eff.section.sight[[1]] %>% 
   mutate(transect_id = cumsum(.data$event == "T")) %>% 
   group_by(transect_id) %>% 
   summarise(dist_sum = sum(dist), 
@@ -136,4 +135,3 @@ For 'systematic' comments, such as fish balls or crab pots, you can extract this
 ```{r comm2}
 glimpse(airdas_comments_process(y.proc))
 ```
-

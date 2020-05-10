@@ -13,7 +13,6 @@ airdas_effort(x, ...)
 \method{airdas_effort}{airdas_df}(
   x,
   method,
-  sp.codes,
   conditions = NULL,
   dist.method = "greatcircle",
   num.cores = NULL,
@@ -32,9 +31,6 @@ Can be \code{"condition"}, \code{"equallength"},
 or \code{"section"} (case-sensitive) to use 
 \code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
 or \code{\link{airdas_chop_section}}, respectively}
-
-\item{sp.codes}{character; species code(s) to include in segdata. 
-These code(s) will be converted to lower case to match \code{\link{airdas_sight}}}
 
 \item{conditions}{character vector of names of conditions to include in segdata output.
 These values must be column names from the output of \code{\link{airdas_process}},
@@ -59,13 +55,11 @@ List of three data frames:
   \itemize{
     \item segdata: one row for every segment, and columns for information including
       unique segment number, event code that started the associated continuous effort section, 
-      start/end/midpoint coordinates, conditions (e.g. Beaufort), 
-      and number of sightings and number of animals on that segment for every species 
-      indicated in \code{sp.codes}. 
+      start/end/midpoint coordinates, and conditions (e.g. Beaufort)
     \item siteinfo: details for all sightings in \code{x}, including: 
       the unique segment number it is associated with, segment mid points (lat/lon), 
-      and whether the sighting was included in the segdata counts (column \code{included}), 
-      in addition to the other output information described in \code{\link{airdas_sight}}.
+      the 'included' column described in the Details section,
+      and the output information described in \code{\link{airdas_sight}}
     \item randpicks: see \code{\link{airdas_chop_equal}}. 
       \code{NULL} if using "condition" method.
   }
@@ -105,16 +99,20 @@ This is the top-level function for chopping processed AirDAS data
   i.e. each continuous effort section is a single effort segment.
   See \code{\link{airdas_chop_section}} for more details about this method.
   
-  The sightings included in the segdata counts are filtered as follows: 
-  Beaufort is less than or equal to five, the declination angle is less than 78, 
-  it is a standard sighting, and the sighting was made while on effort. 
-  Included sightings are those with a \code{TRUE} value in the 'included'
-  column in siteinfo (described below).
-  TODO: Allow user to specify this.
-
   The distance between the lat/lon points of subsequent events
   is calculated using the method specified in \code{dist.method}
   See \code{\link{airdas_sight}} for how the sightings are processed.
+
+  The siteinfo data frame includes the column 'included',
+  which is used in \code{\link{airdas_effort_sight}} when summarizing
+  the number of sightings and animals for selected species.
+  \code{\link{airdas_effort_sight}} is a separate function to allow users to
+  personalize the included values as desired for their analysis.
+  By default, i.e. in the output of this function, 'included' is \code{TRUE} if:
+  the sighting was made when on effort, 
+  by it was a standard sighting (see \code{\link{airdas_sight}}), 
+  in a Beaufort sea state less than or equal to five, 
+  and with a sighting angle less than or equal to 78.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -122,22 +120,18 @@ y.proc <- airdas_process(y)
 
 # Using "condition" method
 airdas_effort(
-  y.proc, method = "condition", sp.codes = c("mn", "bm"), 
-  conditions = "Bft", seg.min.km = 0.05, num.cores = 1
+  y.proc, method = "condition", conditions = "Bft", seg.min.km = 0.05, 
+  num.cores = 1
 )
 
 # Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
-  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-  conditions = c("Bft", "CCover"), 
+  y.proc, method = "equallength", conditions = c("Bft", "CCover"), 
   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 )
 
 # Using "section" method
-airdas_effort(
-  y.proc, method = "section", sp.codes = c("mn", "bm"), 
-  num.cores = 1
-)
+airdas_effort(y.proc, method = "section", num.cores = 1)
 
 }

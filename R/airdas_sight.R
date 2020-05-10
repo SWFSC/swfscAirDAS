@@ -21,7 +21,7 @@
 #'   Abbreviations used in column names include: Gs = group size, Sp = species, 
 #'   Mixed = mixed species (multi-species) sighting.#' 
 #'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
-#'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).#'   
+#'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
 #'   In addition, multi-species group sizes are rounded to 
 #'   the nearest whole number using \code{round(, 0)}
 #'
