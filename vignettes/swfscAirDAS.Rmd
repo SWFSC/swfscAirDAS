@@ -80,9 +80,9 @@ y.sight %>%
 
 ## Effort
 
-In addition, you can chop the summarize the effort data using `airdas_effort` This function allows you to chop continuous effort sections (the event sequence from T/R to E/O events) into effort segments for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses There are several different chopping methods that you can use depending on your needs: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event). 
+In addition, you can chop the effort data into segments, and summarize the conditions and sightings on those segments using `airdas_effort` and `airdas_effort_sight`. These effort segments can be used for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses. `airdas_effort` chops continuous effort sections (the event sequence from T/R to E/O events) into effort segments using one of several different chopping methods: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event). `airdas_effort_sight` takes the output of `airdas_effort` and returns the number of sightings and animals per segment for selected species codes. 
 
-The `airdas_effort` function returns a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (`?airdas_effort`), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the 'equal length' chopping method.
+Both functions return a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (`?airdas_effort` and `?airdas_effort_sight`), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the 'equal length' chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see `?airdas_effort`).
 
 ```{r eff}
 # Chop the effort every time a condition changes
@@ -98,7 +98,7 @@ glimpse(y.eff.sight$segdata)
 glimpse(y.eff.sight$siteinfo)
 ```
 
-If you wanted to determine the number of humpback whales on each transect, for instance, you could do the following
+If you wanted to determine the number of humpback whales on each transect with a sighting angle between -60 and 60 degrees, for instance, you could do the following
 
 ```{r eff2}
 # 'Chop' the effort by continuous effort section
@@ -106,6 +106,9 @@ y.eff.section <- airdas_effort(
   y.proc, method = "section", dist.method = "greatcircle", conditions = NULL, 
   num.cores = 1
 )
+y.eff.section$siteinfo <- y.eff.section$siteinfo %>% 
+  mutate(included = ifelse(.data$Sp == "mn" & abs(.data$Angle > 60), FALSE, .data$included))
+
 y.eff.section.sight <- airdas_effort_sight(y.eff.section, sp.codes = c("mn"))
 
 y.eff.section.sight[[1]] %>% 
@@ -130,8 +133,15 @@ glimpse(y.comm)
 str_subset(y.comm$comment_str, "record") #Could also use grepl() here
 ```
 
-For 'systematic' comments, such as fish balls or crab pots, you can extract this data using `airdas_comments_process`
+You can extract data from 'systematic' comments, using `airdas_comments_process`. This function supports both the codes of TURTLE/PHOCOENA data, and the text string format of CARETTA data. Specifically, it includes a `comment.format` argument for users with CARETTA data, which allows you to provide a list specifying how the data was recorded, although the data must be separated by a delimiter. See below for the `comment.format` value for default CARETTA data. This function also by default looks for codes, e.g. "fb" or "cp", in TURTLE/PHOCOENA data; see `?airdas_comments_process` for more details.
 
 ```{r comm2}
+# comment.format for default CARETTA data
+comment.format <- list(
+  n = 5, sep = ";", 
+  type = c("character", "character", "numeric", "numeric", "character")
+)
+
+# TURTLE/PHOCOENA comment-data
 glimpse(airdas_comments_process(y.proc))
 ```

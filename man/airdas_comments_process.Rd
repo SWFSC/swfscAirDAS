@@ -101,8 +101,8 @@ Historically, project-specific or miscellaneous data have been
 \section{Using \code{comment.format}}{
  
 
- \code{comment.format} allows the user to specify the comment-data format, 
- assuming the data is separated by a delimiter. 
+ \code{comment.format} is a list that allows the user to specify the comment-data format. 
+ To use this argument, data must be separated by a delimiter. 
  This list must contain three named elements:
  \itemize{
    \item n: A single number indicating the number of elements of data in each comment. 
