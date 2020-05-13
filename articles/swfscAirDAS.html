@@ -222,8 +222,8 @@
 <div id="effort" class="section level2">
 <h2 class="hasAnchor">
 <a href="#effort" class="anchor"></a>Effort</h2>
-<p>In addition, you can chop the summarize the effort data using <code>airdas_effort</code> This function allows you to chop continuous effort sections (the event sequence from T/R to E/O events) into effort segments for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses There are several different chopping methods that you can use depending on your needs: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event).</p>
-<p>The <code>airdas_effort</code> function returns a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (<code><a href="../reference/airdas_effort.html">?airdas_effort</a></code>), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the ‘equal length’ chopping method.</p>
+<p>In addition, you can chop the effort data into segments, and summarize the conditions and sightings on those segments using <code>airdas_effort</code> and <code>airdas_effort_sight</code>. These effort segments can be used for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses. <code>airdas_effort</code> chops continuous effort sections (the event sequence from T/R to E/O events) into effort segments using one of several different chopping methods: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event). <code>airdas_effort_sight</code> takes the output of <code>airdas_effort</code> and returns the number of sightings and animals per segment for selected species codes.</p>
+<p>Both functions return a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (<code><a href="../reference/airdas_effort.html">?airdas_effort</a></code> and <code><a href="../reference/airdas_effort_sight.html">?airdas_effort_sight</a></code>), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the ‘equal length’ chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see <code><a href="../reference/airdas_effort.html">?airdas_effort</a></code>).</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Chop the effort every time a condition changes</span>
 <span class="no">y.eff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
   <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"condition"</span>, <span class="kw">seg.min.km</span> <span class="kw">=</span> <span class="fl">0</span>,
@@ -311,12 +311,15 @@
 <span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
 <span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span>
 <span class="co">#&gt; $ included        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE,…</span></pre></body></html></div>
-<p>If you wanted to determine the number of humpback whales on each transect, for instance, you could do the following</p>
+<p>If you wanted to determine the number of humpback whales on each transect with a sighting angle between -60 and 60 degrees, for instance, you could do the following</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># 'Chop' the effort by continuous effort section</span>
 <span class="no">y.eff.section</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
   <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"section"</span>, <span class="kw">dist.method</span> <span class="kw">=</span> <span class="st">"greatcircle"</span>, <span class="kw">conditions</span> <span class="kw">=</span> <span class="kw">NULL</span>,
   <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
 )
+<span class="no">y.eff.section</span>$<span class="no">siteinfo</span> <span class="kw">&lt;-</span> <span class="no">y.eff.section</span>$<span class="no">siteinfo</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">included</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">.data</span>$<span class="no">Sp</span> <span class="kw">==</span> <span class="st">"mn"</span> <span class="kw">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">.data</span>$<span class="no">Angle</span> <span class="kw">&gt;</span> <span class="fl">60</span>), <span class="fl">FALSE</span>, <span class="no">.data</span>$<span class="no">included</span>))
+
 <span class="no">y.eff.section.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort_sight.html">airdas_effort_sight</a></span>(<span class="no">y.eff.section</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>))
 
 <span class="no">y.eff.section.sight</span><span class="kw">[[</span><span class="fl">1</span>]] <span class="kw">%&gt;%</span>
@@ -327,7 +330,7 @@
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   transect_id dist_sum mn_count</span>
 <span class="co">#&gt;         &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1           1     32.5       26</span>
+<span class="co">#&gt; 1           1     32.5       20</span>
 <span class="co">#&gt; 2           2     31.5       18</span></pre></body></html></div>
 <p>In this example you could also simply group by the <code>transect</code> column, but that structure is not robust to analyzing multi-year data sets where the same transects are flown multiple times.</p>
 </div>
@@ -382,8 +385,15 @@
 
 <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span>(<span class="no">y.comm</span>$<span class="no">comment_str</span>, <span class="st">"record"</span>) <span class="co">#Could also use grepl() here</span>
 <span class="co">#&gt; [1] " Not recording molas"</span></pre></body></html></div>
-<p>For ‘systematic’ comments, such as fish balls or crab pots, you can extract this data using <code>airdas_comments_process</code></p>
-<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>))
+<p>You can extract data from ‘systematic’ comments, using <code>airdas_comments_process</code>. This function supports both the codes of TURTLE/PHOCOENA data, and the text string format of CARETTA data. Specifically, it includes a <code>comment.format</code> argument for users with CARETTA data, which allows you to provide a list specifying how the data was recorded, although the data must be separated by a delimiter. See below for the <code>comment.format</code> value for default CARETTA data. This function also by default looks for codes, e.g. “fb” or “cp”, in TURTLE/PHOCOENA data; see <code><a href="../reference/airdas_comments_process.html">?airdas_comments_process</a></code> for more details.</p>
+<div class="sourceCode" id="cb10"><html><body><pre class="r"><span class="co"># comment.format for default CARETTA data</span>
+<span class="no">comment.format</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(
+  <span class="kw">n</span> <span class="kw">=</span> <span class="fl">5</span>, <span class="kw">sep</span> <span class="kw">=</span> <span class="st">";"</span>,
+  <span class="kw">type</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"character"</span>, <span class="st">"character"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"character"</span>)
+)
+
+<span class="co"># TURTLE/PHOCOENA comment-data</span>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>))
 <span class="co">#&gt; Rows: 3</span>
 <span class="co">#&gt; Columns: 43</span>
 <span class="co">#&gt; $ Event       &lt;chr&gt; "C", "C", "C"</span>
