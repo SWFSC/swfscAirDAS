@@ -151,29 +151,40 @@ airdas_comments_process.airdas_df <- function(x, comment.format = NULL, ...) {
   ### Extract data based on comment.format
   if (!is.null(comment.format)) {
     # comment.format input checks
+    # stopifnot(
+    #   "comment.format must be a list" = inherits(comment.format, "list"), 
+    #   "comment.format must be of length 3" = length(comment.format) == 3, 
+    #   
+    #   "The names of comment.format must be 'n', 'sep', and 'type', resepctively" = 
+    #     identical(names(comment.format), c("n", "sep", "type")), 
+    #   
+    #   "n must be a numeric (or integer) of length 1" = 
+    #     length(comment.format$n) == 1 & inherits(comment.format$n, c("integer", "numeric")), 
+    #   
+    #   "n must be a whole number of at least 1" = 
+    #     isTRUE(all.equal(comment.format$n, as.integer(comment.format$n))) & comment.format$n >= 1, 
+    #   
+    #   "sep must be a character of length 1" = 
+    #     length(comment.format$sep) == 1 & inherits(comment.format$sep, "character"), 
+    #   
+    #   "In comment.format, the value of n must be equal to the length of type" = 
+    #     isTRUE(all.equal(comment.format$n, length(comment.format$type))),
+    #   
+    #   "In comment.format, all of type must be one of 'character', 'numeric', or 'integer'" = 
+    #     all(comment.format$type %in% c("character", "numeric", "integer")),   
+    #   
+    #   "sep must be one of ';' or ','" = comment.format$sep %in% c(";", ",")
+    # )
     stopifnot(
-      "comment.format must be a list" = inherits(comment.format, "list"), 
-      "comment.format must be of length 3" = length(comment.format) == 3, 
-      
-      "The names of comment.format must be 'n', 'sep', and 'type', resepctively" = 
-        identical(names(comment.format), c("n", "sep", "type")), 
-      
-      "n must be a numeric (or integer) of length 1" = 
-        length(comment.format$n) == 1 & inherits(comment.format$n, c("integer", "numeric")), 
-      
-      "n must be a whole number of at least 1" = 
-        isTRUE(all.equal(comment.format$n, as.integer(comment.format$n))) & comment.format$n >= 1, 
-      
-      "sep must be a character of length 1" = 
-        length(comment.format$sep) == 1 & inherits(comment.format$sep, "character"), 
-      
-      "In comment.format, the value of n must be equal to the length of type" = 
-        isTRUE(all.equal(comment.format$n, length(comment.format$type))),
-      
-      "In comment.format, all of type must be one of 'character', 'numeric', or 'integer'" = 
-        all(comment.format$type %in% c("character", "numeric", "integer")),   
-      
-      "sep must be one of ';' or ','" = comment.format$sep %in% c(";", ",")
+      inherits(comment.format, "list"), 
+      length(comment.format) == 3, 
+      identical(names(comment.format), c("n", "sep", "type")), 
+      length(comment.format$n) == 1 & inherits(comment.format$n, c("integer", "numeric")), 
+      isTRUE(all.equal(comment.format$n, as.integer(comment.format$n))) & comment.format$n >= 1, 
+      length(comment.format$sep) == 1 & inherits(comment.format$sep, "character"), 
+      isTRUE(all.equal(comment.format$n, length(comment.format$type))),
+      all(comment.format$type %in% c("character", "numeric", "integer")),   
+      comment.format$sep %in% c(";", ",")
     )
     
     # Process
