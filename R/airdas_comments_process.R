@@ -177,15 +177,24 @@ airdas_comments_process.airdas_df <- function(x, comment.format = NULL, ...) {
     # )
     stopifnot(
       inherits(comment.format, "list"), 
-      length(comment.format) == 3, 
-      identical(names(comment.format), c("n", "sep", "type")), 
-      length(comment.format$n) == 1 & inherits(comment.format$n, c("integer", "numeric")), 
-      isTRUE(all.equal(comment.format$n, as.integer(comment.format$n))) & comment.format$n >= 1, 
-      length(comment.format$sep) == 1 & inherits(comment.format$sep, "character"), 
-      isTRUE(all.equal(comment.format$n, length(comment.format$type))),
-      all(comment.format$type %in% c("character", "numeric", "integer")),   
-      comment.format$sep %in% c(";", ",")
-    )
+      length(comment.format) == 3
+    ) 
+    
+    if (!(identical(names(comment.format), c("n", "sep", "type"))))
+      stop("The names of comment.format must be 'n', 'sep', and 'type', resepctively")
+    if (!(length(comment.format$n) == 1 & inherits(comment.format$n, c("integer", "numeric"))))
+      stop("n must be a numeric (or integer) of length 1")
+    if (!(isTRUE(all.equal(comment.format$n, as.integer(comment.format$n))) & comment.format$n >= 1))
+      stop("n must be a whole number of at least 1")
+    if (!(length(comment.format$sep) == 1 & inherits(comment.format$sep, "character")))
+      stop("sep must be a character of length 1")
+    if (!(isTRUE(all.equal(comment.format$n, length(comment.format$type)))))
+      stop("In comment.format, the value of n must be equal to the length of type")
+    if (!(all(comment.format$type %in% c("character", "numeric", "integer"))))
+      stop("In comment.format, all of type must be one of 'character', 'numeric', or 'integer'")
+    if (!(comment.format$sep %in% c(";", ",")))
+      stop("sep must be one of ';' or ','")
+    
     
     # Process
     if (any(str_count(x.c.all$str_lower, comment.format$sep) > (comment.format$n - 1)))
