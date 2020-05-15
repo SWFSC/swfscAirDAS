@@ -124,7 +124,10 @@ airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1,
   #   1) chop by condition change
   #   2) aggregate 0-length segments (e.g. tvpaw),
   #   3) aggregate small segments as specified by user via seg.min.km
-  x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  if (!("cont_eff_section" %in% names(x))) {
+    x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  }
+  
   eff.uniq <- unique(x$cont_eff_section)
   
   # Prep for parallel
@@ -132,7 +135,7 @@ airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1,
   call.conditions <- conditions
   call.seg.min.km <- seg.min.km
   call.func1 <- airdas_segdata
-
+  
   # Setup number of cores
   if(is.null(num.cores)) num.cores <- parallel::detectCores() - 1
   if(is.na(num.cores)) num.cores <- 1

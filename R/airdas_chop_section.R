@@ -87,15 +87,18 @@ airdas_chop_section.airdas_df <- function(x, conditions, dist.method = NULL,
   
   #----------------------------------------------------------------------------
   # ID continuous effort sections, make randpicks, and get max section length
-  x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  if (!("cont_eff_section" %in% names(x))) {
+    x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  }
+  
   randpicks.df <- data.frame(
     effort_section = sort(unique(x$cont_eff_section)), 
     randpicks = NA
   )
   
   x.summ <- x %>% 
-    mutate(dist_from_prev_sect = ifelse(duplicated(.data$cont_eff_section), 
-                                        .data$dist_from_prev, NA)) %>% 
+    mutate(ces_dup = duplicated(.data$cont_eff_section), 
+           dist_from_prev_sect = ifelse(.data$ces_dup, .data$dist_from_prev, NA)) %>% 
     group_by(.data$cont_eff_section) %>% 
     summarise(dist_sum = sum(.data$dist_from_prev_sect, na.rm = TRUE))
   

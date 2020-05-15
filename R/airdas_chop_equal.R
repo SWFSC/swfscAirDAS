@@ -167,7 +167,9 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
   
   #----------------------------------------------------------------------------
   # ID continuous effort sections, and if appl check against randpicks
-  x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  if (!("cont_eff_section" %in% names(x))) {
+    x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
+  }
   
   eff.uniq <- unique(x$cont_eff_section)
   if (exists("r.eff.sect")) {
