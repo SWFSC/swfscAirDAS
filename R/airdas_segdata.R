@@ -118,18 +118,19 @@ airdas_segdata.airdas_df <- function(x, conditions, segdata.method,
   #----------------------------------------------------------------------------
   # Prep stuff - get the info that is consistent for the entire effort length
   # ymd determined below to be safe
+  val.trans <- unique(na.omit(x$Trans))
   df.out1 <- data.frame(
-    file = unique(x$file_das), transect = unique(na.omit(x$Trans)), 
+    file = unique(x$file_das),
+    transect = ifelse(length(val.trans) == 0, NA, val.trans), 
     event = x$Event[1], 
     stringsAsFactors = FALSE
   )
   
-  if (nrow(df.out1) != 1) {
-    browser()
+  if (nrow(df.out1) != 1)
     warning("Error in airdas_segdata(): ", 
-         "There are unexpected inconsistencies in continuous effort section. ", 
-         "Please report this as an issue")
-    }
+            "unexpected inconsistencies in continuous effort section. ", 
+            "Please report this as an issue")
+  
   df.out1 <- df.out1[1, ]
   
   

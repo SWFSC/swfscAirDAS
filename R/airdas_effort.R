@@ -166,16 +166,18 @@ airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = 
   x.oneff$dist_from_prev <- .dist_from_prev(x.oneff, dist.method)
   
   # ID continuous effort sections
-  x$cont_eff_section <- cumsum(x$Event %in% c("T", "R"))
-  x.summ <- x %>% 
+  x.oneff$cont_eff_section <- cumsum(x.oneff$Event %in% c("T", "R"))
+  
+  x.oneff.summ <- x.oneff %>% 
     group_by(.data$cont_eff_section) %>% 
     summarise(tr_count = sum(.data$Event %in% c("T", "R")),
               eo_count = sum(.data$Event %in% c("E", "O")))
-  if (!(all(x.summ$tr_count == 1) & all(x.summ$eo_count == 1)))
+  if (!(all(x.oneff.summ$tr_count == 1) & all(x.oneff.summ$eo_count == 1)))
     warning("Some continuous effort secitons do not have exactly one ", 
             "T/R event and one O/E event. ", 
-            "Please check your data using airdas_check")
-  rm(x.summ)
+            "Please check your data using airdas_check", 
+            immediate. = TRUE)
+  rm(x.oneff.summ)
     
   
   
