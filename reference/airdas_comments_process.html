@@ -243,7 +243,27 @@ See the 'Using <code>comment.format</code>' section</p></td>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='no'>y.proc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='no'>y</span>)
 
-<span class='no'>d</span> <span class='kw'>&lt;-</span> <span class='fu'>airdas_comments_process</span>(<span class='no'>y.proc</span>)</div></pre>
+<span class='fu'>airdas_comments_process</span>(<span class='no'>y.proc</span>)</div><div class='output co'>#&gt;   Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
+#&gt; 1     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0
+#&gt; 2     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0
+#&gt; 3     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0
+#&gt;   HorizSun VertSun HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR Rec VLI
+#&gt; 1        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g
+#&gt; 2        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g
+#&gt; 3        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g
+#&gt;   VLO VB VRI VRO Data1 Data2 Data3 Data4 Data5 Data6 Data7 EffortDot EventNum
+#&gt; 1   g  g   g   g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       11
+#&gt; 2   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45
+#&gt; 3   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45
+#&gt;            file_das line_num file_type comment_str     Misc1 Misc2 Value
+#&gt; 1 airdas_sample.das       11    turtle        2 cp  crab pot  &lt;NA&gt;     2
+#&gt; 2 airdas_sample.das       46    turtle   fb2s fb1m fish ball     s     2
+#&gt; 3 airdas_sample.das       46    turtle   fb2s fb1m fish ball     m     1
+#&gt;   flag_check
+#&gt; 1      FALSE
+#&gt; 2      FALSE
+#&gt; 3      FALSE</div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

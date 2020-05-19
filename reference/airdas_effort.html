@@ -128,9 +128,9 @@
 <span class='co'># S3 method for airdas_df</span>
 <span class='fu'>airdas_effort</span>(
   <span class='no'>x</span>,
-  <span class='no'>method</span>,
+  <span class='kw'>method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"condition"</span>, <span class='st'>"equallength"</span>, <span class='st'>"section"</span>),
   <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>dist.method</span> <span class='kw'>=</span> <span class='st'>"greatcircle"</span>,
+  <span class='kw'>distance.method</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"greatcircle"</span>, <span class='st'>"lawofcosines"</span>, <span class='st'>"haversine"</span>, <span class='st'>"vincenty"</span>),
   <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='no'>...</span>
 )</pre>
@@ -151,10 +151,7 @@ such as <code>seg.km</code> or <code>seg.min.km</code></p></td>
     <tr>
       <th>method</th>
       <td><p>character; method to use to chop AirDAS data into effort segments
-Can be <code>"condition"</code>, <code>"equallength"</code>, 
-or <code>"section"</code> (case-sensitive) to use 
-<code><a href='airdas_chop_condition.html'>airdas_chop_condition</a></code>, <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code>, 
-or <code><a href='airdas_chop_section.html'>airdas_chop_section</a></code>, respectively</p></td>
+Can be "condition", "equallength", "section", or any partial match thereof (case sensitive)</p></td>
     </tr>
     <tr>
       <th>conditions</th>
@@ -166,12 +163,11 @@ If <code>method == "condition"</code>, then these also are the conditions which
 trigger segment chopping when they change.</p></td>
     </tr>
     <tr>
-      <th>dist.method</th>
+      <th>distance.method</th>
       <td><p>character;
 method to use to calculate distance between lat/lon coordinates.
-Can be "greatcircle" to use the great circle distance method (TODO - add ref),
-or one of "lawofcosines", "haversine", or "vincenty" to use
-<code><a href='https://rdrr.io/pkg/swfscMisc/man/distance.html'>distance</a></code>. Default is "vincenty"</p></td>
+Can be "greatcircle", "lawofcosines", "haversine", "vincenty",
+or any partial match thereof (case sensitive). Default is "greatcircle"</p></td>
     </tr>
     <tr>
       <th>num.cores</th>
@@ -211,22 +207,24 @@ Using 1 core likely will be faster for smaller datasets</p></td>
   All on effort events must not have <code>NA</code> Lat or Lon values; 
   note Lat/Lon values for 1 events were 'filled in' in <code><a href='airdas_process.html'>airdas_process</a></code>.</p>
 <p>The following chopping methods are currently available: 
-  <code>"condition"</code>, <code>"equallength"</code>, and <code>"section"</code>. 
-  When using the <code>"condition"</code> method, effort sections are chopped 
-  into segments every time a condition changes, 
+  "condition", "equallength", and "section". 
+  When using the "condition" method, effort sections are chopped 
+  into segments every time a condition specified in <code>conditions</code> changes, 
   thereby ensuring that the conditions are consistent across the entire segment.
   See <code><a href='airdas_chop_condition.html'>airdas_chop_condition</a></code> for more details about this method, 
   including arguments that must be passed to it via <code>...</code>.</p>  
-<p>The <code>"equallength"</code> method consists of
+<p>The "equallength" method consists of
   chopping effort sections into equal-length segments of length <code>seg.km</code>, 
   and doing a weighted average of the conditions for the length of that segment. 
   See <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code> for more details about this method, 
   including arguments that must be passed to it via <code>...</code>.</p>  
-<p>The <code>"section"</code> method involves 'chopping' the effort into continuous effort sections,
+<p>The "section" method involves 'chopping' the effort into continuous effort sections,
   i.e. each continuous effort section is a single effort segment.
   See <code><a href='airdas_chop_section.html'>airdas_chop_section</a></code> for more details about this method.</p>  
 <p>The distance between the lat/lon points of subsequent events
-  is calculated using the method specified in <code>dist.method</code>
+  is calculated using the method specified in <code>distance.method</code>.
+  If "greatcircle", <code><a href='https://rdrr.io/pkg/swfscDAS/man/distance_greatcircle.html'>distance_greatcircle</a></code> is used,
+  while <code><a href='https://rdrr.io/pkg/swfscMisc/man/distance.html'>distance</a></code> is used otherwise.
   See <code><a href='airdas_sight.html'>airdas_sight</a></code> for how the sightings are processed.</p>
 <p>The siteinfo data frame includes the column 'included',
   which is used in <code><a href='airdas_effort_sight.html'>airdas_effort_sight</a></code> when summarizing
@@ -258,7 +256,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt;   endlin     lat1      lon1     lat2      lon2     mlat      mlon    dist
 #&gt; 1     36 39.23550 -123.1563 39.23400 -123.4033 39.23309 -123.2797 21.2882
 #&gt; 2     37 39.23400 -123.4033 39.23400 -123.4047 39.23400 -123.4040  0.1148
-#&gt; 3     44 39.23400 -123.4915 39.23317 -123.5143 39.23323 -123.4942  3.4595
+#&gt; 3     44 39.23400 -123.4742 39.23317 -123.5143 39.23323 -123.4942  3.4595
 #&gt; 4     49 39.23317 -123.5143 39.23283 -123.6032 39.23245 -123.5588  7.6620
 #&gt; 5     78 39.22000 -123.6078 39.21683 -123.3605 39.21667 -123.4842 21.3146
 #&gt; 6     88 39.21683 -123.3605 39.21700 -123.2418 39.21700 -123.3011 10.2336
@@ -457,7 +455,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 5      26 39.23317 -123.2955 39.23330 -123.3302 39.23317 -123.3129 3.0000
 #&gt; 6      31 39.23330 -123.3302 39.23371 -123.3651 39.23345 -123.3478 3.0000
 #&gt; 7      37 39.23371 -123.3651 39.23400 -123.4047 39.23425 -123.3849 3.4029
-#&gt; 8      43 39.23400 -123.4915 39.23317 -123.5089 39.23333 -123.4916 3.0000
+#&gt; 8      43 39.23400 -123.4742 39.23317 -123.5089 39.23333 -123.4916 3.0000
 #&gt; 9      45 39.23317 -123.5089 39.23284 -123.5335 39.23305 -123.5213 2.1215
 #&gt; 10     48 39.23284 -123.5335 39.23239 -123.5684 39.23251 -123.5511 3.0000
 #&gt; 11     49 39.23239 -123.5684 39.23283 -123.6032 39.23249 -123.5859 3.0000
@@ -657,7 +655,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 3      3          3              1     T       T2 airdas_sample.das    53
 #&gt;   endlin    lat1      lon1     lat2      lon2     mlat      mlon    dist
 #&gt; 1     37 39.2355 -123.1563 39.23400 -123.4047 39.23309 -123.2804 21.4029
-#&gt; 2     49 39.2340 -123.4915 39.23283 -123.6032 39.23275 -123.5388 11.1215
+#&gt; 2     49 39.2340 -123.4742 39.23283 -123.6032 39.23275 -123.5388 11.1215
 #&gt; 3     88 39.2200 -123.6078 39.21700 -123.2418 39.21729 -123.4248 31.5482
 #&gt;             mDateTime year month day    mtime   avgBft avgCCover  avgJelly
 #&gt; 1 2015-04-09 12:34:29 2015     4   9 12:34:29 1.005362   10.0000 0.8757162

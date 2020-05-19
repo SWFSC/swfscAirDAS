@@ -136,7 +136,7 @@
   <span class='kw'>days.gap.part</span> <span class='kw'>=</span> <span class='fl'>0.5</span>/<span class='fl'>24</span>,
   <span class='kw'>days.gap.full</span> <span class='kw'>=</span> <span class='fl'>12</span>/<span class='fl'>24</span>,
   <span class='kw'>gap.message</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>reset.tvpaw</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>reset.transect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -175,7 +175,7 @@ Indicates if messages should be printed detailing which row(s) of the
 output data frame were partially or fully reset</p></td>
     </tr>
     <tr>
-      <th>reset.tvpaw</th>
+      <th>reset.transect</th>
       <td><p>logical; default is <code>TRUE</code>.
 Indicates if propogated info (weather, observers, etc) should be reset 
 to <code>NA</code> when beginning a new transect. See Details section</p></td>
@@ -240,7 +240,7 @@ to <code>NA</code> when beginning a new transect. See Details section</p></td>
   
 <p>Normally, a T event (to indicate starting/resuming a transect)
   is immediately followed by a VPAW event series, creating a TVPAW event series.
-  The <code>reset.tvpaw</code> argument causes the conditions set in the VPAW event series
+  The <code>reset.transect</code> argument causes the conditions set in the VPAW event series
   (Beaufort, viewing conditions, altitude, etc.) to be reset to <code>NA</code> at each T event</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>

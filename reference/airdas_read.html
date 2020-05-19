@@ -124,7 +124,13 @@
   where each line is data for a specific event</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_read</span>(<span class='no'>file</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"turtle"</span>, <span class='kw'>skip</span> <span class='kw'>=</span> <span class='fl'>0</span>, <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>airdas_read</span>(
+  <span class='no'>file</span>,
+  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"turtle"</span>, <span class='st'>"caretta"</span>, <span class='st'>"survey"</span>, <span class='st'>"phocoena"</span>),
+  <span class='kw'>skip</span> <span class='kw'>=</span> <span class='fl'>0</span>,
+  <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>,
+  <span class='no'>...</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
