@@ -12,8 +12,8 @@
 #'   phrase "record" to determine what extra information (e.g. molas)
 #'   was being recorded vs ignored.
 #' 
-#' @return \code{x}, with the added column comment_str 
-#'   containing the concatenated comment strings
+#' @return \code{x}, filtered for C events and with the added column
+#'   comment_str containing the concatenated comment strings
 #' 
 #' @examples 
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -29,6 +29,10 @@
 #' y.comm <- airdas_comments(y.read)
 #' y.comm[grepl("record", y.comm$comment_str, ignore.case = TRUE) & 
 #'          !grepl("recorder", y.comm$comment_str, ignore.case = TRUE), ]
+#'          
+#' # Join comments with data frame
+#' dplyr::left_join(y.read, y.comm[, c("file_das", "line_num", "comment_str")],
+#'                  by = c("file_das", "line_num"))
 #' 
 #' @export
 airdas_comments <- function(x) UseMethod("airdas_comments")

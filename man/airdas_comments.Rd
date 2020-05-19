@@ -20,8 +20,8 @@ airdas_comments(x)
 or a data frame that can be coerced to a \code{airdas_dfr} object}
 }
 \value{
-\code{x}, with the added column comment_str 
-  containing the concatenated comment strings
+\code{x}, filtered for C events and with the added column
+  comment_str containing the concatenated comment strings
 }
 \description{
 Extract comments from \code{airdas_dfr} or \code{airdas_df} object
@@ -48,5 +48,9 @@ y.comm[grepl("record", y.comm$comment_str, ignore.case = TRUE), ]
 y.comm <- airdas_comments(y.read)
 y.comm[grepl("record", y.comm$comment_str, ignore.case = TRUE) & 
          !grepl("recorder", y.comm$comment_str, ignore.case = TRUE), ]
+         
+# Join comments with data frame
+dplyr::left_join(y.read, y.comm[, c("file_das", "line_num", "comment_str")],
+                 by = c("file_das", "line_num"))
 
 }
