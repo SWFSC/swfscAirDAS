@@ -4,7 +4,13 @@
 \alias{airdas_read}
 \title{Read AirDAS file(s)}
 \usage{
-airdas_read(file, file.type = "turtle", skip = 0, tz = "UTC", ...)
+airdas_read(
+  file,
+  file.type = c("turtle", "caretta", "survey", "phocoena"),
+  skip = 0,
+  tz = "UTC",
+  ...
+)
 }
 \arguments{
 \item{file}{filename(s) of one or more AirDAS files}

@@ -19,7 +19,7 @@
 #' @param gap.message logical; default is \code{FALSE}.
 #'   Indicates if messages should be printed detailing which row(s) of the 
 #'   output data frame were partially or fully reset
-#' @param reset.tvpaw logical; default is \code{TRUE}.
+#' @param reset.transect logical; default is \code{TRUE}.
 #'   Indicates if propogated info (weather, observers, etc) should be reset 
 #'   to \code{NA} when beginning a new transect. See Details section
 #'
@@ -56,7 +56,7 @@
 #'   
 #'   Normally, a T event (to indicate starting/resuming a transect)
 #'   is immediately followed by a VPAW event series, creating a TVPAW event series.
-#'   The \code{reset.tvpaw} argument causes the conditions set in the VPAW event series
+#'   The \code{reset.transect} argument causes the conditions set in the VPAW event series
 #'   (Beaufort, viewing conditions, altitude, etc.) to be reset to \code{NA} at each T event
 #'   
 #' @return An \code{airdas_df} object, which is also a data frame.
@@ -119,10 +119,8 @@ airdas_process.data.frame <- function(x, ...) {
 
 #' @name airdas_process
 #' @export
-airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, 
-                                      days.gap.full = 12/24, 
-                                      gap.message = FALSE, 
-                                      reset.tvpaw = TRUE, ...) 
+airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full = 12/24, 
+                                      gap.message = FALSE, reset.transect = TRUE, ...) 
 { 
   #----------------------------------------------------------------------------
   # Input checks
@@ -270,7 +268,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24,
     #   all of idx.reset.full are in idx.reset.part
     if (i %in% idx.reset.full) LastTrans <- NA
     
-    if ((i %in% idx.eff) & reset.tvpaw) {
+    if ((i %in% idx.eff) & reset.transect) {
       LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastVertSun <- LastHKR <-
         LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- NA

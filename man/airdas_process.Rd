@@ -18,7 +18,7 @@ airdas_process(x, ...)
   days.gap.part = 0.5/24,
   days.gap.full = 12/24,
   gap.message = FALSE,
-  reset.tvpaw = TRUE,
+  reset.transect = TRUE,
   ...
 )
 }
@@ -44,7 +44,7 @@ Default is 12 hours; must be greater than \code{days.gap.part}}
 Indicates if messages should be printed detailing which row(s) of the 
 output data frame were partially or fully reset}
 
-\item{reset.tvpaw}{logical; default is \code{TRUE}.
+\item{reset.transect}{logical; default is \code{TRUE}.
 Indicates if propogated info (weather, observers, etc) should be reset 
 to \code{NA} when beginning a new transect. See Details section}
 }
@@ -120,7 +120,7 @@ If \code{x} is a character, it is assumed to be a filepath and
   
   Normally, a T event (to indicate starting/resuming a transect)
   is immediately followed by a VPAW event series, creating a TVPAW event series.
-  The \code{reset.tvpaw} argument causes the conditions set in the VPAW event series
+  The \code{reset.transect} argument causes the conditions set in the VPAW event series
   (Beaufort, viewing conditions, altitude, etc.) to be reset to \code{NA} at each T event
 }
 \examples{

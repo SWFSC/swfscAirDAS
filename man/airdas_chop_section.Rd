@@ -10,7 +10,13 @@ airdas_chop_section(x, ...)
 
 \method{airdas_chop_section}{data.frame}(x, ...)
 
-\method{airdas_chop_section}{airdas_df}(x, conditions, dist.method = NULL, num.cores = NULL, ...)
+\method{airdas_chop_section}{airdas_df}(
+  x,
+  conditions,
+  distance.method = NULL,
+  num.cores = NULL,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 
@@ -22,7 +28,7 @@ see the Details section below}
 
 \item{conditions}{see \code{\link{airdas_effort}}}
 
-\item{dist.method}{character; see \code{\link{airdas_effort}}.
+\item{distance.method}{character; see \code{\link{airdas_effort}}.
 Default is \code{NULL} since these distances should have already been
 calculated in \code{\link{airdas_effort}}}
 

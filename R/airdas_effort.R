@@ -5,21 +5,17 @@
 #' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
 #'  or a data frame that can be coerced to a \code{airdas_df} object
 #' @param method character; method to use to chop AirDAS data into effort segments
-#'   Can be \code{"condition"}, \code{"equallength"}, 
-#'   or \code{"section"} (case-sensitive) to use 
-#'   \code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
-#'   or \code{\link{airdas_chop_section}}, respectively
+#'   Can be "condition", "equallength", "section", or any partial match thereof (case sensitive)
 #' @param conditions character vector of names of conditions to include in segdata output.
 #'   These values must be column names from the output of \code{\link{airdas_process}},
 #'   e.g. 'Bft', 'CCover', etc. The default is \code{NULL}, 
 #'   in which case all relevant conditions will be included.
 #'   If \code{method == "condition"}, then these also are the conditions which
 #'   trigger segment chopping when they change.
-#' @param dist.method character;
+#' @param distance.method character;
 #'   method to use to calculate distance between lat/lon coordinates.
-#'   Can be "greatcircle" to use the great circle distance method (TODO - add ref),
-#'   or one of "lawofcosines", "haversine", or "vincenty" to use
-#'   \code{\link[swfscMisc]{distance}}. Default is "vincenty"
+#'   Can be "greatcircle", "lawofcosines", "haversine", "vincenty",
+#'   or any partial match thereof (case sensitive). Default is "greatcircle"
 #' @param num.cores Number of CPUs to over which to distribute computations.
 #'   Defaults to \code{NULL}, which uses one fewer than the number of cores
 #'   reported by \code{\link[parallel]{detectCores}}
@@ -41,25 +37,27 @@
 #'   note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 #' 
 #'   The following chopping methods are currently available: 
-#'   \code{"condition"}, \code{"equallength"}, and \code{"section"}. 
-#'   When using the \code{"condition"} method, effort sections are chopped 
-#'   into segments every time a condition changes, 
+#'   "condition", "equallength", and "section". 
+#'   When using the "condition" method, effort sections are chopped 
+#'   into segments every time a condition specified in \code{conditions} changes, 
 #'   thereby ensuring that the conditions are consistent across the entire segment.
 #'   See \code{\link{airdas_chop_condition}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
 #'   
-#'   The \code{"equallength"} method consists of
+#'   The "equallength" method consists of
 #'   chopping effort sections into equal-length segments of length \code{seg.km}, 
 #'   and doing a weighted average of the conditions for the length of that segment. 
 #'   See \code{\link{airdas_chop_equal}} for more details about this method, 
 #'   including arguments that must be passed to it via \code{...}.
 #'   
-#'   The \code{"section"} method involves 'chopping' the effort into continuous effort sections,
+#'   The "section" method involves 'chopping' the effort into continuous effort sections,
 #'   i.e. each continuous effort section is a single effort segment.
 #'   See \code{\link{airdas_chop_section}} for more details about this method.
 #'   
 #'   The distance between the lat/lon points of subsequent events
-#'   is calculated using the method specified in \code{dist.method}
+#'   is calculated using the method specified in \code{distance.method}.
+#'   If "greatcircle", \code{\link[swfscDAS]{distance_greatcircle}} is used,
+#'   while \code{\link[swfscMisc]{distance}} is used otherwise.
 #'   See \code{\link{airdas_sight}} for how the sightings are processed.
 #'
 #'   The siteinfo data frame includes the column 'included',
@@ -119,39 +117,18 @@ airdas_effort.data.frame <- function(x, ...) {
 
 #' @name airdas_effort
 #' @export
-airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = "greatcircle", 
+airdas_effort.airdas_df <- function(x, method = c("condition", "equallength", "section"), 
+                                    conditions = NULL, 
+                                    distance.method = c("greatcircle", "lawofcosines", "haversine", "vincenty"),
                                     num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   
-  # Method
-  methods.acc <- c("condition", "equallength", "section")
-  if (!(length(method) == 1 & (method %in% methods.acc))) 
-    stop("method must be a string, and must be one of: ", 
-         paste0("\"", paste(methods.acc, collapse = "\", \""), "\""))
+  method <- match.arg(method)
+  distance.method <- match.arg(distance.method)
   
-  #Check for dist.method happens in .dist_from_prev()
-  
-  # Conditions
-  conditions.acc <- c(
-    "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
-    "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
-    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO"
-  )
-  
-  if (is.null(conditions)) {
-    conditions <- c(
-      "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
-      "Haze", "Kelp", "RedTide", "AltFt", "SpKnot"
-    )
-    
-  } else {
-    if (!all(conditions %in% conditions.acc))
-      stop("Please ensure all components of the conditions argument are ",
-           "one of the following accepted values:\n",
-           paste(conditions.acc, collapse  = ", "))
-  }
-  
+  conditions <- .airdas_conditions_check(conditions)
+
   
   #----------------------------------------------------------------------------
   # Prep
@@ -163,7 +140,7 @@ airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = 
   x.oneff <- x[x.oneff.which, ]
   rownames(x.oneff) <- NULL
   
-  x.oneff$dist_from_prev <- .dist_from_prev(x.oneff, dist.method)
+  x.oneff$dist_from_prev <- .dist_from_prev(x.oneff, distance.method)
   
   # ID continuous effort sections
   x.oneff$cont_eff_section <- cumsum(x.oneff$Event %in% c("T", "R"))
@@ -178,7 +155,7 @@ airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = 
             "Please check your data using airdas_check", 
             immediate. = TRUE)
   rm(x.oneff.summ)
-    
+  
   
   
   #----------------------------------------------------------------------------
@@ -225,8 +202,7 @@ airdas_effort.airdas_df <- function(x, method, conditions = NULL, dist.method = 
     left_join(select(segdata, .data$segnum, .data$mlat, .data$mlon), 
               by = "segnum") %>% 
     airdas_sight() %>% 
-    mutate(included = (.data$Bft <= 5 & abs(.data$Angle) <= 78 & 
-                         .data$SightStd & .data$OnEffort), 
+    mutate(included = .data$Bft <= 5 & abs(.data$Angle) <= 78 & .data$SightStd & .data$OnEffort, 
            included = ifelse(is.na(.data$included), FALSE, .data$included)) %>% 
     select(-.data$dist_from_prev, -.data$cont_eff_section)
   

@@ -1,5 +1,37 @@
 # Internal, helper functions for swfscAirDAS
 
+
+###############################################################################
+# Check that conditions are valid for AirDAS data
+.airdas_conditions_check <- function(x) {
+  # x: character; condition name(s)
+  # Output: x, or an error message
+  
+  conditions.acc <- c(
+    "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+    "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
+    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO"
+  )
+  
+  if (is.null(x)) {
+    x <- c(
+      "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
+      "Haze", "Kelp", "RedTide", "AltFt", "SpKnot"
+    )
+    
+  } else {
+    if (!all(x %in% conditions.acc))
+      stop("Please ensure that all 'conditions' are ",
+           "one of the following accepted values:\n",
+           paste(conditions.acc, collapse  = ", "))
+    
+    if (!("Bft" %in% x))  stop("The conditions argument must include 'Bft'")
+  }
+  
+  x
+}
+
+
 ###############################################################################
 # Functions for doing accurate numeric comparisons with floating points
 # Same as the swfscDAS internals

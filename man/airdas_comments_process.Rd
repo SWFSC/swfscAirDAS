@@ -124,6 +124,6 @@ Historically, project-specific or miscellaneous data have been
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
-d <- airdas_comments_process(y.proc)
+airdas_comments_process(y.proc)
 
 }

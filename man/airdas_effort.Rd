@@ -12,9 +12,9 @@ airdas_effort(x, ...)
 
 \method{airdas_effort}{airdas_df}(
   x,
-  method,
+  method = c("condition", "equallength", "section"),
   conditions = NULL,
-  dist.method = "greatcircle",
+  distance.method = c("greatcircle", "lawofcosines", "haversine", "vincenty"),
   num.cores = NULL,
   ...
 )
@@ -27,10 +27,7 @@ or a data frame that can be coerced to a \code{airdas_df} object}
 such as \code{seg.km} or \code{seg.min.km}}
 
 \item{method}{character; method to use to chop AirDAS data into effort segments
-Can be \code{"condition"}, \code{"equallength"}, 
-or \code{"section"} (case-sensitive) to use 
-\code{\link{airdas_chop_condition}}, \code{\link{airdas_chop_equal}}, 
-or \code{\link{airdas_chop_section}}, respectively}
+Can be "condition", "equallength", "section", or any partial match thereof (case sensitive)}
 
 \item{conditions}{character vector of names of conditions to include in segdata output.
 These values must be column names from the output of \code{\link{airdas_process}},
@@ -39,11 +36,10 @@ in which case all relevant conditions will be included.
 If \code{method == "condition"}, then these also are the conditions which
 trigger segment chopping when they change.}
 
-\item{dist.method}{character;
+\item{distance.method}{character;
 method to use to calculate distance between lat/lon coordinates.
-Can be "greatcircle" to use the great circle distance method (TODO - add ref),
-or one of "lawofcosines", "haversine", or "vincenty" to use
-\code{\link[swfscMisc]{distance}}. Default is "vincenty"}
+Can be "greatcircle", "lawofcosines", "haversine", "vincenty",
+or any partial match thereof (case sensitive). Default is "greatcircle"}
 
 \item{num.cores}{Number of CPUs to over which to distribute computations.
 Defaults to \code{NULL}, which uses one fewer than the number of cores
@@ -82,25 +78,27 @@ This is the top-level function for chopping processed AirDAS data
   note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 
   The following chopping methods are currently available: 
-  \code{"condition"}, \code{"equallength"}, and \code{"section"}. 
-  When using the \code{"condition"} method, effort sections are chopped 
-  into segments every time a condition changes, 
+  "condition", "equallength", and "section". 
+  When using the "condition" method, effort sections are chopped 
+  into segments every time a condition specified in \code{conditions} changes, 
   thereby ensuring that the conditions are consistent across the entire segment.
   See \code{\link{airdas_chop_condition}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
-  The \code{"equallength"} method consists of
+  The "equallength" method consists of
   chopping effort sections into equal-length segments of length \code{seg.km}, 
   and doing a weighted average of the conditions for the length of that segment. 
   See \code{\link{airdas_chop_equal}} for more details about this method, 
   including arguments that must be passed to it via \code{...}.
   
-  The \code{"section"} method involves 'chopping' the effort into continuous effort sections,
+  The "section" method involves 'chopping' the effort into continuous effort sections,
   i.e. each continuous effort section is a single effort segment.
   See \code{\link{airdas_chop_section}} for more details about this method.
   
   The distance between the lat/lon points of subsequent events
-  is calculated using the method specified in \code{dist.method}
+  is calculated using the method specified in \code{distance.method}.
+  If "greatcircle", \code{\link[swfscDAS]{distance_greatcircle}} is used,
+  while \code{\link[swfscMisc]{distance}} is used otherwise.
   See \code{\link{airdas_sight}} for how the sightings are processed.
 
   The siteinfo data frame includes the column 'included',

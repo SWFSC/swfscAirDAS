@@ -59,8 +59,12 @@
 #' }
 #'
 #' @export
-airdas_check <- function(file, file.type = "turtle", skip = 0, file.out = NULL, 
+airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),  
+                         skip = 0, file.out = NULL, 
                          sp.codes = NULL, print.transect = TRUE) {
+  
+  file.type <- match.arg(file.type)
+  
   #----------------------------------------------------------------------------
   ### Read and process file
   error.out <- data.frame(

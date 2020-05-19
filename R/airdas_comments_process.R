@@ -99,7 +99,7 @@
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
 #' 
-#' d <- airdas_comments_process(y.proc)
+#' airdas_comments_process(y.proc)
 #' 
 #' @export
 airdas_comments_process <- function(x, ...) UseMethod("airdas_comments_process")

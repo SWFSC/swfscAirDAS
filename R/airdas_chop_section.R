@@ -8,7 +8,7 @@
 #'   see the Details section below
 #' @param ... ignored
 #' @param conditions see \code{\link{airdas_effort}}
-#' @param dist.method character; see \code{\link{airdas_effort}}.
+#' @param distance.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
 #' @param num.cores See \code{\link{airdas_effort}}
@@ -66,23 +66,25 @@ airdas_chop_section.data.frame <- function(x, ...) {
 
 #' @name airdas_chop_section
 #' @export
-airdas_chop_section.airdas_df <- function(x, conditions, dist.method = NULL, 
+airdas_chop_section.airdas_df <- function(x, conditions, distance.method = NULL, 
                                           num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
     stop("x must be filtered for on effort events; see `?airdas_chop_equal")
   
+  conditions <- .airdas_conditions_check(conditions)
+  
   
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
-    if (is.null(dist.method))
+    if (is.null(distance.method))
       stop("If the distance between consectutive points (events) ",
            "has not already been calculated, ",
-           "then you must provide a valid argument for dist.method")
+           "then you must provide a valid argument for distance.method")
     
-    x$dist_from_prev <- .dist_from_prev(x, dist.method)
+    x$dist_from_prev <- .dist_from_prev(x, distance.method)
   }
   
   #----------------------------------------------------------------------------

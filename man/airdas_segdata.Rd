@@ -10,7 +10,14 @@ airdas_segdata(x, ...)
 
 \method{airdas_segdata}{data.frame}(x, ...)
 
-\method{airdas_segdata}{airdas_df}(x, conditions, segdata.method, seg.lengths, section.id, ...)
+\method{airdas_segdata}{airdas_df}(
+  x,
+  conditions,
+  segdata.method = c("avg", "maxdist"),
+  seg.lengths,
+  section.id,
+  ...
+)
 }
 \arguments{
 \item{x}{\code{airdas_df} object, 

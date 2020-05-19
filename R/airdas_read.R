@@ -39,11 +39,16 @@
 #' airdas_read(y, file.type = "turtle")
 #'
 #' @export
-airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
+airdas_read <- function(file, file.type = c("turtle", "caretta", "survey", "phocoena"), 
+                        skip = 0, tz = "UTC", ...) {
+  # Input checks
   stopifnot(
     inherits(file, "character"),
     inherits(file.type, "character")
   )
+  
+  file.type <- match.arg(file.type)
+  
   
   if (length(file) < 1)
     stop("file must be a vector of one or more filename(s)")
@@ -54,10 +59,6 @@ airdas_read <- function(file, file.type = "turtle", skip = 0, tz = "UTC", ...) {
   
   
   # Call appropriate read function
-  file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
-  if (!(file.type %in% file.type.acc))
-    stop("file.type must be one of: ", paste(file.type.acc, collapse = ", "))
-  
   call.read <- switch(file.type, 
                       phocoena = .airdas_read_phocoena, 
                       survey = .airdas_read_survey,

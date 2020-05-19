@@ -25,7 +25,8 @@
 #' @importFrom rlang !! .data
 #' @importFrom stats na.omit runif
 #' @importFrom stringr str_count str_detect str_match_all str_split
-#' @importFrom swfscDAS .chop_condition_eff .chop_equal_eff .dist_from_prev .fn.grcirclkm 
+#' @importFrom swfscDAS das_effort_sight distance_greatcircle 
+#'   .chop_condition_eff .chop_equal_eff .dist_from_prev  
 #'   .process_chr .process_num .segdata_aggr .segdata_proc das_effort_sight
 #' @importFrom swfscMisc bearing destination distance setupClusters
 #' @importFrom tidyr unnest

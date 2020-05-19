@@ -11,7 +11,7 @@
 #' see \code{\link{airdas_effort}}
 #' @param seg.min.km numeric; minimum allowable segment length (in kilometers).
 #'   Default is 0.1. See the Details section below for more information
-#' @param dist.method character; see \code{\link{airdas_effort}}.
+#' @param distance.method character; see \code{\link{airdas_effort}}.
 #'   Default is \code{NULL} since these distances should have already been
 #'   calculated in \code{\link{airdas_effort}}
 #' @param num.cores See \code{\link{airdas_effort}}
@@ -82,7 +82,7 @@ airdas_chop_condition.data.frame <- function(x, ...) {
 #' @name airdas_chop_condition
 #' @export
 airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1, 
-                                            dist.method = NULL, 
+                                            distance.method = NULL, 
                                             num.cores = NULL, ...) {
   #----------------------------------------------------------------------------
   # Input checks
@@ -101,18 +101,18 @@ airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1,
     stop("seg.min.km must be greater than or equal to 0; ", 
          "see `?airdas_chop_condition")
   
-  # TODO: conditions check.?
+  conditions <- .airdas_conditions_check(conditions)
   
   
   #----------------------------------------------------------------------------
   # Calculate distance between points if necessary
   if (!("dist_from_prev" %in% names(x))) {
-    if (is.null(dist.method))
+    if (is.null(distance.method))
       stop("If the distance between consectutive points (events) ",
            "has not already been calculated, ",
-           "then you must provide a valid argument for dist.method")
+           "then you must provide a valid argument for distance.method")
     
-    x$dist_from_prev <- .dist_from_prev(x, dist.method)
+    x$dist_from_prev <- .dist_from_prev(x, distance.method)
   }
   
   # Get distance to next point

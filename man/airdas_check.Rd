@@ -6,7 +6,7 @@
 \usage{
 airdas_check(
   file,
-  file.type = "turtle",
+  file.type = c("turtle", "caretta", "phocoena"),
   skip = 0,
   file.out = NULL,
   sp.codes = NULL,

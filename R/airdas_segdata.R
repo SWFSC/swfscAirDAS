@@ -75,28 +75,12 @@ airdas_segdata.data.frame <- function(x, ...) {
 
 #' @name airdas_segdata
 #' @export
-airdas_segdata.airdas_df <- function(x, conditions, segdata.method, 
+airdas_segdata.airdas_df <- function(x, conditions, segdata.method = c("avg", "maxdist"),
                                      seg.lengths, section.id, ...) {
   #----------------------------------------------------------------------------
   # Input checks
-  conditions.acc <- c(
-    "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
-    "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
-    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO"
-  )
-  if (!all(conditions %in% conditions.acc))
-    stop("Was this function called by one of the airdas_chop_ functions? ",
-         "Please ensure all components of the conditions argument are ",
-         "one of the following accepted values:\n",
-         paste(conditions.acc, collapse  = ", "))
-  
-  
-  segdata.method.acc <- c("avg", "maxdist")
-  if (!(segdata.method %in% segdata.method.acc))
-    stop("Was this function called by a _chop_ function? ",
-         "segdata.method must be one of the following:\n",
-         paste(segdata.method.acc, collapse = ", "))
-  
+  conditions <- .airdas_conditions_check(conditions)
+  segdata.method <- match.arg(segdata.method)
   
   if (!("dist_from_prev" %in% names(x))) 
     stop("x must contain a 'dist_from_prev' column; ", 
@@ -111,8 +95,6 @@ airdas_segdata.airdas_df <- function(x, conditions, segdata.method,
     stop("The sum of the seg.lengths values does not equal the sum of the ", 
          "x$dist_from_prev' values; ", 
          "was this function called by the top-level effort function?")
-  
-  rm(conditions.acc, segdata.method.acc)
   
   
   #----------------------------------------------------------------------------
