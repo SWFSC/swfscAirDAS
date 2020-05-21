@@ -193,13 +193,11 @@ calculated in <code><a href='airdas_effort.html'>airdas_effort</a></code></p></t
 <span class='no'>y.proc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='no'>y</span>)
 
 <span class='no'>y.eff1</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"equallength"</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>),
-  <span class='kw'>seg.km</span> <span class='kw'>=</span> <span class='fl'>35</span>
+  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"equallength"</span>, <span class='kw'>seg.km</span> <span class='kw'>=</span> <span class='fl'>35</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
 )
 
-<span class='no'>y.eff2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"section"</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>)
-)
+<span class='no'>y.eff2</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(<span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"section"</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)
+
 
 <span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='no'>y.eff1</span>, <span class='no'>y.eff2</span>)
 }</div></pre>
