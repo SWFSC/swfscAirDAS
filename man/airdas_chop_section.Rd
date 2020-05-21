@@ -64,13 +64,11 @@ y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
 y.eff1 <- airdas_effort(
-  y.proc, method = "equallength", sp.codes = c("mn", "bm"), 
-  seg.km = 35
+  y.proc, method = "equallength", seg.km = 35, num.cores = 1
 )
 
-y.eff2 <- airdas_effort(
-  y.proc, method = "section", sp.codes = c("mn", "bm")
-)
+y.eff2 <- airdas_effort(y.proc, method = "section", num.cores = 1)
+
 
 all.equal(y.eff1, y.eff2)
 }
