@@ -1,6 +1,6 @@
 Package: swfscAirDAS
 Title: Southwest Fisheries Science Center Aerial DAS Data Processing
-Version: 0.1.0
+Version: 0.2.0
 Authors@R: 
     person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
 Description: Process and summarize aerial survey DAS data (AirDAS; data written to a .das file) 
@@ -19,7 +19,7 @@ Imports:
     readr, 
     rlang, 
     stringr,
-    swfscDAS, 
+    swfscDAS (>= 0.3), 
     swfscMisc, 
     tidyr
 Suggests: 
