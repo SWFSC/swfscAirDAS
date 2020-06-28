@@ -17,7 +17,7 @@
 #' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
 #' @importFrom dplyr arrange between bind_cols bind_rows case_when distinct everything filter 
-#'   full_join group_by left_join mutate right_join select slice starts_with summarise ungroup
+#'   full_join group_by left_join mutate n right_join select slice starts_with summarise ungroup
 #' @importFrom lubridate year month day tz
 #' @importFrom magrittr %>%
 #' @importFrom parallel clusterExport detectCores parLapplyLB stopCluster
@@ -26,7 +26,7 @@
 #' @importFrom stats na.omit runif
 #' @importFrom stringr str_count str_detect str_match_all str_split
 #' @importFrom swfscDAS das_effort_sight distance_greatcircle 
-#'   .chop_condition_eff .chop_equal_eff .dist_from_prev  
+#'   .chop_condition_eff .chop_equallength_eff .dist_from_prev  
 #'   .process_chr .process_num .segdata_aggr .segdata_proc das_effort_sight
 #' @importFrom swfscMisc bearing destination distance setupClusters
 #' @importFrom tidyr unnest

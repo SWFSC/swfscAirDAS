@@ -36,14 +36,14 @@
 #'     \item The extra length remaining after chopping is greater than or equal to 
 #'       half of the target segment length (i.e. \code{>= 0.5*seg.km}): 
 #'       the extra length is assigned to a random portion of the effort section as its own segment 
-#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1a})
+#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf}{see Fig. 1a})
 #'     \item The extra length remaining after chopping is less than half of the 
 #'       target segment length (i.e. \code{< 0.5*seg.km}): 
 #'       the extra length is added to one of the (randomly selected) equal-length segments 
-#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1b})
+#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf}{see Fig. 1b})
 #'     \item The length of the effort section is less than or equal to 
 #'       the target segment length: the entire segment becomes a segment 
-#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1c})
+#'       (\href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf}{see Fig. 1c})
 #'     \item The length of the effort section is zero: a segment of length zero. 
 #'       If there are more than two events (the "T"/R" and "E"/"O" events),
 #'       the function throws a warning
@@ -55,10 +55,10 @@
 #'   and the central tendency is approximately equal to the target segment length. 
 #'   The only exception is when a continuous effort section is less than 
 #'   one half of the target segment length (i.e. \code{< 0.5*seg.km}; 
-#'   \href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equal_figures.pdf}{see Fig. 1c}).
+#'   \href{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf}{see Fig. 1c}).
 #'   
 #'   Note the PDF with Figs. 1a - 1c is included in the package, and can be found at:
-#'   \code{system.file("AirDAS_chop_equal_figures.pdf", package = "swfscAirDAS")}   
+#'   \code{system.file("AirDAS_chop_equallength_figures.pdf", package = "swfscAirDAS")}   
 #'   
 #'   'Randpicks' is a record of the random assignments that were made when 
 #'   chopping the effort sections into segments, and can be saved to allow 
@@ -88,22 +88,20 @@
 #' 
 #' @keywords internal
 #' 
-#' @seealso airdas_chop_condition, airdas_chop_section
-#' 
 #' @export
-airdas_chop_equal <- function(x, ...) UseMethod("airdas_chop_equal")
+airdas_chop_equallength <- function(x, ...) UseMethod("airdas_chop_equallength")
 
 
-#' @name airdas_chop_equal
+#' @name airdas_chop_equallength
 #' @export
-airdas_chop_equal.data.frame <- function(x, ...) {
-  airdas_chop_equal(as_airdas_df(x), ...)
+airdas_chop_equallength.data.frame <- function(x, ...) {
+  airdas_chop_equallength(as_airdas_df(x), ...)
 }
 
 
-#' @name airdas_chop_equal
+#' @name airdas_chop_equallength
 #' @export
-airdas_chop_equal.airdas_df <- function(x, conditions, seg.km, 
+airdas_chop_equallength.airdas_df <- function(x, conditions, seg.km, 
                                         randpicks.load = NULL, 
                                         distance.method = NULL, num.cores = NULL, 
                                         ...) {
@@ -111,10 +109,10 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
   # Input checks
   if (missing(seg.km))
     stop("You must specify a 'seg.km' argument when using the \"equallength\" ", 
-         "method. See `?airdas_chop_equal` for more details")
+         "method. See `?airdas_chop_equallength` for more details")
   
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
-    stop("x must be filtered for on effort events; see `?airdas_chop_equal")
+    stop("x must be filtered for on effort events; see `?airdas_chop_equallength")
   
   conditions <- .airdas_conditions_check(conditions)
   
@@ -177,7 +175,7 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
       stop("The provided AirDAS data (x) does not have the same number of ", 
            "continuous effort sections as the provided randpicks file has rows. ", 
            "Did you load the correct randpicks file, and does it have ", 
-           "proper column names? See `?airdas_chop_equal` for more details")
+           "proper column names? See `?airdas_chop_equallength` for more details")
   }
   
   
@@ -201,7 +199,7 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
   eff.chop.list <- tryCatch({
     if(is.null(cl)) { # Don't parallelize if num.cores == 1
       lapply(
-        eff.uniq, .chop_equal_eff,
+        eff.uniq, .chop_equallength_eff,
         call.x = call.x, call.conditions = call.conditions, 
         call.seg.km = call.seg.km, call.r.pos = call.r.pos,
         call.func1 = call.func1
@@ -215,7 +213,7 @@ airdas_chop_equal.airdas_df <- function(x, conditions, seg.km,
         envir = environment()
       )
       parallel::parLapplyLB(
-        cl, eff.uniq, .chop_equal_eff,
+        cl, eff.uniq, .chop_equallength_eff,
         call.x = call.x, call.conditions = call.conditions, 
         call.seg.km = call.seg.km, call.r.pos = call.r.pos,
         call.func1 = call.func1

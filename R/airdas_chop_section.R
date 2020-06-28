@@ -13,8 +13,8 @@
 #'   calculated in \code{\link{airdas_effort}}
 #' @param num.cores See \code{\link{airdas_effort}}
 #' 
-#' @details This function is simply a wrapper for \code{\link{airdas_chop_equal}}.
-#'   It calls \code{\link{airdas_chop_equal}}, with \code{seg.km} set to a 
+#' @details This function is simply a wrapper for \code{\link{airdas_chop_equallength}}.
+#'   It calls \code{\link{airdas_chop_equallength}}, with \code{seg.km} set to a 
 #'   value larger than the longest continuous effort section in \code{x}. 
 #'   Thus, the effort is 'chopped' into the continuous effort sections and then summarized.
 #'   
@@ -29,7 +29,7 @@
 #'   Then you can use \code{\link[dplyr]{group_by}(transect_idx)} and 
 #'   \code{\link[dplyr]{summarise}} to summarise the desired data by transect
 #'   
-#' @return See \code{\link{airdas_chop_equal}}. 
+#' @return See \code{\link{airdas_chop_equallength}}. 
 #'   The randpicks values will all be \code{NA}
 #'   
 #' @examples 
@@ -49,8 +49,6 @@
 #' 
 #' @keywords internal
 #' 
-#' @seealso airdas_chop_condition, airdas_chop_equal
-#' 
 #' @export
 airdas_chop_section <- function(x, ...) UseMethod("airdas_chop_section")
 
@@ -69,7 +67,7 @@ airdas_chop_section.airdas_df <- function(x, conditions, distance.method = NULL,
   #----------------------------------------------------------------------------
   # Input checks
   if (!all(x$OnEffort | x$Event %in% c("O", "E"))) 
-    stop("x must be filtered for on effort events; see `?airdas_chop_equal")
+    stop("x must be filtered for on effort events; see `?airdas_chop_equallength")
   
   conditions <- .airdas_conditions_check(conditions)
   
@@ -102,8 +100,8 @@ airdas_chop_section.airdas_df <- function(x, conditions, distance.method = NULL,
     group_by(.data$cont_eff_section) %>% 
     summarise(dist_sum = sum(.data$dist_from_prev_sect, na.rm = TRUE))
   
-  # Call airdas_chop_equal using max section length + 1
-  airdas_chop_equal(
+  # Call airdas_chop_equallength using max section length + 1
+  airdas_chop_equallength(
     x %>% select(-.data$cont_eff_section), 
     conditions = conditions, 
     seg.km = max(x.summ$dist_sum) + 1, randpicks.load = randpicks.df, 

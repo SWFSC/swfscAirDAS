@@ -84,38 +84,37 @@ as_airdas_df.data.frame <- function(x) {
     }
   }
   
-  # Check that no events are NA
-  if (any(is.na(x$Event)))
-    stop("The provided data cannot be coerced to an object of class airdas_df ",
-         "because the following line(s) have NA Event value(s):\n", 
-         paste(x$line_num[is.na(x$Event)], collapse = ", "))
-  
-  # Check that all of OnEffort is either TRUE/FALSE; no NAs
-  if (any(is.na(x$OnEffort))) 
-    stop("The following line(s) have OnEffort values of NA, ", 
-         "and thus this object cannot be coerced to an airdas_df object: ", 
-         paste(x$line_num[is.na(x$OnEffort)], collapse = ", "))
-  
-  # Check for no datetime/lat/lon NAs in on-effort events
-  x.oneff <- x[x$OnEffort, ]
-  if (any(is.na(x.oneff$Lat) | is.na(x.oneff$Lon) | is.na(x.oneff$DateTime)))
-    stop("The following line(s) have NA values in the Lat, Lon, and/or DateTime columns; ", 
-         "should this object be coerced to an airdas_df object? Lines:\n", 
-         paste(sort(unique(c(x.oneff$line_num[is.na(x.oneff$Lat)], 
-                             x.oneff$line_num[is.na(x.oneff$Lon)], 
-                             x.oneff$line_num[is.na(x.oneff$DateTime)]))), 
-               collapse = ", "))
-  
-  # Check for no deleted events
-  if (any(x$Event == "#"))
-    warning("This airdas_df object has some deleted events, meaning ", 
-            "some \"#\" events. These should be removed")
-  
   # Check that file_type column has an expected value
   file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
   if (!all(x$file_type %in% file.type.acc))
     stop("The file_type column values all must be one of: ", 
          paste(file.type.acc, collapse = ", "))
+  
+  # Check that no events are NA
+  if (any(is.na(x$Event)))
+    stop("The provided data cannot be coerced to an object of class airdas_df ",
+         "because the following line(s) have NA Event value(s):\n", 
+         .print_file_line(x$file_das, x$line_num, which(is.na(x$Event))))
+  
+  # Check that all of OnEffort is either TRUE/FALSE; no NAs
+  if (any(is.na(x$OnEffort))) 
+    stop("The following line(s) have OnEffort values of NA, ", 
+         "and thus this object cannot be coerced to an airdas_df object:\n",
+         .print_file_line(x$file_das, x$line_num, which(is.na(x$OnEffort))))
+  
+  # Check for no datetime/lat/lon NAs in on-effort events
+  x.oneff <- x[x$OnEffort, ]
+  x.oneff.dtll.na <- which(is.na(x.oneff$Lat) | is.na(x.oneff$Lon) | is.na(x.oneff$DateTime))
+  if (length(x.oneff.dtll.na) > 0)
+    stop("The following have NA Lat, Lon, and/or DateTime values in the following, ", 
+         "meaning this object cannot coerced to an airdas_df object:\n", 
+         .print_file_line(x$file_das, x$line_num, x.oneff.dtll.na))
+  
+  # Check for no deleted events
+  if (any(x$Event == "#"))
+    warning("This airdas_df object has deleted events, meaning ", 
+            "some \"#\" events which should be removed, at the following:\n", 
+            .print_file_line(x$file_das, x$line_num, which(x$Event == "#")))
   
   # Add class and return
   class(x) <- c("airdas_df", setdiff(class(x), "airdas_df"))

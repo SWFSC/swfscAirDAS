@@ -19,7 +19,7 @@
 #' @param ... ignored
 #' 
 #' @details This function was designed to be called by one of the airdas_chop_ functions, 
-#'   e.g. \code{\link{airdas_chop_equal}}, and thus 
+#'   e.g. \code{\link{airdas_chop_equallength}}, and thus 
 #'   users should avoid calling it themselves.
 #'   It loops through the events in \code{x}, calculating and storing relevant
 #'   information for each modeling segment as it goes. 

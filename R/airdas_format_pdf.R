@@ -43,21 +43,16 @@
 #' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
 #' @examples
-#' \dontrun{
-#' airdas_format_pdf("AirDAS_Format_TURTLE.pdf", file.type  = "turtle", overwrite = FALSE)
+#' if (interactive()) {
+#'   airdas_format_pdf(
+#'     "AirDAS_Format_TURTLE.pdf", file.type  = "turtle", 
+#'     overwrite = FALSE
+#'   )
 #' }
 #'
 #' @export
-airdas_format_pdf <- function(file, file.type, ...) {
-  if (!(inherits(file, "character") & length(file) == 1))
-    stop("file must be a single character string")
-  
-  file.type.acc <- c("turtle", "caretta", "survey", "phocoena")
-  if (!(file.type %in% file.type.acc))
-    stop("file.type must be one of: ", paste(file.type.acc, collapse = ", "))
-  
-  if (file.type == "survey") 
-    stop("This package does not yet support the SURVEY method")
+airdas_format_pdf <- function(file, file.type = c("phocoena", "caretta", "turtle"), ...) {
+  file.type <- match.arg(file.type)
   
   file.tocopy <- switch(file.type, 
                         phocoena = "AirDAS_Format_PHOCOENA.pdf", 

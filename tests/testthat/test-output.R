@@ -88,8 +88,8 @@ test_that("airdas_sight output has expected column names and classes", {
     "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot",  
     "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", 
-    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
-    "TurtleSizeFt", "TurtleDirection", "TurtleTail"
+    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "SpCode", "GsTotal", "GsSp", 
+    "TurtleSize", "TurtleDirection", "TurtleTail"
   )
   
   expect_identical(exp.name, names(y.sight))
@@ -107,8 +107,8 @@ test_that("airdas_sight output has expected column names and classes with an ext
     "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot",  
     "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", "testrr", 
-    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "GsTotal", "Sp", "GsSp", 
-    "TurtleSizeFt", "TurtleDirection", "TurtleTail"
+    "SightNo", "Obs", "Angle", "SightStd", "Mixed", "SpCode", "GsTotal", "GsSp", 
+    "TurtleSize", "TurtleDirection", "TurtleTail"
   )
   
   expect_identical(exp.name, names(y.sight))

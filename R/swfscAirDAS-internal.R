@@ -2,6 +2,36 @@
 
 
 ###############################################################################
+# Copied from swfscDAS
+.print_file_line <- function(file.das, line.num, print.which) {
+  ###Inputs
+  # file.das: filename; either length one or the same length as line.num
+  # line.num: line numbers
+  # print.which: numbers which to print file + line number message
+  line.num.len <- length(line.num)
+  if (length(file.das) == 1) file.das <- rep(file.das, line.num.len)
+  stopifnot(
+    length(file.das) == line.num.len,
+    length(print.which) >= 1,
+    all(between(print.which, 1, line.num.len))
+  )
+  
+  df.out <- data.frame(file.das, line.num)[print.which, ]
+  
+  message.out <- sapply(unique(df.out$file.das), function(i) {
+    line.num.out <- df.out[df.out$file.das == i, "line.num"]
+    paste(
+      "File:", i, "|",
+      ifelse(length(line.num.out) > 1, "Line numbers:", "Line number:"),
+      paste(line.num.out, collapse = ", ")
+    )
+  })
+  
+  paste(message.out, collapse = "\n")
+}
+
+
+###############################################################################
 # Check that conditions are valid for AirDAS data
 .airdas_conditions_check <- function(x) {
   # x: character; condition name(s)

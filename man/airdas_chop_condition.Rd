@@ -92,7 +92,4 @@ This function is intended to only be called by \code{\link{airdas_effort}}
   If the column \code{dist_from_prev} does not exist, the distance between
   subsequent events is calculated as described in \code{\link{airdas_effort}}
 }
-\seealso{
-airdas_chop_equal, airdas_chop_section
-}
 \keyword{internal}

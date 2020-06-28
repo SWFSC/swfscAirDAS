@@ -143,7 +143,8 @@ airdas_comments_process.airdas_df <- function(x, comment.format = NULL, ...) {
            idx = seq_along(.data$file_das))
   
   df.na <- x.c.all %>% 
-    mutate(Misc1 = NA, Misc2 = NA, Value = NA, flag_check = FALSE) %>% 
+    mutate(Misc1 = NA_character_, Misc2 = NA_character_, Value = NA, 
+           flag_check = FALSE) %>% 
     slice(0)
   
   
@@ -326,7 +327,7 @@ airdas_comments_process.airdas_df <- function(x, comment.format = NULL, ...) {
         unnest(cols = c(.data$var_extract), keep_empty = FALSE) %>% 
         mutate(var_extract = .data$var_extract[, 1], 
                Misc1 = "crab pot", 
-               Misc2 = NA, 
+               Misc2 = NA_character_, 
                Value = suppressWarnings(as.numeric(substr(.data$var_extract, 1, 2))), 
                flag_check = nchar(.data$str_lower) > 10) %>% 
         filter(!is.na(.data$Value))
@@ -355,10 +356,6 @@ airdas_comments_process.airdas_df <- function(x, comment.format = NULL, ...) {
   df.out <- bind_rows(x.c.ext, df.proc) %>% 
     arrange(.data$idx) %>% 
     select(-.data$idx, -.data$str_lower)
-  
-  if (nrow(df.out) != nrow(dplyr::distinct(df.out)))
-    warning("Some of the comments were processed both using comment.format ", 
-            "and as turtle/phocoena special codes")
   
   right_join(x, df.out, by = c("file_das", "line_num", "file_type"))
 }

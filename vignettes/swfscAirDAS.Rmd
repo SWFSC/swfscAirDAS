@@ -82,7 +82,7 @@ y.sight %>%
 
 In addition, you can chop the effort data into segments, and summarize the conditions and sightings on those segments using `airdas_effort` and `airdas_effort_sight`. These effort segments can be used for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses. `airdas_effort` chops continuous effort sections (the event sequence from T/R to E/O events) into effort segments using one of several different chopping methods: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event). `airdas_effort_sight` takes the output of `airdas_effort` and returns the number of sightings and animals per segment for specified species codes. 
 
-Both functions return a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (`?airdas_effort` and `?airdas_effort_sight`), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the 'equal length' chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see `?airdas_effort`).
+Both functions return a list of three data frames: segdata, sightinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (`?airdas_effort` and `?airdas_effort_sight`), segdata contains information about each effort segment, sightinfo contains information about the sightings on the segments, and randpicks contains information specific to the 'equal length' chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see `?airdas_effort`).
 
 ```{r eff}
 # Chop the effort every time a condition changes
@@ -95,7 +95,7 @@ y.eff.sight <- airdas_effort_sight(y.eff, sp.codes = c("bm", "dc"))
 
 glimpse(y.eff.sight$segdata)
 
-glimpse(y.eff.sight$siteinfo)
+glimpse(y.eff.sight$sightinfo)
 ```
 
 If you wanted to determine the number of humpback whales on each transect with a sighting angle between -60 and 60 degrees, for instance, you could do the following
@@ -106,8 +106,8 @@ y.eff.section <- airdas_effort(
   y.proc, method = "section", dist.method = "greatcircle", conditions = NULL, 
   num.cores = 1
 )
-y.eff.section$siteinfo <- y.eff.section$siteinfo %>% 
-  mutate(included = ifelse(.data$Sp == "mn" & abs(.data$Angle > 60), FALSE, .data$included))
+y.eff.section$sightinfo <- y.eff.section$sightinfo %>% 
+  mutate(included = ifelse(.data$SpCode == "mn" & abs(.data$Angle > 60), FALSE, .data$included))
 
 y.eff.section.sight <- airdas_effort_sight(y.eff.section, sp.codes = c("mn"))
 
@@ -115,7 +115,7 @@ y.eff.section.sight[[1]] %>%
   mutate(transect_id = cumsum(.data$event == "T")) %>% 
   group_by(transect_id) %>% 
   summarise(dist_sum = sum(dist), 
-            mn_count = sum(mn_ANI))
+            mn_count = sum(ANI_mn))
 ```
 
 In this example you could also simply group by the `transect` column, but that structure is not robust to analyzing multi-year data sets where the same transects are flown multiple times.

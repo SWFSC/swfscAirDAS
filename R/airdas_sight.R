@@ -15,12 +15,11 @@
 #'   See \code{\link{airdas_format_pdf}} for more information about the expected
 #'   events and event formats, depending on the file type.
 #'   
-#'   All species codes are converted to lower case using 
-#'   \code{\link[base:chartr]{tolower}}.
+#'   All species codes are converted to lower case using \code{\link[base:chartr]{tolower}}.
 #'    
 #'   Abbreviations used in column names include: Gs = group size, Sp = species, 
-#'   Mixed = mixed species (multi-species) sighting.#' 
-#'   A 'standard sighting' ('SightStd' in output data frame) is a sighting 
+#'   Mixed = mixed species (multi-species) sighting. 
+#'   A 'standard sighting' ('SightStd') is a sighting 
 #'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
 #'   In addition, multi-species group sizes are rounded to 
 #'   the nearest whole number using \code{round(, 0)}
@@ -38,15 +37,15 @@
 #'     Angle of declination              \tab Angle    \tab Left is negative\cr
 #'     Standard sighting                 \tab SightStd \tab Logical; described in Details\cr
 #'     Mixed species sighting            \tab Mixed    \tab Logical\cr
-#'     Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
-#'     Species                           \tab Sp       \tab All values converted to lower case\cr
-#'     Species-specific group size       \tab GsSp\cr
-#'     Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events; may be character or numeric\cr
+#'     Species code                      \tab SpCode   \tab All characters converted to lower case\cr
+#'     Group size of school              \tab GsTotal \tab Only different from GsSp for mixed species sightings\cr
+#'     Group size of species             \tab GsSp\cr
+#'     Turtle length (feet if numeric)   \tab TurtleSize      \tab \code{NA} for non-"t" events; may be character or numeric\cr
 #'     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
 #'     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
 #'   }
 #'   
-#'   The TurtleSizeFt will be of class character is there is any CARETTA data in \code{x}, 
+#'   The TurtleSize will be of class character is there is any CARETTA data in \code{x}, 
 #'   and of class numeric otherwise.
 #'
 #' @examples
@@ -102,13 +101,11 @@ airdas_sight.airdas_df <- function(x) {
     sp.num.all <- round(sp.perc.all / 100 * gs.total, 0)
     
     # Warning if species percentages do not sum to 100
-    if (!all.equal(sum(sp.perc.all, na.rm = TRUE), 100)) {
-      file.line <- paste0(
-        "file '", curr.df$file_das[1], "', line '", curr.df$line_num[2], "'"
-      )
-      warning("The multispecies sightings percentages for ", file.line, 
-              ", do not sum to 100", immediate. = TRUE)
-    }
+    if (!isTRUE(all.equal(sum(sp.perc.all, na.rm = TRUE), 100)))
+      warning("The multispecies sightings percentages do not sum to 100 ", 
+              "for the following sighting: ",
+              .print_file_line(curr.df$file_das, curr.df$line_num, 1))
+    
     
     # Create df with one row for each species
     bind_rows(curr.df[1, ], curr.df[1, ], curr.df[1, ]) %>% 
@@ -143,15 +140,15 @@ airdas_sight.airdas_df <- function(x) {
     .airdas_sight_turtle(filter(sight.df, .data$file_type == "turtle"))
   )
   
-  # CARETTA data uses "l", "m", "s" code for TurtleSizeFt
+  # CARETTA data uses "l", "m", "s" code for TurtleSize
   if (!any(sight.df$file_type == "caretta")) 
-    sight.df.all$TurtleSizeFt <- as.numeric(sight.df.all$TurtleSizeFt)
+    sight.df.all$TurtleSize <- as.numeric(sight.df.all$TurtleSize)
   
   #----------------------------------------------------------------------------
   # Join data frames and return
   sight.info %>% 
     left_join(sight.df.all, by = "idx") %>% 
-    mutate(Sp = tolower(.data$Sp)) %>%
+    mutate(SpCode = tolower(.data$SpCode)) %>%
     select(-.data$idx)
 }
 
@@ -167,18 +164,18 @@ airdas_sight.airdas_df <- function(x) {
   
   sight.df %>% 
     mutate(SightNo = .data$Data1, 
-           Sp = .data$Data2, 
+           SpCode = .data$Data2, 
            GsTotal = as.numeric(.data$Data3), 
            Angle = as.numeric(.data$Data4), 
            Obs = .data$Data5, 
            GsSp = .data$GsTotal, 
            SightStd = .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR), 
-           TurtleSizeFt = NA, 
-           TurtleDirection = NA, 
-           TurtleTail = NA) %>% 
+           TurtleSize = NA_character_, 
+           TurtleDirection = as.numeric(NA), 
+           TurtleTail = NA_character_) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
-           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp, 
-           .data$TurtleSizeFt, .data$TurtleDirection, .data$TurtleTail)
+           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp, 
+           .data$TurtleSize, .data$TurtleDirection, .data$TurtleTail)
 }
 
 
@@ -197,21 +194,21 @@ airdas_sight.airdas_df <- function(x) {
                                         .data$Event == "t" ~ .data$Data3)), 
            SightStd = ifelse(.data$Event == "s", NA, 
                              .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)), 
-           Sp = case_when(.data$Event == "S" ~ .data$Data5,
-                          .data$Event == "t" ~ .data$Data5), 
+           SpCode = case_when(.data$Event == "S" ~ .data$Data5,
+                              .data$Event == "t" ~ .data$Data5), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ as.numeric(.data$Data4)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ .data$GsSp)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
-           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
+           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp)
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
-    mutate(TurtleSizeFt = .data$Data6, 
-           TurtleDirection = NA, 
+    mutate(TurtleSize = .data$Data6, 
+           TurtleDirection = as.numeric(NA), 
            TurtleTail = .data$Data7) %>% 
-    select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
+    select(.data$idx, .data$TurtleSize, .data$TurtleDirection, 
            .data$TurtleTail)
   
   left_join(sight.info.all, sight.info.t, by = "idx")
@@ -225,7 +222,8 @@ airdas_sight.airdas_df <- function(x) {
          "Please report this as an issue")
   
   sight.info.all <- sight.df %>% 
-    mutate(SightNo = ifelse(.data$Event == "t", NA, .data$Data1), 
+    mutate(SightNo = as.character(ifelse(.data$Event == "t", NA, .data$Data1)), 
+           # ^ is for when there are 0 rows to ensure character class
            Obs = case_when(.data$Event == "S" ~ .data$Data2,
                            .data$Event == "t" ~ .data$Data1), 
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
@@ -233,21 +231,21 @@ airdas_sight.airdas_df <- function(x) {
                                         .data$Event == "t" ~ .data$Data2)), 
            SightStd = ifelse(.data$Event == "s", NA, 
                              .data$Obs %in% c(.data$ObsL, .data$ObsB, .data$ObsR)), 
-           Sp = case_when(.data$Event == "S" ~ .data$Data5,
-                          .data$Event == "t" ~ .data$Data3), 
+           SpCode = case_when(.data$Event == "S" ~ .data$Data5,
+                              .data$Event == "t" ~ .data$Data3), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ 1), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ 1)) %>% 
     select(.data$idx, .data$SightNo, .data$Obs, .data$Angle, .data$SightStd, 
-           .data$Mixed, .data$GsTotal, .data$Sp, .data$GsSp)
+           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp)
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
-    mutate(TurtleSizeFt = .data$Data4, 
+    mutate(TurtleSize = .data$Data4, 
            TurtleDirection = as.numeric(.data$Data5), 
            TurtleTail = .data$Data6) %>% 
-    select(.data$idx, .data$TurtleSizeFt, .data$TurtleDirection, 
+    select(.data$idx, .data$TurtleSize, .data$TurtleDirection, 
            .data$TurtleTail)
   
   left_join(sight.info.all, sight.info.t, by = "idx")

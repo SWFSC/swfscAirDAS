@@ -69,8 +69,8 @@ as_airdas_dfr.data.frame <- function(x) {
   # Check that no events are NA
   if (any(is.na(x$Event)))
     stop("The provided data cannot be coerced to an object of class airdas_dfr ",
-         "because the following line(s) have NA Event value(s):\n", 
-         paste(x$line_num[is.na(x$Event)], collapse = ", "))
+         "because the following have NA Event codes:\n", 
+         .print_file_line(x$file_das, x$line_num, which(is.na(x$Event))))
   
   # Add class and return
   class(x) <- c("airdas_dfr", setdiff(class(x), "airdas_dfr"))

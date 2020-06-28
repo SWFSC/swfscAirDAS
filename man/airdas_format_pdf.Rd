@@ -4,7 +4,7 @@
 \alias{airdas_format_pdf}
 \title{Aerial DAS format requirements}
 \usage{
-airdas_format_pdf(file, file.type, ...)
+airdas_format_pdf(file, file.type = c("phocoena", "caretta", "turtle"), ...)
 }
 \arguments{
 \item{file}{character; the name of the file where the PDF will be saved}
@@ -53,8 +53,11 @@ This function is a wrapper function for \code{\link[base:files]{file.copy}}.
   }
 }
 \examples{
-\dontrun{
-airdas_format_pdf("AirDAS_Format_TURTLE.pdf", file.type  = "turtle", overwrite = FALSE)
+if (interactive()) {
+  airdas_format_pdf(
+    "AirDAS_Format_TURTLE.pdf", file.type  = "turtle", 
+    overwrite = FALSE
+  )
 }
 
 }

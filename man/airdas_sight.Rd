@@ -30,15 +30,15 @@ Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
     Angle of declination              \tab Angle    \tab Left is negative\cr
     Standard sighting                 \tab SightStd \tab Logical; described in Details\cr
     Mixed species sighting            \tab Mixed    \tab Logical\cr
-    Total group size                  \tab GsTotal  \tab Only differnt from GsSp if mixed species sighting\cr
-    Species                           \tab Sp       \tab All values converted to lower case\cr
-    Species-specific group size       \tab GsSp\cr
-    Turtle length (feet)              \tab TurtleSizeFt    \tab \code{NA} for non-"t" events; may be character or numeric\cr
+    Species code                      \tab SpCode   \tab All characters converted to lower case\cr
+    Group size of school              \tab GsTotal \tab Only different from GsSp for mixed species sightings\cr
+    Group size of species             \tab GsSp\cr
+    Turtle length (feet if numeric)   \tab TurtleSize      \tab \code{NA} for non-"t" events; may be character or numeric\cr
     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
   }
   
-  The TurtleSizeFt will be of class character is there is any CARETTA data in \code{x}, 
+  The TurtleSize will be of class character is there is any CARETTA data in \code{x}, 
   and of class numeric otherwise.
 }
 \description{
@@ -55,12 +55,11 @@ AirDAS events contain specific information in the 'Data#' columns,
   See \code{\link{airdas_format_pdf}} for more information about the expected
   events and event formats, depending on the file type.
   
-  All species codes are converted to lower case using 
-  \code{\link[base:chartr]{tolower}}.
+  All species codes are converted to lower case using \code{\link[base:chartr]{tolower}}.
    
   Abbreviations used in column names include: Gs = group size, Sp = species, 
-  Mixed = mixed species (multi-species) sighting.#' 
-  A 'standard sighting' ('SightStd' in output data frame) is a sighting 
+  Mixed = mixed species (multi-species) sighting. 
+  A 'standard sighting' ('SightStd') is a sighting 
   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
   In addition, multi-species group sizes are rounded to 
   the nearest whole number using \code{round(, 0)}

@@ -338,13 +338,13 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
   event.acc <- c("*", 1, "A", "C", "E", "O", "P", "R", "s", "S", "t", 
                  "T", "V", "W")
   if (!all(x$Event %in% event.acc))
-    warning(paste0("Expected event codes (case sensitive): ",
+    warning("This DAS data contains unexpected event codes, ",
+            "which could break other package functions. ",
+            "Please address this issue before continuing.\n",
+            paste0("Expected event codes (case sensitive): ",
                    paste(event.acc, collapse = ", "), "\n"),
-            "The following line(s) of the input file ",
-            "(NOT necessarily the row numbers of output) ",
-            "contain unexpected event codes:\n",
-            paste(x$line_num[!(x$Event %in% event.acc)], 
-                  collapse = ", "))
+            "The following contain unexpected event codes:\n",
+            .print_file_line(x$file_das, x$line_num, which(!(x$Event %in% event.acc))))
   
   
   #----------------------------------------------------------------------------
@@ -358,7 +358,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
   )
   
   as_airdas_df(
-    data.frame(x, tmp, stringsAsFactors = FALSE, row.names = 1:nrow(x)) %>%
+    data.frame(x, tmp, stringsAsFactors = FALSE, row.names = NULL) %>%
       select(!!cols.toreturn)
   )
 }
