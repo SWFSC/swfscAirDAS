@@ -73,7 +73,7 @@ different file types supported by swfscAirDAS" />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -90,6 +90,9 @@ different file types supported by swfscAirDAS" />
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -122,7 +125,7 @@ different file types supported by swfscAirDAS" />
 different file types supported by <code>swfscAirDAS</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_format_pdf</span>(<span class='no'>file</span>, <span class='no'>file.type</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>airdas_format_pdf</span>(<span class='no'>file</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"phocoena"</span>, <span class='st'>"caretta"</span>, <span class='st'>"turtle"</span>), <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -175,8 +178,11 @@ might included named argument <code>overwrite</code></p></td>
     <div class='dont-index'><p><a href='https://smwoodman.github.io/swfscAirDAS/'>https://smwoodman.github.io/swfscAirDAS/</a></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='fu'>airdas_format_pdf</span>(<span class='st'>"AirDAS_Format_TURTLE.pdf"</span>, <span class='kw'>file.type</span>  <span class='kw'>=</span> <span class='st'>"turtle"</span>, <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) {
+  <span class='fu'>airdas_format_pdf</span>(
+    <span class='st'>"AirDAS_Format_TURTLE.pdf"</span>, <span class='kw'>file.type</span>  <span class='kw'>=</span> <span class='st'>"turtle"</span>,
+    <span class='kw'>overwrite</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>
+  )
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

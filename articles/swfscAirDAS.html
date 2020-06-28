@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -48,6 +48,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -212,10 +215,10 @@
 <span class="co">#&gt; $ Angle           &lt;dbl&gt; 67, -60, 38, -50, 49, 42, 42, -53, 24, -57, 65, -20, …</span>
 <span class="co">#&gt; $ SightStd        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
 <span class="co">#&gt; $ Mixed           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE,…</span>
+<span class="co">#&gt; $ SpCode          &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
 <span class="co">#&gt; $ GsTotal         &lt;dbl&gt; 6, 6, 2, 5, 4, 10, 10, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, …</span>
-<span class="co">#&gt; $ Sp              &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
 <span class="co">#&gt; $ GsSp            &lt;dbl&gt; 6, 6, 2, 5, 4, 8, 2, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, 6,…</span>
-<span class="co">#&gt; $ TurtleSizeFt    &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
+<span class="co">#&gt; $ TurtleSize      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
 <span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
 <span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span></pre></body></html></div>
 </div>
@@ -223,7 +226,7 @@
 <h2 class="hasAnchor">
 <a href="#effort" class="anchor"></a>Effort</h2>
 <p>In addition, you can chop the effort data into segments, and summarize the conditions and sightings on those segments using <code>airdas_effort</code> and <code>airdas_effort_sight</code>. These effort segments can be used for line transect estimates using the Distance software, species distribution modeling, or summarizing the number of harbor porpoises on each transect, among other uses. <code>airdas_effort</code> chops continuous effort sections (the event sequence from T/R to E/O events) into effort segments using one of several different chopping methods: condition (a new effort segment every time a condition changes), equal length (effort segments of equal length), and section (each segment is a full continuous effort section, i.e. it runs from a T/R event to an E/O event). <code>airdas_effort_sight</code> takes the output of <code>airdas_effort</code> and returns the number of sightings and animals per segment for specified species codes.</p>
-<p>Both functions return a list of three data frames: segdata, siteinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (<code><a href="../reference/airdas_effort.html">?airdas_effort</a></code> and <code><a href="../reference/airdas_effort_sight.html">?airdas_effort_sight</a></code>), segdata contains information about each effort segment, siteinfo contains information about the sightings on the segments, and randpicks contains information specific to the ‘equal length’ chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see <code><a href="../reference/airdas_effort.html">?airdas_effort</a></code>).</p>
+<p>Both functions return a list of three data frames: segdata, sightinfo, and randpicks. Briefly, as these data frames and the different chopping methodologies are described in depth in the function documentation (<code><a href="../reference/airdas_effort.html">?airdas_effort</a></code> and <code><a href="../reference/airdas_effort_sight.html">?airdas_effort_sight</a></code>), segdata contains information about each effort segment, sightinfo contains information about the sightings on the segments, and randpicks contains information specific to the ‘equal length’ chopping method. These are separate functions to allow the user more control over the filters applied to determine which sightings should be included in the summaries (see <code><a href="../reference/airdas_effort.html">?airdas_effort</a></code>).</p>
 <div class="sourceCode" id="cb7"><html><body><pre class="r"><span class="co"># Chop the effort every time a condition changes</span>
 <span class="no">y.eff</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
   <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"condition"</span>, <span class="kw">seg.min.km</span> <span class="kw">=</span> <span class="fl">0</span>,
@@ -257,13 +260,13 @@
 <span class="co">#&gt; $ mtime          &lt;chr&gt; "12:34:28", "12:37:58", "12:40:14", "12:40:48", "12:42…</span>
 <span class="co">#&gt; $ maxdistBft     &lt;dbl&gt; 1, 2, 2, 2, 1, 1, 2</span>
 <span class="co">#&gt; $ maxdistCCover  &lt;dbl&gt; 10, 10, 10, 20, 20, 20, 20</span>
-<span class="co">#&gt; $ bm_nSI         &lt;dbl&gt; 3, 0, 0, 0, 0, 3, 0</span>
-<span class="co">#&gt; $ bm_ANI         &lt;dbl&gt; 11, 0, 0, 0, 0, 13, 0</span>
-<span class="co">#&gt; $ dc_nSI         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
-<span class="co">#&gt; $ dc_ANI         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
+<span class="co">#&gt; $ nSI_bm         &lt;dbl&gt; 3, 0, 0, 0, 0, 3, 0</span>
+<span class="co">#&gt; $ ANI_bm         &lt;dbl&gt; 11, 0, 0, 0, 0, 13, 0</span>
+<span class="co">#&gt; $ nSI_dc         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
+<span class="co">#&gt; $ ANI_dc         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">siteinfo</span>)
-<span class="co">#&gt; Rows: 28</span>
+<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">sightinfo</span>)
+<span class="co">#&gt; Rows: 27</span>
 <span class="co">#&gt; Columns: 46</span>
 <span class="co">#&gt; $ segnum          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 6,…</span>
 <span class="co">#&gt; $ mlat            &lt;dbl&gt; 39.23309, 39.23309, 39.23309, 39.23309, 39.23309, 39.…</span>
@@ -304,10 +307,10 @@
 <span class="co">#&gt; $ Angle           &lt;dbl&gt; 67, -60, 38, -50, 49, 42, 42, -53, 24, -57, 65, -20, …</span>
 <span class="co">#&gt; $ SightStd        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
 <span class="co">#&gt; $ Mixed           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE,…</span>
+<span class="co">#&gt; $ SpCode          &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
 <span class="co">#&gt; $ GsTotal         &lt;dbl&gt; 6, 6, 2, 5, 4, 10, 10, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, …</span>
-<span class="co">#&gt; $ Sp              &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
 <span class="co">#&gt; $ GsSp            &lt;dbl&gt; 6, 6, 2, 5, 4, 8, 2, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, 6,…</span>
-<span class="co">#&gt; $ TurtleSizeFt    &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
+<span class="co">#&gt; $ TurtleSize      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
 <span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
 <span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span>
 <span class="co">#&gt; $ included        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE,…</span></pre></body></html></div>
@@ -317,8 +320,8 @@
   <span class="no">y.proc</span>, <span class="kw">method</span> <span class="kw">=</span> <span class="st">"section"</span>, <span class="kw">dist.method</span> <span class="kw">=</span> <span class="st">"greatcircle"</span>, <span class="kw">conditions</span> <span class="kw">=</span> <span class="kw">NULL</span>,
   <span class="kw">num.cores</span> <span class="kw">=</span> <span class="fl">1</span>
 )
-<span class="no">y.eff.section</span>$<span class="no">siteinfo</span> <span class="kw">&lt;-</span> <span class="no">y.eff.section</span>$<span class="no">siteinfo</span> <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">included</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">.data</span>$<span class="no">Sp</span> <span class="kw">==</span> <span class="st">"mn"</span> <span class="kw">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">.data</span>$<span class="no">Angle</span> <span class="kw">&gt;</span> <span class="fl">60</span>), <span class="fl">FALSE</span>, <span class="no">.data</span>$<span class="no">included</span>))
+<span class="no">y.eff.section</span>$<span class="no">sightinfo</span> <span class="kw">&lt;-</span> <span class="no">y.eff.section</span>$<span class="no">sightinfo</span> <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">included</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html">ifelse</a></span>(<span class="no">.data</span>$<span class="no">SpCode</span> <span class="kw">==</span> <span class="st">"mn"</span> <span class="kw">&amp;</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span>(<span class="no">.data</span>$<span class="no">Angle</span> <span class="kw">&gt;</span> <span class="fl">60</span>), <span class="fl">FALSE</span>, <span class="no">.data</span>$<span class="no">included</span>))
 
 <span class="no">y.eff.section.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort_sight.html">airdas_effort_sight</a></span>(<span class="no">y.eff.section</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"mn"</span>))
 
@@ -326,7 +329,8 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">transect_id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">.data</span>$<span class="no">event</span> <span class="kw">==</span> <span class="st">"T"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">transect_id</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">dist_sum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">dist</span>),
-            <span class="kw">mn_count</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">mn_ANI</span>))
+            <span class="kw">mn_count</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ANI_mn</span>))
+<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 <span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   transect_id dist_sum mn_count</span>
 <span class="co">#&gt;         &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>

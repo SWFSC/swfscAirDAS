@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -184,11 +187,11 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 <li><p>segdata: one row for every segment, and columns for information including
       unique segment number, event code that started the associated continuous effort section, 
       start/end/midpoint coordinates, and conditions (e.g. Beaufort)</p></li>
-<li><p>siteinfo: details for all sightings in <code>x</code>, including: 
+<li><p>sightinfo: details for all sightings in <code>x</code>, including: 
       the unique segment number it is associated with, segment mid points (lat/lon), 
       the 'included' column described in the Details section,
       and the output information described in <code><a href='airdas_sight.html'>airdas_sight</a></code></p></li>
-<li><p>randpicks: see <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code>. 
+<li><p>randpicks: see <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code>. 
       <code>NULL</code> if using "condition" method.</p></li>
 </ul>
 
@@ -198,7 +201,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
   into modeling segments (henceforth 'segments'), and assigning sightings 
   and related information (e.g., weather conditions) to each segment. 
   This function returns data frames with all relevant information for the 
-  effort segments and associated sightings ('segdata' and 'siteinfo', respectively). 
+  effort segments and associated sightings ('segdata' and 'sightinfo', respectively). 
   Before chopping, the AirDAS data is filtered for events (rows) where either
   the 'OnEffort' column is <code>TRUE</code> or the 'Event' column is "E" or "O". 
   In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
@@ -216,7 +219,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 <p>The "equallength" method consists of
   chopping effort sections into equal-length segments of length <code>seg.km</code>, 
   and doing a weighted average of the conditions for the length of that segment. 
-  See <code><a href='airdas_chop_equal.html'>airdas_chop_equal</a></code> for more details about this method, 
+  See <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code> for more details about this method, 
   including arguments that must be passed to it via <code>...</code>.</p>  
 <p>The "section" method involves 'chopping' the effort into continuous effort sections,
   i.e. each continuous effort section is a single effort segment.
@@ -226,7 +229,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
   If "greatcircle", <code><a href='https://rdrr.io/pkg/swfscDAS/man/distance_greatcircle.html'>distance_greatcircle</a></code> is used,
   while <code><a href='https://rdrr.io/pkg/swfscMisc/man/distance.html'>distance</a></code> is used otherwise.
   See <code><a href='airdas_sight.html'>airdas_sight</a></code> for how the sightings are processed.</p>
-<p>The siteinfo data frame includes the column 'included',
+<p>The sightinfo data frame includes the column 'included',
   which is used in <code><a href='airdas_effort_sight.html'>airdas_effort_sight</a></code> when summarizing
   the number of sightings and animals for selected species.
   <code><a href='airdas_effort_sight.html'>airdas_effort_sight</a></code> is a separate function to allow users to
@@ -268,7 +271,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 5 2015-04-09 12:50:27 2015     4   9 12:50:27          1
 #&gt; 6 2015-04-09 12:55:47 2015     4   9 12:55:47          2
 #&gt; 
-#&gt; $siteinfo
+#&gt; $sightinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
 #&gt; 1       1 39.23309 -123.2797     S 2015-04-09 12:31:35 39.23367 -123.1783
 #&gt; 2       1 39.23309 -123.2797     S 2015-04-09 12:31:47 39.23350 -123.1857
@@ -385,35 +388,35 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 26 airdas_sample.das       81    turtle      24   cc    37     TRUE FALSE
 #&gt; 27 airdas_sample.das       85    turtle      25   bb   -76     TRUE FALSE
 #&gt; 28 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70       NA    NA
-#&gt;    GsTotal   Sp GsSp TurtleSizeFt TurtleDirection TurtleTail included
-#&gt; 1        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 2        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 3        2   mn    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 4        5   mn    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 5        4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 6       10   gg    8           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 7       10   er    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 8        5   bm    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 9        2   bm    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 10       4   mn    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 11       5   gg    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 12       1   dc    1            5              90          n     TRUE
-#&gt; 13       3   pp    3           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 14       5   gg    5           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 15       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 16       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 17       3   mn    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 18       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 19       6   bm    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 20       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 21       3   bm    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 22       4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 23       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 24       2   pp    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 25       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 26       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 27       1   pp    1           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 28      NA &lt;NA&gt;   NA           NA              NA       &lt;NA&gt;    FALSE
+#&gt;    SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail included
+#&gt; 1      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 2      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 3      mn       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 4      mn       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 5      bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 6      gg      10    8         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 7      er      10    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 8      bm       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 9      bm       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 10     mn       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 11     gg       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 12     dc       1    1          5              90          n     TRUE
+#&gt; 13     pp       3    3         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 14     gg       5    5         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 15     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 16     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 17     mn       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 18     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 19     bm       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 20     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 21     bm       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 22     bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 23     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 24     pp       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 25     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 26     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 27     pp       1    1         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 28   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;    FALSE
 #&gt; 
 #&gt; $randpicks
 #&gt; NULL
@@ -494,7 +497,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 21 2015-04-09 12:56:20 2015     4   9 12:56:20 2.000000  20.00000
 #&gt; 22 2015-04-09 12:57:05 2015     4   9 12:57:05 2.000000  20.00000
 #&gt; 
-#&gt; $siteinfo
+#&gt; $sightinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
 #&gt; 1       1 39.23412 -123.1736     S 2015-04-09 12:31:35 39.23367 -123.1783
 #&gt; 2       1 39.23412 -123.1736     S 2015-04-09 12:31:47 39.23350 -123.1857
@@ -611,35 +614,35 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 26 airdas_sample.das       81    turtle      24   cc    37     TRUE FALSE
 #&gt; 27 airdas_sample.das       85    turtle      25   bb   -76     TRUE FALSE
 #&gt; 28 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70       NA    NA
-#&gt;    GsTotal   Sp GsSp TurtleSizeFt TurtleDirection TurtleTail included
-#&gt; 1        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 2        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 3        2   mn    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 4        5   mn    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 5        4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 6       10   gg    8           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 7       10   er    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 8        5   bm    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 9        2   bm    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 10       4   mn    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 11       5   gg    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 12       1   dc    1            5              90          n     TRUE
-#&gt; 13       3   pp    3           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 14       5   gg    5           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 15       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 16       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 17       3   mn    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 18       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 19       6   bm    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 20       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 21       3   bm    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 22       4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 23       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 24       2   pp    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 25       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 26       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 27       1   pp    1           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 28      NA &lt;NA&gt;   NA           NA              NA       &lt;NA&gt;    FALSE
+#&gt;    SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail included
+#&gt; 1      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 2      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 3      mn       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 4      mn       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 5      bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 6      gg      10    8         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 7      er      10    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 8      bm       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 9      bm       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 10     mn       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 11     gg       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 12     dc       1    1          5              90          n     TRUE
+#&gt; 13     pp       3    3         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 14     gg       5    5         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 15     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 16     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 17     mn       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 18     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 19     bm       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 20     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 21     bm       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 22     bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 23     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 24     pp       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 25     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 26     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 27     pp       1    1         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 28   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;    FALSE
 #&gt; 
 #&gt; $randpicks
 #&gt;   effort_section randpicks
@@ -666,7 +669,7 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 2           6         NA       0       0 0.00000000 650.0000 100.00000
 #&gt; 3          12         NA       0       0 0.08556751 669.8738  93.50289
 #&gt; 
-#&gt; $siteinfo
+#&gt; $sightinfo
 #&gt;    segnum     mlat      mlon Event            DateTime      Lat       Lon
 #&gt; 1       1 39.23309 -123.2804     S 2015-04-09 12:31:35 39.23367 -123.1783
 #&gt; 2       1 39.23309 -123.2804     S 2015-04-09 12:31:47 39.23350 -123.1857
@@ -783,35 +786,35 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 26 airdas_sample.das       81    turtle      24   cc    37     TRUE FALSE
 #&gt; 27 airdas_sample.das       85    turtle      25   bb   -76     TRUE FALSE
 #&gt; 28 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70       NA    NA
-#&gt;    GsTotal   Sp GsSp TurtleSizeFt TurtleDirection TurtleTail included
-#&gt; 1        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 2        6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 3        2   mn    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 4        5   mn    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 5        4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 6       10   gg    8           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 7       10   er    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 8        5   bm    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 9        2   bm    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 10       4   mn    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 11       5   gg    5           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 12       1   dc    1            5              90          n     TRUE
-#&gt; 13       3   pp    3           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 14       5   gg    5           NA              NA       &lt;NA&gt;    FALSE
-#&gt; 15       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 16       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 17       3   mn    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 18       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 19       6   bm    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 20       2   gg    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 21       3   bm    3           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 22       4   bm    4           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 23       6   pp    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 24       2   pp    2           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 25       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 26       6   mn    6           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 27       1   pp    1           NA              NA       &lt;NA&gt;     TRUE
-#&gt; 28      NA &lt;NA&gt;   NA           NA              NA       &lt;NA&gt;    FALSE
+#&gt;    SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail included
+#&gt; 1      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 2      mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 3      mn       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 4      mn       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 5      bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 6      gg      10    8         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 7      er      10    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 8      bm       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 9      bm       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 10     mn       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 11     gg       5    5         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 12     dc       1    1          5              90          n     TRUE
+#&gt; 13     pp       3    3         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 14     gg       5    5         NA              NA       &lt;NA&gt;    FALSE
+#&gt; 15     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 16     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 17     mn       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 18     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 19     bm       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 20     gg       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 21     bm       3    3         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 22     bm       4    4         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 23     pp       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 24     pp       2    2         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 25     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 26     mn       6    6         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 27     pp       1    1         NA              NA       &lt;NA&gt;     TRUE
+#&gt; 28   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;    FALSE
 #&gt; 
 #&gt; $randpicks
 #&gt;   effort_section randpicks

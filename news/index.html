@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Coerce object to a airdas_dfr object — as_airdas_dfr • swfscAirDAS</title>
+<title>Changelog • swfscAirDAS</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,7 @@
 
 
 
-<meta property="og:title" content="Coerce object to a airdas_dfr object — as_airdas_dfr" />
-<meta property="og:description" content="Check if an object is of class airdas_dfr, or coerce it if possible." />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -59,7 +58,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -114,51 +113,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Coerce object to a airdas_dfr object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/R/as_airdas_dfr.R'><code>R/as_airdas_dfr.R</code></a></small>
-    <div class="hidden name"><code>as_airdas_dfr.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Check if an object is of class <code><a href='airdas_dfr-class.html'>airdas_dfr</a></code>, or coerce it if possible.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>as_airdas_dfr</span>(<span class='no'>x</span>)
-
-<span class='co'># S3 method for airdas_dfr</span>
-<span class='fu'>as_airdas_dfr</span>(<span class='no'>x</span>)
-
-<span class='co'># S3 method for data.frame</span>
-<span class='fu'>as_airdas_dfr</span>(<span class='no'>x</span>)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>x</th>
-      <td><p>An object to be coerced to class <code>airdas_dfr</code></p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>An object of class `airdas_dfr`</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Currently only data frames can be coerced to an object of class <code><a href='airdas_dfr-class.html'>airdas_dfr</a></code>.
-  If <code>x</code> does not have column names and classes as specified in <code><a href='airdas_dfr-class.html'>airdas_dfr</a></code>,
-  then the function returns an error message detailing the first column that does not
-  meet the <code><a href='airdas_dfr-class.html'>airdas_dfr</a></code> requirements.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='airdas_dfr-class.html'>airdas_dfr-class</a></code></p></div>
-
+    <div id="swfscairdas-0-2-0" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#swfscairdas-0-2-0" class="anchor"></a>swfscAirDAS 0.2.0</h1>
+<ul>
+<li><p>Catch up internally with changes made in swfscDAS. This package now depends on swfscDAS version &gt;= 0.3</p></li>
+<li><p><code>airdas_sight</code> column name changes: ‘Sp’ is now ‘SpCode’ for consistency with swfscDAS, and ‘TurtleSizeFt’ is now ‘TurtleSize’ since this data can be a character code</p></li>
+<li><p>Changed <code>airdas_chop_equal</code> to <code>airdas_chop_equallength</code> for naming consistency. This change should not affect users, as it does not affect any of the syntax required when using <code>airdas_effort</code></p></li>
+<li><p>Renamed items in effort list output of airdas_effort and airdas_effort_sight: ‘siteinfo’ is now ‘sightinfo’, and segdata columns indicating the number of sightings or animals on a segment are now formatted as ‘description’_‘species code’, e.g. “nSI_mn”</p></li>
+<li><p>Where applicable, error, warning, and informational messages now report both the file name and line number. This makes the messages more useful when working with concatenated AirDAS objects with multiple files</p></li>
+</ul>
+</div>
+    <div id="swfscairdas-0-1-0" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#swfscairdas-0-1-0" class="anchor"></a>swfscAirDAS 0.1.0</h1>
+<ul>
+<li>Initial version, presented to NMFS users</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 

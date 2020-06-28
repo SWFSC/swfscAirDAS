@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -211,7 +214,7 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
 #&gt;            comment_str
 #&gt; 2  Not recording molas</div><div class='input'>
 <span class='co'># Join comments with data frame</span>
-<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/join.html'>left_join</a></span>(<span class='no'>y.read</span>, <span class='no'>y.comm</span>[, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file_das"</span>, <span class='st'>"line_num"</span>, <span class='st'>"comment_str"</span>)],
+<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span>(<span class='no'>y.read</span>, <span class='no'>y.comm</span>[, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file_das"</span>, <span class='st'>"line_num"</span>, <span class='st'>"comment_str"</span>)],
                  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file_das"</span>, <span class='st'>"line_num"</span>))</div><div class='output co'>#&gt;    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3
 #&gt; 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  
 #&gt; 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding 

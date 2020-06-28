@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -89,6 +89,9 @@
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -150,16 +153,16 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></td>
 <tr><td>Obs</td><td>Angle of declination</td><td>Angle</td></tr>
 <tr><td>Left is negative</td><td>Standard sighting</td><td>SightStd</td></tr>
 <tr><td>Logical; described in Details</td><td>Mixed species sighting</td><td>Mixed</td></tr>
-<tr><td>Logical</td><td>Total group size</td><td>GsTotal</td></tr>
-<tr><td>Only differnt from GsSp if mixed species sighting</td><td>Species</td><td>Sp</td></tr>
-<tr><td>All values converted to lower case</td><td>Species-specific group size</td><td>GsSp</td></tr>
-<tr><td>Turtle length (feet)</td><td>TurtleSizeFt</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr>
+<tr><td>Logical</td><td>Species code</td><td>SpCode</td></tr>
+<tr><td>All characters converted to lower case</td><td>Group size of school</td><td>GsTotal</td></tr>
+<tr><td>Only different from GsSp for mixed species sightings</td><td>Group size of species</td><td>GsSp</td></tr>
+<tr><td>Turtle length (feet if numeric)</td><td>TurtleSize</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr>
 <tr><td>Turtle travel direction (degrees)</td><td>TurtleDirection</td><td><code>NA</code> for non-"t" events</td></tr>
 <tr><td>Turtle tail visible?</td><td>TurtleTail</td><td><code>NA</code> for non-"t" events</td></tr>
 </table>
 
   
-<p>The TurtleSizeFt will be of class character is there is any CARETTA data in <code>x</code>, 
+<p>The TurtleSize will be of class character is there is any CARETTA data in <code>x</code>, 
   and of class numeric otherwise.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
@@ -172,11 +175,10 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></td>
   combined using <code><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></code>. 
   See <code><a href='airdas_format_pdf.html'>airdas_format_pdf</a></code> for more information about the expected
   events and event formats, depending on the file type.</p>  
-<p>All species codes are converted to lower case using 
-  <code><a href='https://rdrr.io/r/base/chartr.html'>tolower</a></code>.</p>   
+<p>All species codes are converted to lower case using <code><a href='https://rdrr.io/r/base/chartr.html'>tolower</a></code>.</p>   
 <p>Abbreviations used in column names include: Gs = group size, Sp = species, 
-  Mixed = mixed species (multi-species) sighting.#' 
-  A 'standard sighting' ('SightStd' in output data frame) is a sighting 
+  Mixed = mixed species (multi-species) sighting. 
+  A 'standard sighting' ('SightStd') is a sighting 
   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
   In addition, multi-species group sizes are rounded to 
   the nearest whole number using <code><a href='https://rdrr.io/r/base/Round.html'>round(, 0)</a></code></p>
@@ -272,35 +274,35 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></td>
 #&gt; 26   g  p   g   g      TRUE       80 airdas_sample.das       81    turtle
 #&gt; 27   g  p   g   g      TRUE       84 airdas_sample.das       85    turtle
 #&gt; 28   g  p   g   g      TRUE       86 airdas_sample.das       87    turtle
-#&gt;    SightNo  Obs Angle SightStd Mixed GsTotal   Sp GsSp TurtleSizeFt
-#&gt; 1        1   cc    67     TRUE FALSE       6   mn    6           NA
-#&gt; 2        2   bb   -60     TRUE FALSE       6   mn    6           NA
-#&gt; 3        3   cc    38     TRUE FALSE       2   mn    2           NA
-#&gt; 4        4   aa   -50     TRUE FALSE       5   mn    5           NA
-#&gt; 5        5   cc    49     TRUE FALSE       4   bm    4           NA
-#&gt; 6        6   cc    42     TRUE  TRUE      10   gg    8           NA
-#&gt; 7        6   cc    42     TRUE  TRUE      10   er    2           NA
-#&gt; 8        7   aa   -53     TRUE FALSE       5   bm    5           NA
-#&gt; 9        8   dd    24     TRUE FALSE       2   bm    2           NA
-#&gt; 10       9   aa   -57     TRUE FALSE       4   mn    4           NA
-#&gt; 11      10   cc    65     TRUE FALSE       5   gg    5           NA
-#&gt; 12    &lt;NA&gt;   aa   -20     TRUE FALSE       1   dc    1            5
-#&gt; 13      11   bb    87     TRUE FALSE       3   pp    3           NA
-#&gt; 14      12   bb    82     TRUE FALSE       5   gg    5           NA
-#&gt; 15      13   bb    54     TRUE FALSE       6   pp    6           NA
-#&gt; 16      14   cc    62     TRUE FALSE       2   gg    2           NA
-#&gt; 17      15   bb    50     TRUE FALSE       3   mn    3           NA
-#&gt; 18      16   aa   -31     TRUE FALSE       6   mn    6           NA
-#&gt; 19      17   bb   -59     TRUE FALSE       6   bm    6           NA
-#&gt; 20      18   aa   -62     TRUE FALSE       2   gg    2           NA
-#&gt; 21      19   cc    42     TRUE FALSE       3   bm    3           NA
-#&gt; 22      20   aa   -48     TRUE FALSE       4   bm    4           NA
-#&gt; 23      21   cc    63     TRUE FALSE       6   pp    6           NA
-#&gt; 24      22   cc    43     TRUE FALSE       2   pp    2           NA
-#&gt; 25      23   cc    56     TRUE FALSE       6   mn    6           NA
-#&gt; 26      24   cc    37     TRUE FALSE       6   mn    6           NA
-#&gt; 27      25   bb   -76     TRUE FALSE       1   pp    1           NA
-#&gt; 28      25 &lt;NA&gt;   -70       NA    NA      NA &lt;NA&gt;   NA           NA
+#&gt;    SightNo  Obs Angle SightStd Mixed SpCode GsTotal GsSp TurtleSize
+#&gt; 1        1   cc    67     TRUE FALSE     mn       6    6         NA
+#&gt; 2        2   bb   -60     TRUE FALSE     mn       6    6         NA
+#&gt; 3        3   cc    38     TRUE FALSE     mn       2    2         NA
+#&gt; 4        4   aa   -50     TRUE FALSE     mn       5    5         NA
+#&gt; 5        5   cc    49     TRUE FALSE     bm       4    4         NA
+#&gt; 6        6   cc    42     TRUE  TRUE     gg      10    8         NA
+#&gt; 7        6   cc    42     TRUE  TRUE     er      10    2         NA
+#&gt; 8        7   aa   -53     TRUE FALSE     bm       5    5         NA
+#&gt; 9        8   dd    24     TRUE FALSE     bm       2    2         NA
+#&gt; 10       9   aa   -57     TRUE FALSE     mn       4    4         NA
+#&gt; 11      10   cc    65     TRUE FALSE     gg       5    5         NA
+#&gt; 12    &lt;NA&gt;   aa   -20     TRUE FALSE     dc       1    1          5
+#&gt; 13      11   bb    87     TRUE FALSE     pp       3    3         NA
+#&gt; 14      12   bb    82     TRUE FALSE     gg       5    5         NA
+#&gt; 15      13   bb    54     TRUE FALSE     pp       6    6         NA
+#&gt; 16      14   cc    62     TRUE FALSE     gg       2    2         NA
+#&gt; 17      15   bb    50     TRUE FALSE     mn       3    3         NA
+#&gt; 18      16   aa   -31     TRUE FALSE     mn       6    6         NA
+#&gt; 19      17   bb   -59     TRUE FALSE     bm       6    6         NA
+#&gt; 20      18   aa   -62     TRUE FALSE     gg       2    2         NA
+#&gt; 21      19   cc    42     TRUE FALSE     bm       3    3         NA
+#&gt; 22      20   aa   -48     TRUE FALSE     bm       4    4         NA
+#&gt; 23      21   cc    63     TRUE FALSE     pp       6    6         NA
+#&gt; 24      22   cc    43     TRUE FALSE     pp       2    2         NA
+#&gt; 25      23   cc    56     TRUE FALSE     mn       6    6         NA
+#&gt; 26      24   cc    37     TRUE FALSE     mn       6    6         NA
+#&gt; 27      25   bb   -76     TRUE FALSE     pp       1    1         NA
+#&gt; 28      25 &lt;NA&gt;   -70       NA    NA   &lt;NA&gt;      NA   NA         NA
 #&gt;    TurtleDirection TurtleTail
 #&gt; 1               NA       &lt;NA&gt;
 #&gt; 2               NA       &lt;NA&gt;
