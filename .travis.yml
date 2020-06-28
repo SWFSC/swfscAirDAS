@@ -1,4 +1,5 @@
 # tic documentation: https://docs.ropensci.org/tic/dev/
+# Copied some over from sf/.travis.yml
 
 # OS ---------------------------------------------------------------------------
 os: linux
@@ -21,8 +22,8 @@ matrix:
     # if you use bookdown or blogdown, replace "PKGDOWN" by the respective
     # capitalized term. This also might need to be done in tic.R
     - BUILD_PKGDOWN=true
-    
-    addons:
+
+addons:
   apt:
     sources:
       - sourceline: 'ppa:opencpu/jq'
@@ -34,7 +35,7 @@ matrix:
       - libproj-dev
       - libgeos-dev
       - libgdal-dev
-      
+
 
 # Stages -----------------------------------------------------------------------
 
@@ -62,5 +63,3 @@ deploy:
     all_branches: true
 after_deploy: R -q -e 'tic::after_deploy()'
 after_script: R -q -e 'tic::after_script()'
-
-# Custom user code -------------------------------------------------------------
