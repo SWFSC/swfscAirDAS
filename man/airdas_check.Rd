@@ -59,22 +59,18 @@ Check that AirDAS file has accepted formatting and values
 The default (internal) \code{sp.codes} file is located at 
 \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
 
-To see the checks performed by this function, 
-you can access the PDF locally at 
+To see the checks performed by this function, you can access the PDF locally at 
 \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, 
 or online at \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
 
-Outstanding questions/todo:
+Checks that are not done by this function that may be of interest:
 \itemize{
-  \item Attempt to check for valid fish ball/mola/jelly/crab pot codes?
-  \item Add check for valid lat lon coordinates
+  \item Check for valid fish ball/mola/jelly/crab pot codes
 }
 }
 \examples{
-\dontrun{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-airdas_check(y)
-}
+airdas_check(y, print.transect = FALSE)
 
 }
 \seealso{

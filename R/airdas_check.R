@@ -22,15 +22,13 @@
 #' The default (internal) \code{sp.codes} file is located at 
 #' \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}. 
 #' 
-#' To see the checks performed by this function, 
-#' you can access the PDF locally at 
+#' To see the checks performed by this function, you can access the PDF locally at 
 #' \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, 
 #' or online at \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
 #'
-#' Outstanding questions/todo:
+#' Checks that are not done by this function that may be of interest:
 #' \itemize{
-#'   \item Attempt to check for valid fish ball/mola/jelly/crab pot codes?
-#'   \item Add check for valid lat lon coordinates
+#'   \item Check for valid fish ball/mola/jelly/crab pot codes
 #' }
 #'
 #' @return 
@@ -53,10 +51,8 @@
 #' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
 #'
 #' @examples
-#' \dontrun{
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' airdas_check(y)
-#' }
+#' airdas_check(y, print.transect = FALSE)
 #'
 #' @export
 airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),  
@@ -72,10 +68,12 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
     stringsAsFactors = FALSE
   )
   
+  # message("Reading AirDAS data")
   x <- suppressWarnings(airdas_read(file, file.type = file.type, skip = skip))
   x$idx <- seq_along(x$Event)
   x <- as_airdas_dfr(x)
   
+  # message("Processing AirDAS data")
   x.proc <- suppressWarnings(airdas_process(x)) %>% 
     left_join(select(x, .data$line_num, .data$idx), by = "line_num")
   x.proc <- as_airdas_df(x.proc)
@@ -91,6 +89,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   #----------------------------------------------------------------------------
   ### Process sp.codes file
+  # message("Reading and processing SpCodes file")
   if (is.null(sp.codes)) 
     sp.codes <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
   
@@ -111,6 +110,8 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   
   #----------------------------------------------------------------------------
+  # message("Checking DAS file")
+  
   ### Check event codes
   event.acc <- c("#", "*", 1, "A", "C", "E", "O", 
                  "P", "R", "s", "S", "t", "T", "V", "W")
@@ -118,6 +119,16 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   error.out <- rbind(
     error.out,
     .check_list(x, x.lines, ev.which, "The event code is not recognized")
+  )
+  
+  ### Check lat/lon coordinates - coords added to 1 events in processed data
+  lat.which <- which(!between(x.proc$Lat, -90, 90))
+  lon.which <- which(!between(x.proc$Lat, -180, 1800))
+
+  error.out <- rbind(
+    error.out,
+    .check_list(x, x.lines, lat.which, "The latitude value is not between -90 and 90"), 
+    .check_list(x, x.lines, lon.which, "The longitude value is not between -180 and 180")
   )
   
   

@@ -20,7 +20,7 @@ library(stringr)
 library(swfscAirDAS)
 ```
 
-This document introduces you to the swfscAirDAS package. This package is intended to standardize and streamline processing of aerial survey DAS (AirDAS) data collected using the PHOCOENA, TURTLE, or CARETTA programs from the Southwest Fisheries Science Center. In DAS data (and thus AirDAS data), an event is only recorded when something changes or happens, which can complicate processing. Thus, the main theme of this package is enabling analyses and downstream processing by 1) determining associated state and condition information for each event and 2) pulling out event-specific information from the Data columns.
+This document introduces you to the swfscAirDAS package. This package is intended to standardize and streamline processing of aerial survey DAS (AirDAS) data collected using the PHOCOENA, TURTLE, or CARETTA programs from the Southwest Fisheries Science Center. In DAS data (and thus AirDAS data), an event is only recorded when something changes or happens, which can complicate processing. Thus, the main theme of this package is enabling analyses and downstream processing by 1) determining associated state and condition information for each event and 2) pulling out event-specific information from the Data columns. The following examples generally use the default function arguments; see the documentation for the individual functions for a complete description of all processing options.
 
 ## Data
 
@@ -50,7 +50,7 @@ y.read <- airdas_read(y, file.type = "turtle", skip = 0)
 glimpse(y.read)
 
 # Process
-y.proc <- airdas_process(y)
+y.proc <- airdas_process(y.read, trans.upper = TRUE)
 glimpse(y.proc)
 ```
 

@@ -33,7 +33,6 @@
 #'   The randpicks values will all be \code{NA}
 #'   
 #' @examples 
-#' \dontrun{
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
 #' 
@@ -45,7 +44,6 @@
 #' 
 #' 
 #' all.equal(y.eff1, y.eff2)
-#' }
 #' 
 #' @keywords internal
 #' 

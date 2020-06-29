@@ -116,20 +116,17 @@ This is the top-level function for chopping processed AirDAS data
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
-# Using "condition" method
 airdas_effort(
   y.proc, method = "condition", conditions = "Bft", seg.min.km = 0.05, 
   num.cores = 1
 )
 
-# Using "equallength" method
 y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
   y.proc, method = "equallength", conditions = c("Bft", "CCover"), 
   seg.km = 3, randpicks.load = y.rand, num.cores = 1
 )
 
-# Using "section" method
 airdas_effort(y.proc, method = "section", num.cores = 1)
 
 }

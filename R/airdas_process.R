@@ -22,6 +22,9 @@
 #' @param reset.transect logical; default is \code{TRUE}.
 #'   Indicates if propogated info (weather, observers, etc) should be reset 
 #'   to \code{NA} when beginning a new transect. See Details section
+#' @param trans.upper logical; indicates if all transect codes should be 
+#'   capitalized using \code{\link[base:chartr]{toupper}}.
+#'   Default is \code{FALSE}
 #'
 #' @details If \code{x} is a character, it is assumed to be a filepath and 
 #'   first passed to \code{\link{airdas_read}}. 
@@ -94,7 +97,7 @@
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' airdas_process(y)
+#' airdas_process(y, trans.upper = FALSE)
 #' 
 #' y.read <- airdas_read(y)
 #' airdas_process(y.read)
@@ -120,7 +123,8 @@ airdas_process.data.frame <- function(x, ...) {
 #' @name airdas_process
 #' @export
 airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full = 12/24, 
-                                      gap.message = FALSE, reset.transect = TRUE, ...) 
+                                      gap.message = FALSE, reset.transect = TRUE, 
+                                      trans.upper = FALSE, ...) 
 { 
   #----------------------------------------------------------------------------
   # Input checks
@@ -240,6 +244,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
   VRO <- .process_chr(init.val, x, "Data5", event.V, event.na)
   
   Trans <- .process_chr(init.val, x, "Data1", event.T, event.na)
+  if (trans.upper) Trans <- toupper(Trans)
   Trans[event.O] <- event.na
   
   Eff <- as.logical(init.val)

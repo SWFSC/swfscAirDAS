@@ -60,8 +60,6 @@
 #' 
 #' @keywords internal
 #' 
-#' @seealso airdas_segdata_max
-#' 
 #' @export
 airdas_segdata <- function(x, ...) UseMethod("airdas_segdata")
 

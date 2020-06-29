@@ -59,7 +59,6 @@ This function is simply a wrapper for \code{\link{airdas_chop_equallength}}.
   \code{\link[dplyr]{summarise}} to summarise the desired data by transect
 }
 \examples{
-\dontrun{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
@@ -71,7 +70,6 @@ y.eff2 <- airdas_effort(y.proc, method = "section", num.cores = 1)
 
 
 all.equal(y.eff1, y.eff2)
-}
 
 }
 \keyword{internal}

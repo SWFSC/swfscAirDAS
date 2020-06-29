@@ -19,6 +19,7 @@ airdas_process(x, ...)
   days.gap.full = 12/24,
   gap.message = FALSE,
   reset.transect = TRUE,
+  trans.upper = FALSE,
   ...
 )
 }
@@ -47,6 +48,10 @@ output data frame were partially or fully reset}
 \item{reset.transect}{logical; default is \code{TRUE}.
 Indicates if propogated info (weather, observers, etc) should be reset 
 to \code{NA} when beginning a new transect. See Details section}
+
+\item{trans.upper}{logical; indicates if all transect codes should be 
+capitalized using \code{\link[base:chartr]{toupper}}.
+Default is \code{FALSE}}
 }
 \value{
 An \code{airdas_df} object, which is also a data frame.
@@ -125,7 +130,7 @@ If \code{x} is a character, it is assumed to be a filepath and
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-airdas_process(y)
+airdas_process(y, trans.upper = FALSE)
 
 y.read <- airdas_read(y)
 airdas_process(y.read)

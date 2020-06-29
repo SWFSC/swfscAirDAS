@@ -1,3 +1,10 @@
+# swfscAirDAS 0.2.1
+
+* Users can now capitalize all transect codes using the `trans.upper` argument in `das_process`
+
+* Added info messages to `airdas_check`, as well as a check for valid latitude and longitude values
+
+
 # swfscAirDAS 0.2.0
 
 * Catch up internally with changes made in swfscDAS. This package now depends on swfscDAS version >= 0.3

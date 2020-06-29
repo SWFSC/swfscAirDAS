@@ -86,7 +86,4 @@ This function was designed to be called by one of the airdas_chop_ functions,
   are used to calculate the segment start, mid, and end points,
   with \code{method = "vincenty"}.
 }
-\seealso{
-airdas_segdata_max
-}
 \keyword{internal}
