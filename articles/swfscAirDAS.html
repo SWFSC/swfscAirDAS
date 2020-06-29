@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">swfscAirDAS</span>)</pre></body></html></div>
-<p>This document introduces you to the swfscAirDAS package. This package is intended to standardize and streamline processing of aerial survey DAS (AirDAS) data collected using the PHOCOENA, TURTLE, or CARETTA programs from the Southwest Fisheries Science Center. In DAS data (and thus AirDAS data), an event is only recorded when something changes or happens, which can complicate processing. Thus, the main theme of this package is enabling analyses and downstream processing by 1) determining associated state and condition information for each event and 2) pulling out event-specific information from the Data columns.</p>
+<p>This document introduces you to the swfscAirDAS package. This package is intended to standardize and streamline processing of aerial survey DAS (AirDAS) data collected using the PHOCOENA, TURTLE, or CARETTA programs from the Southwest Fisheries Science Center. In DAS data (and thus AirDAS data), an event is only recorded when something changes or happens, which can complicate processing. Thus, the main theme of this package is enabling analyses and downstream processing by 1) determining associated state and condition information for each event and 2) pulling out event-specific information from the Data columns. The following examples generally use the default function arguments; see the documentation for the individual functions for a complete description of all processing options.</p>
 <div id="data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#data" class="anchor"></a>Data</h2>
@@ -137,7 +137,7 @@
 <span class="co">#&gt; $ file_type &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "turtle",…</span>
 
 <span class="co"># Process</span>
-<span class="no">y.proc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_process.html">airdas_process</a></span>(<span class="no">y</span>)
+<span class="no">y.proc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_process.html">airdas_process</a></span>(<span class="no">y.read</span>, <span class="kw">trans.upper</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
 <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.proc</span>)
 <span class="co">#&gt; Rows: 87</span>
 <span class="co">#&gt; Columns: 38</span>

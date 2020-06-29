@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -244,7 +244,6 @@ Using 1 core likely will be faster for smaller datasets</p></td>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='no'>y.proc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='no'>y</span>)
 
-<span class='co'># Using "condition" method</span>
 <span class='fu'>airdas_effort</span>(
   <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"condition"</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='st'>"Bft"</span>, <span class='kw'>seg.min.km</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
   <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
@@ -421,7 +420,6 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; $randpicks
 #&gt; NULL
 #&gt; </div><div class='input'>
-<span class='co'># Using "equallength" method</span>
 <span class='no'>y.rand</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample_randpicks.csv"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
 <span class='fu'>airdas_effort</span>(
   <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"equallength"</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"Bft"</span>, <span class='st'>"CCover"</span>),
@@ -650,7 +648,6 @@ Using 1 core likely will be faster for smaller datasets</p></td>
 #&gt; 2              2         2
 #&gt; 3              3         9
 #&gt; </div><div class='input'>
-<span class='co'># Using "section" method</span>
 <span class='fu'>airdas_effort</span>(<span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"section"</span>, <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>)</div><div class='output co'>#&gt; $segdata
 #&gt;   segnum section_id section_sub_id event transect              file stlin
 #&gt; 1      1          1              1     T       T1 airdas_sample.das     3

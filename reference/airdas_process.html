@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -140,6 +140,7 @@
   <span class='kw'>days.gap.full</span> <span class='kw'>=</span> <span class='fl'>12</span>/<span class='fl'>24</span>,
   <span class='kw'>gap.message</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='kw'>reset.transect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
+  <span class='kw'>trans.upper</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
   <span class='no'>...</span>
 )</pre>
 
@@ -182,6 +183,12 @@ output data frame were partially or fully reset</p></td>
       <td><p>logical; default is <code>TRUE</code>.
 Indicates if propogated info (weather, observers, etc) should be reset 
 to <code>NA</code> when beginning a new transect. See Details section</p></td>
+    </tr>
+    <tr>
+      <th>trans.upper</th>
+      <td><p>logical; indicates if all transect codes should be 
+capitalized using <code><a href='https://rdrr.io/r/base/chartr.html'>toupper</a></code>.
+Default is <code>FALSE</code></p></td>
     </tr>
     </table>
 
@@ -248,7 +255,7 @@ to <code>NA</code> when beginning a new transect. See Details section</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
-<span class='fu'>airdas_process</span>(<span class='no'>y</span>)</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
+<span class='fu'>airdas_process</span>(<span class='no'>y</span>, <span class='kw'>trans.upper</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
 #&gt; 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 3      T 2015-04-09 12:30:59 39.23550 -123.1563     TRUE    T1  NA     NA    NA
