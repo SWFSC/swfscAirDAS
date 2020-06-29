@@ -52,7 +52,7 @@
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' airdas_check(y, print.transect = FALSE)
+#' if (interactive()) airdas_check(y, print.transect = FALSE)
 #'
 #' @export
 airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),  

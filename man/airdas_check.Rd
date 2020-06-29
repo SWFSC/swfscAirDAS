@@ -70,7 +70,7 @@ Checks that are not done by this function that may be of interest:
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-airdas_check(y, print.transect = FALSE)
+if (interactive()) airdas_check(y, print.transect = FALSE)
 
 }
 \seealso{
