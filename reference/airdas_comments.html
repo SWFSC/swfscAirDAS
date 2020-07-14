@@ -213,6 +213,275 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></td>
 #&gt; 2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        2 airdas_sample.das        2    turtle
 #&gt;            comment_str
 #&gt; 2  Not recording molas</div><div class='input'>
+<span class='co'># Join comments with processed data</span>
+<span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate-joins.html'>left_join</a></span>(<span class='no'>y.read</span>, <span class='no'>y.comm</span>[, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file_das"</span>, <span class='st'>"line_num"</span>, <span class='st'>"comment_str"</span>)],
+                 <span class='kw'>by</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"file_das"</span>, <span class='st'>"line_num"</span>))</div><div class='output co'>#&gt;    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3
+#&gt; 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  
+#&gt; 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding 
+#&gt; 3      T      TRUE 2015-04-09 12:30:59 39.23550 -123.1563    T1  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 4      V      TRUE 2015-04-09 12:30:59 39.23550 -123.1563     g     g     g
+#&gt; 5      P      TRUE 2015-04-09 12:30:59 39.23550 -123.1563    aa    bb    cc
+#&gt; 6      A      TRUE 2015-04-09 12:30:59 39.23550 -123.1563   650   100  &lt;NA&gt;
+#&gt; 7      W      TRUE 2015-04-09 12:30:59 39.23550 -123.1563     n    10     1
+#&gt; 8      *      TRUE 2015-04-09 12:31:00 39.23567 -123.1575  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 9      S      TRUE 2015-04-09 12:31:35 39.23367 -123.1783     1    cc    67
+#&gt; 10     S      TRUE 2015-04-09 12:31:47 39.23350 -123.1857     2    bb   -60
+#&gt; 11     C      TRUE 2015-04-09 12:31:48 39.23350 -123.1857  2 cp  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 12     S      TRUE 2015-04-09 12:31:56 39.23333 -123.1917     3    cc    38
+#&gt; 13     *      TRUE 2015-04-09 12:32:00 39.23317 -123.1930  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 14     S      TRUE 2015-04-09 12:32:20 39.23233 -123.2053     4    aa   -50
+#&gt; 15     S      TRUE 2015-04-09 12:32:30 39.23233 -123.2108     5    cc    49
+#&gt; 16     S      TRUE 2015-04-09 12:32:42 39.23233 -123.2195     6    cc    42
+#&gt; 17     1     FALSE                &lt;NA&gt;       NA        NA  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 18     *      TRUE 2015-04-09 12:33:00 39.23267 -123.2292  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 19     S      TRUE 2015-04-09 12:33:43 39.23333 -123.2550     7    aa   -53
+#&gt; 20     *      TRUE 2015-04-09 12:34:00 39.23300 -123.2637  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 21     W      TRUE 2015-04-09 12:34:52 39.23317 -123.2945     r    10     1
+#&gt; 22     C      TRUE 2015-04-09 12:34:56 39.23317 -123.2968  stre aky r ed ti
+#&gt; 23     *      TRUE 2015-04-09 12:35:00 39.23317 -123.2985  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 24     S      TRUE 2015-04-09 12:35:13 39.23317 -123.3073     8    dd    24
+#&gt; 25     C      TRUE 2015-04-09 12:35:32 39.23317 -123.3178  shar k 11f t    
+#&gt; 26     *      TRUE 2015-04-09 12:36:00 39.23333 -123.3337  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 27     S      TRUE 2015-04-09 12:36:13 39.23333 -123.3418     9    aa   -57
+#&gt; 28     S      TRUE 2015-04-09 12:36:26 39.23350 -123.3500    10    cc    65
+#&gt; 29     t      TRUE 2015-04-09 12:36:26 39.23350 -123.3500    aa   -20    dc
+#&gt; 30     S      TRUE 2015-04-09 12:36:43 39.23350 -123.3592    11    bb    87
+#&gt; 31     *      TRUE 2015-04-09 12:37:01 39.23383 -123.3685  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 32     S      TRUE 2015-04-09 12:37:01 39.23400 -123.3697    12    bb    82
+#&gt; 33     S      TRUE 2015-04-09 12:37:16 39.23433 -123.3790    13    bb    54
+#&gt; 34     #      TRUE 2015-04-09 12:37:17 39.23433 -123.3790  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 35     S      TRUE 2015-04-09 12:37:37 39.23417 -123.3910    14    cc    62
+#&gt; 36     W      TRUE 2015-04-09 12:37:57 39.23400 -123.4033     n    10     2
+#&gt; 37     E     FALSE 2015-04-09 12:38:00 39.23400 -123.4047  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 38     C     FALSE 2015-04-09 12:38:00 39.23400 -123.4047  off  effor t to 
+#&gt; 39     *     FALSE 2015-04-09 12:39:00 39.23417 -123.4400  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 40     R      TRUE 2015-04-09 12:40:00 39.23400 -123.4742  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 41     W      TRUE 2015-04-09 12:40:28 39.23333 -123.4915     n    20     2
+#&gt; 42     C      TRUE 2015-04-09 12:40:36 39.23317 -123.4960  wate r got  more
+#&gt; 43     *      TRUE 2015-04-09 12:41:00 39.23317 -123.5092  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 44     W      TRUE 2015-04-09 12:41:08 39.23317 -123.5143     n    20     1
+#&gt; 45     *      TRUE 2015-04-09 12:42:00 39.23267 -123.5433  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 46     C      TRUE 2015-04-09 12:42:01 39.23267 -123.5433  fb2s  fb1m  &lt;NA&gt;
+#&gt; 47     S      TRUE 2015-04-09 12:42:13 39.23250 -123.5515    15    bb    50
+#&gt; 48     *      TRUE 2015-04-09 12:43:00 39.23233 -123.5778  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 49     O     FALSE 2015-04-09 12:43:43 39.23283 -123.6033  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 50     *     FALSE 2015-04-09 12:44:00 39.23300 -123.6118  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 51     *     FALSE 2015-04-09 12:45:00 39.24450 -123.6415  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 52     *     FALSE 2015-04-09 12:46:00 39.22167 -123.6373  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 53     T      TRUE 2015-04-09 12:46:51 39.22000 -123.6078    T2  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 54     V      TRUE 2015-04-09 12:46:51 39.22000 -123.6078     g     g     g
+#&gt; 55     P      TRUE 2015-04-09 12:46:51 39.22000 -123.6078    aa    dd    cc
+#&gt; 56     A      TRUE 2015-04-09 12:46:51 39.22000 -123.6078   650   100  &lt;NA&gt;
+#&gt; 57     W      TRUE 2015-04-09 12:46:51 39.22000 -123.6078     n    20     1
+#&gt; 58     *      TRUE 2015-04-09 12:47:00 39.21950 -123.6025  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 59     *      TRUE 2015-04-09 12:48:00 39.21783 -123.5682  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 60     A      TRUE 2015-04-09 12:48:29 39.21767 -123.5515   680   100  &lt;NA&gt;
+#&gt; 61     A      TRUE 2015-04-09 12:48:36 39.21783 -123.5468   650   100  &lt;NA&gt;
+#&gt; 62     *      TRUE 2015-04-09 12:49:00 39.21783 -123.5333  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 63     *      TRUE 2015-04-09 12:50:00 39.21617 -123.4987  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 64     A      TRUE 2015-04-09 12:50:32 39.21683 -123.4797   680    90  &lt;NA&gt;
+#&gt; 65     *      TRUE 2015-04-09 12:51:00 39.21733 -123.4653  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 66     S      TRUE 2015-04-09 12:51:40 39.21750 -123.4410    16    aa   -31
+#&gt; 67     S      TRUE 2015-04-09 12:51:55 39.21750 -123.4317    17    bb   -59
+#&gt; 68     *      TRUE 2015-04-09 12:52:00 39.21733 -123.4293  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 69     S      TRUE 2015-04-09 12:52:03 39.21733 -123.4270    18    aa   -62
+#&gt; 70     S      TRUE 2015-04-09 12:52:04 39.21733 -123.4270    19    cc    42
+#&gt; 71     S      TRUE 2015-04-09 12:52:07 39.21733 -123.4258    20    aa   -48
+#&gt; 72     S      TRUE 2015-04-09 12:52:17 39.21700 -123.4185    21    cc    63
+#&gt; 73     C      TRUE 2015-04-09 12:52:39 39.21700 -123.4072  bell y has  some
+#&gt; 74     S      TRUE 2015-04-09 12:52:54 39.21700 -123.3982    22    cc    43
+#&gt; 75     *      TRUE 2015-04-09 12:53:00 39.21717 -123.3960  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 76     *      TRUE 2015-04-09 12:54:00 39.21683 -123.3617  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 77     V      TRUE 2015-04-09 12:54:01 39.21683 -123.3605     g     g     p
+#&gt; 78     W      TRUE 2015-04-09 12:54:04 39.21683 -123.3605     n    20     2
+#&gt; 79     S      TRUE 2015-04-09 12:54:34 39.21667 -123.3422    23    cc    56
+#&gt; 80     *      TRUE 2015-04-09 12:55:00 39.21667 -123.3285  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 81     S      TRUE 2015-04-09 12:55:20 39.21700 -123.3172    24    cc    37
+#&gt; 82     *      TRUE 2015-04-09 12:56:00 39.21700 -123.2960  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 83     W      TRUE 2015-04-09 12:56:40 39.21733 -123.2730     r    20     2
+#&gt; 84     C      TRUE 2015-04-09 12:56:43 39.21717 -123.2718  patc hy re d tid
+#&gt; 85     S      TRUE 2015-04-09 12:56:49 39.21717 -123.2685    25    bb   -76
+#&gt; 86     *      TRUE 2015-04-09 12:57:00 39.21700 -123.2617  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt; 87     s      TRUE 2015-04-09 12:57:00 39.21700 -123.2617    25   -70  &lt;NA&gt;
+#&gt; 88     O     FALSE 2015-04-09 12:57:30 39.21700 -123.2417  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;
+#&gt;    Data4 Data5 Data6           Data7 EventNum          file_das line_num
+#&gt; 1   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        1 airdas_sample.das        1
+#&gt; 2  molas  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        2 airdas_sample.das        2
+#&gt; 3   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        3 airdas_sample.das        3
+#&gt; 4      g     g  &lt;NA&gt;            &lt;NA&gt;        4 airdas_sample.das        4
+#&gt; 5     dd  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        5 airdas_sample.das        5
+#&gt; 6   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        6 airdas_sample.das        6
+#&gt; 7      0     6  &lt;NA&gt;            &lt;NA&gt;        7 airdas_sample.das        7
+#&gt; 8   &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;        8 airdas_sample.das        8
+#&gt; 9      6    mn  &lt;NA&gt;            &lt;NA&gt;        9 airdas_sample.das        9
+#&gt; 10     6    mn  &lt;NA&gt;            &lt;NA&gt;       10 airdas_sample.das       10
+#&gt; 11  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       11 airdas_sample.das       11
+#&gt; 12     2    mn  &lt;NA&gt;            &lt;NA&gt;       12 airdas_sample.das       12
+#&gt; 13  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       13 airdas_sample.das       13
+#&gt; 14     5    mn  &lt;NA&gt;            &lt;NA&gt;       14 airdas_sample.das       14
+#&gt; 15     4    bm  &lt;NA&gt;            &lt;NA&gt;       15 airdas_sample.das       15
+#&gt; 16    10    gg    er            &lt;NA&gt;       16 airdas_sample.das       16
+#&gt; 17  &lt;NA&gt;    80    20            &lt;NA&gt;     &lt;NA&gt; airdas_sample.das       17
+#&gt; 18  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       17 airdas_sample.das       18
+#&gt; 19     5    bm  &lt;NA&gt;            &lt;NA&gt;       18 airdas_sample.das       19
+#&gt; 20  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       19 airdas_sample.das       20
+#&gt; 21     2     6  &lt;NA&gt;            &lt;NA&gt;       20 airdas_sample.das       21
+#&gt; 22 de     &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       21 airdas_sample.das       22
+#&gt; 23  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       22 airdas_sample.das       23
+#&gt; 24     2    bm  &lt;NA&gt;            &lt;NA&gt;       23 airdas_sample.das       24
+#&gt; 25  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       24 airdas_sample.das       25
+#&gt; 26  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       25 airdas_sample.das       26
+#&gt; 27     4    mn  &lt;NA&gt;            &lt;NA&gt;       26 airdas_sample.das       27
+#&gt; 28     5    gg  &lt;NA&gt;            &lt;NA&gt;       27 airdas_sample.das       28
+#&gt; 29     5    90     n            &lt;NA&gt;       28 airdas_sample.das       29
+#&gt; 30     3    pp  &lt;NA&gt;            &lt;NA&gt;       29 airdas_sample.das       30
+#&gt; 31  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       30 airdas_sample.das       31
+#&gt; 32     5    gg  &lt;NA&gt;            &lt;NA&gt;       31 airdas_sample.das       32
+#&gt; 33     6    pp  &lt;NA&gt;            &lt;NA&gt;       32 airdas_sample.das       33
+#&gt; 34  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       33 airdas_sample.das       34
+#&gt; 35     2    gg  &lt;NA&gt;            &lt;NA&gt;       34 airdas_sample.das       35
+#&gt; 36     0     6  &lt;NA&gt;            &lt;NA&gt;       35 airdas_sample.das       36
+#&gt; 37  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       36 airdas_sample.das       37
+#&gt; 38 circl e on  unide ntifed object         37 airdas_sample.das       38
+#&gt; 39  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       38 airdas_sample.das       39
+#&gt; 40  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       39 airdas_sample.das       40
+#&gt; 41     0     6  &lt;NA&gt;            &lt;NA&gt;       40 airdas_sample.das       41
+#&gt; 42  blue  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       41 airdas_sample.das       42
+#&gt; 43  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       42 airdas_sample.das       43
+#&gt; 44     0     6  &lt;NA&gt;            &lt;NA&gt;       43 airdas_sample.das       44
+#&gt; 45  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       44 airdas_sample.das       45
+#&gt; 46  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       45 airdas_sample.das       46
+#&gt; 47     3    mn  &lt;NA&gt;            &lt;NA&gt;       46 airdas_sample.das       47
+#&gt; 48  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       47 airdas_sample.das       48
+#&gt; 49  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       48 airdas_sample.das       49
+#&gt; 50  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       49 airdas_sample.das       50
+#&gt; 51  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       50 airdas_sample.das       51
+#&gt; 52  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       51 airdas_sample.das       52
+#&gt; 53  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       52 airdas_sample.das       53
+#&gt; 54     g     g  &lt;NA&gt;            &lt;NA&gt;       53 airdas_sample.das       54
+#&gt; 55    bb  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       54 airdas_sample.das       55
+#&gt; 56  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       55 airdas_sample.das       56
+#&gt; 57     0    12  &lt;NA&gt;            &lt;NA&gt;       56 airdas_sample.das       57
+#&gt; 58  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       57 airdas_sample.das       58
+#&gt; 59  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       58 airdas_sample.das       59
+#&gt; 60  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       59 airdas_sample.das       60
+#&gt; 61  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       60 airdas_sample.das       61
+#&gt; 62  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       61 airdas_sample.das       62
+#&gt; 63  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       62 airdas_sample.das       63
+#&gt; 64  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       63 airdas_sample.das       64
+#&gt; 65  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       64 airdas_sample.das       65
+#&gt; 66     6    mn  &lt;NA&gt;            &lt;NA&gt;       65 airdas_sample.das       66
+#&gt; 67     6    bm  &lt;NA&gt;            &lt;NA&gt;       66 airdas_sample.das       67
+#&gt; 68  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       67 airdas_sample.das       68
+#&gt; 69     2    gg  &lt;NA&gt;            &lt;NA&gt;       68 airdas_sample.das       69
+#&gt; 70     3    bm  &lt;NA&gt;            &lt;NA&gt;       69 airdas_sample.das       70
+#&gt; 71     4    bm  &lt;NA&gt;            &lt;NA&gt;       70 airdas_sample.das       71
+#&gt; 72     6    pp  &lt;NA&gt;            &lt;NA&gt;       71 airdas_sample.das       72
+#&gt; 73  glar e      &lt;NA&gt;            &lt;NA&gt;       72 airdas_sample.das       73
+#&gt; 74     2    pp  &lt;NA&gt;            &lt;NA&gt;       73 airdas_sample.das       74
+#&gt; 75  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       74 airdas_sample.das       75
+#&gt; 76  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       75 airdas_sample.das       76
+#&gt; 77     g     g  &lt;NA&gt;            &lt;NA&gt;       76 airdas_sample.das       77
+#&gt; 78     0    12  &lt;NA&gt;            &lt;NA&gt;       77 airdas_sample.das       78
+#&gt; 79     6    mn  &lt;NA&gt;            &lt;NA&gt;       78 airdas_sample.das       79
+#&gt; 80  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       79 airdas_sample.das       80
+#&gt; 81     6    mn  &lt;NA&gt;            &lt;NA&gt;       80 airdas_sample.das       81
+#&gt; 82  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       81 airdas_sample.das       82
+#&gt; 83     0    12  &lt;NA&gt;            &lt;NA&gt;       82 airdas_sample.das       83
+#&gt; 84 e      &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       83 airdas_sample.das       84
+#&gt; 85     1    pp  &lt;NA&gt;            &lt;NA&gt;       84 airdas_sample.das       85
+#&gt; 86  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       85 airdas_sample.das       86
+#&gt; 87  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       86 airdas_sample.das       87
+#&gt; 88  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;       87 airdas_sample.das       88
+#&gt;    file_type                                   comment_str
+#&gt; 1     turtle                                Recorder: dd  
+#&gt; 2     turtle                           Not recording molas
+#&gt; 3     turtle                                          &lt;NA&gt;
+#&gt; 4     turtle                                          &lt;NA&gt;
+#&gt; 5     turtle                                          &lt;NA&gt;
+#&gt; 6     turtle                                          &lt;NA&gt;
+#&gt; 7     turtle                                          &lt;NA&gt;
+#&gt; 8     turtle                                          &lt;NA&gt;
+#&gt; 9     turtle                                          &lt;NA&gt;
+#&gt; 10    turtle                                          &lt;NA&gt;
+#&gt; 11    turtle                                          2 cp
+#&gt; 12    turtle                                          &lt;NA&gt;
+#&gt; 13    turtle                                          &lt;NA&gt;
+#&gt; 14    turtle                                          &lt;NA&gt;
+#&gt; 15    turtle                                          &lt;NA&gt;
+#&gt; 16    turtle                                          &lt;NA&gt;
+#&gt; 17    turtle                                          &lt;NA&gt;
+#&gt; 18    turtle                                          &lt;NA&gt;
+#&gt; 19    turtle                                          &lt;NA&gt;
+#&gt; 20    turtle                                          &lt;NA&gt;
+#&gt; 21    turtle                                          &lt;NA&gt;
+#&gt; 22    turtle                           streaky red tide   
+#&gt; 23    turtle                                          &lt;NA&gt;
+#&gt; 24    turtle                                          &lt;NA&gt;
+#&gt; 25    turtle                                shark 11ft    
+#&gt; 26    turtle                                          &lt;NA&gt;
+#&gt; 27    turtle                                          &lt;NA&gt;
+#&gt; 28    turtle                                          &lt;NA&gt;
+#&gt; 29    turtle                                          &lt;NA&gt;
+#&gt; 30    turtle                                          &lt;NA&gt;
+#&gt; 31    turtle                                          &lt;NA&gt;
+#&gt; 32    turtle                                          &lt;NA&gt;
+#&gt; 33    turtle                                          &lt;NA&gt;
+#&gt; 34    turtle                                          &lt;NA&gt;
+#&gt; 35    turtle                                          &lt;NA&gt;
+#&gt; 36    turtle                                          &lt;NA&gt;
+#&gt; 37    turtle                                          &lt;NA&gt;
+#&gt; 38    turtle  off effort to circle on unidentifed object  
+#&gt; 39    turtle                                          &lt;NA&gt;
+#&gt; 40    turtle                                          &lt;NA&gt;
+#&gt; 41    turtle                                          &lt;NA&gt;
+#&gt; 42    turtle                           water got more blue
+#&gt; 43    turtle                                          &lt;NA&gt;
+#&gt; 44    turtle                                          &lt;NA&gt;
+#&gt; 45    turtle                                          &lt;NA&gt;
+#&gt; 46    turtle                                     fb2s fb1m
+#&gt; 47    turtle                                          &lt;NA&gt;
+#&gt; 48    turtle                                          &lt;NA&gt;
+#&gt; 49    turtle                                          &lt;NA&gt;
+#&gt; 50    turtle                                          &lt;NA&gt;
+#&gt; 51    turtle                                          &lt;NA&gt;
+#&gt; 52    turtle                                          &lt;NA&gt;
+#&gt; 53    turtle                                          &lt;NA&gt;
+#&gt; 54    turtle                                          &lt;NA&gt;
+#&gt; 55    turtle                                          &lt;NA&gt;
+#&gt; 56    turtle                                          &lt;NA&gt;
+#&gt; 57    turtle                                          &lt;NA&gt;
+#&gt; 58    turtle                                          &lt;NA&gt;
+#&gt; 59    turtle                                          &lt;NA&gt;
+#&gt; 60    turtle                                          &lt;NA&gt;
+#&gt; 61    turtle                                          &lt;NA&gt;
+#&gt; 62    turtle                                          &lt;NA&gt;
+#&gt; 63    turtle                                          &lt;NA&gt;
+#&gt; 64    turtle                                          &lt;NA&gt;
+#&gt; 65    turtle                                          &lt;NA&gt;
+#&gt; 66    turtle                                          &lt;NA&gt;
+#&gt; 67    turtle                                          &lt;NA&gt;
+#&gt; 68    turtle                                          &lt;NA&gt;
+#&gt; 69    turtle                                          &lt;NA&gt;
+#&gt; 70    turtle                                          &lt;NA&gt;
+#&gt; 71    turtle                                          &lt;NA&gt;
+#&gt; 72    turtle                                          &lt;NA&gt;
+#&gt; 73    turtle                      belly has some glare    
+#&gt; 74    turtle                                          &lt;NA&gt;
+#&gt; 75    turtle                                          &lt;NA&gt;
+#&gt; 76    turtle                                          &lt;NA&gt;
+#&gt; 77    turtle                                          &lt;NA&gt;
+#&gt; 78    turtle                                          &lt;NA&gt;
+#&gt; 79    turtle                                          &lt;NA&gt;
+#&gt; 80    turtle                                          &lt;NA&gt;
+#&gt; 81    turtle                                          &lt;NA&gt;
+#&gt; 82    turtle                                          &lt;NA&gt;
+#&gt; 83    turtle                                          &lt;NA&gt;
+#&gt; 84    turtle                           patchy red tide    
+#&gt; 85    turtle                                          &lt;NA&gt;
+#&gt; 86    turtle                                          &lt;NA&gt;
+#&gt; 87    turtle                                          &lt;NA&gt;
+#&gt; 88    turtle                                          &lt;NA&gt;</div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

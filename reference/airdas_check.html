@@ -194,6 +194,8 @@ written to the file (e.g., a .txt or .csv file) specified by <code>file.out</cod
 or online at <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf'>https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
 <p>Checks that are not done by this function that may be of interest:</p><ul>
 <li><p>Check for valid fish ball/mola/jelly/crab pot codes</p></li>
+<li><p>Check that datetimes are sequential, meaning they 
+    1) are the same as or 2) come after the previous event</p></li>
 </ul>
 
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
@@ -202,7 +204,7 @@ or online at <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/inst/
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
-<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) <span class='fu'>airdas_check</span>(<span class='no'>y</span>, <span class='kw'>print.transect</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div></pre>
+<span class='kw'>if</span> (<span class='fu'><a href='https://rdrr.io/r/base/interactive.html'>interactive</a></span>()) <span class='fu'>airdas_check</span>(<span class='no'>y</span>, <span class='kw'>print.transect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -149,9 +149,9 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>x</th>
-      <td><p>either an object of class <code>airdas_dfr</code> (the output of <code><a href='airdas_read.html'>airdas_read</a></code>), 
-or a character (filepath) which is first passed to 
-the <code>file</code> argument of <code><a href='airdas_read.html'>airdas_read</a></code></p></td>
+      <td><p>an object of class <code>airdas_dfr</code> object, 
+an object that can be coerced to class <code>airdas_dfr</code>,
+or a character (filepath) which is first passed to <code><a href='airdas_read.html'>airdas_read</a></code></p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -162,14 +162,14 @@ Otherwise ignored</p></td>
       <th>days.gap.part</th>
       <td><p>numeric of length 1; 
 time gap (in days) used to identify when a 'partial reset' is performed, 
-i.e. when propogated info (weather, observers, etc) is reset. 
+i.e. when propagated info (weather, observers, etc) is reset. 
 Default is 30 minutes; must be less than or equal to <code>days.gap.full</code></p></td>
     </tr>
     <tr>
       <th>days.gap.full</th>
       <td><p>numeric of length 1; 
 time gap (in days) used to identify when a 'full reset; is performed, 
-i.e. when all info (transect number and propogated info) is reset. 
+i.e. when all info (transect number and propagated info) is reset. 
 Default is 12 hours; must be greater than <code>days.gap.part</code></p></td>
     </tr>
     <tr>
@@ -181,7 +181,7 @@ output data frame were partially or fully reset</p></td>
     <tr>
       <th>reset.transect</th>
       <td><p>logical; default is <code>TRUE</code>.
-Indicates if propogated info (weather, observers, etc) should be reset 
+Indicates if propagated info (weather, observers, etc) should be reset 
 to <code>NA</code> when beginning a new transect. See Details section</p></td>
     </tr>
     <tr>
@@ -237,7 +237,7 @@ Default is <code>FALSE</code></p></td>
   pertinent state/condition information for that row.</p>  
 <p>The following assumptions/decisions are made during processing:</p><ul>
 <li><p>All '#' events (deleted events) are removed</p></li>
-<li><p>'Datetime', 'Lat', and 'Lon' information are added to '1' events where applicable</p></li>
+<li><p>'DateTime', 'Lat', and 'Lon' information are added to '1' events where applicable</p></li>
 <li><p>Effort is determined as follows: T/R events turns effort on, 
       and O/E events turn effort off. 
       T/R events themselves will be on effort, while O/E events will be off effort.
