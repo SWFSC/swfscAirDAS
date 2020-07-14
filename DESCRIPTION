@@ -7,7 +7,7 @@ Description: Process and summarize aerial survey 'DAS'
     <https://www.fisheries.noaa.gov/about/marine-mammal-and-turtle-division-southwest-fisheries-science-center> 
     data (AirDAS) collected using an aerial survey program from the 
     Southwest Fisheries Science Center (SWFSC).
-    PDFs detailing the relevant AirDAS data formats are included in this package.
+    PDF files detailing the relevant AirDAS data formats are included in this package.
 URL: https://smwoodman.github.io/swfscAirDAS, https://github.com/smwoodman/swfscAirDAS
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues
 Depends: R (>= 3.5.0)
@@ -27,8 +27,6 @@ Suggests:
     knitr,
     rmarkdown,
     testthat (>= 2.1.0)
-Remotes:
-    smwoodman/swfscDAS
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

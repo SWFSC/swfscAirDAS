@@ -74,7 +74,7 @@ In addition, the package contains the function
 which checks whether the provided file adheres to expected format of the
 provided file type. This function is designed to 1) be used for data
 QA/QC after performing a survey and 2) ensure the data format meets all
-of the assumptions made by the rest of the functions in the packge. A
+of the assumptions made by the rest of the functions in the package. A
 PDF describing the format checks is included in the package; you can
 also [`download the PDF
 here`](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf)

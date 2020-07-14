@@ -21,10 +21,10 @@
 #'   See the Examples section for an example where the two methods give the same output.
 #'   Note that the longest continuous effort section in the sample data is ~32km.
 #'   
-#'   To summarize data by transect rather than continuous effort section, 
-#'   see vignette TODO. 
+#'   For an example of how to summarize data by transect, 
+#'   see \code{vignette("swfscAirDAS")}.
 #'   In short, if looking to group by individual transects, use 
-#'   \code{segdata$transect_idx <- cumsum(segdat$event == "T")} 
+#'   \code{segdata$transect_idx <- cumsum(segdata$event == "T")} 
 #'   to create a column with a transect index. 
 #'   Then you can use \code{\link[dplyr]{group_by}(transect_idx)} and 
 #'   \code{\link[dplyr]{summarise}} to summarise the desired data by transect
@@ -35,14 +35,10 @@
 #' @examples 
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
-#' 
-#' y.eff1 <- airdas_effort(
-#'   y.proc, method = "equallength", seg.km = 35, num.cores = 1
-#' )
-#' 
+#'
+#' y.eff1 <- airdas_effort(y.proc, method = "equallength", seg.km = 35, num.cores = 1)
 #' y.eff2 <- airdas_effort(y.proc, method = "section", num.cores = 1)
-#' 
-#' 
+#'
 #' all.equal(y.eff1, y.eff2)
 #' 
 #' @keywords internal

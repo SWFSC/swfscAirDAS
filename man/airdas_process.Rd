@@ -33,12 +33,12 @@ Otherwise ignored}
 
 \item{days.gap.part}{numeric of length 1; 
 time gap (in days) used to identify when a 'partial reset' is performed, 
-i.e. when propogated info (weather, observers, etc) is reset. 
+i.e. when propagated info (weather, observers, etc) is reset. 
 Default is 30 minutes; must be less than or equal to \code{days.gap.full}}
 
 \item{days.gap.full}{numeric of length 1; 
 time gap (in days) used to identify when a 'full reset; is performed, 
-i.e. when all info (transect number and propogated info) is reset. 
+i.e. when all info (transect number and propagated info) is reset. 
 Default is 12 hours; must be greater than \code{days.gap.part}}
 
 \item{gap.message}{logical; default is \code{FALSE}.
@@ -46,7 +46,7 @@ Indicates if messages should be printed detailing which row(s) of the
 output data frame were partially or fully reset}
 
 \item{reset.transect}{logical; default is \code{TRUE}.
-Indicates if propogated info (weather, observers, etc) should be reset 
+Indicates if propagated info (weather, observers, etc) should be reset 
 to \code{NA} when beginning a new transect. See Details section}
 
 \item{trans.upper}{logical; indicates if all transect codes should be 
@@ -112,7 +112,7 @@ If \code{x} is a character, it is assumed to be a filepath and
   The following assumptions/decisions are made during processing:
   \itemize{
     \item All '#' events (deleted events) are removed
-    \item 'Datetime', 'Lat', and 'Lon' information are added to '1' events where applicable
+    \item 'DateTime', 'Lat', and 'Lon' information are added to '1' events where applicable
     \item Effort is determined as follows: T/R events turns effort on, 
       and O/E events turn effort off. 
       T/R events themselves will be on effort, while O/E events will be off effort.
