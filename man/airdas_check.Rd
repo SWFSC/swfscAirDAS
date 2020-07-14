@@ -66,11 +66,13 @@ or online at \url{https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirD
 Checks that are not done by this function that may be of interest:
 \itemize{
   \item Check for valid fish ball/mola/jelly/crab pot codes
+  \item Check that datetimes are sequential, meaning they 
+    1) are the same as or 2) come after the previous event
 }
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-if (interactive()) airdas_check(y, print.transect = FALSE)
+if (interactive()) airdas_check(y, print.transect = TRUE)
 
 }
 \seealso{

@@ -24,9 +24,9 @@ airdas_process(x, ...)
 )
 }
 \arguments{
-\item{x}{either an object of class \code{airdas_dfr} (the output of \code{\link{airdas_read}}), 
-or a character (filepath) which is first passed to 
-the \code{file} argument of \code{\link{airdas_read}}}
+\item{x}{an object of class \code{airdas_dfr} object, 
+an object that can be coerced to class \code{airdas_dfr},
+or a character (filepath) which is first passed to \code{\link{airdas_read}}}
 
 \item{...}{passed to \code{\link{airdas_read}} if \code{x} is a character.
 Otherwise ignored}

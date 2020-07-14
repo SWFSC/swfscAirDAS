@@ -3,10 +3,11 @@ Title: Southwest Fisheries Science Center Aerial DAS Data Processing
 Version: 0.2.1
 Authors@R: 
     person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
-Description: Process and summarize aerial survey DAS data (AirDAS; data written to a .das file) 
-    collected using one of the following Southwest Fisheries Science Center (SWFSC) programs: 
-    PHOCOENA, CARETTA, or TURTLE (such as TURTLEP or TURTLE 4D).
-    PDFs detailing the different AirDAS data formats are included in this package.
+Description: Process and summarize aerial survey 'DAS' 
+    <https://www.fisheries.noaa.gov/about/marine-mammal-and-turtle-division-southwest-fisheries-science-center> 
+    data (AirDAS) collected using an aerial survey program from the 
+    Southwest Fisheries Science Center (SWFSC).
+    PDFs detailing the relevant AirDAS data formats are included in this package.
 URL: https://smwoodman.github.io/swfscAirDAS, https://github.com/smwoodman/swfscAirDAS
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues
 Depends: R (>= 3.5.0)
@@ -31,5 +32,5 @@ Remotes:
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

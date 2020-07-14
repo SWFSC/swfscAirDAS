@@ -29,6 +29,8 @@
 #' Checks that are not done by this function that may be of interest:
 #' \itemize{
 #'   \item Check for valid fish ball/mola/jelly/crab pot codes
+#'   \item Check that datetimes are sequential, meaning they 
+#'     1) are the same as or 2) come after the previous event
 #' }
 #'
 #' @return 
@@ -52,7 +54,7 @@
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
-#' if (interactive()) airdas_check(y, print.transect = FALSE)
+#' if (interactive()) airdas_check(y, print.transect = TRUE)
 #'
 #' @export
 airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),  
@@ -61,6 +63,11 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   file.type <- match.arg(file.type)
   
+  if (length(unique(file)) != length(file))
+    warning("Not all files are unique - this likely will cause an error in ", 
+            "airdas_check. Please ensure all files are unique.", 
+            immediate. = TRUE)
+  
   #----------------------------------------------------------------------------
   ### Read and process file
   error.out <- data.frame(
@@ -68,28 +75,34 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
     stringsAsFactors = FALSE
   )
   
-  # message("Reading AirDAS data")
+  message("Reading AirDAS data")
   x <- suppressWarnings(airdas_read(file, file.type = file.type, skip = skip))
   x$idx <- seq_along(x$Event)
   x <- as_airdas_dfr(x)
   
-  # message("Processing AirDAS data")
+  id.lines.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
+  x.lines.list <- lapply(file, function(i) {
+    if (skip > 0) readLines(i)[-c(1:skip)] else readLines(i)
+  })
+  x.lines <- substr(do.call(c, x.lines.list), 1, id.lines.idx)
+  
+  message("Processing AirDAS data")
   x.proc <- suppressWarnings(airdas_process(x)) %>% 
-    left_join(select(x, .data$line_num, .data$idx), by = "line_num")
+    left_join(select(x, .data$file_das, .data$line_num, .data$idx), 
+              by = c("file_das", "line_num"))
   x.proc <- as_airdas_df(x.proc)
   
-  id.lines.idx <- switch(file.type, caretta = 39, phocoena = 45, turtle = 39)
-  x.lines <- do.call(
-    c, lapply(file, function(i) substr(readLines(i), 1, id.lines.idx))
-  )
-  if (skip > 0) x.lines <- x.lines[-c(1:skip)]
   
-  stopifnot(nrow(x) == length(x.lines))
+  if ((nrow(x) != length(x.lines)) | (nrow(x) < nrow(x.proc)))
+    stop("Error reading and processing AirDAS files. ", 
+         "Please try checking only a single file, or contact the developer")
+  
+  rm(id.lines.idx, x.lines.list)
   
   
   #----------------------------------------------------------------------------
   ### Process sp.codes file
-  # message("Reading and processing SpCodes file")
+  message("Reading and processing SpCodes file")
   if (is.null(sp.codes)) 
     sp.codes <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
   
@@ -110,7 +123,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   
   #----------------------------------------------------------------------------
-  # message("Checking DAS file")
+  message("Checking DAS file")
   
   ### Check event codes
   event.acc <- c("#", "*", 1, "A", "C", "E", "O", 
@@ -124,7 +137,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   ### Check lat/lon coordinates - coords added to 1 events in processed data
   lat.which <- which(!between(x.proc$Lat, -90, 90))
   lon.which <- which(!between(x.proc$Lat, -180, 1800))
-
+  
   error.out <- rbind(
     error.out,
     .check_list(x, x.lines, lat.which, "The latitude value is not between -90 and 90"), 

@@ -4,6 +4,8 @@
 
 * Added info messages to `airdas_check`, as well as a check for valid latitude and longitude values
 
+* Fixed a bug in `airdas_check` when checking multiple files
+
 
 # swfscAirDAS 0.2.0
 
