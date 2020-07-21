@@ -84,6 +84,7 @@
     
     
 <div class="sourceCode" id="cb1"><html><body><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">dplyr</span>)
+<span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">tibble</span>) <span class="co">#For printing output</span>
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">stringr</span>)
 <span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">swfscAirDAS</span>)</pre></body></html></div>
 <p>This document introduces you to the swfscAirDAS package. This package is intended to standardize and streamline processing of aerial survey DAS (AirDAS) data collected using the PHOCOENA, TURTLE, or CARETTA programs from the Southwest Fisheries Science Center. In DAS data (and thus AirDAS data), an event is only recorded when something changes or happens, which can complicate processing. Thus, the main theme of this package is enabling analyses and downstream processing by 1) determining associated state and condition information for each event and 2) pulling out event-specific information from the Data columns. The following examples generally use the default function arguments; see the documentation for the individual functions for a complete description of all processing options.</p>
@@ -113,72 +114,53 @@
 <p>Once QA/QC is complete and you have fixed any data entry errors, you can begin to process the AirDAS data. The backbone of this package is the reading and processing steps: 1) the data from the DAS file are read into the columns of a data frame and 2) state and condition information are extracted for each event. This means that after processing, you can simply look at any event (row) and determine the Beaufort, viewing conditions, etc., at the time of the event. All other functions in the package depend on the AirDAS data being in this processed state.</p>
 <div class="sourceCode" id="cb4"><html><body><pre class="r"><span class="co"># Read </span>
 <span class="no">y.read</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_read.html">airdas_read</a></span>(<span class="no">y</span>, <span class="kw">file.type</span> <span class="kw">=</span> <span class="st">"turtle"</span>, <span class="kw">skip</span> <span class="kw">=</span> <span class="fl">0</span>)
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.read</span>)
-<span class="co">#&gt; Registered S3 method overwritten by 'cli':</span>
-<span class="co">#&gt;   method     from    </span>
-<span class="co">#&gt;   print.boxx spatstat</span>
-<span class="co">#&gt; Rows: 88</span>
-<span class="co">#&gt; Columns: 16</span>
-<span class="co">#&gt; $ Event     &lt;chr&gt; "C", "C", "T", "V", "P", "A", "W", "*", "S", "S", "C", "S",…</span>
-<span class="co">#&gt; $ EffortDot &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRU…</span>
-<span class="co">#&gt; $ DateTime  &lt;dttm&gt; 2015-04-09 12:30:59, 2015-04-09 12:30:59, 2015-04-09 12:30…</span>
-<span class="co">#&gt; $ Lat       &lt;dbl&gt; 39.23550, 39.23550, 39.23550, 39.23550, 39.23550, 39.23550,…</span>
-<span class="co">#&gt; $ Lon       &lt;dbl&gt; -123.1563, -123.1563, -123.1563, -123.1563, -123.1563, -123…</span>
-<span class="co">#&gt; $ Data1     &lt;chr&gt; " Reco", " Not ", "T1", "g", "aa", "650", "n", NA, "1", "2"…</span>
-<span class="co">#&gt; $ Data2     &lt;chr&gt; "rder:", "recor", NA, "g", "bb", "100", "10", NA, "cc", "bb…</span>
-<span class="co">#&gt; $ Data3     &lt;chr&gt; " dd  ", "ding ", NA, "g", "cc", NA, "1", NA, "67", "-60", …</span>
-<span class="co">#&gt; $ Data4     &lt;chr&gt; NA, "molas", NA, "g", "dd", NA, "0", NA, "6", "6", NA, "2",…</span>
-<span class="co">#&gt; $ Data5     &lt;chr&gt; NA, NA, NA, "g", NA, NA, "6", NA, "mn", "mn", NA, "mn", NA,…</span>
-<span class="co">#&gt; $ Data6     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ Data7     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ EventNum  &lt;chr&gt; "  1", "  2", "  3", "  4", "  5", "  6", "  7", "  8", "  …</span>
-<span class="co">#&gt; $ file_das  &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.da…</span>
-<span class="co">#&gt; $ line_num  &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, …</span>
-<span class="co">#&gt; $ file_type &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "turtle",…</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.read</span>)
+<span class="co">#&gt;   Event EffortDot            DateTime     Lat       Lon Data1 Data2 Data3 Data4</span>
+<span class="co">#&gt; 1     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Reco rder:  dd    &lt;NA&gt;</span>
+<span class="co">#&gt; 2     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Not  recor ding  molas</span>
+<span class="co">#&gt; 3     T      TRUE 2015-04-09 12:30:59 39.2355 -123.1563    T1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;</span>
+<span class="co">#&gt; 4     V      TRUE 2015-04-09 12:30:59 39.2355 -123.1563     g     g     g     g</span>
+<span class="co">#&gt; 5     P      TRUE 2015-04-09 12:30:59 39.2355 -123.1563    aa    bb    cc    dd</span>
+<span class="co">#&gt; 6     A      TRUE 2015-04-09 12:30:59 39.2355 -123.1563   650   100  &lt;NA&gt;  &lt;NA&gt;</span>
+<span class="co">#&gt;   Data5 Data6 Data7 EventNum          file_das line_num file_type</span>
+<span class="co">#&gt; 1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        1 airdas_sample.das        1    turtle</span>
+<span class="co">#&gt; 2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        2 airdas_sample.das        2    turtle</span>
+<span class="co">#&gt; 3  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        3 airdas_sample.das        3    turtle</span>
+<span class="co">#&gt; 4     g  &lt;NA&gt;  &lt;NA&gt;        4 airdas_sample.das        4    turtle</span>
+<span class="co">#&gt; 5  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        5 airdas_sample.das        5    turtle</span>
+<span class="co">#&gt; 6  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        6 airdas_sample.das        6    turtle</span>
 
 <span class="co"># Process</span>
 <span class="no">y.proc</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_process.html">airdas_process</a></span>(<span class="no">y.read</span>, <span class="kw">trans.upper</span> <span class="kw">=</span> <span class="fl">TRUE</span>)
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.proc</span>)
-<span class="co">#&gt; Rows: 87</span>
-<span class="co">#&gt; Columns: 38</span>
-<span class="co">#&gt; $ Event     &lt;chr&gt; "C", "C", "T", "V", "P", "A", "W", "*", "S", "S", "C", "S",…</span>
-<span class="co">#&gt; $ DateTime  &lt;dttm&gt; 2015-04-09 12:30:59, 2015-04-09 12:30:59, 2015-04-09 12:30…</span>
-<span class="co">#&gt; $ Lat       &lt;dbl&gt; 39.23550, 39.23550, 39.23550, 39.23550, 39.23550, 39.23550,…</span>
-<span class="co">#&gt; $ Lon       &lt;dbl&gt; -123.1563, -123.1563, -123.1563, -123.1563, -123.1563, -123…</span>
-<span class="co">#&gt; $ OnEffort  &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRU…</span>
-<span class="co">#&gt; $ Trans     &lt;chr&gt; NA, NA, "T1", "T1", "T1", "T1", "T1", "T1", "T1", "T1", "T1…</span>
-<span class="co">#&gt; $ Bft       &lt;dbl&gt; NA, NA, NA, NA, NA, NA, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span>
-<span class="co">#&gt; $ CCover    &lt;dbl&gt; NA, NA, NA, NA, NA, NA, 10, 10, 10, 10, 10, 10, 10, 10, 10,…</span>
-<span class="co">#&gt; $ Jelly     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span>
-<span class="co">#&gt; $ HorizSun  &lt;dbl&gt; NA, NA, NA, NA, NA, NA, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6,…</span>
-<span class="co">#&gt; $ VertSun   &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ HKR       &lt;chr&gt; NA, NA, NA, NA, NA, NA, "n", "n", "n", "n", "n", "n", "n", …</span>
-<span class="co">#&gt; $ Haze      &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…</span>
-<span class="co">#&gt; $ Kelp      &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…</span>
-<span class="co">#&gt; $ RedTide   &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FAL…</span>
-<span class="co">#&gt; $ AltFt     &lt;dbl&gt; NA, NA, NA, NA, NA, 650, 650, 650, 650, 650, 650, 650, 650,…</span>
-<span class="co">#&gt; $ SpKnot    &lt;dbl&gt; NA, NA, NA, NA, NA, 100, 100, 100, 100, 100, 100, 100, 100,…</span>
-<span class="co">#&gt; $ ObsL      &lt;chr&gt; NA, NA, NA, NA, "aa", "aa", "aa", "aa", "aa", "aa", "aa", "…</span>
-<span class="co">#&gt; $ ObsB      &lt;chr&gt; NA, NA, NA, NA, "bb", "bb", "bb", "bb", "bb", "bb", "bb", "…</span>
-<span class="co">#&gt; $ ObsR      &lt;chr&gt; NA, NA, NA, NA, "cc", "cc", "cc", "cc", "cc", "cc", "cc", "…</span>
-<span class="co">#&gt; $ Rec       &lt;chr&gt; NA, NA, NA, NA, "dd", "dd", "dd", "dd", "dd", "dd", "dd", "…</span>
-<span class="co">#&gt; $ VLI       &lt;chr&gt; NA, NA, NA, "g", "g", "g", "g", "g", "g", "g", "g", "g", "g…</span>
-<span class="co">#&gt; $ VLO       &lt;chr&gt; NA, NA, NA, "g", "g", "g", "g", "g", "g", "g", "g", "g", "g…</span>
-<span class="co">#&gt; $ VB        &lt;chr&gt; NA, NA, NA, "g", "g", "g", "g", "g", "g", "g", "g", "g", "g…</span>
-<span class="co">#&gt; $ VRI       &lt;chr&gt; NA, NA, NA, "g", "g", "g", "g", "g", "g", "g", "g", "g", "g…</span>
-<span class="co">#&gt; $ VRO       &lt;chr&gt; NA, NA, NA, "g", "g", "g", "g", "g", "g", "g", "g", "g", "g…</span>
-<span class="co">#&gt; $ Data1     &lt;chr&gt; " Reco", " Not ", "T1", "g", "aa", "650", "n", NA, "1", "2"…</span>
-<span class="co">#&gt; $ Data2     &lt;chr&gt; "rder:", "recor", NA, "g", "bb", "100", "10", NA, "cc", "bb…</span>
-<span class="co">#&gt; $ Data3     &lt;chr&gt; " dd  ", "ding ", NA, "g", "cc", NA, "1", NA, "67", "-60", …</span>
-<span class="co">#&gt; $ Data4     &lt;chr&gt; NA, "molas", NA, "g", "dd", NA, "0", NA, "6", "6", NA, "2",…</span>
-<span class="co">#&gt; $ Data5     &lt;chr&gt; NA, NA, NA, "g", NA, NA, "6", NA, "mn", "mn", NA, "mn", NA,…</span>
-<span class="co">#&gt; $ Data6     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ Data7     &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA,…</span>
-<span class="co">#&gt; $ EffortDot &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRU…</span>
-<span class="co">#&gt; $ EventNum  &lt;chr&gt; "  1", "  2", "  3", "  4", "  5", "  6", "  7", "  8", "  …</span>
-<span class="co">#&gt; $ file_das  &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.da…</span>
-<span class="co">#&gt; $ line_num  &lt;int&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, …</span>
-<span class="co">#&gt; $ file_type &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "turtle",…</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.proc</span>)
+<span class="co">#&gt;   Event            DateTime     Lat       Lon OnEffort Trans Bft CCover Jelly</span>
+<span class="co">#&gt; 1     C 2015-04-09 12:30:59 39.2355 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 2     C 2015-04-09 12:30:59 39.2355 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 3     T 2015-04-09 12:30:59 39.2355 -123.1563     TRUE    T1  NA     NA    NA</span>
+<span class="co">#&gt; 4     V 2015-04-09 12:30:59 39.2355 -123.1563     TRUE    T1  NA     NA    NA</span>
+<span class="co">#&gt; 5     P 2015-04-09 12:30:59 39.2355 -123.1563     TRUE    T1  NA     NA    NA</span>
+<span class="co">#&gt; 6     A 2015-04-09 12:30:59 39.2355 -123.1563     TRUE    T1  NA     NA    NA</span>
+<span class="co">#&gt;   HorizSun VertSun  HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR  Rec</span>
+<span class="co">#&gt; 1       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 2       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 3       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 4       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 5       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA   aa   bb   cc   dd</span>
+<span class="co">#&gt; 6       NA      NA &lt;NA&gt; FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt;    VLI  VLO   VB  VRI  VRO Data1 Data2 Data3 Data4 Data5 Data6 Data7 EffortDot</span>
+<span class="co">#&gt; 1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Reco rder:  dd    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     FALSE</span>
+<span class="co">#&gt; 2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Not  recor ding  molas  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;     FALSE</span>
+<span class="co">#&gt; 3 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;    T1  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE</span>
+<span class="co">#&gt; 4    g    g    g    g    g     g     g     g     g     g  &lt;NA&gt;  &lt;NA&gt;      TRUE</span>
+<span class="co">#&gt; 5    g    g    g    g    g    aa    bb    cc    dd  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE</span>
+<span class="co">#&gt; 6    g    g    g    g    g   650   100  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE</span>
+<span class="co">#&gt;   EventNum          file_das line_num file_type</span>
+<span class="co">#&gt; 1        1 airdas_sample.das        1    turtle</span>
+<span class="co">#&gt; 2        2 airdas_sample.das        2    turtle</span>
+<span class="co">#&gt; 3        3 airdas_sample.das        3    turtle</span>
+<span class="co">#&gt; 4        4 airdas_sample.das        4    turtle</span>
+<span class="co">#&gt; 5        5 airdas_sample.das        5    turtle</span>
+<span class="co">#&gt; 6        6 airdas_sample.das        6    turtle</span></pre></body></html></div>
 <p>Once you have processed the AirDAS data, you can easily access a variety of information. For instance, you can look at the different Beaufort values that occurred in the data, or filter for specific events to get the beginning and ending points of each effort section.</p>
 <div class="sourceCode" id="cb5"><html><body><pre class="r"><span class="co"># The number of events per Beaufort value</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span>(<span class="no">y.proc</span>$<span class="no">Bft</span>)
@@ -206,21 +188,21 @@
 
 <span class="no">y.sight</span> <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="no">Event</span>, <span class="no">SightNo</span>:<span class="no">TurtleTail</span>) <span class="kw">%&gt;%</span>
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()
-<span class="co">#&gt; Rows: 28</span>
-<span class="co">#&gt; Columns: 12</span>
-<span class="co">#&gt; $ Event           &lt;chr&gt; "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"…</span>
-<span class="co">#&gt; $ SightNo         &lt;chr&gt; "1", "2", "3", "4", "5", "6", "6", "7", "8", "9", "10…</span>
-<span class="co">#&gt; $ Obs             &lt;chr&gt; "cc", "bb", "cc", "aa", "cc", "cc", "cc", "aa", "dd",…</span>
-<span class="co">#&gt; $ Angle           &lt;dbl&gt; 67, -60, 38, -50, 49, 42, 42, -53, 24, -57, 65, -20, …</span>
-<span class="co">#&gt; $ SightStd        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
-<span class="co">#&gt; $ Mixed           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE,…</span>
-<span class="co">#&gt; $ SpCode          &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
-<span class="co">#&gt; $ GsTotal         &lt;dbl&gt; 6, 6, 2, 5, 4, 10, 10, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, …</span>
-<span class="co">#&gt; $ GsSp            &lt;dbl&gt; 6, 6, 2, 5, 4, 8, 2, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, 6,…</span>
-<span class="co">#&gt; $ TurtleSize      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
-<span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
-<span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span></pre></body></html></div>
+  <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>()
+<span class="co">#&gt;   Event SightNo Obs Angle SightStd Mixed SpCode GsTotal GsSp TurtleSize</span>
+<span class="co">#&gt; 1     S       1  cc    67     TRUE FALSE     mn       6    6         NA</span>
+<span class="co">#&gt; 2     S       2  bb   -60     TRUE FALSE     mn       6    6         NA</span>
+<span class="co">#&gt; 3     S       3  cc    38     TRUE FALSE     mn       2    2         NA</span>
+<span class="co">#&gt; 4     S       4  aa   -50     TRUE FALSE     mn       5    5         NA</span>
+<span class="co">#&gt; 5     S       5  cc    49     TRUE FALSE     bm       4    4         NA</span>
+<span class="co">#&gt; 6     S       6  cc    42     TRUE  TRUE     gg      10    8         NA</span>
+<span class="co">#&gt;   TurtleDirection TurtleTail</span>
+<span class="co">#&gt; 1              NA       &lt;NA&gt;</span>
+<span class="co">#&gt; 2              NA       &lt;NA&gt;</span>
+<span class="co">#&gt; 3              NA       &lt;NA&gt;</span>
+<span class="co">#&gt; 4              NA       &lt;NA&gt;</span>
+<span class="co">#&gt; 5              NA       &lt;NA&gt;</span>
+<span class="co">#&gt; 6              NA       &lt;NA&gt;</span></pre></body></html></div>
 </div>
 <div id="effort" class="section level2">
 <h2 class="hasAnchor">
@@ -235,85 +217,72 @@
 )
 <span class="no">y.eff.sight</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort_sight.html">airdas_effort_sight</a></span>(<span class="no">y.eff</span>, <span class="kw">sp.codes</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"bm"</span>, <span class="st">"dc"</span>))
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">segdata</span>)
-<span class="co">#&gt; Rows: 7</span>
-<span class="co">#&gt; Columns: 26</span>
-<span class="co">#&gt; $ segnum         &lt;int&gt; 1, 2, 3, 4, 5, 6, 7</span>
-<span class="co">#&gt; $ section_id     &lt;int&gt; 1, 1, 2, 2, 2, 3, 3</span>
-<span class="co">#&gt; $ section_sub_id &lt;dbl&gt; 1, 2, 1, 2, 3, 1, 2</span>
-<span class="co">#&gt; $ event          &lt;chr&gt; "T", "T", "R", "R", "R", "T", "T"</span>
-<span class="co">#&gt; $ transect       &lt;chr&gt; "T1", "T1", "T1", "T1", "T1", "T2", "T2"</span>
-<span class="co">#&gt; $ file           &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_samp…</span>
-<span class="co">#&gt; $ stlin          &lt;int&gt; 3, 36, 40, 41, 44, 53, 78</span>
-<span class="co">#&gt; $ endlin         &lt;int&gt; 36, 37, 41, 44, 49, 78, 88</span>
-<span class="co">#&gt; $ lat1           &lt;dbl&gt; 39.23550, 39.23400, 39.23400, 39.23333, 39.23317, 39.2…</span>
-<span class="co">#&gt; $ lon1           &lt;dbl&gt; -123.1563, -123.4033, -123.4742, -123.4914, -123.5143,…</span>
-<span class="co">#&gt; $ lat2           &lt;dbl&gt; 39.23400, 39.23400, 39.23333, 39.23317, 39.23283, 39.2…</span>
-<span class="co">#&gt; $ lon2           &lt;dbl&gt; -123.4033, -123.4047, -123.4914, -123.5143, -123.6032,…</span>
-<span class="co">#&gt; $ mlat           &lt;dbl&gt; 39.23309, 39.23400, 39.23367, 39.23317, 39.23245, 39.2…</span>
-<span class="co">#&gt; $ mlon           &lt;dbl&gt; -123.2797, -123.4040, -123.4828, -123.5029, -123.5588,…</span>
-<span class="co">#&gt; $ dist           &lt;dbl&gt; 21.2882, 0.1148, 1.4937, 1.9657, 7.6620, 21.3146, 10.2…</span>
-<span class="co">#&gt; $ mDateTime      &lt;dttm&gt; 2015-04-09 12:34:28, 2015-04-09 12:37:58, 2015-04-09 …</span>
-<span class="co">#&gt; $ year           &lt;dbl&gt; 2015, 2015, 2015, 2015, 2015, 2015, 2015</span>
-<span class="co">#&gt; $ month          &lt;dbl&gt; 4, 4, 4, 4, 4, 4, 4</span>
-<span class="co">#&gt; $ day            &lt;int&gt; 9, 9, 9, 9, 9, 9, 9</span>
-<span class="co">#&gt; $ mtime          &lt;chr&gt; "12:34:28", "12:37:58", "12:40:14", "12:40:48", "12:42…</span>
-<span class="co">#&gt; $ maxdistBft     &lt;dbl&gt; 1, 2, 2, 2, 1, 1, 2</span>
-<span class="co">#&gt; $ maxdistCCover  &lt;dbl&gt; 10, 10, 10, 20, 20, 20, 20</span>
-<span class="co">#&gt; $ nSI_bm         &lt;dbl&gt; 3, 0, 0, 0, 0, 3, 0</span>
-<span class="co">#&gt; $ ANI_bm         &lt;dbl&gt; 11, 0, 0, 0, 0, 13, 0</span>
-<span class="co">#&gt; $ nSI_dc         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
-<span class="co">#&gt; $ ANI_dc         &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.eff.sight</span>$<span class="no">segdata</span>)
+<span class="co">#&gt;   segnum section_id section_sub_id event transect              file stlin</span>
+<span class="co">#&gt; 1      1          1              1     T       T1 airdas_sample.das     3</span>
+<span class="co">#&gt; 2      2          1              2     T       T1 airdas_sample.das    36</span>
+<span class="co">#&gt; 3      3          2              1     R       T1 airdas_sample.das    40</span>
+<span class="co">#&gt; 4      4          2              2     R       T1 airdas_sample.das    41</span>
+<span class="co">#&gt; 5      5          2              3     R       T1 airdas_sample.das    44</span>
+<span class="co">#&gt; 6      6          3              1     T       T2 airdas_sample.das    53</span>
+<span class="co">#&gt;   endlin     lat1      lon1     lat2      lon2     mlat      mlon    dist</span>
+<span class="co">#&gt; 1     36 39.23550 -123.1563 39.23400 -123.4033 39.23309 -123.2797 21.2882</span>
+<span class="co">#&gt; 2     37 39.23400 -123.4033 39.23400 -123.4047 39.23400 -123.4040  0.1148</span>
+<span class="co">#&gt; 3     41 39.23400 -123.4742 39.23333 -123.4914 39.23367 -123.4828  1.4937</span>
+<span class="co">#&gt; 4     44 39.23333 -123.4914 39.23317 -123.5143 39.23317 -123.5029  1.9657</span>
+<span class="co">#&gt; 5     49 39.23317 -123.5143 39.23283 -123.6032 39.23245 -123.5588  7.6620</span>
+<span class="co">#&gt; 6     78 39.22000 -123.6078 39.21683 -123.3605 39.21667 -123.4842 21.3146</span>
+<span class="co">#&gt;             mDateTime year month day    mtime maxdistBft maxdistCCover nSI_bm</span>
+<span class="co">#&gt; 1 2015-04-09 12:34:28 2015     4   9 12:34:28          1            10      3</span>
+<span class="co">#&gt; 2 2015-04-09 12:37:58 2015     4   9 12:37:58          2            10      0</span>
+<span class="co">#&gt; 3 2015-04-09 12:40:14 2015     4   9 12:40:14          2            10      0</span>
+<span class="co">#&gt; 4 2015-04-09 12:40:48 2015     4   9 12:40:48          2            20      0</span>
+<span class="co">#&gt; 5 2015-04-09 12:42:25 2015     4   9 12:42:25          1            20      0</span>
+<span class="co">#&gt; 6 2015-04-09 12:50:27 2015     4   9 12:50:27          1            20      3</span>
+<span class="co">#&gt;   ANI_bm nSI_dc ANI_dc</span>
+<span class="co">#&gt; 1     11      1      1</span>
+<span class="co">#&gt; 2      0      0      0</span>
+<span class="co">#&gt; 3      0      0      0</span>
+<span class="co">#&gt; 4      0      0      0</span>
+<span class="co">#&gt; 5      0      0      0</span>
+<span class="co">#&gt; 6     13      0      0</span>
 
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.eff.sight</span>$<span class="no">sightinfo</span>)
-<span class="co">#&gt; Rows: 27</span>
-<span class="co">#&gt; Columns: 46</span>
-<span class="co">#&gt; $ segnum          &lt;int&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 6,…</span>
-<span class="co">#&gt; $ mlat            &lt;dbl&gt; 39.23309, 39.23309, 39.23309, 39.23309, 39.23309, 39.…</span>
-<span class="co">#&gt; $ mlon            &lt;dbl&gt; -123.2797, -123.2797, -123.2797, -123.2797, -123.2797…</span>
-<span class="co">#&gt; $ Event           &lt;chr&gt; "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"…</span>
-<span class="co">#&gt; $ DateTime        &lt;dttm&gt; 2015-04-09 12:31:35, 2015-04-09 12:31:47, 2015-04-09…</span>
-<span class="co">#&gt; $ Lat             &lt;dbl&gt; 39.23367, 39.23350, 39.23333, 39.23233, 39.23233, 39.…</span>
-<span class="co">#&gt; $ Lon             &lt;dbl&gt; -123.1783, -123.1857, -123.1917, -123.2053, -123.2108…</span>
-<span class="co">#&gt; $ OnEffort        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
-<span class="co">#&gt; $ Trans           &lt;chr&gt; "T1", "T1", "T1", "T1", "T1", "T1", "T1", "T1", "T1",…</span>
-<span class="co">#&gt; $ Bft             &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,…</span>
-<span class="co">#&gt; $ CCover          &lt;dbl&gt; 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 1…</span>
-<span class="co">#&gt; $ Jelly           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 2, 2, 2, 2, 0, 0,…</span>
-<span class="co">#&gt; $ HorizSun        &lt;dbl&gt; 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 12…</span>
-<span class="co">#&gt; $ VertSun         &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, N…</span>
-<span class="co">#&gt; $ HKR             &lt;chr&gt; "n", "n", "n", "n", "n", "n", "n", "n", "r", "r", "r"…</span>
-<span class="co">#&gt; $ Haze            &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span>
-<span class="co">#&gt; $ Kelp            &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span>
-<span class="co">#&gt; $ RedTide         &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALS…</span>
-<span class="co">#&gt; $ AltFt           &lt;dbl&gt; 650, 650, 650, 650, 650, 650, 650, 650, 650, 650, 650…</span>
-<span class="co">#&gt; $ SpKnot          &lt;dbl&gt; 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100…</span>
-<span class="co">#&gt; $ ObsL            &lt;chr&gt; "aa", "aa", "aa", "aa", "aa", "aa", "aa", "aa", "aa",…</span>
-<span class="co">#&gt; $ ObsB            &lt;chr&gt; "bb", "bb", "bb", "bb", "bb", "bb", "bb", "bb", "bb",…</span>
-<span class="co">#&gt; $ ObsR            &lt;chr&gt; "cc", "cc", "cc", "cc", "cc", "cc", "cc", "cc", "cc",…</span>
-<span class="co">#&gt; $ Rec             &lt;chr&gt; "dd", "dd", "dd", "dd", "dd", "dd", "dd", "dd", "dd",…</span>
-<span class="co">#&gt; $ VLI             &lt;chr&gt; "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"…</span>
-<span class="co">#&gt; $ VLO             &lt;chr&gt; "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"…</span>
-<span class="co">#&gt; $ VB              &lt;chr&gt; "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"…</span>
-<span class="co">#&gt; $ VRI             &lt;chr&gt; "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"…</span>
-<span class="co">#&gt; $ VRO             &lt;chr&gt; "g", "g", "g", "g", "g", "g", "g", "g", "g", "g", "g"…</span>
-<span class="co">#&gt; $ EffortDot       &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
-<span class="co">#&gt; $ EventNum        &lt;chr&gt; "  9", " 10", " 12", " 14", " 15", " 16", " 16", " 18…</span>
-<span class="co">#&gt; $ file_das        &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sam…</span>
-<span class="co">#&gt; $ line_num        &lt;int&gt; 9, 10, 12, 14, 15, 16, 16, 19, 24, 27, 28, 29, 30, 32…</span>
-<span class="co">#&gt; $ file_type       &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "tu…</span>
-<span class="co">#&gt; $ SightNo         &lt;chr&gt; "1", "2", "3", "4", "5", "6", "6", "7", "8", "9", "10…</span>
-<span class="co">#&gt; $ Obs             &lt;chr&gt; "cc", "bb", "cc", "aa", "cc", "cc", "cc", "aa", "dd",…</span>
-<span class="co">#&gt; $ Angle           &lt;dbl&gt; 67, -60, 38, -50, 49, 42, 42, -53, 24, -57, 65, -20, …</span>
-<span class="co">#&gt; $ SightStd        &lt;lgl&gt; TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE, TRUE,…</span>
-<span class="co">#&gt; $ Mixed           &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, TRUE, TRUE, FALSE,…</span>
-<span class="co">#&gt; $ SpCode          &lt;chr&gt; "mn", "mn", "mn", "mn", "bm", "gg", "er", "bm", "bm",…</span>
-<span class="co">#&gt; $ GsTotal         &lt;dbl&gt; 6, 6, 2, 5, 4, 10, 10, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, …</span>
-<span class="co">#&gt; $ GsSp            &lt;dbl&gt; 6, 6, 2, 5, 4, 8, 2, 5, 2, 4, 5, 1, 3, 5, 6, 2, 3, 6,…</span>
-<span class="co">#&gt; $ TurtleSize      &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 5, NA, NA…</span>
-<span class="co">#&gt; $ TurtleDirection &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, 90, NA, N…</span>
-<span class="co">#&gt; $ TurtleTail      &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "n", NA, …</span>
-<span class="co">#&gt; $ included        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, TRUE, FALSE, FALSE, TRUE,…</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.eff.sight</span>$<span class="no">sightinfo</span>)
+<span class="co">#&gt;   segnum     mlat      mlon Event            DateTime      Lat       Lon</span>
+<span class="co">#&gt; 1      1 39.23309 -123.2797     S 2015-04-09 12:31:35 39.23367 -123.1783</span>
+<span class="co">#&gt; 2      1 39.23309 -123.2797     S 2015-04-09 12:31:47 39.23350 -123.1857</span>
+<span class="co">#&gt; 3      1 39.23309 -123.2797     S 2015-04-09 12:31:56 39.23333 -123.1917</span>
+<span class="co">#&gt; 4      1 39.23309 -123.2797     S 2015-04-09 12:32:20 39.23233 -123.2053</span>
+<span class="co">#&gt; 5      1 39.23309 -123.2797     S 2015-04-09 12:32:30 39.23233 -123.2108</span>
+<span class="co">#&gt; 6      1 39.23309 -123.2797     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="co">#&gt;   OnEffort Trans Bft CCover Jelly HorizSun VertSun HKR  Haze  Kelp RedTide</span>
+<span class="co">#&gt; 1     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt; 2     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt; 3     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt; 4     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt; 5     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt; 6     TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="co">#&gt;   AltFt SpKnot ObsL ObsB ObsR Rec VLI VLO VB VRI VRO EffortDot EventNum</span>
+<span class="co">#&gt; 1   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE        9</span>
+<span class="co">#&gt; 2   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE       10</span>
+<span class="co">#&gt; 3   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE       12</span>
+<span class="co">#&gt; 4   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE       14</span>
+<span class="co">#&gt; 5   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE       15</span>
+<span class="co">#&gt; 6   650    100   aa   bb   cc  dd   g   g  g   g   g      TRUE       16</span>
+<span class="co">#&gt;            file_das line_num file_type SightNo Obs Angle SightStd Mixed SpCode</span>
+<span class="co">#&gt; 1 airdas_sample.das        9    turtle       1  cc    67     TRUE FALSE     mn</span>
+<span class="co">#&gt; 2 airdas_sample.das       10    turtle       2  bb   -60     TRUE FALSE     mn</span>
+<span class="co">#&gt; 3 airdas_sample.das       12    turtle       3  cc    38     TRUE FALSE     mn</span>
+<span class="co">#&gt; 4 airdas_sample.das       14    turtle       4  aa   -50     TRUE FALSE     mn</span>
+<span class="co">#&gt; 5 airdas_sample.das       15    turtle       5  cc    49     TRUE FALSE     bm</span>
+<span class="co">#&gt; 6 airdas_sample.das       16    turtle       6  cc    42     TRUE  TRUE     gg</span>
+<span class="co">#&gt;   GsTotal GsSp TurtleSize TurtleDirection TurtleTail included</span>
+<span class="co">#&gt; 1       6    6         NA              NA       &lt;NA&gt;    FALSE</span>
+<span class="co">#&gt; 2       6    6         NA              NA       &lt;NA&gt;    FALSE</span>
+<span class="co">#&gt; 3       2    2         NA              NA       &lt;NA&gt;    FALSE</span>
+<span class="co">#&gt; 4       5    5         NA              NA       &lt;NA&gt;    FALSE</span>
+<span class="co">#&gt; 5       4    4         NA              NA       &lt;NA&gt;     TRUE</span>
+<span class="co">#&gt; 6      10    8         NA              NA       &lt;NA&gt;    FALSE</span></pre></body></html></div>
 <p>If you wanted to determine the number of humpback whales on each transect with a sighting angle between -60 and 60 degrees, for instance, you could do the following</p>
 <div class="sourceCode" id="cb8"><html><body><pre class="r"><span class="co"># 'Chop' the effort by continuous effort section</span>
 <span class="no">y.eff.section</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_effort.html">airdas_effort</a></span>(
@@ -329,13 +298,12 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="kw">transect_id</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html">cumsum</a></span>(<span class="no">.data</span>$<span class="no">event</span> <span class="kw">==</span> <span class="st">"T"</span>)) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html">group_by</a></span>(<span class="no">transect_id</span>) <span class="kw">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span>(<span class="kw">dist_sum</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">dist</span>),
-            <span class="kw">mn_count</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ANI_mn</span>))
+            <span class="kw">mn_count</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span>(<span class="no">ANI_mn</span>)) <span class="kw">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span>() <span class="co">#for printing format</span>
 <span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
-<span class="co">#&gt; # A tibble: 2 x 3</span>
 <span class="co">#&gt;   transect_id dist_sum mn_count</span>
-<span class="co">#&gt;         &lt;int&gt;    &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1           1     32.5       20</span>
-<span class="co">#&gt; 2           2     31.5       18</span></pre></body></html></div>
+<span class="co">#&gt; 1           1  32.5244       20</span>
+<span class="co">#&gt; 2           2  31.5482       18</span></pre></body></html></div>
 <p>In this example you could also simply group by the <code>transect</code> column, but that structure is not robust to analyzing multi-year data sets where the same transects are flown multiple times.</p>
 </div>
 <div id="comments" class="section level2">
@@ -344,48 +312,42 @@
 <p>In AirDAS data, comments are a catch-all field, meaning they are used to record information that does not fit neatly into the AirDAS framework. For instance, users will often enter a comment indicating if they are or are not recording extra information such as mola mola sightings. Again, this information is not recorded in a systematic way, but you can still use swfscAirDAS functions to determine this information.</p>
 <p>A comment indicating whether or not something is being recorded will likely contain “record” somewhere in the comment. Thus, you can use <code>airdas_comments</code> to extract comments, and then subset for comments that contain the pattern “record”.</p>
 <div class="sourceCode" id="cb9"><html><body><pre class="r"><span class="no">y.comm</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/airdas_comments.html">airdas_comments</a></span>(<span class="no">y.proc</span>)
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="no">y.comm</span>)
-<span class="co">#&gt; Rows: 10</span>
-<span class="co">#&gt; Columns: 39</span>
-<span class="co">#&gt; $ Event       &lt;chr&gt; "C", "C", "C", "C", "C", "C", "C", "C", "C", "C"</span>
-<span class="co">#&gt; $ DateTime    &lt;dttm&gt; 2015-04-09 12:30:59, 2015-04-09 12:30:59, 2015-04-09 12:…</span>
-<span class="co">#&gt; $ Lat         &lt;dbl&gt; 39.23550, 39.23550, 39.23350, 39.23317, 39.23317, 39.2340…</span>
-<span class="co">#&gt; $ Lon         &lt;dbl&gt; -123.1563, -123.1563, -123.1857, -123.2968, -123.3178, -1…</span>
-<span class="co">#&gt; $ OnEffort    &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, …</span>
-<span class="co">#&gt; $ Trans       &lt;chr&gt; NA, NA, "T1", "T1", "T1", "T1", "T1", "T1", "T2", "T2"</span>
-<span class="co">#&gt; $ Bft         &lt;dbl&gt; NA, NA, 1, 1, 1, 2, 2, 1, 1, 2</span>
-<span class="co">#&gt; $ CCover      &lt;dbl&gt; NA, NA, 10, 10, 10, 10, 20, 20, 20, 20</span>
-<span class="co">#&gt; $ Jelly       &lt;dbl&gt; NA, NA, 0, 2, 2, 0, 0, 0, 0, 0</span>
-<span class="co">#&gt; $ HorizSun    &lt;dbl&gt; NA, NA, 6, 6, 6, 6, 6, 6, 12, 12</span>
-<span class="co">#&gt; $ VertSun     &lt;dbl&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA</span>
-<span class="co">#&gt; $ HKR         &lt;chr&gt; NA, NA, "n", "r", "r", "n", "n", "n", "n", "r"</span>
-<span class="co">#&gt; $ Haze        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span>
-<span class="co">#&gt; $ Kelp        &lt;lgl&gt; FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, F…</span>
-<span class="co">#&gt; $ RedTide     &lt;lgl&gt; FALSE, FALSE, FALSE, TRUE, TRUE, FALSE, FALSE, FALSE, FAL…</span>
-<span class="co">#&gt; $ AltFt       &lt;dbl&gt; NA, NA, 650, 650, 650, 650, 650, 650, 680, 680</span>
-<span class="co">#&gt; $ SpKnot      &lt;dbl&gt; NA, NA, 100, 100, 100, 100, 100, 100, 90, 90</span>
-<span class="co">#&gt; $ ObsL        &lt;chr&gt; NA, NA, "aa", "aa", "aa", "aa", "aa", "aa", "aa", "aa"</span>
-<span class="co">#&gt; $ ObsB        &lt;chr&gt; NA, NA, "bb", "bb", "bb", "bb", "bb", "bb", "dd", "dd"</span>
-<span class="co">#&gt; $ ObsR        &lt;chr&gt; NA, NA, "cc", "cc", "cc", "cc", "cc", "cc", "cc", "cc"</span>
-<span class="co">#&gt; $ Rec         &lt;chr&gt; NA, NA, "dd", "dd", "dd", "dd", "dd", "dd", "bb", "bb"</span>
-<span class="co">#&gt; $ VLI         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
-<span class="co">#&gt; $ VLO         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
-<span class="co">#&gt; $ VB          &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "p"</span>
-<span class="co">#&gt; $ VRI         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
-<span class="co">#&gt; $ VRO         &lt;chr&gt; NA, NA, "g", "g", "g", "g", "g", "g", "g", "g"</span>
-<span class="co">#&gt; $ Data1       &lt;chr&gt; " Reco", " Not ", " 2 cp", " stre", " shar", " off ", " w…</span>
-<span class="co">#&gt; $ Data2       &lt;chr&gt; "rder:", "recor", NA, "aky r", "k 11f", "effor", "r got",…</span>
-<span class="co">#&gt; $ Data3       &lt;chr&gt; " dd  ", "ding ", NA, "ed ti", "t    ", "t to ", " more",…</span>
-<span class="co">#&gt; $ Data4       &lt;chr&gt; NA, "molas", NA, "de   ", NA, "circl", " blue", NA, " gla…</span>
-<span class="co">#&gt; $ Data5       &lt;chr&gt; NA, NA, NA, NA, NA, "e on ", NA, NA, "e    ", NA</span>
-<span class="co">#&gt; $ Data6       &lt;chr&gt; NA, NA, NA, NA, NA, "unide", NA, NA, NA, NA</span>
-<span class="co">#&gt; $ Data7       &lt;chr&gt; NA, NA, NA, NA, NA, "ntifed object  ", NA, NA, NA, NA</span>
-<span class="co">#&gt; $ EffortDot   &lt;lgl&gt; FALSE, FALSE, TRUE, TRUE, TRUE, FALSE, TRUE, TRUE, TRUE, …</span>
-<span class="co">#&gt; $ EventNum    &lt;chr&gt; "  1", "  2", " 11", " 21", " 24", " 37", " 41", " 45", "…</span>
-<span class="co">#&gt; $ file_das    &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.…</span>
-<span class="co">#&gt; $ line_num    &lt;int&gt; 1, 2, 11, 22, 25, 38, 42, 46, 73, 84</span>
-<span class="co">#&gt; $ file_type   &lt;chr&gt; "turtle", "turtle", "turtle", "turtle", "turtle", "turtle…</span>
-<span class="co">#&gt; $ comment_str &lt;chr&gt; " Recorder: dd  ", " Not recording molas", " 2 cp", " str…</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="no">y.comm</span>)
+<span class="co">#&gt;   Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
+<span class="co">#&gt; 1     C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 2     C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 3     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0</span>
+<span class="co">#&gt; 4     C 2015-04-09 12:34:56 39.23317 -123.2968     TRUE    T1   1     10     2</span>
+<span class="co">#&gt; 5     C 2015-04-09 12:35:32 39.23317 -123.3178     TRUE    T1   1     10     2</span>
+<span class="co">#&gt; 6     C 2015-04-09 12:38:00 39.23400 -123.4047    FALSE    T1   2     10     0</span>
+<span class="co">#&gt;   HorizSun VertSun  HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR  Rec</span>
+<span class="co">#&gt; 1       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 2       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 3        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 4        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 5        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 6        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt;    VLI  VLO   VB  VRI  VRO Data1 Data2 Data3 Data4 Data5 Data6           Data7</span>
+<span class="co">#&gt; 1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Reco rder:  dd    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Not  recor ding  molas  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 3    g    g    g    g    g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 4    g    g    g    g    g  stre aky r ed ti de     &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 5    g    g    g    g    g  shar k 11f t      &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 6    g    g    g    g    g  off  effor t to  circl e on  unide ntifed object  </span>
+<span class="co">#&gt;   EffortDot EventNum          file_das line_num file_type</span>
+<span class="co">#&gt; 1     FALSE        1 airdas_sample.das        1    turtle</span>
+<span class="co">#&gt; 2     FALSE        2 airdas_sample.das        2    turtle</span>
+<span class="co">#&gt; 3      TRUE       11 airdas_sample.das       11    turtle</span>
+<span class="co">#&gt; 4      TRUE       21 airdas_sample.das       22    turtle</span>
+<span class="co">#&gt; 5      TRUE       24 airdas_sample.das       25    turtle</span>
+<span class="co">#&gt; 6     FALSE       37 airdas_sample.das       38    turtle</span>
+<span class="co">#&gt;                                     comment_str</span>
+<span class="co">#&gt; 1                                Recorder: dd  </span>
+<span class="co">#&gt; 2                           Not recording molas</span>
+<span class="co">#&gt; 3                                          2 cp</span>
+<span class="co">#&gt; 4                           streaky red tide   </span>
+<span class="co">#&gt; 5                                shark 11ft    </span>
+<span class="co">#&gt; 6  off effort to circle on unidentifed object</span>
 
 <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span>(<span class="no">y.comm</span>$<span class="no">comment_str</span>, <span class="st">"record"</span>) <span class="co">#Could also use grepl() here</span>
 <span class="co">#&gt; [1] " Not recording molas"</span></pre></body></html></div>
@@ -397,52 +359,27 @@
 )
 
 <span class="co"># TURTLE/PHOCOENA comment-data</span>
-<span class="fu"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>(<span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>))
-<span class="co">#&gt; Rows: 3</span>
-<span class="co">#&gt; Columns: 43</span>
-<span class="co">#&gt; $ Event       &lt;chr&gt; "C", "C", "C"</span>
-<span class="co">#&gt; $ DateTime    &lt;dttm&gt; 2015-04-09 12:31:48, 2015-04-09 12:42:01, 2015-04-09 12:…</span>
-<span class="co">#&gt; $ Lat         &lt;dbl&gt; 39.23350, 39.23267, 39.23267</span>
-<span class="co">#&gt; $ Lon         &lt;dbl&gt; -123.1857, -123.5433, -123.5433</span>
-<span class="co">#&gt; $ OnEffort    &lt;lgl&gt; TRUE, TRUE, TRUE</span>
-<span class="co">#&gt; $ Trans       &lt;chr&gt; "T1", "T1", "T1"</span>
-<span class="co">#&gt; $ Bft         &lt;dbl&gt; 1, 1, 1</span>
-<span class="co">#&gt; $ CCover      &lt;dbl&gt; 10, 20, 20</span>
-<span class="co">#&gt; $ Jelly       &lt;dbl&gt; 0, 0, 0</span>
-<span class="co">#&gt; $ HorizSun    &lt;dbl&gt; 6, 6, 6</span>
-<span class="co">#&gt; $ VertSun     &lt;dbl&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ HKR         &lt;chr&gt; "n", "n", "n"</span>
-<span class="co">#&gt; $ Haze        &lt;lgl&gt; FALSE, FALSE, FALSE</span>
-<span class="co">#&gt; $ Kelp        &lt;lgl&gt; FALSE, FALSE, FALSE</span>
-<span class="co">#&gt; $ RedTide     &lt;lgl&gt; FALSE, FALSE, FALSE</span>
-<span class="co">#&gt; $ AltFt       &lt;dbl&gt; 650, 650, 650</span>
-<span class="co">#&gt; $ SpKnot      &lt;dbl&gt; 100, 100, 100</span>
-<span class="co">#&gt; $ ObsL        &lt;chr&gt; "aa", "aa", "aa"</span>
-<span class="co">#&gt; $ ObsB        &lt;chr&gt; "bb", "bb", "bb"</span>
-<span class="co">#&gt; $ ObsR        &lt;chr&gt; "cc", "cc", "cc"</span>
-<span class="co">#&gt; $ Rec         &lt;chr&gt; "dd", "dd", "dd"</span>
-<span class="co">#&gt; $ VLI         &lt;chr&gt; "g", "g", "g"</span>
-<span class="co">#&gt; $ VLO         &lt;chr&gt; "g", "g", "g"</span>
-<span class="co">#&gt; $ VB          &lt;chr&gt; "g", "g", "g"</span>
-<span class="co">#&gt; $ VRI         &lt;chr&gt; "g", "g", "g"</span>
-<span class="co">#&gt; $ VRO         &lt;chr&gt; "g", "g", "g"</span>
-<span class="co">#&gt; $ Data1       &lt;chr&gt; " 2 cp", " fb2s", " fb2s"</span>
-<span class="co">#&gt; $ Data2       &lt;chr&gt; NA, " fb1m", " fb1m"</span>
-<span class="co">#&gt; $ Data3       &lt;chr&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ Data4       &lt;chr&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ Data5       &lt;chr&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ Data6       &lt;chr&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ Data7       &lt;chr&gt; NA, NA, NA</span>
-<span class="co">#&gt; $ EffortDot   &lt;lgl&gt; TRUE, TRUE, TRUE</span>
-<span class="co">#&gt; $ EventNum    &lt;chr&gt; " 11", " 45", " 45"</span>
-<span class="co">#&gt; $ file_das    &lt;chr&gt; "airdas_sample.das", "airdas_sample.das", "airdas_sample.…</span>
-<span class="co">#&gt; $ line_num    &lt;int&gt; 11, 46, 46</span>
-<span class="co">#&gt; $ file_type   &lt;chr&gt; "turtle", "turtle", "turtle"</span>
-<span class="co">#&gt; $ comment_str &lt;chr&gt; " 2 cp", " fb2s fb1m", " fb2s fb1m"</span>
-<span class="co">#&gt; $ Misc1       &lt;chr&gt; "crab pot", "fish ball", "fish ball"</span>
-<span class="co">#&gt; $ Misc2       &lt;chr&gt; NA, "s", "m"</span>
-<span class="co">#&gt; $ Value       &lt;dbl&gt; 2, 2, 1</span>
-<span class="co">#&gt; $ flag_check  &lt;lgl&gt; FALSE, FALSE, FALSE</span></pre></body></html></div>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span>(<span class="fu"><a href="../reference/airdas_comments_process.html">airdas_comments_process</a></span>(<span class="no">y.proc</span>))
+<span class="co">#&gt;   Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
+<span class="co">#&gt; 1     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0</span>
+<span class="co">#&gt; 2     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0</span>
+<span class="co">#&gt; 3     C 2015-04-09 12:42:01 39.23267 -123.5433     TRUE    T1   1     20     0</span>
+<span class="co">#&gt;   HorizSun VertSun HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR Rec VLI</span>
+<span class="co">#&gt; 1        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
+<span class="co">#&gt; 2        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
+<span class="co">#&gt; 3        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
+<span class="co">#&gt;   VLO VB VRI VRO Data1 Data2 Data3 Data4 Data5 Data6 Data7 EffortDot EventNum</span>
+<span class="co">#&gt; 1   g  g   g   g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       11</span>
+<span class="co">#&gt; 2   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45</span>
+<span class="co">#&gt; 3   g  g   g   g  fb2s  fb1m  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;      TRUE       45</span>
+<span class="co">#&gt;            file_das line_num file_type comment_str     Misc1 Misc2 Value</span>
+<span class="co">#&gt; 1 airdas_sample.das       11    turtle        2 cp  crab pot  &lt;NA&gt;     2</span>
+<span class="co">#&gt; 2 airdas_sample.das       46    turtle   fb2s fb1m fish ball     s     2</span>
+<span class="co">#&gt; 3 airdas_sample.das       46    turtle   fb2s fb1m fish ball     m     1</span>
+<span class="co">#&gt;   flag_check</span>
+<span class="co">#&gt; 1      FALSE</span>
+<span class="co">#&gt; 2      FALSE</span>
+<span class="co">#&gt; 3      FALSE</span></pre></body></html></div>
 </div>
   </div>
 
