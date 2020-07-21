@@ -20,7 +20,7 @@ Imports:
     readr, 
     rlang, 
     stringr,
-    swfscDAS (>= 0.3), 
+    swfscDAS (>= 0.3.0), 
     swfscMisc, 
     tidyr
 Suggests: 
