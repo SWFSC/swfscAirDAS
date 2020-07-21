@@ -8,14 +8,15 @@ vignette: >
 ---
   
 ```{r, include = FALSE}
-  knitr::opts_chunk$set(
+knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
-  )
+)
 ```
   
 ```{r setup, message=FALSE}
 library(dplyr)
+library(tibble) #For printing output
 library(stringr)
 library(swfscAirDAS)
 ```
@@ -47,11 +48,11 @@ Once QA/QC is complete and you have fixed any data entry errors, you can begin t
 ```{r readproc}
 # Read 
 y.read <- airdas_read(y, file.type = "turtle", skip = 0)
-glimpse(y.read)
+head(y.read)
 
 # Process
 y.proc <- airdas_process(y.read, trans.upper = TRUE)
-glimpse(y.proc)
+head(y.proc)
 ```
 
 Once you have processed the AirDAS data, you can easily access a variety of information. For instance, you can look at the different Beaufort values that occurred in the data, or filter for specific events to get the beginning and ending points of each effort section. 
@@ -75,7 +76,7 @@ y.sight <- airdas_sight(y.proc)
 
 y.sight %>% 
   select(Event, SightNo:TurtleTail) %>% 
-  glimpse()
+  head()
 ```
 
 ## Effort
@@ -93,9 +94,9 @@ y.eff <- airdas_effort(
 )
 y.eff.sight <- airdas_effort_sight(y.eff, sp.codes = c("bm", "dc"))
 
-glimpse(y.eff.sight$segdata)
+head(y.eff.sight$segdata)
 
-glimpse(y.eff.sight$sightinfo)
+head(y.eff.sight$sightinfo)
 ```
 
 If you wanted to determine the number of humpback whales on each transect with a sighting angle between -60 and 60 degrees, for instance, you could do the following
@@ -115,7 +116,8 @@ y.eff.section.sight[[1]] %>%
   mutate(transect_id = cumsum(.data$event == "T")) %>% 
   group_by(transect_id) %>% 
   summarise(dist_sum = sum(dist), 
-            mn_count = sum(ANI_mn))
+            mn_count = sum(ANI_mn)) %>% 
+  as.data.frame() #for printing format
 ```
 
 In this example you could also simply group by the `transect` column, but that structure is not robust to analyzing multi-year data sets where the same transects are flown multiple times.
@@ -128,7 +130,7 @@ A comment indicating whether or not something is being recorded will likely cont
 
 ```{r comm}
 y.comm <- airdas_comments(y.proc)
-glimpse(y.comm)
+head(y.comm)
 
 str_subset(y.comm$comment_str, "record") #Could also use grepl() here
 ```
@@ -143,5 +145,5 @@ comment.format <- list(
 )
 
 # TURTLE/PHOCOENA comment-data
-glimpse(airdas_comments_process(y.proc))
+head(airdas_comments_process(y.proc))
 ```

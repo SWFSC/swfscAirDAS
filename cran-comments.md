@@ -12,9 +12,9 @@ There were no ERRORs, WARNINGs
 
 There was one NOTE on win-builder: 
 
-* "Possibly mis-spelled words in DESCRIPTION: DAS, SWFSC, das"
+* "Possibly mis-spelled words in DESCRIPTION: AirDAS, DAS, SWFSC"
 
-DAS and SWFSC are acronyms explained in DESCRIPTION, while .das refers to a file type
+DAS is quoted with an associated reference, and AirDAS and SWFSC are acronyms detailed in the Description text
 
 ## Downstream dependencies
 No downstream dependencies
