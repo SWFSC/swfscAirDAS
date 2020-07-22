@@ -14,7 +14,7 @@ There was one NOTE on win-builder:
 
 * "Possibly mis-spelled words in DESCRIPTION: AirDAS, DAS, SWFSC"
 
-DAS is quoted with an associated reference, and AirDAS and SWFSC are acronyms detailed in the Description text
+DAS is quoted with an associated reference, while AirDAS and SWFSC are acronyms detailed in the Description text
 
 ## Downstream dependencies
 No downstream dependencies
