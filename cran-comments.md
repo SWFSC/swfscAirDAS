@@ -1,3 +1,8 @@
+## Resubmission
+This is a resubmission. In this version I have:
+* Added a reference describing AirDAS data
+* Ensured that all examples and vignettes use only one core
+
 ## Release summary
 Initial release (0.2.1)
 

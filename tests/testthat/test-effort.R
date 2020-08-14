@@ -1,4 +1,4 @@
-test_that("condition method works as expected", {
+test_that("equallength with big value and section method match", {
   y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
   
   # Using "equallength" method
