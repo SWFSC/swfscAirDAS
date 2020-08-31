@@ -1,6 +1,6 @@
 ## Resubmission
 This is a resubmission. In this version I have:
-* Added a reference describing AirDAS data
+* Added a reference describing AirDAS data to the Description, and fixed broken url
 * Ensured that all examples and vignettes use only one core
 
 ## Release summary
