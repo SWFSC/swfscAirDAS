@@ -128,11 +128,11 @@
     </div>
 
     <pre class="usage"><span class='fu'>airdas_read</span>(
-  <span class='no'>file</span>,
-  <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"turtle"</span>, <span class='st'>"caretta"</span>, <span class='st'>"survey"</span>, <span class='st'>"phocoena"</span>),
-  <span class='kw'>skip</span> <span class='kw'>=</span> <span class='fl'>0</span>,
-  <span class='kw'>tz</span> <span class='kw'>=</span> <span class='st'>"UTC"</span>,
-  <span class='no'>...</span>
+  <span class='kw'>file</span>,
+  file.type = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"turtle"</span>, <span class='st'>"caretta"</span>, <span class='st'>"survey"</span>, <span class='st'>"phocoena"</span>),
+  skip = <span class='fl'>0</span>,
+  tz = <span class='st'>"UTC"</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -188,8 +188,9 @@ Default is "turtle"</p></td>
   for the specific file types (programs)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
-<span class='fu'>airdas_read</span>(<span class='no'>y</span>, <span class='kw'>file.type</span> <span class='kw'>=</span> <span class='st'>"turtle"</span>)</div><div class='output co'>#&gt;    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3
+    <pre class="examples"><div class='input'><span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, package = <span class='st'>"swfscAirDAS"</span>)
+<span class='fu'>airdas_read</span>(<span class='kw'>y</span>, file.type = <span class='st'>"turtle"</span>)
+</div><div class='output co'>#&gt;    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3
 #&gt; 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  
 #&gt; 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding 
 #&gt; 3      T      TRUE 2015-04-09 12:30:59 39.23550 -123.1563    T1  &lt;NA&gt;  &lt;NA&gt;
@@ -472,7 +473,7 @@ Default is "turtle"</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

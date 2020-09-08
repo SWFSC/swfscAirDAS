@@ -123,7 +123,7 @@
     <p>Summarize number of sightings and animals for selected species by segment</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_effort_sight</span>(<span class='no'>x.list</span>, <span class='no'>sp.codes</span>, <span class='kw'>sp.events</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"S"</span>, <span class='st'>"t"</span>))</pre>
+    <pre class="usage"><span class='fu'>airdas_effort_sight</span>(<span class='kw'>x.list</span>, <span class='kw'>sp.codes</span>, sp.events = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"S"</span>, <span class='st'>"t"</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -166,14 +166,15 @@ The default is that all of these event codes are kept</p></td>
   personalize the included values as desired for their analysis.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
-<span class='no'>y.proc</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='no'>y</span>)
-<span class='no'>y.cond</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(
-  <span class='no'>y.proc</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"condition"</span>, <span class='kw'>conditions</span> <span class='kw'>=</span> <span class='st'>"Bft"</span>, <span class='kw'>seg.min.km</span> <span class='kw'>=</span> <span class='fl'>0.05</span>,
-  <span class='kw'>num.cores</span> <span class='kw'>=</span> <span class='fl'>1</span>
+    <pre class="examples"><div class='input'><span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, package = <span class='st'>"swfscAirDAS"</span>)
+<span class='kw'>y.proc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='kw'>y</span>)
+<span class='kw'>y.cond</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(
+  <span class='kw'>y.proc</span>, method = <span class='st'>"condition"</span>, conditions = <span class='st'>"Bft"</span>, seg.min.km = <span class='fl'>0.05</span>, 
+  num.cores = <span class='fl'>1</span>
 )
 
-<span class='fu'>airdas_effort_sight</span>(<span class='no'>y.cond</span>, <span class='kw'>sp.codes</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>))</div><div class='output co'>#&gt; $segdata
+<span class='fu'>airdas_effort_sight</span>(<span class='kw'>y.cond</span>, sp.codes = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"mn"</span>, <span class='st'>"bm"</span>))
+</div><div class='output co'>#&gt; $segdata
 #&gt;   segnum section_id section_sub_id event transect              file stlin
 #&gt; 1      1          1              1     T       T1 airdas_sample.das     3
 #&gt; 2      2          1              2     T       T1 airdas_sample.das    36
@@ -364,7 +365,7 @@ The default is that all of these event codes are kept</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>

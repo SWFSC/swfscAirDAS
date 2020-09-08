@@ -125,23 +125,23 @@
   including extracting state and condition information for each AirDAS event</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_process</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+    <pre class="usage"><span class='fu'>airdas_process</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for character</span>
-<span class='fu'>airdas_process</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>airdas_process</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>airdas_process</span>(<span class='no'>x</span>, <span class='no'>...</span>)
+<span class='fu'>airdas_process</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
 
 <span class='co'># S3 method for airdas_dfr</span>
 <span class='fu'>airdas_process</span>(
-  <span class='no'>x</span>,
-  <span class='kw'>days.gap.part</span> <span class='kw'>=</span> <span class='fl'>0.5</span>/<span class='fl'>24</span>,
-  <span class='kw'>days.gap.full</span> <span class='kw'>=</span> <span class='fl'>12</span>/<span class='fl'>24</span>,
-  <span class='kw'>gap.message</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='kw'>reset.transect</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>,
-  <span class='kw'>trans.upper</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>,
-  <span class='no'>...</span>
+  <span class='kw'>x</span>,
+  days.gap.part = <span class='fl'>0.5</span><span class='op'>/</span><span class='fl'>24</span>,
+  days.gap.full = <span class='fl'>12</span><span class='op'>/</span><span class='fl'>24</span>,
+  gap.message = <span class='fl'>FALSE</span>,
+  reset.transect = <span class='fl'>TRUE</span>,
+  trans.upper = <span class='fl'>FALSE</span>,
+  <span class='kw'>...</span>
 )</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -254,8 +254,9 @@ Default is <code>FALSE</code></p></td>
   (Beaufort, viewing conditions, altitude, etc.) to be reset to <code>NA</code> at each T event</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>y</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, <span class='kw'>package</span> <span class='kw'>=</span> <span class='st'>"swfscAirDAS"</span>)
-<span class='fu'>airdas_process</span>(<span class='no'>y</span>, <span class='kw'>trans.upper</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
+    <pre class="examples"><div class='input'><span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, package = <span class='st'>"swfscAirDAS"</span>)
+<span class='fu'>airdas_process</span>(<span class='kw'>y</span>, trans.upper = <span class='fl'>FALSE</span>)
+</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
 #&gt; 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 3      T 2015-04-09 12:30:59 39.23550 -123.1563     TRUE    T1  NA     NA    NA
@@ -607,8 +608,9 @@ Default is <code>FALSE</code></p></td>
 #&gt; 85      TRUE       85 airdas_sample.das       86    turtle
 #&gt; 86      TRUE       86 airdas_sample.das       87    turtle
 #&gt; 87     FALSE       87 airdas_sample.das       88    turtle</div><div class='input'>
-<span class='no'>y.read</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='airdas_read.html'>airdas_read</a></span>(<span class='no'>y</span>)
-<span class='fu'>airdas_process</span>(<span class='no'>y.read</span>)</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
+<span class='kw'>y.read</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_read.html'>airdas_read</a></span>(<span class='kw'>y</span>)
+<span class='fu'>airdas_process</span>(<span class='kw'>y.read</span>)
+</div><div class='output co'>#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly
 #&gt; 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA
 #&gt; 3      T 2015-04-09 12:30:59 39.23550 -123.1563     TRUE    T1  NA     NA    NA
@@ -976,7 +978,7 @@ Default is <code>FALSE</code></p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
 </div>
 
       </footer>
