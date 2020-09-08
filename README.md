@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![CRAN
+version](http://www.r-pkg.org/badges/version/swfscAirDAS)](https://cran.r-project.org/package=swfscAirDAS)
 [![Travis build
 status](https://travis-ci.com/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.com/smwoodman/swfscAirDAS)
 [![AppVeyor build
