@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -123,20 +123,20 @@
     <p>Summarize AirDAS effort data by effort segment, while averaging conditions</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_segdata</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>airdas_segdata</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>airdas_segdata</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>airdas_segdata</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for airdas_df</span>
-<span class='fu'>airdas_segdata</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>conditions</span>,
-  segdata.method = <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"avg"</span>, <span class='st'>"maxdist"</span>),
-  <span class='kw'>seg.lengths</span>,
-  <span class='kw'>section.id</span>,
-  <span class='kw'>...</span>
-)</pre>
+<span class='fu'>airdas_segdata</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>conditions</span>,
+  segdata.method <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"avg"</span>, <span class='st'>"maxdist"</span><span class='op'>)</span>,
+  <span class='va'>seg.lengths</span>,
+  <span class='va'>section.id</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -182,7 +182,9 @@ into which <code>x</code> will be chopped</p></td>
   and in <code><a href='airdas_effort.html'>airdas_effort</a></code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function was designed to be called by one of the airdas_chop_ functions, 
+    <p>WARNING - do not call this function directly!
+  It is exported for documentation purposes, but is intended for internal package use only.</p>
+<p>This function was designed to be called by one of the airdas_chop_ functions, 
   e.g. <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code>, and thus 
   users should avoid calling it themselves.
   It loops through the events in <code>x</code>, calculating and storing relevant
@@ -190,7 +192,8 @@ into which <code>x</code> will be chopped</p></td>
   Because <code>x</code> is a continuous effort section, it must begin with 
   a "T" or "R" event and end with the corresponding "E" or "O" event.</p>
 <p>For each segment, this function reports the 
-  segment ID, transect code, the start/end/midpoints (lat/lon), segment length, 
+  segment ID, transect code, the start/end/mid coordinates (lat/lon),
+  start/end/mid date/times (DateTime), segment length, 
   year, month, day, time, observers, 
   and average conditions (which are specified by <code>conditions</code>).
   The segment ID is designated as <code>section.id</code> _ index of the modeling segment.
@@ -230,7 +233,7 @@ into which <code>x</code> will be chopped</p></td>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

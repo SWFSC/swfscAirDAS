@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -123,19 +123,19 @@
     <p>Chop AirDAS data into effort segments by continuous effort section</p>
     </div>
 
-    <pre class="usage"><span class='fu'>airdas_chop_section</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+    <pre class="usage"><span class='fu'>airdas_chop_section</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for data.frame</span>
-<span class='fu'>airdas_chop_section</span>(<span class='kw'>x</span>, <span class='kw'>...</span>)
+<span class='fu'>airdas_chop_section</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for airdas_df</span>
-<span class='fu'>airdas_chop_section</span>(
-  <span class='kw'>x</span>,
-  <span class='kw'>conditions</span>,
-  distance.method = <span class='kw'>NULL</span>,
-  num.cores = <span class='kw'>NULL</span>,
-  <span class='kw'>...</span>
-)</pre>
+<span class='fu'>airdas_chop_section</span><span class='op'>(</span>
+  <span class='va'>x</span>,
+  <span class='va'>conditions</span>,
+  distance.method <span class='op'>=</span> <span class='cn'>NULL</span>,
+  num.cores <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -173,7 +173,9 @@ calculated in <code><a href='airdas_effort.html'>airdas_effort</a></code></p></t
   The randpicks values will all be <code>NA</code></p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>This function is simply a wrapper for <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code>.
+    <p>WARNING - do not call this function directly!
+  It is exported for documentation purposes, but is intended for internal package use only.</p>
+<p>This function is simply a wrapper for <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code>.
   It calls <code><a href='airdas_chop_equallength.html'>airdas_chop_equallength</a></code>, with <code>seg.km</code> set to a 
   value larger than the longest continuous effort section in <code>x</code>. 
   Thus, the effort is 'chopped' into the continuous effort sections and then summarized.</p>  
@@ -188,13 +190,13 @@ calculated in <code><a href='airdas_effort.html'>airdas_effort</a></code></p></t
   <code><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></code> to summarise the desired data by transect</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span>(<span class='st'>"airdas_sample.das"</span>, package = <span class='st'>"swfscAirDAS"</span>)
-<span class='kw'>y.proc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span>(<span class='kw'>y</span>)
+    <pre class="examples"><div class='input'><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"airdas_sample.das"</span>, package <span class='op'>=</span> <span class='st'>"swfscAirDAS"</span><span class='op'>)</span>
+<span class='va'>y.proc</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_process.html'>airdas_process</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span>
 
-<span class='kw'>y.eff1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(<span class='kw'>y.proc</span>, method = <span class='st'>"equallength"</span>, seg.km = <span class='fl'>35</span>, num.cores = <span class='fl'>1</span>)
-</div><div class='output co'>#&gt; <span class='message'>No argument was passed via randpicks.load, and thus new randpicks values will be generated</span></div><div class='input'><span class='kw'>y.eff2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span>(<span class='kw'>y.proc</span>, method = <span class='st'>"section"</span>, num.cores = <span class='fl'>1</span>)
+<span class='va'>y.eff1</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span><span class='op'>(</span><span class='va'>y.proc</span>, method <span class='op'>=</span> <span class='st'>"equallength"</span>, seg.km <span class='op'>=</span> <span class='fl'>35</span>, num.cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; <span class='message'>No argument was passed via randpicks.load, and thus new randpicks values will be generated</span></div><div class='input'><span class='va'>y.eff2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='airdas_effort.html'>airdas_effort</a></span><span class='op'>(</span><span class='va'>y.proc</span>, method <span class='op'>=</span> <span class='st'>"section"</span>, num.cores <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>
 
-<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span>(<span class='kw'>y.eff1</span>, <span class='kw'>y.eff2</span>)
+<span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>y.eff1</span>, <span class='va'>y.eff2</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; [1] TRUE</div><div class='input'>
 </div></pre>
   </div>
@@ -212,7 +214,7 @@ calculated in <code><a href='airdas_effort.html'>airdas_effort</a></code></p></t
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

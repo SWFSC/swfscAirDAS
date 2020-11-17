@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">swfscAirDAS</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
       </span>
     </div>
 
@@ -117,9 +117,18 @@
       <small>Source: <a href='https://github.com/smwoodman/swfscAirDAS/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="swfscairdas-0-2-1" class="section level1">
+    <div id="swfscairdas-022" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.2">
+<a href="#swfscairdas-022" class="anchor"></a>swfscAirDAS 0.2.2<small> Unreleased </small>
+</h1>
+<ul>
+<li><p>The ‘segdata’ output of <code>das_effort</code> now includes DateTime1 and DateTime2, the date/time of the start and end points of each segment. The column order of the segdata data frame was also slightly changed for consistency</p></li>
+<li><p><code>airdas_chop_condition</code>, <code>airdas_chop_equallength</code>, <code>airdas_chop_section</code>, and <code>airdas_segdata</code> are now exported for documentation purposes only</p></li>
+</ul>
+</div>
+    <div id="swfscairdas-021" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.1">
-<a href="#swfscairdas-0-2-1" class="anchor"></a>swfscAirDAS 0.2.1<small> 2020-09-07 </small>
+<a href="#swfscairdas-021" class="anchor"></a>swfscAirDAS 0.2.1<small> 2020-09-07 </small>
 </h1>
 <ul>
 <li><p>Users can now capitalize all transect codes using the <code>trans.upper</code> argument in <code>das_process</code></p></li>
@@ -127,21 +136,21 @@
 <li><p>Fixed a bug in <code>airdas_check</code> when checking multiple files</p></li>
 </ul>
 </div>
-    <div id="swfscairdas-0-2-0" class="section level1">
+    <div id="swfscairdas-020" class="section level1">
 <h1 class="page-header" data-toc-text="0.2.0">
-<a href="#swfscairdas-0-2-0" class="anchor"></a>swfscAirDAS 0.2.0<small> Unreleased </small>
+<a href="#swfscairdas-020" class="anchor"></a>swfscAirDAS 0.2.0<small> Unreleased </small>
 </h1>
 <ul>
 <li><p>Catch up internally with changes made in swfscDAS. This package now depends on swfscDAS version &gt;= 0.3</p></li>
 <li><p><code>airdas_sight</code> column name changes: ‘Sp’ is now ‘SpCode’ for consistency with swfscDAS, and ‘TurtleSizeFt’ is now ‘TurtleSize’ since this data can be a character code</p></li>
 <li><p>Changed <code>airdas_chop_equal</code> to <code>airdas_chop_equallength</code> for naming consistency. This change should not affect users, as it does not affect any of the syntax required when using <code>airdas_effort</code></p></li>
-<li><p>Renamed items in effort list output of airdas_effort and airdas_effort_sight: ‘siteinfo’ is now ‘sightinfo’, and segdata columns indicating the number of sightings or animals on a segment are now formatted as ‘description’_‘species code’, e.g. “nSI_mn”</p></li>
+<li><p>Renamed items in effort list output of airdas_effort and airdas_effort_sight: ‘siteinfo’ is now ‘sightinfo’, and segdata columns indicating the number of sightings or animals on a segment are now formatted as ‘description’_‘species code’, e.g. “nSI_mn”</p></li>
 <li><p>Where applicable, error, warning, and informational messages now report both the file name and line number. This makes the messages more useful when working with concatenated AirDAS objects with multiple files</p></li>
 </ul>
 </div>
-    <div id="swfscairdas-0-1-0" class="section level1">
+    <div id="swfscairdas-010" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.0">
-<a href="#swfscairdas-0-1-0" class="anchor"></a>swfscAirDAS 0.1.0<small> Unreleased </small>
+<a href="#swfscairdas-010" class="anchor"></a>swfscAirDAS 0.1.0<small> Unreleased </small>
 </h1>
 <ul>
 <li>Initial version, presented to NMFS users</li>
@@ -164,7 +173,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
