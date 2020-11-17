@@ -90,4 +90,3 @@ WARNING - do not call this function directly!
   are used to calculate the segment start, mid, and end points,
   with \code{method = "vincenty"}.
 }
-\keyword{internal}

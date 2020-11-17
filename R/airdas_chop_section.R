@@ -44,8 +44,6 @@
 #'
 #' all.equal(y.eff1, y.eff2)
 #' 
-#' @keywords internal
-#' 
 #' @export
 airdas_chop_section <- function(x, ...) UseMethod("airdas_chop_section")
 

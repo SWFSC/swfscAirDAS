@@ -62,8 +62,6 @@
 #' @return Data frame with the segdata information described above
 #'   and in \code{\link{airdas_effort}}
 #' 
-#' @keywords internal
-#' 
 #' @export
 airdas_segdata <- function(x, ...) UseMethod("airdas_segdata")
 

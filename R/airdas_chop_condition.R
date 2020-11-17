@@ -67,8 +67,6 @@
 #'     relevant data (see \code{\link{airdas_effort}} for specifics)
 #' }
 #' 
-#' @keywords internal
-#' 
 #' @export
 airdas_chop_condition <- function(x, ...) UseMethod("airdas_chop_condition")
 

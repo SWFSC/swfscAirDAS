@@ -89,8 +89,6 @@
 #'     (see Details section above)
 #' }
 #' 
-#' @keywords internal
-#' 
 #' @export
 airdas_chop_equallength <- function(x, ...) UseMethod("airdas_chop_equallength")
 

@@ -71,4 +71,3 @@ y.eff2 <- airdas_effort(y.proc, method = "section", num.cores = 1)
 all.equal(y.eff1, y.eff2)
 
 }
-\keyword{internal}

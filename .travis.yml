@@ -7,7 +7,6 @@ r:
   - release
   - devel
 cache: packages
-dist: bionic
 
 
 before_install:
