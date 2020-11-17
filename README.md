@@ -9,8 +9,7 @@
 version](http://www.r-pkg.org/badges/version/swfscAirDAS)](https://cran.r-project.org/package=swfscAirDAS)
 [![Travis build
 status](https://travis-ci.com/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.com/smwoodman/swfscAirDAS)
-[![AppVeyor build
-status](https://ci.appveyor.com/api/projects/status/github/smwoodman/swfscAirDAS?branch=master&svg=true)](https://ci.appveyor.com/project/smwoodman/swfscAirDAS)
+<!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/smwoodman/swfscAirDAS?branch=master&svg=true)](https://ci.appveyor.com/project/smwoodman/swfscAirDAS) -->
 <!-- badges: end -->
 
 This package contains functions designed for processing and analyzing
