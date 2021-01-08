@@ -34,8 +34,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          brew install pkg-config gdal proj geos
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = "binary")
           install.packages("pkgdown", type = "binary")
         shell: Rscript {0}
 
