@@ -1,25 +1,14 @@
-## Resubmission
-This is a resubmission. In this version I have:
-* Added a reference describing AirDAS data to the Description, and fixed broken url
-* Ensured that all examples and vignettes use only one core
-
 ## Release summary
-Initial release (0.2.1)
+Bug fixes and feature additions. I have also addressed the notes in the CRAN checks
 
 ## Test environments
-* Windows 10, R 4.0.2 (local)
+* Windows 10, R 4.0.3 (local)
 * win-builder (devel and release)
-* OS X, R 4.0.2 (local)
-* ubuntu 14.04.5 (on travis-ci.com, R devel, oldrel, and release)
+* OS X, R 4.0.3 (local)
+* ubuntu 16.04 (on travis-ci.com, R devel, oldrel, and release)
 
 ## R CMD check results
-There were no ERRORs, WARNINGs
-
-There was one NOTE on win-builder: 
-
-* "Possibly mis-spelled words in DESCRIPTION: AirDAS, DAS, SWFSC"
-
-DAS is quoted with an associated reference, while AirDAS and SWFSC are acronyms detailed in the Description text
+There were no ERRORs, WARNINGs, or NOTEs
 
 ## Downstream dependencies
 No downstream dependencies
