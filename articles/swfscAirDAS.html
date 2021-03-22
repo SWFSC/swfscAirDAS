@@ -308,7 +308,6 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html">summarise</a></span><span class="op">(</span>dist_sum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">dist</span><span class="op">)</span>, 
             mn_count <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">ANI_mn</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html">as.data.frame</a></span><span class="op">(</span><span class="op">)</span> <span class="co">#for printing format</span>
-<span class="co">#&gt; `summarise()` ungrouping output (override with `.groups` argument)</span>
 <span class="co">#&gt;   transect_id dist_sum mn_count</span>
 <span class="co">#&gt; 1           1  32.5244       20</span>
 <span class="co">#&gt; 2           2  31.5482       18</span></code></pre></div>
@@ -322,41 +321,41 @@
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">y.comm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/airdas_comments.html">airdas_comments</a></span><span class="op">(</span><span class="va">y.proc</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">y.comm</span><span class="op">)</span>
-<span class="co">#&gt;   Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
-<span class="co">#&gt; 1     C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
-<span class="co">#&gt; 2     C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
-<span class="co">#&gt; 3     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0</span>
-<span class="co">#&gt; 4     C 2015-04-09 12:34:56 39.23317 -123.2968     TRUE    T1   1     10     2</span>
-<span class="co">#&gt; 5     C 2015-04-09 12:35:32 39.23317 -123.3178     TRUE    T1   1     10     2</span>
-<span class="co">#&gt; 6     C 2015-04-09 12:38:00 39.23400 -123.4047    FALSE    T1   2     10     0</span>
-<span class="co">#&gt;   HorizSun VertSun  HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR  Rec</span>
-<span class="co">#&gt; 1       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
-<span class="co">#&gt; 2       NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
-<span class="co">#&gt; 3        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
-<span class="co">#&gt; 4        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
-<span class="co">#&gt; 5        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
-<span class="co">#&gt; 6        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
-<span class="co">#&gt;    VLI  VLO   VB  VRI  VRO Data1 Data2 Data3 Data4 Data5 Data6           Data7</span>
-<span class="co">#&gt; 1 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Reco rder:  dd    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
-<span class="co">#&gt; 2 &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Not  recor ding  molas  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
-<span class="co">#&gt; 3    g    g    g    g    g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
-<span class="co">#&gt; 4    g    g    g    g    g  stre aky r ed ti de     &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
-<span class="co">#&gt; 5    g    g    g    g    g  shar k 11f t      &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
-<span class="co">#&gt; 6    g    g    g    g    g  off  effor t to  circl e on  unide ntifed object  </span>
-<span class="co">#&gt;   EffortDot EventNum          file_das line_num file_type</span>
-<span class="co">#&gt; 1     FALSE        1 airdas_sample.das        1    turtle</span>
-<span class="co">#&gt; 2     FALSE        2 airdas_sample.das        2    turtle</span>
-<span class="co">#&gt; 3      TRUE       11 airdas_sample.das       11    turtle</span>
-<span class="co">#&gt; 4      TRUE       21 airdas_sample.das       22    turtle</span>
-<span class="co">#&gt; 5      TRUE       24 airdas_sample.das       25    turtle</span>
-<span class="co">#&gt; 6     FALSE       37 airdas_sample.das       38    turtle</span>
-<span class="co">#&gt;                                     comment_str</span>
-<span class="co">#&gt; 1                                Recorder: dd  </span>
-<span class="co">#&gt; 2                           Not recording molas</span>
-<span class="co">#&gt; 3                                          2 cp</span>
-<span class="co">#&gt; 4                           streaky red tide   </span>
-<span class="co">#&gt; 5                                shark 11ft    </span>
-<span class="co">#&gt; 6  off effort to circle on unidentifed object</span>
+<span class="co">#&gt;    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
+<span class="co">#&gt; 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
+<span class="co">#&gt; 11     C 2015-04-09 12:31:48 39.23350 -123.1857     TRUE    T1   1     10     0</span>
+<span class="co">#&gt; 22     C 2015-04-09 12:34:56 39.23317 -123.2968     TRUE    T1   1     10     2</span>
+<span class="co">#&gt; 25     C 2015-04-09 12:35:32 39.23317 -123.3178     TRUE    T1   1     10     2</span>
+<span class="co">#&gt; 37     C 2015-04-09 12:38:00 39.23400 -123.4047    FALSE    T1   2     10     0</span>
+<span class="co">#&gt;    HorizSun VertSun  HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR  Rec</span>
+<span class="co">#&gt; 1        NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 2        NA      NA &lt;NA&gt; FALSE FALSE   FALSE    NA     NA &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;</span>
+<span class="co">#&gt; 11        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 22        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 25        6      NA    r FALSE FALSE    TRUE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt; 37        6      NA    n FALSE FALSE   FALSE   650    100   aa   bb   cc   dd</span>
+<span class="co">#&gt;     VLI  VLO   VB  VRI  VRO Data1 Data2 Data3 Data4 Data5 Data6           Data7</span>
+<span class="co">#&gt; 1  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Reco rder:  dd    &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 2  &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt; &lt;NA&gt;  Not  recor ding  molas  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 11    g    g    g    g    g  2 cp  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 22    g    g    g    g    g  stre aky r ed ti de     &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 25    g    g    g    g    g  shar k 11f t      &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;            &lt;NA&gt;</span>
+<span class="co">#&gt; 37    g    g    g    g    g  off  effor t to  circl e on  unide ntifed object  </span>
+<span class="co">#&gt;    EffortDot EventNum          file_das line_num file_type</span>
+<span class="co">#&gt; 1      FALSE        1 airdas_sample.das        1    turtle</span>
+<span class="co">#&gt; 2      FALSE        2 airdas_sample.das        2    turtle</span>
+<span class="co">#&gt; 11      TRUE       11 airdas_sample.das       11    turtle</span>
+<span class="co">#&gt; 22      TRUE       21 airdas_sample.das       22    turtle</span>
+<span class="co">#&gt; 25      TRUE       24 airdas_sample.das       25    turtle</span>
+<span class="co">#&gt; 37     FALSE       37 airdas_sample.das       38    turtle</span>
+<span class="co">#&gt;                                      comment_str</span>
+<span class="co">#&gt; 1                                 Recorder: dd  </span>
+<span class="co">#&gt; 2                            Not recording molas</span>
+<span class="co">#&gt; 11                                          2 cp</span>
+<span class="co">#&gt; 22                           streaky red tide   </span>
+<span class="co">#&gt; 25                                shark 11ft    </span>
+<span class="co">#&gt; 37  off effort to circle on unidentifed object</span>
 
 <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_subset.html">str_subset</a></span><span class="op">(</span><span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, <span class="st">"record"</span><span class="op">)</span> <span class="co">#Could also use grepl() here</span>
 <span class="co">#&gt; [1] " Not recording molas"</span></code></pre></div>
