@@ -1,6 +1,6 @@
 Package: swfscAirDAS
 Title: Southwest Fisheries Science Center Aerial DAS Data Processing
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: 
     person("Sam", "Woodman", email = "sam.woodman@noaa.gov", role = c("aut", "cre"), comment = c(ORCID = "0000-0001-6071-8186"))
 Description: Process and summarize aerial survey 'DAS' data (AirDAS) 
@@ -9,9 +9,10 @@ Description: Process and summarize aerial survey 'DAS' data (AirDAS)
     Southwest Fisheries Science Center (SWFSC) 
     <https://www.fisheries.noaa.gov/west-coast/science-data/california-current-marine-mammal-assessment-program>.
     PDF files detailing the relevant AirDAS data formats are included in this package.
-URL: https://smwoodman.github.io/swfscAirDAS/, https://github.com/smwoodman/swfscAirDAS/
+URL: https://smwoodman.github.io/swfscAirDAS/,
+    https://github.com/smwoodman/swfscAirDAS/
 BugReports: https://github.com/smwoodman/swfscAirDAS/issues/
-Depends: R (>= 3.5.0)
+Depends: R (>= 4.0.0)
 Imports:
     dplyr, 
     lubridate, 
@@ -29,8 +30,7 @@ Suggests:
     rmarkdown,
     testthat (>= 2.1.0), 
     tibble
-License: GPL-3
+License: CC0
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 VignetteBuilder: knitr

@@ -1,14 +1,16 @@
 ## Release summary
-Bug fixes and feature additions. I have also addressed the notes in the CRAN checks
+Package depends on R >= 4.0, and update license. 
+Removed 'LazyData' from Description because no data directory
 
-## Test environments
-* Windows 10, R 4.0.3 (local)
-* win-builder (devel and release)
-* OS X, R 4.0.3 (local)
-* ubuntu 16.04 (on travis-ci.com, R devel, oldrel, and release)
+## Test environments (R-release = v4.2.0)
+* Windows 10, R-release (local)
+* win-builder (devel)
+* windows-latest (Microsoft Windows Server 2022, on github actions) R-release
+* macOS-latest (on github actions) R-release
+* ubuntu 20.04 (on github actions) R-devel and release
 
 ## R CMD check results
-There were no ERRORs, WARNINGs, or NOTEs
+There were no ERRORs, WARNINGs, or NOTES
 
 ## Downstream dependencies
 No downstream dependencies
