@@ -7,9 +7,7 @@
 
 [![CRAN
 version](http://www.r-pkg.org/badges/version/swfscAirDAS)](https://cran.r-project.org/package=swfscAirDAS)
-[![R-CMD-check](https://github.com/smwoodman/swfscAirDAS/workflows/R-CMD-check/badge.svg)](https://github.com/smwoodman/swfscAirDAS/actions)
-<!-- [![Travis build status](https://travis-ci.com/smwoodman/swfscAirDAS.svg?branch=master)](https://travis-ci.com/smwoodman/swfscAirDAS) -->
-<!-- [![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/smwoodman/swfscAirDAS?branch=master&svg=true)](https://ci.appveyor.com/project/smwoodman/swfscAirDAS) -->
+[![R-CMD-check](https://github.com/smwoodman/swfscAirDAS/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/smwoodman/swfscAirDAS/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This package contains functions designed for processing and analyzing
@@ -51,11 +49,11 @@ swfscAirDAS accepts AirDAS data from several different programs, and
 thus in several different formats: PHOCOENA, CARETTA, and TURTLE. You
 can download PDFs describing these formats at the following links:
 
-  - [PHOCOENA data format
+-   [PHOCOENA data format
     PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf)
-  - [CARETTA data format
+-   [CARETTA data format
     PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf)
-  - [TURTLE data format
+-   [TURTLE data format
     PDF](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf)
 
 These PDFs are also included in the package; see
@@ -69,8 +67,8 @@ provided file type. This function is designed to 1) be used for data
 QA/QC after performing a survey and 2) ensure the data format meets all
 of the assumptions made by the rest of the functions in the package. A
 PDF describing the format checks is included in the package; you can
-also [`download the PDF
-here`](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf)
+also
+[`download the PDF here`](https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf)
 
 ## Disclaimer
 
