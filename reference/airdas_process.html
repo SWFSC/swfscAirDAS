@@ -57,24 +57,24 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for character</span>
-<span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="co"># S3 method for airdas_dfr</span>
-<span class="fu">airdas_process</span><span class="op">(</span>
-  <span class="va">x</span>,
-  days.gap.part <span class="op">=</span> <span class="fl">0.5</span><span class="op">/</span><span class="fl">24</span>,
-  days.gap.full <span class="op">=</span> <span class="fl">12</span><span class="op">/</span><span class="fl">24</span>,
-  gap.message <span class="op">=</span> <span class="cn">FALSE</span>,
-  reset.transect <span class="op">=</span> <span class="cn">TRUE</span>,
-  trans.upper <span class="op">=</span> <span class="cn">FALSE</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for character</span></span>
+<span><span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">airdas_process</span><span class="op">(</span><span class="va">x</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for airdas_dfr</span></span>
+<span><span class="fu">airdas_process</span><span class="op">(</span></span>
+<span>  <span class="va">x</span>,</span>
+<span>  days.gap.part <span class="op">=</span> <span class="fl">0.5</span><span class="op">/</span><span class="fl">24</span>,</span>
+<span>  days.gap.full <span class="op">=</span> <span class="fl">12</span><span class="op">/</span><span class="fl">24</span>,</span>
+<span>  gap.message <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  reset.transect <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  trans.upper <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -83,37 +83,54 @@
 <dd><p>an object of class <code>airdas_dfr</code> object, 
 an object that can be coerced to class <code>airdas_dfr</code>,
 or a character (filepath) which is first passed to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
+
+
 <dt>...</dt>
 <dd><p>passed to <code><a href="airdas_read.html">airdas_read</a></code> if <code>x</code> is a character.
 Otherwise ignored</p></dd>
+
+
 <dt>days.gap.part</dt>
 <dd><p>numeric of length 1; 
 time gap (in days) used to identify when a 'partial reset' is performed, 
 i.e. when propagated info (weather, observers, etc) is reset. 
 Default is 30 minutes; must be less than or equal to <code>days.gap.full</code></p></dd>
+
+
 <dt>days.gap.full</dt>
 <dd><p>numeric of length 1; 
 time gap (in days) used to identify when a 'full reset; is performed, 
 i.e. when all info (transect number and propagated info) is reset. 
 Default is 12 hours; must be greater than <code>days.gap.part</code></p></dd>
+
+
 <dt>gap.message</dt>
 <dd><p>logical; default is <code>FALSE</code>.
 Indicates if messages should be printed detailing which row(s) of the 
 output data frame were partially or fully reset</p></dd>
+
+
 <dt>reset.transect</dt>
 <dd><p>logical; default is <code>TRUE</code>.
 Indicates if propagated info (weather, observers, etc) should be reset 
 to <code>NA</code> when beginning a new transect. See Details section</p></dd>
+
+
 <dt>trans.upper</dt>
 <dd><p>logical; indicates if all transect codes should be 
 capitalized using <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper</a></code>.
 Default is <code>FALSE</code></p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>An <code>airdas_df</code> object, which is also a data frame.
+    
+
+<p>An <code>airdas_df</code> object, which is also a data frame.
   It consists of the input data frame, i.e. the output of <code><a href="airdas_read.html">airdas_read</a></code>,
-  with the following columns added:</p><table class="table table"><tr><td><em>State/condition</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>On/off effort</td><td>OnEffort</td><td>Transect code</td></tr><tr><td>Trans</td><td>Beaufort sea state</td><td>Bft</td></tr><tr><td>Percent overcast (cloud cover)</td><td>CCover</td><td>Jellyfish code</td></tr><tr><td>Jelly</td><td>not in PHOCOENA data</td><td>Horizontal sun (clock system)</td></tr><tr><td>HorizSun</td><td>Vertical sun (clock system)</td><td>VertSun</td></tr><tr><td>only in PHOCOENA data</td><td>Haze/Kelp/Red tide code</td><td>HKR</td></tr><tr><td>Haze (from HKR code)</td><td>Haze</td><td>Kelp (from HKR code)</td></tr><tr><td>Kelp</td><td>Red tide (from HKR code)</td><td>RedTide</td></tr><tr><td>Altitude (feet)</td><td>AltFt</td><td>Speed (knots)</td></tr><tr><td>SpKnot</td><td>Left observer</td><td>ObsL</td></tr><tr><td>Belly observer</td><td>ObsB</td><td>Right observer</td></tr><tr><td>ObsR</td><td>Data recorder</td><td>Rec</td></tr><tr><td>Viewing condition - left inside</td><td>VLI</td><td>Viewing condition - left outside</td></tr><tr><td>VLO</td><td>Viewing condition - belly</td><td>VB</td></tr><tr><td>Viewing condition - right inside</td><td>VRI</td><td>Viewing condition - right outside</td></tr></table><p>See <code><a href="airdas_format_pdf.html">airdas_format_pdf</a></code> for which data columns the condition information 
+  with the following columns added:</p>
+<p></p>
+<table class="table table"><tr><td><em>State/condition</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>On/off effort</td><td>OnEffort</td><td>Transect code</td></tr><tr><td>Trans</td><td>Beaufort sea state</td><td>Bft</td></tr><tr><td>Percent overcast (cloud cover)</td><td>CCover</td><td>Jellyfish code</td></tr><tr><td>Jelly</td><td>not in PHOCOENA data</td><td>Horizontal sun (clock system)</td></tr><tr><td>HorizSun</td><td>Vertical sun (clock system)</td><td>VertSun</td></tr><tr><td>only in PHOCOENA data</td><td>Haze/Kelp/Red tide code</td><td>HKR</td></tr><tr><td>Haze (from HKR code)</td><td>Haze</td><td>Kelp (from HKR code)</td></tr><tr><td>Kelp</td><td>Red tide (from HKR code)</td><td>RedTide</td></tr><tr><td>Altitude (feet)</td><td>AltFt</td><td>Speed (knots)</td></tr><tr><td>SpKnot</td><td>Left observer</td><td>ObsL</td></tr><tr><td>Belly observer</td><td>ObsB</td><td>Right observer</td></tr><tr><td>ObsR</td><td>Data recorder</td><td>Rec</td></tr><tr><td>Viewing condition - left inside</td><td>VLI</td><td>Viewing condition - left outside</td></tr><tr><td>VLO</td><td>Viewing condition - belly</td><td>VB</td></tr><tr><td>Viewing condition - right inside</td><td>VRI</td><td>Viewing condition - right outside</td></tr></table><p>See <code><a href="airdas_format_pdf.html">airdas_format_pdf</a></code> for which data columns the condition information 
   is extracted form for each file type. 
   In addition, warnings are printed with line numbers of unexpected event codes</p>
     </div>
@@ -151,8 +168,8 @@ Default is <code>FALSE</code></p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">airdas_process</span><span class="op">(</span><span class="va">y</span>, trans.upper <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">airdas_process</span><span class="op">(</span><span class="va">y</span>, trans.upper <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
@@ -505,9 +522,9 @@ Default is <code>FALSE</code></p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 85      TRUE       85 airdas_sample.das       86    turtle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 86      TRUE       86 airdas_sample.das       87    turtle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 87     FALSE       87 airdas_sample.das       88    turtle</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">airdas_process</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">airdas_process</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      C 2015-04-09 12:30:59 39.23550 -123.1563    FALSE  &lt;NA&gt;  NA     NA    NA</span>
@@ -860,7 +877,7 @@ Default is <code>FALSE</code></p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 85      TRUE       85 airdas_sample.das       86    turtle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 86      TRUE       86 airdas_sample.das       87    turtle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 87     FALSE       87 airdas_sample.das       88    turtle</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -872,7 +889,7 @@ Default is <code>FALSE</code></p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

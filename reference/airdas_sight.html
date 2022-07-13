@@ -54,13 +54,13 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="co"># S3 method for airdas_df</span>
-<span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for airdas_df</span></span>
+<span><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,14 +68,21 @@
     <dl><dt>x</dt>
 <dd><p><code>airdas_df</code> object; output from <code><a href="airdas_process.html">airdas_process</a></code>, 
 or a data frame that can be coerced to a <code>airdas_df</code> object</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>Data frame with 1) the columns from <code>x</code>, excluding the 'Data#' columns,
+    
+
+<p>Data frame with 1) the columns from <code>x</code>, excluding the 'Data#' columns,
   and 2) columns with sighting information extracted from 'Data#' columns as described below.
   The data frame has one row for each sighting, or one row for each 
-  species of each sighting if it is a multi-species (mixed) sighting.
-  Added sighting information columns:</p><table class="table table"><tr><td><em>Sighting information</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>Sighting number</td><td>SightNo</td><td>Observer that made the sighting</td></tr><tr><td>Obs</td><td>Angle of declination</td><td>Angle</td></tr><tr><td>Left is negative</td><td>Standard sighting</td><td>SightStd</td></tr><tr><td>Logical; described in Details</td><td>Mixed species sighting</td><td>Mixed</td></tr><tr><td>Logical</td><td>Species code</td><td>SpCode</td></tr><tr><td>All characters converted to lower case</td><td>Group size of school</td><td>GsTotal</td></tr><tr><td>Only different from GsSp for mixed species sightings</td><td>Group size of species</td><td>GsSp</td></tr><tr><td>Turtle length (feet if numeric)</td><td>TurtleSize</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr><tr><td>Turtle travel direction (degrees)</td><td>TurtleDirection</td><td><code>NA</code> for non-"t" events</td></tr><tr><td>Turtle tail visible?</td><td>TurtleTail</td><td><code>NA</code> for non-"t" events</td></tr></table><p>The TurtleSize will be of class character is there is any CARETTA data in <code>x</code>, 
+  species of each sighting if it is a multi-species (mixed) sighting.</p>
+  
+
+<p>Added sighting information columns:</p>
+<p></p>
+<table class="table table"><tr><td><em>Sighting information</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>Sighting number</td><td>SightNo</td><td>Observer that made the sighting</td></tr><tr><td>Obs</td><td>Angle of declination</td><td>Angle</td></tr><tr><td>Left is negative</td><td>Standard sighting</td><td>SightStd</td></tr><tr><td>Logical; described in Details</td><td>Mixed species sighting</td><td>Mixed</td></tr><tr><td>Logical</td><td>Species code</td><td>SpCode</td></tr><tr><td>All characters converted to lower case</td><td>Group size of school</td><td>GsTotal</td></tr><tr><td>Only different from GsSp for mixed species sightings</td><td>Group size of species</td><td>GsSp</td></tr><tr><td>Turtle length (feet if numeric)</td><td>TurtleSize</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr><tr><td>Turtle travel direction (degrees)</td><td>TurtleDirection</td><td><code>NA</code> for non-"t" events</td></tr><tr><td>Turtle tail visible?</td><td>TurtleTail</td><td><code>NA</code> for non-"t" events</td></tr></table><p>The TurtleSize will be of class character is there is any CARETTA data in <code>x</code>, 
   and of class numeric otherwise.</p>
     </div>
     <div class="section level2">
@@ -100,10 +107,10 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">y.proc</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_process.html">airdas_process</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">y.proc</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y.proc</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_process.html">airdas_process</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">airdas_sight</span><span class="op">(</span><span class="va">y.proc</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Event            DateTime      Lat       Lon OnEffort Trans Bft CCover Jelly</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      S 2015-04-09 12:31:35 39.23367 -123.1783     TRUE    T1   1     10     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      S 2015-04-09 12:31:47 39.23350 -123.1857     TRUE    T1   1     10     0</span>
@@ -249,7 +256,7 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26              NA       &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27              NA       &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28              NA       &lt;NA&gt;</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -261,7 +268,7 @@ or a data frame that can be coerced to a <code>airdas_df</code> object</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>

@@ -54,16 +54,16 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="co"># S3 method for data.frame</span>
-<span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="co"># S3 method for airdas_df</span>
-<span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
-
-<span class="co"># S3 method for airdas_dfr</span>
-<span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for data.frame</span></span>
+<span><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for airdas_df</span></span>
+<span><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># S3 method for airdas_dfr</span></span>
+<span><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -71,10 +71,13 @@
     <dl><dt>x</dt>
 <dd><p><code>airdas_dfr</code> or <code>airdas_df</code> object, 
 or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p><code>x</code>, filtered for C events and with the added column
+    
+
+<p><code>x</code>, filtered for C events and with the added column
   comment_str containing the concatenated comment strings</p>
     </div>
     <div class="section level2">
@@ -88,10 +91,10 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span>, file.type <span class="op">=</span> <span class="st">"turtle"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span>, file.type <span class="op">=</span> <span class="st">"turtle"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding </span>
@@ -125,10 +128,10 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 46    turtle                                     fb2s fb1m</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 73    turtle                      belly has some glare    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 84    turtle                           patchy red tide    </span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Extract all comments containing "record"</span></span>
-<span class="r-in"><span class="va">y.comm</span> <span class="op">&lt;-</span> <span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">y.comm</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"record"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extract all comments containing "record"</span></span></span>
+<span class="r-in"><span><span class="va">y.comm</span> <span class="op">&lt;-</span> <span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y.comm</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"record"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Event EffortDot            DateTime     Lat       Lon Data1 Data2 Data3 Data4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Reco rder:  dd    &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Not  recor ding  molas</span>
@@ -138,21 +141,21 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            comment_str</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1       Recorder: dd  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  Not recording molas</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Extract all comments containing "record", but not "recorder"</span></span>
-<span class="r-in"><span class="va">y.comm</span> <span class="op">&lt;-</span> <span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">y.comm</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"record"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span> </span>
-<span class="r-in">         <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"recorder"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Extract all comments containing "record", but not "recorder"</span></span></span>
+<span class="r-in"><span><span class="va">y.comm</span> <span class="op">&lt;-</span> <span class="fu">airdas_comments</span><span class="op">(</span><span class="va">y.read</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y.comm</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"record"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">&amp;</span> </span></span>
+<span class="r-in"><span>         <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"recorder"</span>, <span class="va">y.comm</span><span class="op">$</span><span class="va">comment_str</span>, ignore.case <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="op">]</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Event EffortDot            DateTime     Lat       Lon Data1 Data2 Data3 Data4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2     C     FALSE 2015-04-09 12:30:59 39.2355 -123.1563  Not  recor ding  molas</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   Data5 Data6 Data7 EventNum          file_das line_num file_type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  &lt;NA&gt;  &lt;NA&gt;  &lt;NA&gt;        2 airdas_sample.das        2    turtle</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>            comment_str</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  Not recording molas</span>
-<span class="r-in">         </span>
-<span class="r-in"><span class="co"># Join comments with processed data</span></span>
-<span class="r-in"><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">y.read</span>, <span class="va">y.comm</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file_das"</span>, <span class="st">"line_num"</span>, <span class="st">"comment_str"</span><span class="op">)</span><span class="op">]</span>,</span>
-<span class="r-in">                 by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file_das"</span>, <span class="st">"line_num"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span>         </span></span>
+<span class="r-in"><span><span class="co"># Join comments with processed data</span></span></span>
+<span class="r-in"><span><span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span><span class="va">y.read</span>, <span class="va">y.comm</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file_das"</span>, <span class="st">"line_num"</span>, <span class="st">"comment_str"</span><span class="op">)</span><span class="op">]</span>,</span></span>
+<span class="r-in"><span>                 by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"file_das"</span>, <span class="st">"line_num"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    Event EffortDot            DateTime      Lat       Lon Data1 Data2 Data3</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Reco rder:  dd  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      C     FALSE 2015-04-09 12:30:59 39.23550 -123.1563  Not  recor ding </span>
@@ -420,7 +423,7 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 86    turtle                                          &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 87    turtle                                          &lt;NA&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 88    turtle                                          &lt;NA&gt;</span>
-<span class="r-in"></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -432,7 +435,7 @@ or a data frame that can be coerced to a <code>airdas_dfr</code> object</p></dd>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.5.</p>
 </div>
 
     </footer></div>
