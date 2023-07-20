@@ -1,4 +1,4 @@
-# swfscAirDAS 0.3.0.9000
+# swfscAirDAS 0.3.0
 
 * `airdas_sight` now has both ObsStd and SightStd columns; SightStd definition updated. `airdas_effort` standardizes the definition for the 'included' column. (#3)
 
