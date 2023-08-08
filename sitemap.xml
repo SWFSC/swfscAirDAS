@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/404.html</loc>
+    <loc>/404.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/LICENSE.html</loc>
+    <loc>/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/articles/index.html</loc>
+    <loc>/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/articles/swfscAirDAS.html</loc>
+    <loc>/articles/swfscAirDAS.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/authors.html</loc>
+    <loc>/authors.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/index.html</loc>
+    <loc>/index.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/news/index.html</loc>
+    <loc>/news/index.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_check.html</loc>
+    <loc>/reference/airdas_check.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_chop_condition.html</loc>
+    <loc>/reference/airdas_chop_condition.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_chop_equallength.html</loc>
+    <loc>/reference/airdas_chop_equallength.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_chop_section.html</loc>
+    <loc>/reference/airdas_chop_section.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_comments.html</loc>
+    <loc>/reference/airdas_comments.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_comments_process.html</loc>
+    <loc>/reference/airdas_comments_process.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_df-class.html</loc>
+    <loc>/reference/airdas_df-class.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_dfr-class.html</loc>
+    <loc>/reference/airdas_dfr-class.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_effort.html</loc>
+    <loc>/reference/airdas_effort.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_effort_sight.html</loc>
+    <loc>/reference/airdas_effort_sight.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html</loc>
+    <loc>/reference/airdas_format_pdf.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_process.html</loc>
+    <loc>/reference/airdas_process.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_read.html</loc>
+    <loc>/reference/airdas_read.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_segdata.html</loc>
+    <loc>/reference/airdas_segdata.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/airdas_sight.html</loc>
+    <loc>/reference/airdas_sight.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/as_airdas_df.html</loc>
+    <loc>/reference/as_airdas_df.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/as_airdas_dfr.html</loc>
+    <loc>/reference/as_airdas_dfr.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/index.html</loc>
+    <loc>/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/subsetting.html</loc>
+    <loc>/reference/subsetting.html</loc>
   </url>
   <url>
-    <loc>https://smwoodman.github.io/swfscAirDAS/reference/swfscAirDAS-package.html</loc>
+    <loc>/reference/swfscAirDAS-package.html</loc>
   </url>
 </urlset>

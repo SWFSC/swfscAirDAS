@@ -3,8 +3,5 @@ pkgdown: 2.0.7
 pkgdown_sha: ~
 articles:
   swfscAirDAS: swfscAirDAS.html
-last_built: 2023-08-08T23:32Z
-urls:
-  reference: https://smwoodman.github.io/swfscAirDAS/reference
-  article: https://smwoodman.github.io/swfscAirDAS/articles
+last_built: 2023-08-08T23:57Z
 
