@@ -11,7 +11,6 @@
 #'
 #' @name swfscAirDAS-package
 #' @aliases swfscAirDAS
-#' @docType package
 #' @title Southwest Fisheries Science Center Aerial Survey DAS
 #' @author Sam Woodman \email{sam.woodman@@noaa.gov}
 #' @seealso \url{https://swfsc.github.io/swfscAirDAS/}
@@ -36,7 +35,7 @@
 #' @importFrom utils head tail read.csv write.csv 
 #' 
 #' @keywords package
-NULL
+"_PACKAGE"
 
 setOldClass("airdas_dfr")
 setOldClass("airdas_df")

@@ -76,5 +76,5 @@ if (interactive()) airdas_check(y, print.transect = TRUE)
 
 }
 \seealso{
-\url{https://smwoodman.github.io/swfscAirDAS/}
+\url{https://swfsc.github.io/swfscAirDAS/}
 }

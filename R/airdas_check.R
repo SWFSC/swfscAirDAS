@@ -50,7 +50,7 @@
 #' If \code{file.out} is not \code{NULL}, then the error log is also
 #' written to the file (e.g., a .txt or .csv file) specified by \code{file.out}
 #' 
-#' @seealso \url{https://smwoodman.github.io/swfscAirDAS/}
+#' @seealso \url{https://swfsc.github.io/swfscAirDAS/}
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
