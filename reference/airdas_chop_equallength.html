@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">swfscAirDAS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/swfsc/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/smwoodman/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -30,7 +30,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Chop AirDAS data - equal length</h1>
-      <small class="dont-index">Source: <a href="https://github.com/swfsc/swfscAirDAS/blob/main/R/airdas_chop_equallength.R" class="external-link"><code>R/airdas_chop_equallength.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/smwoodman/swfscAirDAS/blob/v0.3.0/R/airdas_chop_equallength.R" class="external-link"><code>R/airdas_chop_equallength.R</code></a></small>
       <div class="d-none name"><code>airdas_chop_equallength.Rd</code></div>
     </div>
 
@@ -124,14 +124,14 @@ calculated in <code><a href="airdas_effort.html">airdas_effort</a></code></p></d
   there are several possible scenarios:</p><ul><li><p>The extra length remaining after chopping is greater than or equal to
       half of the target segment length (i.e. <code>&gt;= 0.5*seg.km</code>):
       the extra length is assigned to a random portion of the effort section as its own segment
-      (<a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1a</a>)</p></li>
+      (<a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1a</a>)</p></li>
 <li><p>The extra length remaining after chopping is less than half of the
       target segment length (i.e. <code>&lt; 0.5*seg.km</code>):
       the extra length is added to one of the (randomly selected) equal-length segments
-      (<a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1b</a>)</p></li>
+      (<a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1b</a>)</p></li>
 <li><p>The length of the effort section is less than or equal to
       the target segment length: the entire segment becomes a segment
-      (<a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1c</a>)</p></li>
+      (<a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1c</a>)</p></li>
 <li><p>The length of the effort section is zero: a segment of length zero.
       If there are more than two events (the "T"/R" and "E"/"O" events),
       the function throws a warning</p></li>
@@ -141,7 +141,7 @@ calculated in <code><a href="airdas_effort.html">airdas_effort</a></code></p></d
   and the central tendency is approximately equal to the target segment length.
   The only exception is when a continuous effort section is less than
   one half of the target segment length (i.e. <code>&lt; 0.5*seg.km</code>;
-  <a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1c</a>).</p>
+  <a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_chop_equallength_figures.pdf" class="external-link">see Fig. 1c</a>).</p>
 <p>Note the PDF with Figs. 1a - 1c is included in the package, and can be found at:
   <code>system.file("AirDAS_chop_equallength_figures.pdf", package = "swfscAirDAS")</code></p>
 <p>'Randpicks' is a record of the random assignments that were made when
