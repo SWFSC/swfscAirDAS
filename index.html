@@ -22,7 +22,7 @@
 
     <a class="navbar-brand me-2" href="index.html">swfscAirDAS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -39,7 +39,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/smwoodman/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/swfsc/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,11 +59,11 @@
 <p>You can install the released version of swfscAirDAS from <a href="https://CRAN.R-project.org" class="external-link">CRAN</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"swfscAirDAS"</span><span class="op">)</span></span></code></pre></div>
-<p>You can install the developmental version of swfscAirDAS from <a href="https://github.com/" class="external-link">GitHub</a>. To use the development version of swfscAirDAS, it is recommended to install the development version of <a href="https://smwoodman.github.io/swfscDAS/index.html" class="external-link">swfscDAS</a> as well:</p>
+<p>You can install the developmental version of swfscAirDAS from <a href="https://github.com/" class="external-link">GitHub</a>. To use the development version of swfscAirDAS, it is recommended to install the development version of <a href="https://swfsc.github.io/swfscDAS/index.html" class="external-link">swfscDAS</a> as well:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"smwoodman/swfscDAS"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"smwoodman/swfscAirDAS"</span>, build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"SWFSC/swfscDAS"</span><span class="op">)</span></span>
+<span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pkg_install.html" class="external-link">pkg_install</a></span><span class="op">(</span><span class="st">"SWFSC/swfscAirDAS"</span><span class="op">)</span></span></code></pre></div>
 <p>Please contact the developer if you have any issues.</p>
 </div>
 <div class="section level2">
@@ -71,12 +71,12 @@
 </h2>
 <p>swfscAirDAS accepts AirDAS data from several different programs, and thus in several different formats: PHOCOENA, CARETTA, and TURTLE. You can download PDFs describing these formats at the following links:</p>
 <ul>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf" class="external-link">PHOCOENA data format PDF</a></li>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf" class="external-link">CARETTA data format PDF</a></li>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf" class="external-link">TURTLE data format PDF</a></li>
+<li><a href="https://github.com/SWFSC/swfscAirDAS/blob/master/inst/AirDAS_Format_PHOCOENA.pdf" class="external-link">PHOCOENA data format PDF</a></li>
+<li><a href="https://github.com/SWFSC/swfscAirDAS/blob/master/inst/AirDAS_Format_CARETTA.pdf" class="external-link">CARETTA data format PDF</a></li>
+<li><a href="https://github.com/SWFSC/swfscAirDAS/blob/master/inst/AirDAS_Format_TURTLE.pdf" class="external-link">TURTLE data format PDF</a></li>
 </ul>
-<p>These PDFs are also included in the package; see <a href="https://smwoodman.github.io/swfscAirDAS/reference/airdas_format_pdf.html"><code>airdas_format_pdf</code></a> for more details.</p>
-<p>In addition, the package contains the function <a href="https://smwoodman.github.io/swfscAirDAS/reference/airdas_check.html"><code>airdas_check</code></a>, which checks whether the provided file adheres to expected format of the provided file type. This function is designed to 1) be used for data QA/QC after performing a survey and 2) ensure the data format meets all of the assumptions made by the rest of the functions in the package. A PDF describing the format checks is included in the package; you can also <a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link"><code>download the PDF here</code></a></p>
+<p>These PDFs are also included in the package; see <a href="https://swfsc.github.io/swfscAirDAS/reference/airdas_format_pdf.html"><code>airdas_format_pdf</code></a> for more details.</p>
+<p>In addition, the package contains the function <a href="https://swfsc.github.io/swfscAirDAS/reference/airdas_check.html"><code>airdas_check</code></a>, which checks whether the provided file adheres to expected format of the provided file type. This function is designed to 1) be used for data QA/QC after performing a survey and 2) ensure the data format meets all of the assumptions made by the rest of the functions in the package. A PDF describing the format checks is included in the package; you can also <a href="https://github.com/SWFSC/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link"><code>download the PDF here</code></a></p>
 </div>
 <div class="section level2">
 <h2 id="disclaimer">Disclaimer<a class="anchor" aria-label="anchor" href="#disclaimer"></a>
@@ -88,8 +88,8 @@
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
 <li><a href="https://cloud.r-project.org/package=swfscAirDAS" class="external-link">View on CRAN</a></li>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/" class="external-link">Browse source code</a></li>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/issues/" class="external-link">Report a bug</a></li>
+<li><a href="https://github.com/swfsc/swfscAirDAS/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/swfsc/swfscAirDAS/issues/" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -97,7 +97,7 @@
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small>CC0</small></li>
+<li><small>Apache License (== 2)</small></li>
 </ul>
 </div>
 
@@ -120,7 +120,7 @@
 <h2 data-toc-skip>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://cran.r-project.org/package=swfscAirDAS" class="external-link"><img src="http://www.r-pkg.org/badges/version/swfscAirDAS" alt="CRAN version"></a></li>
-<li><a href="https://github.com/smwoodman/swfscAirDAS/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/smwoodman/swfscAirDAS/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/swfsc/swfscAirDAS/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/swfsc/swfscAirDAS/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 

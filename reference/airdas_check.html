@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">swfscAirDAS</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,7 +20,7 @@
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
-<li class="nav-item"><a class="external-link nav-link" href="https://github.com/smwoodman/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/swfsc/swfscAirDAS/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul></div>
 
 
@@ -30,7 +30,7 @@
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Check AirDAS file</h1>
-      <small class="dont-index">Source: <a href="https://github.com/smwoodman/swfscAirDAS/blob/v0.3.0/R/airdas_check.R" class="external-link"><code>R/airdas_check.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/swfsc/swfscAirDAS/blob/main/R/airdas_check.R" class="external-link"><code>R/airdas_check.R</code></a></small>
       <div class="d-none name"><code>airdas_check.Rd</code></div>
     </div>
 
@@ -60,63 +60,62 @@
 
 <dt id="arg-file-type">file.type<a class="anchor" aria-label="anchor" href="#arg-file-type"></a></dt>
 <dd><p>character; indicates the program used to create <code>file</code>.
-Must be one of: "turtle", "caretta", "survey", or "phocoena" (case sensitive).
-Default is "turtle". Passed to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
+Must be one of: "turtle", "caretta", "survey", or "phocoena" (case
+sensitive). Default is "turtle". Passed to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
 
 
 <dt id="arg-skip">skip<a class="anchor" aria-label="anchor" href="#arg-skip"></a></dt>
-<dd><p>integer: see <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">read_fwf</a></code>. Default is 0.
-Passed to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
+<dd><p>integer: see <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">read_fwf</a></code>. Default is 0. Passed
+to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
 
 
 <dt id="arg-file-out">file.out<a class="anchor" aria-label="anchor" href="#arg-file-out"></a></dt>
-<dd><p>character; filename to which to write the error log.
-Should be a text or CSV file. Default is <code>NULL</code></p></dd>
+<dd><p>character; filename to which to write the error log. Should
+be a text or CSV file. Default is <code>NULL</code></p></dd>
 
 
 <dt id="arg-sp-codes">sp.codes<a class="anchor" aria-label="anchor" href="#arg-sp-codes"></a></dt>
-<dd><p>character; filename of .dat file from which to read
-accepted species codes.
-If <code>NULL</code>, default (internal) file will be used.
+<dd><p>character; filename of .dat file from which to read accepted
+species codes. If <code>NULL</code>, default (internal) file will be used.
 Default is <code>NULL</code></p></dd>
 
 
 <dt id="arg-print-transect">print.transect<a class="anchor" aria-label="anchor" href="#arg-print-transect"></a></dt>
-<dd><p>logical; indicates if a table with all the
-transect numbers in the <code>x</code> should be printed using
-<code><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></code>. Default is <code>TRUE</code></p></dd>
+<dd><p>logical; indicates if a table with all the transect
+numbers in the <code>x</code> should be printed using <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></code>.
+Default is <code>TRUE</code></p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A data frame with five columns that list information about errors found
-in the AirDAS files: the file name, line number,
-index (row number) from the <code>airdas_read(file)</code> data frame,
-'ID' (pre-Data# columns from the DAS file), and description of the issue.
-This data frame is sorted by the 'Description' column.
-If there are multiple issues with the same line, the issue descriptions
-are concatenated together using <code>paste(..., collapse = "; ")</code></p>
+    <p>A data frame with five columns that list information about errors
+found in the AirDAS files: the file name, line number, index (row number)
+from the <code>airdas_read(file)</code> data frame, 'ID' (pre-Data# columns from
+the DAS file), and description of the issue. This data frame is sorted by the
+'Description' column. If there are multiple issues with the same line, the
+issue descriptions are concatenated together using <code>paste(..., collapse
+= "; ")</code></p>
 <p>If <code>print.transect</code> is <code>TRUE</code>, then the output of
-<code>table(x$Data1[x$Event == "T"], useNA = "always")</code>,
-where <code>x</code> is the output of <code>airdas_read(file, ...)</code>
-is printed</p>
-<p>If <code>file.out</code> is not <code>NULL</code>, then the error log is also
-written to the file (e.g., a .txt or .csv file) specified by <code>file.out</code></p>
+<code>table(x$Data1[x$Event == "T"], useNA = "always")</code>, where <code>x</code> is
+the output of <code>airdas_read(file, ...)</code> is printed</p>
+<p>If <code>file.out</code> is not <code>NULL</code>, then the error log is also written to
+the file (e.g., a .txt or .csv file) specified by <code>file.out</code></p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The default (internal) <code>sp.codes</code> file is located at
 <code>system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")</code>.</p>
-<p>To see the checks performed by this function, you can access the PDF locally at
-<code>system.file("AirDAS_check.pdf", package = "swfscAirDAS")</code>,
-or online at <a href="https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link">https://github.com/smwoodman/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
+<p>To see the checks performed by this function, you can access the PDF locally
+at <code>system.file("AirDAS_check.pdf", package = "swfscAirDAS")</code>, or online
+at
+<a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link">https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
 <p>Checks that are not done by this function that may be of interest:</p><ul><li><p>Check for valid fish ball/mola/jelly/crab pot codes</p></li>
 <li><p>Check that datetimes are sequential, meaning they
     1) are the same as or 2) come after the previous event</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><a href="https://smwoodman.github.io/swfscAirDAS/">https://smwoodman.github.io/swfscAirDAS/</a></p></div>
+    <div class="dont-index"><p><a href="https://swfsc.github.io/swfscAirDAS/">https://swfsc.github.io/swfscAirDAS/</a></p></div>
     </div>
 
     <div class="section level2">
