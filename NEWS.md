@@ -1,5 +1,13 @@
 # swfscAirDAS 0.4.0 (dev)
 
+* Add ability to read and parse left rear and right rear observers to columns ObsLR and ObsRR, respectively. These should only be relevant for the TURTLE format. Sightings by left rear and right rear observers are considered standard sightings. Additionally, updated the AirDAS TURTLE format PDF to include descriptions of these data
+
+* Fix longitude check (#5)
+
+* Allow turtle sizes to be in increments of 0.5, rather than just whole numbers
+
+* Added "mm" (unidentified marine mammal) to the default airdas species code file
+
 
 # swfscAirDAS 0.3.1
 

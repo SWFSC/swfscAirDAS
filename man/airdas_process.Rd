@@ -72,10 +72,12 @@ An \code{airdas_df} object, which is also a data frame.
     Red tide (from HKR code)          \tab RedTide\cr
     Altitude (feet)                   \tab AltFt\cr
     Speed (knots)                     \tab SpKnot\cr
-    Left observer                     \tab ObsL\cr
+    Left observer (front)             \tab ObsL\cr
     Belly observer                    \tab ObsB\cr
-    Right observer                    \tab ObsR\cr
+    Right observer (front)            \tab ObsR\cr
     Data recorder                     \tab Rec\cr
+    Left rear observer                \tab ObsLR\cr
+    Right rear observer               \tab ObsRR\cr
     Viewing condition - left inside   \tab VLI\cr
     Viewing condition - left outside  \tab VLO\cr
     Viewing condition - belly         \tab VB\cr
@@ -118,7 +120,7 @@ If \code{x} is a character, it is assumed to be a filepath and
       T/R events themselves will be on effort, while O/E events will be off effort.
       The 'EffortDot' column is ignored
     \item 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
-    \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec') values are converted to lower case
+    \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec', 'ObsLR', 'ObsRR') values are converted to lower case
     \item Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
     \item Missing values are \code{NA} rather than \code{-1}
   }

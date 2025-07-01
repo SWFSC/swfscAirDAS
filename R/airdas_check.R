@@ -583,16 +583,16 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
     
     # Turtle size
     data.t.size <- switch(file.type, caretta = 6, turtle = 4)
-    acc.size <- c(1:9, sprintf("%02d", 1:9))
-    
+    acc.size <- c(1:9, sprintf("%02d", 1:9), seq(0.5, 8.5, by = 1))
+
     if (file.type == "caretta") {
       acc.size <- c(acc.size, "s", "m", "l")
       idx.t.size <- .check_character(x.proc, "t", paste0("Data", data.t.size), acc.size, 2)
-      txt.t.size <- paste("Turtle size must be either a whole number between 1 and 9,", 
+      txt.t.size <- paste("Turtle size must be a number between 0.5 and 9, in increments of 0.5",
                           "or one of s, m, or l")
     } else if (file.type == "turtle") {
       idx.t.size <- .check_character(x.proc, "t", paste0("Data", data.t.size), acc.size, 2)
-      txt.t.size <- "Turtle size must be a whole number between 1 and 9"
+      txt.t.size <- "Turtle size must be a number between 0.5 and 9, in increments of 0.5"
     }
     
     

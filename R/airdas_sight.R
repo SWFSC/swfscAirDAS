@@ -26,7 +26,7 @@
 #'   the nearest whole number using \code{round(, 0)}
 #'   
 #'   A 'sighting by a standard observer' ('ObsStd') is a sighting 
-#'   made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
+#'   made by ObsL, ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot).   
 #'   A 'standard sighting' ('SightStd') is a sighting 
 #'   that was made while on effort, by a standard observer, 
 #'   and with the absolute value of the angle of declination 
@@ -170,8 +170,8 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
 
 ###############################################################################
 # Helper functions, for consistency across .airdas_sight_ functions below
-.obsStd_lgl <- function(Event, Obs, ObsL, ObsB, ObsR) {
-  if_else(Event == "s", na_lgl,  Obs %in% c(ObsL, ObsB, ObsR))
+.obsStd_lgl <- function(Event, Obs, ObsL, ObsB, ObsR, ObsLR, ObsRR) {
+  if_else(Event == "s", na_lgl,  Obs %in% c(ObsL, ObsB, ObsR, ObsLR, ObsRR))
 }
 
 .sightStd_lgl <- function(OnEffort, ObsStd, Event, Angle, angle.min) {
@@ -200,7 +200,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            Obs = .data$Data5, 
            GsSp = .data$GsTotal, 
            ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR), 
+                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
                              .obsStd_lgl), 
            SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
                                     .data$Angle, angle.min), 
@@ -228,7 +228,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data3)), 
            ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR), 
+                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
                              .obsStd_lgl), 
            SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
                                     .data$Angle, angle.min), 
@@ -269,7 +269,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data2)), 
            ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR), 
+                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
                              .obsStd_lgl), 
            SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
                                     .data$Angle, angle.min), 

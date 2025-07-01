@@ -47,6 +47,8 @@ as_airdas_df.data.frame <- function(x) {
     ObsL = "character",
     ObsB = "character",
     ObsR = "character",
+    ObsLR = "character",
+    ObsRR = "character",
     Rec = "character",
     VLI = "character",
     VLO = "character",

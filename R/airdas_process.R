@@ -52,7 +52,7 @@
 #'       T/R events themselves will be on effort, while O/E events will be off effort.
 #'       The 'EffortDot' column is ignored
 #'     \item 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
-#'     \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec') values are converted to lower case
+#'     \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec', 'ObsLR', 'ObsRR') values are converted to lower case
 #'     \item Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
 #'     \item Missing values are \code{NA} rather than \code{-1}
 #'   }
@@ -80,10 +80,12 @@
 #'     Red tide (from HKR code)          \tab RedTide\cr
 #'     Altitude (feet)                   \tab AltFt\cr
 #'     Speed (knots)                     \tab SpKnot\cr
-#'     Left observer                     \tab ObsL\cr
+#'     Left observer (front)             \tab ObsL\cr
 #'     Belly observer                    \tab ObsB\cr
-#'     Right observer                    \tab ObsR\cr
+#'     Right observer (front)            \tab ObsR\cr
 #'     Data recorder                     \tab Rec\cr
+#'     Left rear observer                \tab ObsLR\cr
+#'     Right rear observer               \tab ObsRR\cr
 #'     Viewing condition - left inside   \tab VLI\cr
 #'     Viewing condition - left outside  \tab VLO\cr
 #'     Viewing condition - belly         \tab VB\cr
@@ -122,8 +124,11 @@ airdas_process.data.frame <- function(x, ...) {
 
 #' @name airdas_process
 #' @export
-airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full = 12/24, 
-                                      gap.message = FALSE, reset.transect = TRUE, 
+airdas_process.airdas_dfr <- function(x, 
+                                      days.gap.part = 0.5/24, 
+                                      days.gap.full = 12/24, 
+                                      gap.message = FALSE, 
+                                      reset.transect = TRUE, 
                                       trans.upper = FALSE, ...) 
 { 
   #----------------------------------------------------------------------------
@@ -233,6 +238,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
   ObsB <- .process_chr(init.val, x, "Data2", event.P, event.na)
   ObsR <- .process_chr(init.val, x, "Data3", event.P, event.na)
   Rec <-  .process_chr(init.val, x, "Data4", event.P, event.na)
+  ObsLR <- .process_chr(init.val, x, "Data5", event.P, event.na)
+  ObsRR <- .process_chr(init.val, x, "Data6", event.P, event.na)
   
   AltFt  <- .process_num(init.val, x, "Data1", event.A, event.na)
   SpKnot <- .process_num(init.val, x, "Data2", event.A, event.na)
@@ -265,7 +272,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
     # Reset data when necessary
     if (i %in% idx.reset.part) {
       LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastVertSun <- LastHKR <-
-        LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
+        LastObsL <- LastObsB <- LastObsR <- LastRec <- LastObsLR <- LastObsRR <- 
+        LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- LastEff <- NA
     }
     
@@ -275,7 +283,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
     
     if ((i %in% idx.eff) & reset.transect) {
       LastBft <- LastCCover <- LastJelly <- LastHorizSun <- LastVertSun <- LastHKR <-
-        LastObsL <- LastObsB <- LastObsR <- LastRec <- LastAltFt <- LastSpKnot <-
+        LastObsL <- LastObsB <- LastObsR <- LastRec <- LastObsLR <- LastObsRR <- 
+        LastAltFt <- LastSpKnot <-
         LastVLI <- LastVLO <- LastVB <- LastVRI <- LastVRO <- NA
     }
     
@@ -284,11 +293,13 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
     if (is.na(CCover[i]))   CCover[i] <- LastCCover     else LastCCover <- CCover[i]     #Cloud cover
     if (is.na(Bft[i]))      Bft[i] <- LastBft           else LastBft <- Bft[i]           #Beaufort
     if (is.na(Jelly[i]))    Jelly[i] <- LastJelly       else LastJelly <- Jelly[i]       #Jellyfish
-    if (is.na(HorizSun[i])) HorizSun[i] <- LastHorizSun else LastHorizSun <- HorizSun[i] # Horizontal sun
-    if (is.na(VertSun[i]))  VertSun[i] <- LastVertSun   else LastVertSun <- VertSun[i]   # Vertical sun
+    if (is.na(HorizSun[i])) HorizSun[i] <- LastHorizSun else LastHorizSun <- HorizSun[i] #Horizontal sun
+    if (is.na(VertSun[i]))  VertSun[i] <- LastVertSun   else LastVertSun <- VertSun[i]   #Vertical sun
     if (is.na(ObsL[i]))     ObsL[i] <- LastObsL         else LastObsL <- ObsL[i]         #Observer - left
     if (is.na(ObsB[i]))     ObsB[i] <- LastObsB         else LastObsB <- ObsB[i]         #Observer - belly
     if (is.na(ObsR[i]))     ObsR[i] <- LastObsR         else LastObsR <- ObsR[i]         #Observer - right
+    if (is.na(ObsLR[i]))    ObsLR[i] <- LastObsLR       else LastObsLR <- ObsLR[i]       #Observer - left rear
+    if (is.na(ObsRR[i]))    ObsRR[i] <- LastObsRR       else LastObsRR <- ObsRR[i]       #Observer - right rear
     if (is.na(Rec[i]))      Rec[i] <- LastRec           else LastRec <- Rec[i]           #Recorder
     if (is.na(AltFt[i]))    AltFt[i] <- LastAltFt       else LastAltFt <- AltFt[i]       #Altitude (ft)
     if (is.na(SpKnot[i]))   SpKnot[i] <- LastSpKnot     else LastSpKnot <- SpKnot[i]     #Speed (knots)
@@ -310,6 +321,7 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
     RedTide = grepl("r", HKR, ignore.case = TRUE), 
     AltFt = AltFt, SpKnot = SpKnot, 
     ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
+    ObsLR = ObsLR, ObsRR = ObsRR, 
     VLI = VLI, VLO = VLO, VB = VB, VRI = VRI, VRO = VRO, 
     Trans = Trans, OnEffort = Eff
   )
@@ -330,6 +342,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
   tmp$ObsB <- tolower(tmp$ObsB)
   tmp$ObsR <- tolower(tmp$ObsR)
   tmp$Rec  <- tolower(tmp$Rec)
+  tmp$ObsLR <- tolower(tmp$ObsLR)
+  tmp$ObsRR <- tolower(tmp$ObsRR)
   
   tmp$VLI <- tolower(tmp$VLI)
   tmp$VLO <- tolower(tmp$VLO)
@@ -357,7 +371,8 @@ airdas_process.airdas_dfr <- function(x, days.gap.part = 0.5/24, days.gap.full =
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", 
     "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
     "HKR", "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
-    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO", 
+    "ObsL", "ObsB", "ObsR", "Rec", "ObsLR", "ObsRR", 
+    "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7",
     "EffortDot", "EventNum", "file_das", "line_num", "file_type"
   )

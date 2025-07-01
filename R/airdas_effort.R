@@ -188,7 +188,7 @@ airdas_effort.airdas_df <- function(
     "Event", "DateTime", "Lat", "Lon", "OnEffort", "Trans", "Bft", 
     "CCover", "Jelly", "HorizSun", "VertSun", 
     "HKR", "Haze", "Kelp", "RedTide", 
-    "AltFt", "SpKnot", "ObsL", "ObsB", "ObsR", "Rec", 
+    "AltFt", "SpKnot", "ObsL", "ObsB", "ObsR", "Rec", "ObsLR", "ObsRR", 
     "VLI", "VLO", "VB", "VRI", "VRO", 
     "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", 
     "EffortDot", "EventNum", "file_das", "line_num", "file_type", 

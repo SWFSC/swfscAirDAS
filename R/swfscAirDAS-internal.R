@@ -40,7 +40,8 @@
   conditions.acc <- c(
     "Bft", "CCover", "Jelly", "HorizSun", "VertSun", 
     "Haze", "Kelp", "RedTide", "AltFt", "SpKnot", 
-    "ObsL", "ObsB", "ObsR", "Rec", "VLI", "VLO", "VB", "VRI", "VRO"
+    "ObsL", "ObsB", "ObsR", "Rec", "ObsLR", "ObsRR", 
+    "VLI", "VLO", "VB", "VRI", "VRO"
   )
   
   if (is.null(x)) {

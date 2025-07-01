@@ -69,7 +69,7 @@ AirDAS events contain specific information in the 'Data#' columns,
   the nearest whole number using \code{round(, 0)}
   
   A 'sighting by a standard observer' ('ObsStd') is a sighting 
-  made by ObsL, ObsB, or ObsR (not the data recorder or pilot).   
+  made by ObsL, ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot).   
   A 'standard sighting' ('SightStd') is a sighting 
   that was made while on effort, by a standard observer, 
   and with the absolute value of the angle of declination 
