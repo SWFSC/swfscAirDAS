@@ -133,7 +133,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   ### Check lat/lon coordinates - coords added to 1 events in processed data
   lat.which <- which(!between(x.proc$Lat, -90, 90))
-  lon.which <- which(!between(x.proc$Lat, -180, 1800))
+  lon.which <- which(!between(x.proc$Lon, -180, 180))
   
   error.out <- rbind(
     error.out,
