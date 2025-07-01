@@ -93,7 +93,7 @@ for which to consider a sighting a standard sighting. Default is 12</p></dd>
   In addition, note that multi-species group sizes are rounded to
   the nearest whole number using <code>round(, 0)</code></p>
 <p>A 'sighting by a standard observer' ('ObsStd') is a sighting
-  made by ObsL, ObsB, or ObsR (not the data recorder or pilot).
+  made by ObsL, ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot).
   A 'standard sighting' ('SightStd') is a sighting
   that was made while on effort, by a standard observer,
   and with the absolute value of the angle of declination
@@ -137,122 +137,122 @@ for which to consider a sighting a standard sighting. Default is 12</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 26     S 2015-04-09 12:55:20 39.21700 -123.3172     TRUE    T2   2     20     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 27     S 2015-04-09 12:56:49 39.21717 -123.2685     TRUE    T2   2     20     0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 28     s 2015-04-09 12:57:00 39.21700 -123.2617     TRUE    T2   2     20     0</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    HorizSun VertSun HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR Rec VLI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9         6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27       12      NA   r FALSE FALSE    TRUE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28       12      NA   r FALSE FALSE    TRUE   680     90   aa   dd   cc  bb   g</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    VLO VB VRI VRO EffortDot EventNum          file_das line_num file_type</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1    g  g   g   g      TRUE        9 airdas_sample.das        9    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    g  g   g   g      TRUE       10 airdas_sample.das       10    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3    g  g   g   g      TRUE       12 airdas_sample.das       12    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4    g  g   g   g      TRUE       14 airdas_sample.das       14    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5    g  g   g   g      TRUE       15 airdas_sample.das       15    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6    g  g   g   g      TRUE       16 airdas_sample.das       16    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7    g  g   g   g      TRUE       16 airdas_sample.das       16    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8    g  g   g   g      TRUE       18 airdas_sample.das       19    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9    g  g   g   g      TRUE       23 airdas_sample.das       24    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10   g  g   g   g      TRUE       26 airdas_sample.das       27    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11   g  g   g   g      TRUE       27 airdas_sample.das       28    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12   g  g   g   g      TRUE       28 airdas_sample.das       29    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13   g  g   g   g      TRUE       29 airdas_sample.das       30    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14   g  g   g   g      TRUE       31 airdas_sample.das       32    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15   g  g   g   g      TRUE       32 airdas_sample.das       33    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16   g  g   g   g      TRUE       34 airdas_sample.das       35    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17   g  g   g   g      TRUE       46 airdas_sample.das       47    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18   g  g   g   g      TRUE       65 airdas_sample.das       66    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19   g  g   g   g      TRUE       66 airdas_sample.das       67    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20   g  g   g   g      TRUE       68 airdas_sample.das       69    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21   g  g   g   g      TRUE       69 airdas_sample.das       70    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22   g  g   g   g      TRUE       70 airdas_sample.das       71    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23   g  g   g   g      TRUE       71 airdas_sample.das       72    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24   g  g   g   g      TRUE       73 airdas_sample.das       74    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25   g  p   g   g      TRUE       78 airdas_sample.das       79    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26   g  p   g   g      TRUE       80 airdas_sample.das       81    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27   g  p   g   g      TRUE       84 airdas_sample.das       85    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28   g  p   g   g      TRUE       86 airdas_sample.das       87    turtle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    SightNo  Obs Angle ObsStd SightStd Mixed SpCode GsTotal GsSp TurtleSize</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1        1   cc    67   TRUE     TRUE FALSE     mn       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2        2   bb   -60   TRUE     TRUE FALSE     mn       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3        3   cc    38   TRUE     TRUE FALSE     mn       2    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4        4   aa   -50   TRUE     TRUE FALSE     mn       5    5         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5        5   cc    49   TRUE     TRUE FALSE     bm       4    4         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        6   cc    42   TRUE     TRUE  TRUE     gg      10    8         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7        6   cc    42   TRUE     TRUE  TRUE     er      10    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8        7   aa   -53   TRUE     TRUE FALSE     bm       5    5         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9        8   dd    24  FALSE    FALSE FALSE     bm       2    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10       9   aa   -57   TRUE     TRUE FALSE     mn       4    4         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11      10   cc    65   TRUE     TRUE FALSE     gg       5    5         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12    &lt;NA&gt;   aa   -20   TRUE     TRUE FALSE     dc       1    1          5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13      11   bb    87   TRUE     TRUE FALSE     pp       3    3         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14      12   bb    82   TRUE     TRUE FALSE     gg       5    5         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15      13   bb    54   TRUE     TRUE FALSE     pp       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16      14   cc    62   TRUE     TRUE FALSE     gg       2    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17      15   bb    50   TRUE     TRUE FALSE     mn       3    3         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18      16   aa   -31   TRUE     TRUE FALSE     mn       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19      17   bb   -59  FALSE    FALSE FALSE     bm       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20      18   aa   -62   TRUE     TRUE FALSE     gg       2    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21      19   cc    42   TRUE     TRUE FALSE     bm       3    3         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22      20   aa   -48   TRUE     TRUE FALSE     bm       4    4         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23      21   cc    63   TRUE     TRUE FALSE     pp       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24      22   cc    43   TRUE     TRUE FALSE     pp       2    2         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25      23   cc    56   TRUE     TRUE FALSE     mn       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26      24   cc    37   TRUE     TRUE FALSE     mn       6    6         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27      25   bb   -76  FALSE    FALSE FALSE     pp       1    1         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28      25 &lt;NA&gt;   -70     NA       NA    NA   &lt;NA&gt;      NA   NA         NA</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    TurtleDirection TurtleTail</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 7               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 9               NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 10              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 11              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 12              90          n</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 14              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 15              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 16              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 17              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 18              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 19              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 20              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 21              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 23              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 25              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 26              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 27              NA       &lt;NA&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    HorizSun VertSun HKR  Haze  Kelp RedTide AltFt SpKnot ObsL ObsB ObsR Rec</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8         6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9         6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16        6      NA   r FALSE FALSE    TRUE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17        6      NA   n FALSE FALSE   FALSE   650    100   aa   bb   cc  dd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       12      NA   n FALSE FALSE   FALSE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       12      NA   r FALSE FALSE    TRUE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       12      NA   r FALSE FALSE    TRUE   680     90   aa   dd   cc  bb</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    ObsLR ObsRR VLI VLO VB VRI VRO EffortDot EventNum          file_das line_num</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE        9 airdas_sample.das        9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       10 airdas_sample.das       10</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       12 airdas_sample.das       12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       14 airdas_sample.das       14</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       15 airdas_sample.das       15</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       16 airdas_sample.das       16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       16 airdas_sample.das       16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       18 airdas_sample.das       19</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9   &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       23 airdas_sample.das       24</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       26 airdas_sample.das       27</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       27 airdas_sample.das       28</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       28 airdas_sample.das       29</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       29 airdas_sample.das       30</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       31 airdas_sample.das       32</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       32 airdas_sample.das       33</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       34 airdas_sample.das       35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       46 airdas_sample.das       47</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       65 airdas_sample.das       66</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       66 airdas_sample.das       67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       68 airdas_sample.das       69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       69 airdas_sample.das       70</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       70 airdas_sample.das       71</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       71 airdas_sample.das       72</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE       73 airdas_sample.das       74</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE       78 airdas_sample.das       79</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE       80 airdas_sample.das       81</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE       84 airdas_sample.das       85</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE       86 airdas_sample.das       87</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    file_type SightNo  Obs Angle ObsStd SightStd Mixed SpCode GsTotal GsSp</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     turtle       1   cc    67   TRUE     TRUE FALSE     mn       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2     turtle       2   bb   -60   TRUE     TRUE FALSE     mn       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     turtle       3   cc    38   TRUE     TRUE FALSE     mn       2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     turtle       4   aa   -50   TRUE     TRUE FALSE     mn       5    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     turtle       5   cc    49   TRUE     TRUE FALSE     bm       4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6     turtle       6   cc    42   TRUE     TRUE  TRUE     gg      10    8</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7     turtle       6   cc    42   TRUE     TRUE  TRUE     er      10    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8     turtle       7   aa   -53   TRUE     TRUE FALSE     bm       5    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     turtle       8   dd    24  FALSE    FALSE FALSE     bm       2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10    turtle       9   aa   -57   TRUE     TRUE FALSE     mn       4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11    turtle      10   cc    65   TRUE     TRUE FALSE     gg       5    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12    turtle    &lt;NA&gt;   aa   -20   TRUE     TRUE FALSE     dc       1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13    turtle      11   bb    87   TRUE     TRUE FALSE     pp       3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14    turtle      12   bb    82   TRUE     TRUE FALSE     gg       5    5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15    turtle      13   bb    54   TRUE     TRUE FALSE     pp       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16    turtle      14   cc    62   TRUE     TRUE FALSE     gg       2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17    turtle      15   bb    50   TRUE     TRUE FALSE     mn       3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18    turtle      16   aa   -31   TRUE     TRUE FALSE     mn       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    turtle      17   bb   -59  FALSE    FALSE FALSE     bm       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20    turtle      18   aa   -62   TRUE     TRUE FALSE     gg       2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21    turtle      19   cc    42   TRUE     TRUE FALSE     bm       3    3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22    turtle      20   aa   -48   TRUE     TRUE FALSE     bm       4    4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23    turtle      21   cc    63   TRUE     TRUE FALSE     pp       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24    turtle      22   cc    43   TRUE     TRUE FALSE     pp       2    2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25    turtle      23   cc    56   TRUE     TRUE FALSE     mn       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26    turtle      24   cc    37   TRUE     TRUE FALSE     mn       6    6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    turtle      25   bb   -76  FALSE    FALSE FALSE     pp       1    1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28    turtle      25 &lt;NA&gt;   -70     NA       NA    NA   &lt;NA&gt;      NA   NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    TurtleSize TurtleDirection TurtleTail</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9          NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12          5              90          n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28         NA              NA       &lt;NA&gt;</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
