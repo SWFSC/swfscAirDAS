@@ -85,7 +85,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   
   message("Processing AirDAS data")
   x.proc <- suppressWarnings(airdas_process(x)) %>% 
-    left_join(select(x, .data$file_das, .data$line_num, .data$idx), 
+    left_join(select(x, "file_das", "line_num", "idx"), 
               by = c("file_das", "line_num"))
   x.proc <- as_airdas_df(x.proc)
   
@@ -235,7 +235,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
       call.read(i, skip = skip, tz = "UTC", file.type = file.type)
     })
   ) %>% 
-    select(-.data$DateTime) %>% 
+    select(-"DateTime") %>% 
     filter(!(.data$Event %in% event.tofilt)) %>% 
     select(starts_with("Data")) %>% 
     mutate(Data7 = substr(.data$Data7, 1, 5))
@@ -353,7 +353,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   txt.obs <- "Observer entries (Data1-4 of P events) must be exactly two characters"
   
   x.p <- x %>% filter(.data$Event == "P")
-  x.p.data <- select(x.p, .data$Data1, .data$Data2, .data$Data3, .data$Data4)
+  x.p.data <- select(x.p, "Data1", "Data2", "Data3", "Data4")
   x.p.which <- apply(x.p.data, 1, function(i) any(duplicated(na.omit(i))))
   
   idx.obs.dup <- x.p$idx[x.p.which]
@@ -422,8 +422,8 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   obs.code <- x.proc %>% 
     filter(.data$Event == "S", 
            !(.data$idx %in% idx.s.obs)) %>% 
-    select(.data$ObsL, .data$ObsB, .data$ObsR, .data$Rec, 
-           obs_curr = !!data.s.obs, .data$idx, angle_curr = !!data.s.ang) %>% 
+    select("ObsL", "ObsB", "ObsR", "Rec", 
+           obs_curr = !!data.s.obs, "idx", angle_curr = !!data.s.ang) %>% 
     mutate(s_obs_code = case_when(.data$obs_curr == .data$ObsL ~ 1, 
                                   .data$obs_curr == .data$ObsB ~ 2, 
                                   .data$obs_curr == .data$ObsR ~ 3, 
@@ -484,7 +484,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
     # If percentages are numeric, do they sum to 100?
     txt.1.sum <- "The species percentages must sum to 100"
     if (length(idx.1.num) == 0) {
-      x.1.data <- select(x.1, .data$Data5, .data$Data6, .data$Data7)
+      x.1.data <- select(x.1, "Data5", "Data6", "Data7")
       x.1.which <- apply(x.1.data, 1, function(i) {
         !isTRUE(all.equal(100, sum(as.numeric(i), na.rm = TRUE)))
       })

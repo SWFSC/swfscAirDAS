@@ -29,21 +29,20 @@ See the 'Using \code{comment.format}' section}
   with the following columns added: 
   \itemize{
     \item comment_str: the full comment string
-    \item Misc#: Some number of descriptor columns. There should be \code{n} columns, 
-      although the minimum number will be two columns
+    \item Misc#: Some number of descriptor columns. There should be \code{n}
+    columns, although the minimum number will be two columns
     \item Value: Associated count or percentage for TURTLE/PHOCOENA data
     \item flag_check: logical indicating if the TURTLE/PHOCOENA 
       comment string was longer than an expected number of characters, 
       and thus should be manually inspected 
   }
   
-  See the additional sections for more context. 
-  If \code{comment.format} is \code{NULL}, 
-  then the output data frame would two Misc# columns: 
-  a level one descriptor, e.g. "Fish ball" or "Jellyfish", 
-  and a level two descriptor, e.g. s, m, or c. 
-  However, if \code{comment.format$n} is say 4, then the output data frame would have
-  columns Misc1, Misc2, Misc3, and Misc4.
+  See the additional sections for more context. If \code{comment.format} is
+  \code{NULL}, then the output data frame would two Misc# columns: a level
+  one descriptor, e.g. "Fish ball" or "Jellyfish", and a level two
+  descriptor, e.g. s, m, or c. However, if \code{comment.format$n} is say 4,
+  then the output data frame would have columns Misc1, Misc2, Misc3, and
+  Misc4.
   
   Messages are printed if either \code{comment.format} is not \code{NULL}
   and not comment-data is identified using \code{comment.format}, or if 
@@ -53,36 +52,34 @@ See the 'Using \code{comment.format}' section}
 Extract miscellaneous information recorded in AirDAS data comments, i.e. comment-data
 }
 \details{
-Historically, project-specific or miscellaneous data have been 
-  recorded in AirDAS comments using specific formats and character codes. 
-  This functions identifies and extracts this data from the comment text strings. 
-  However, different data types have different comment-data formats. 
-  Specifically, TURTLE and PHOCOENA comment-data uses identifier codes 
-  that each signify a certain data pattern, while other comment-data
-  (usually that of CARETTA) uses data separated by some delimiter.
+Historically, project-specific or miscellaneous data have been
+  recorded in AirDAS comments using specific formats and character codes.
+  This functions identifies and extracts this data from the comment text
+  strings. However, different data types have different comment-data formats.
+  Specifically, TURTLE and PHOCOENA comment-data uses identifier codes that
+  each signify a certain data pattern, while other comment-data (usually that
+  of CARETTA) uses data separated by some delimiter.
 }
 \section{TURTLE and PHOCOENA comment-data}{
  
 
-  Current supported data types are: fish balls, molas, jellyfish, and crab pots. 
-  See any of the AirDAS format PDFs (\code{\link{airdas_format_pdf}}) 
-  for information about the specific codes and formats used to
-  record this data. All comments are converted to lower case for processing 
-  to avoid missing data.
-  
-  These different codes contain (at most):
-  a level one descriptor (e.g. fish ball or crab pot), 
-  a level two descriptor (e.g. size or jellyfish species), 
-  and a value (a count or percentage). 
-  Thus, the extracted data are returned together in this structure. 
-  The output data frame is long data, i.e. it has one piece of information per line.
-  For instance, if the comment is "fb1s fb1m", then the output data frame
-  will have one line for the small fish ball and one for the medium fish ball. 
-  See Value section for more details.
-  
-  Currently this function only recognizes mola data recorded using the 
-  "m1", "m2", and "m3" codes (small, medium, and large mola, respectively). 
-  Thus, "mola" is not recognized and processed.
+  Current supported data types are: fish balls, molas, jellyfish, and crab
+  pots. See any of the AirDAS format PDFs (\code{\link{airdas_format_pdf}})
+  for information about the specific codes and formats used to record this
+  data. All comments are converted to lower case for processing to avoid
+  missing data.
+
+  These different codes contain (at most): a level one descriptor (e.g. fish
+  ball or crab pot), a level two descriptor (e.g. size or jellyfish species),
+  and a value (a count or percentage). Thus, the extracted data are returned
+  together in this structure. The output data frame is long data, i.e. it has
+  one piece of information per line. For instance, if the comment is "fb1s
+  fb1m", then the output data frame will have one line for the small fish
+  ball and one for the medium fish ball. See Value section for more details.
+
+  Currently this function only recognizes mola data recorded using the "m1",
+  "m2", and "m3" codes (small, medium, and large mola, respectively). Thus,
+  "mola" is not recognized and processed.
   
   The following codes are used for the level two descriptors: 
   \tabular{lr}{
@@ -101,23 +98,24 @@ Historically, project-specific or miscellaneous data have been
 \section{Using \code{comment.format}}{
  
 
- \code{comment.format} is a list that allows the user to specify the comment-data format. 
- To use this argument, data must be separated by a delimiter. 
- This list must contain three named elements:
+ \code{comment.format} is a list that allows the user to specify the
+ comment-data format. To use this argument, data must be separated by a
+ delimiter. This list must contain three named elements:
  \itemize{
-   \item n: A single number indicating the number of elements of data in each comment. 
-     Must equal the length of \code{type}. 
-     A comment must contain exactly this number of \code{sep} to be recognized as comment-data
-   \item sep: A single string indicating the field separator string (delimiter). 
-     Values within each comment are separated by this string. 
-     Currently accepted values are ";" and ","
-   \item type: A character vector of length \code{n} indicating the data type of 
-     each data element (column). 
-     All values must be one of: "character", "numeric", or "integer".
+   \item n: A single number indicating the number of elements of data in each
+   comment. Must equal the length of \code{type}. A comment must contain
+   exactly this number of \code{sep} to be recognized as comment-data
+   \item sep: A single string indicating the field separator string
+   (delimiter). Values within each comment are separated by this string.
+   Currently accepted values are ";" and ","
+   \item type: A character vector of length \code{n} indicating the data type
+   of each data element (column). All values must be one of: "character",
+   "numeric", or "integer".
  }
  
  For instance, for most CARETTA data \code{comment.format} should be 
- \code{list(n = 5, sep = ";", type = c("character", "character", "numeric", "numeric", "character"))}
+ \code{list(n = 5, sep = ";", type = c("character", "character", "numeric",
+ "numeric", "character"))}
 }
 
 \examples{

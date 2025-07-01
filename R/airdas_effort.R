@@ -206,20 +206,20 @@ airdas_effort.airdas_df <- function(
   #----------------------------------------------------------------------------
   # Summarize sightings (based on sightinfo)
   sightinfo <- x.eff %>% 
-    left_join(select(segdata, .data$segnum, .data$mlat, .data$mlon), 
+    left_join(select(segdata, "segnum", "mlat", "mlon"), 
               by = "segnum") %>% 
     airdas_sight(angle.min = angle.min) %>% 
     mutate(included = .data$Bft <= bft.max & .data$SightStd, 
            included = ifelse(is.na(.data$included), FALSE, .data$included)) %>% 
-    select(-.data$dist_from_prev, -.data$cont_eff_section)
+    select(-c("dist_from_prev", "cont_eff_section"))
   
   
   # And return - ready for airdas_effort_sightings
-  segdata <- segdata %>% select(-.data$seg_idx)
+  segdata <- segdata %>% select(-"seg_idx")
   
   sightinfo <- sightinfo %>%
-    select(-.data$seg_idx) %>%
-    select(.data$segnum, .data$mlat, .data$mlon, everything())
+    select(-"seg_idx") %>%
+    select("segnum", "mlat", "mlon", everything())
   
   list(segdata = segdata, sightinfo = sightinfo, randpicks = randpicks)
 } 

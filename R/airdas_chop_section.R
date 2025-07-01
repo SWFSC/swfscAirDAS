@@ -97,7 +97,7 @@ airdas_chop_section.airdas_df <- function(x, conditions, distance.method = NULL,
   
   # Call airdas_chop_equallength using max section length + 1
   airdas_chop_equallength(
-    x %>% select(-.data$cont_eff_section), 
+    x %>% select(-"cont_eff_section"), 
     conditions = conditions, 
     seg.km = max(x.summ$dist_sum) + 1, randpicks.load = randpicks.df, 
     num.cores = num.cores  

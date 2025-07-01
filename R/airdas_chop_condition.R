@@ -177,7 +177,7 @@ airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1,
   ) %>%
     mutate(segnum = seq_along(.data$file), 
            dist = round(.data$dist, 4)) %>%
-    select(.data$segnum, .data$seg_idx, everything())
+    select("segnum", "seg_idx", everything())
   
   ### Segment lengths
   x.len <- lapply(eff.chop.list, function(i) i[["seg.lengths"]])
@@ -188,7 +188,7 @@ airdas_chop_condition.airdas_df <- function(x, conditions, seg.min.km = 0.1,
     stringsAsFactors = FALSE
   ) %>% 
     left_join(segdata[, c("seg_idx", "segnum")], by = "seg_idx") %>% 
-    select(-.data$dist_to_next)
+    select(-"dist_to_next")
   
   ### Message about segments that were combined
   segs.message <- na.omit(vapply(eff.chop.list, function(i) i[["segs.combine"]], 1))

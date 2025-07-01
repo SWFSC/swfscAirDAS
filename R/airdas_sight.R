@@ -138,7 +138,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
     bind_rows(sight.mult) %>% 
     arrange(.data$sight_cumsum) %>% 
     mutate(idx = seq_along(.data$sight_cumsum)) %>% 
-    select(-.data$sight_cumsum)
+    select(-"sight_cumsum")
   
   
   #----------------------------------------------------------------------------
@@ -146,7 +146,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   
   ### 1) Extract processed AirDAS variables
   sight.info <- sight.df %>% 
-    select(-!!paste0("Data", 1:7), -.data$GsTotal, -.data$Mixed)
+    select(-!!paste0("Data", 1:7), -"GsTotal", -"Mixed")
   
   ### 2) Extract sighting information based on file type
   sight.df.all <- bind_rows(
@@ -164,7 +164,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   sight.info %>% 
     left_join(sight.df.all, by = "idx") %>% 
     mutate(SpCode = tolower(.data$SpCode)) %>%
-    select(-.data$idx)
+    select(-"idx")
 }
 
 
@@ -207,10 +207,9 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            TurtleSize = NA_character_, 
            TurtleDirection = as.numeric(NA), 
            TurtleTail = NA_character_) %>% 
-    select(.data$idx, .data$SightNo, 
-           .data$Obs, .data$Angle, .data$ObsStd, .data$SightStd, 
-           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp, 
-           .data$TurtleSize, .data$TurtleDirection, .data$TurtleTail)
+    select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
+           "Mixed", "SpCode", "GsTotal", "GsSp", 
+           "TurtleSize", "TurtleDirection", "TurtleTail")
 }
 
 
@@ -238,17 +237,15 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
                             .data$Event == "t" ~ as.numeric(.data$Data4)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ .data$GsSp)) %>% 
-    select(.data$idx, .data$SightNo, 
-           .data$Obs, .data$Angle, .data$ObsStd, .data$SightStd, 
-           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp)
+    select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
+           "Mixed", "SpCode", "GsTotal", "GsSp")
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
     mutate(TurtleSize = .data$Data6, 
            TurtleDirection = as.numeric(NA), 
            TurtleTail = .data$Data7) %>% 
-    select(.data$idx, .data$TurtleSize, .data$TurtleDirection, 
-           .data$TurtleTail)
+    select("idx", "TurtleSize", "TurtleDirection", "TurtleTail")
   
   left_join(sight.info.all, sight.info.t, by = "idx")
 }
@@ -279,17 +276,15 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
                             .data$Event == "t" ~ 1), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ 1)) %>% 
-    select(.data$idx, .data$SightNo, 
-           .data$Obs, .data$Angle, .data$ObsStd, .data$SightStd, 
-           .data$Mixed, .data$SpCode, .data$GsTotal, .data$GsSp)
+    select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
+           "Mixed", "SpCode", "GsTotal", "GsSp")
   
   sight.info.t <- sight.df %>% 
     filter(.data$Event == "t") %>%
     mutate(TurtleSize = .data$Data4, 
            TurtleDirection = as.numeric(.data$Data5), 
            TurtleTail = .data$Data6) %>% 
-    select(.data$idx, .data$TurtleSize, .data$TurtleDirection, 
-           .data$TurtleTail)
+    select("idx", "TurtleSize", "TurtleDirection", "TurtleTail")
   
   left_join(sight.info.all, sight.info.t, by = "idx")
 }

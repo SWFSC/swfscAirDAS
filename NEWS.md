@@ -8,6 +8,8 @@
 
 * Added "mm" (unidentified marine mammal) to the default airdas species code file
 
+* Use [proper](https://dplyr.tidyverse.org/articles/programming.html) tidyselect syntax
+
 
 # swfscAirDAS 0.3.1
 

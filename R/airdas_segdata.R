@@ -125,12 +125,9 @@ airdas_segdata.airdas_df <- function(x, conditions, segdata.method = c("avg", "m
   
   #----------------------------------------------------------------------------
   segdata.all %>% 
-    select(.data$seg_idx, .data$section_id, .data$section_sub_id, 
-           .data$event, .data$transect, 
-           .data$file, .data$stlin, .data$endlin, 
-           .data$lat1, .data$lon1, .data$DateTime1, 
-           .data$lat2, .data$lon2, .data$DateTime2, 
-           .data$mlat, .data$mlon, .data$mDateTime, 
-           .data$dist, .data$year, .data$month, .data$day, .data$mtime, 
+    select("seg_idx", "section_id", "section_sub_id", 
+           "event", "transect", "file", "stlin", "endlin", 
+           "lat1", "lon1", "DateTime1", "lat2", "lon2", "DateTime2", 
+           "mlat", "mlon", "mDateTime", "dist", "year", "month", "day", "mtime", 
            everything())
 }

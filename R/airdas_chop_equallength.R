@@ -240,7 +240,7 @@ airdas_chop_equallength.airdas_df <- function(
   ) %>%
     mutate(segnum = seq_along(.data$file), 
            dist = round(.data$dist, 4)) %>%
-    select(.data$segnum, .data$seg_idx, everything())
+    select("segnum", "seg_idx", everything())
   
   ### Each das data point, along with segnum
   x.eff <- data.frame(
