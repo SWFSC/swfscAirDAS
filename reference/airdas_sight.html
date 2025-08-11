@@ -54,7 +54,7 @@
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p><code>airdas_df</code> object; output from <code><a href="airdas_process.html">airdas_process</a></code>,
+<dd><p><code>airdas_df</code> object; output from <code><a href="airdas_process.html">airdas_process()</a></code>,
 or a data frame that can be coerced to a <code>airdas_df</code> object</p></dd>
 
 
@@ -70,36 +70,34 @@ for which to consider a sighting a standard sighting. Default is 12</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Data frame with 1) the columns from <code>x</code>, excluding the 'Data#' columns,
-and 2) columns with sighting information extracted from 'Data#' columns as described below.
-The data frame has one row for each sighting, or one row for each
-species of each sighting if it is a multi-species (mixed) sighting.</p>
-<p>Added sighting information columns:</p><table class="table table"><tr><td><em>Sighting information</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>Sighting number</td><td>SightNo</td><td>Observer that made the sighting</td></tr><tr><td>Obs</td><td>Angle of declination</td><td>Angle</td></tr><tr><td>Left is negative</td><td>Sighting by standard observer</td><td>ObsStd</td></tr><tr><td>Logical; described in Details</td><td>Standard sighting</td><td>SightStd</td></tr><tr><td>Logical; described in Details</td><td>Mixed species sighting</td><td>Mixed</td></tr><tr><td>Logical</td><td>Species code</td><td>SpCode</td></tr><tr><td>All characters converted to lower case</td><td>Group size of school</td><td>GsTotal</td></tr><tr><td>Only different from GsSp for mixed species sightings</td><td>Group size of species</td><td>GsSp</td></tr><tr><td>Turtle length (feet if numeric)</td><td>TurtleSize</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr><tr><td>Turtle travel direction (degrees)</td><td>TurtleDirection</td><td><code>NA</code> for non-"t" events</td></tr><tr><td>Turtle tail visible?</td><td>TurtleTail</td><td><code>NA</code> for non-"t" events</td></tr></table><p>The TurtleSize will be of class character is there is any
+and 2) columns with sighting information extracted from 'Data#' columns as
+described below. The data frame has one row for each sighting, or one row for
+each species of each sighting if it is a multi-species (mixed) sighting.</p>
+<p>Added sighting information columns:</p><table class="table table"><tr><td><em>Sighting information</em></td><td><em>Column name</em></td><td><em>Notes</em></td></tr><tr><td>Sighting number</td><td>SightNo</td><td></td></tr><tr><td>Observer that made the sighting</td><td>Obs</td><td></td></tr><tr><td>Angle of declination</td><td>Angle</td><td>Left is negative</td></tr><tr><td>Sighting by standard observer</td><td>ObsStd</td><td>Logical; described in Details</td></tr><tr><td>Standard sighting</td><td>SightStd</td><td>Logical; described in Details</td></tr><tr><td>Mixed species sighting</td><td>Mixed</td><td>Logical</td></tr><tr><td>Species code</td><td>SpCode</td><td>All characters converted to lower case</td></tr><tr><td>Group size of school</td><td>GsTotal</td><td>Only different from GsSp for mixed species sightings</td></tr><tr><td>Group size of species</td><td>GsSp</td><td></td></tr><tr><td>Turtle length (feet if numeric)</td><td>TurtleSize</td><td><code>NA</code> for non-"t" events; may be character or numeric</td></tr><tr><td>Turtle travel direction (degrees)</td><td>TurtleDirection</td><td><code>NA</code> for non-"t" events</td></tr><tr><td>Turtle tail visible?</td><td>TurtleTail</td><td><code>NA</code> for non-"t" events</td></tr></table><p>The TurtleSize will be of class character is there is any
 CARETTA data in <code>x</code>, and of class numeric otherwise.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>AirDAS events contain specific information in the 'Data#' columns,
-with the information depending on the event code and file type for that row.
-This function extracts relevant data for sighting events, and returns a
-data frame with dedicated columns for each piece of sighting information.
-It can handle multiple file types in <code>x</code>; for instance,
-<code>x</code> could be processed PHOCOENA and TURTLE data
-combined using <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></code>.
-See <code><a href="airdas_format_pdf.html">airdas_format_pdf</a></code> for more information about the expected
-events and event formats, depending on the file type.</p>
-<p>All species codes are converted to lower case using <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower</a></code>.</p>
+    <p>AirDAS events contain specific information in the 'Data#' columns, with the
+information depending on the event code and file type for that row. This
+function extracts relevant data for sighting events, and returns a data frame
+with dedicated columns for each piece of sighting information. It can handle
+multiple file types in <code>x</code>; for instance, <code>x</code> could be processed PHOCOENA and
+TURTLE data combined using <code><a href="https://rdrr.io/r/base/cbind.html" class="external-link">base::rbind()</a></code>. See <code><a href="airdas_format_pdf.html">airdas_format_pdf()</a></code> for
+more information about the expected events and event formats, depending on
+the file type.</p>
+<p>All species codes are converted to lower case using <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">base::tolower()</a></code>.</p>
 <p>Abbreviations used in column names include: Gs = group size, Sp = species,
-Mixed = mixed species (multi-species) sighting.
-In addition, note that multi-species group sizes are rounded to
-the nearest whole number using <code>round(, 0)</code></p>
-<p>A 'sighting by a standard observer' ('ObsStd') is a sighting
-made by ObsL, ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot).
-A 'standard sighting' ('SightStd') is a sighting
-that was made while on effort, by a standard observer,
-and with the absolute value of the angle of declination
-being greater than or equal to <code>angle.min</code>.
-Resights (Events 's') are not considered standard events,
-and thus both 'ObsStd' and 'SightStd' will be <code>NA</code> for 's' events.</p>
+Mixed = mixed species (multi-species) sighting. In addition, note that
+multi-species group sizes are rounded to the nearest whole number using
+<code><a href="https://rdrr.io/r/base/Round.html" class="external-link">base::round()</a></code> with <code>digits = 0</code>.</p>
+<p>A 'sighting by a standard observer' ('ObsStd') is a sighting made by ObsL,
+ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot). A 'standard
+sighting' ('SightStd') is a sighting that was made while on effort, by a
+standard observer, and with the absolute value of the angle of declination
+being greater than or equal to <code>angle.min</code>. Resights (Events 's') are not
+considered standard events, and thus both 'ObsStd' and 'SightStd' will be
+<code>NA</code> for 's' events.</p>
     </div>
 
     <div class="section level2">
