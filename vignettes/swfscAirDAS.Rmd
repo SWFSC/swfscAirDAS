@@ -28,7 +28,7 @@ This document introduces you to the swfscAirDAS package. This package is intende
 This package includes a sample AirDAS file, which we will use in this document. This file is formatted as a DAS file created using the TURTLE program
 
 ```{r data}
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 head(readLines(y))
 ```
 
@@ -41,7 +41,7 @@ The first step in processing AirDAS data is to ensure that the DAS file has expe
 y.check <- airdas_check(y, file.type = "turtle", skip = 0, print.transect = TRUE)
 ```
 
-Part of the check is to check that all sighting events use expected species codes.  The package includes a [default SpCodes file](https://github.com/SWFSC/swfscAirDAS/blob/main/inst/SpCodesAirDAS.DAT); however, `airdas_check` does have an argument `sp.codes.file` if you need to use a custom SpCodes file.
+Part of the check is to check that all sighting events use expected species codes. The package includes a [default SpCodes file](https://github.com/SWFSC/swfscAirDAS/blob/main/inst/extdata/SpCodesAirDAS.DAT); however, `airdas_check` does have an argument `sp.codes.file` if you need to use a custom SpCodes file.
 
 ## Read and process data
 
