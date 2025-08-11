@@ -11,7 +11,7 @@
 #' @param file.out character; filename to which to write the error log. Should
 #'   be a text or CSV file. Default is `NULL`
 #' @param sp.codes.file character; default is `NULL`. 
-#'   Filename of .dat file from which to read the species codes. 
+#'   Filename of the SpCodes file from which to read the species codes.
 #'   If `NULL`, the default (internal) file will be used.
 #'   The SpCodes file will be read by [airdas_spcodes_read()]
 #' @param sp.codes.skip integer; default is 3. 

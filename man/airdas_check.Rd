@@ -28,7 +28,7 @@ to \code{\link[=airdas_read]{airdas_read()}}}
 be a text or CSV file. Default is \code{NULL}}
 
 \item{sp.codes.file}{character; default is \code{NULL}.
-Filename of .dat file from which to read the species codes.
+Filename of the SpCodes file from which to read the species codes.
 If \code{NULL}, the default (internal) file will be used.
 The SpCodes file will be read by \code{\link[=airdas_spcodes_read]{airdas_spcodes_read()}}}
 

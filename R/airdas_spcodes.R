@@ -2,6 +2,8 @@
 #' 
 #' Read AirDAS SpCodes file
 #' 
+#' @name airdas_spcodes
+#' 
 #' @param file character; filename of .dat file from which to read accepted
 #'   species codes
 #' @param skip integer; default is 3. 

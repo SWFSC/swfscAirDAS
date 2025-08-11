@@ -125,7 +125,7 @@ the sighting was a standard sighting (see \code{\link{airdas_sight}})
 and in a Beaufort sea state less than or equal to 'btf.max'.
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
 airdas_effort(
@@ -133,7 +133,7 @@ airdas_effort(
   num.cores = 1
 )
 
-y.rand <- system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")
+y.rand <- system.file("extdata","airdas_sample_randpicks.csv", package = "swfscAirDAS")
 airdas_effort(
   y.proc, method = "equallength", conditions = c("Bft", "CCover"), 
   seg.km = 3, randpicks.load = y.rand, num.cores = 1
