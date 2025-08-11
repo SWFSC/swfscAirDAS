@@ -18,16 +18,17 @@ See \code{\link[readr:read_fwf]{readr::read_fwf()}} for more details}
 \value{
 Data frame with three columns:
 \itemize{
-\item code: species code
-\item common_name: species common name
-( sci_name: species scientific name)
+\item code: species code, columns 1 to 6
+\item common_name: species common name, columns 10 to 42
+\item sci_name: species scientific name, columns 43 until the end of the line
 }
 }
 \description{
 Read AirDAS SpCodes file
 }
 \details{
-todo
+Provide a standardized function to read an aerial survey DAS SpCodes file.
+Methods described in 'returns'
 }
 \examples{
 sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")

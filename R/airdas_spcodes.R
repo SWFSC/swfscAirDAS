@@ -11,12 +11,13 @@
 #'   See [readr::read_fwf()] for more details
 #'   
 #' @details
-#' todo 
+#' Provide a standardized function to read an aerial survey DAS SpCodes file.
+#' Methods described in 'returns'
 #' 
 #' @returns Data frame with three columns: 
-#' * code: species code
-#' * common_name: species common name
-#' ( sci_name: species scientific name)
+#' * code: species code, columns 1 to 6
+#' * common_name: species common name, columns 10 to 42
+#' * sci_name: species scientific name, columns 43 until the end of the line
 #' 
 #' @examples
 #' sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")
@@ -30,7 +31,7 @@ airdas_spcodes_read <- function(file, skip = 3) {
     col_positions = fwf_cols(
       code = c(1, 6), 
       common_name = c(10, 42), 
-      sci_name = c(42, NA_integer_)
+      sci_name = c(43, NA_integer_)
     ), 
     col_types = cols(.default = col_character()),
     trim_ws = TRUE, 

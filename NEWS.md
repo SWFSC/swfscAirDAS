@@ -12,7 +12,9 @@
 
 * Added a function `airdas_spcodes_read` for reading AirDas SpCodes files in a consistent way. Changed `airdas_check` to use this function for reading in either the default or a custom SpCodes file. 
 
-* Moved sample files for examples to an 'extdata' folder within 'inst'
+* Moved example data files to an 'extdata' folder within 'inst'
+
+* Update roxygen to use markdown
 
 ## `airdas_check` updates
 
