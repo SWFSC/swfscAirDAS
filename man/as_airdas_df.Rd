@@ -22,12 +22,12 @@ An object of class \code{\link{airdas_df}}
 Check if an object is of class \code{\link{airdas_df}}, or coerce it if possible.
 }
 \details{
-Currently only data frames can be coerced to an object 
-  of class \code{\link{airdas_df}}.
-  If \code{x} does not have column names, classes, and contents 
-  as specified in \code{\link{airdas_df}},
-  then the function returns an error message detailing the first column that does not
-  meet the \code{\link{airdas_df}} requirements.
+Currently only data frames can be coerced to an object
+of class \code{\link{airdas_df}}.
+If \code{x} does not have column names, classes, and contents
+as specified in \code{\link{airdas_df}},
+then the function returns an error message detailing the first column that does not
+meet the \code{\link{airdas_df}} requirements.
 }
 \seealso{
 \code{\link{airdas_df-class}}

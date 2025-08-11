@@ -22,20 +22,20 @@ airdas_effort(x, ...)
 )
 }
 \arguments{
-\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}}, 
+\item{x}{\code{airdas_df} object; output from \code{\link{airdas_process}},
 or a data frame that can be coerced to a \code{airdas_df} object}
 
 \item{...}{arguments passed to the chopping function specified using \code{method},
 such as \code{seg.km} or \code{seg.min.km}}
 
 \item{method}{character; method to use to chop AirDAS data into effort segments
-Can be "condition", "equallength", "section", 
+Can be "condition", "equallength", "section",
 or any partial match thereof (case sensitive)}
 
-\item{conditions}{character vector of names of conditions 
+\item{conditions}{character vector of names of conditions
 to include in segdata output.
 These values must be column names from the output of \code{\link{airdas_process}},
-e.g. 'Bft', 'CCover', etc. The default is \code{NULL}, 
+e.g. 'Bft', 'CCover', etc. The default is \code{NULL},
 in which case all relevant conditions will be included.
 If \code{method == "condition"}, then these also are the conditions which
 trigger segment chopping when they change.}
@@ -52,77 +52,77 @@ Using 1 core likely will be faster for smaller datasets}
 
 \item{angle.min}{passed to \code{\link{airdas_sight}}}
 
-\item{bft.max}{numeric; the maximum Beaufort (column 'Bft') for which to 
-mark a sighting as \code{TRUE} in 'included' (see Details). 
+\item{bft.max}{numeric; the maximum Beaufort (column 'Bft') for which to
+mark a sighting as \code{TRUE} in 'included' (see Details).
 Default is 5.}
 }
 \value{
-List of three data frames: 
-  \itemize{
-    \item segdata: one row for every segment, and columns for information including
-      unique segment number, event code that started the associated continuous effort section, 
-      the starting and ending line of the segment in the DAS file (stlin, endlin),
-      start/end/midpoint coordinates(lat1/lon1, lat2/lon2, and mlat/mlon, respectively),
-      the start/end/midpoint date/time of the segment (DateTime1, DateTime2, and mDateTime, respectively;
-      mDateTime is the average of DateTime1 and DateTime2), segment length (dist),
-      and conditions (e.g. Beaufort)
-    \item sightinfo: details for all sightings in \code{x}, including: 
-      the unique segment number it is associated with, segment mid points (lat/lon), 
-      the 'included' column described in the Details section,
-      and the output information described in \code{\link{airdas_sight}}
-    \item randpicks: see \code{\link{airdas_chop_equallength}}. 
-      \code{NULL} if using "condition" method.
-  }
+List of three data frames:
+\itemize{
+\item segdata: one row for every segment, and columns for information including
+unique segment number, event code that started the associated continuous effort section,
+the starting and ending line of the segment in the DAS file (stlin, endlin),
+start/end/midpoint coordinates(lat1/lon1, lat2/lon2, and mlat/mlon, respectively),
+the start/end/midpoint date/time of the segment (DateTime1, DateTime2, and mDateTime, respectively;
+mDateTime is the average of DateTime1 and DateTime2), segment length (dist),
+and conditions (e.g. Beaufort)
+\item sightinfo: details for all sightings in \code{x}, including:
+the unique segment number it is associated with, segment mid points (lat/lon),
+the 'included' column described in the Details section,
+and the output information described in \code{\link{airdas_sight}}
+\item randpicks: see \code{\link{airdas_chop_equallength}}.
+\code{NULL} if using "condition" method.
+}
 }
 \description{
 Chop AirDAS data into effort segments
 }
 \details{
-This is the top-level function for chopping processed AirDAS data 
-  into modeling segments (henceforth 'segments'), and assigning sightings 
-  and related information (e.g., weather conditions) to each segment. 
-  This function returns data frames with all relevant information for the 
-  effort segments and associated sightings ('segdata' and 'sightinfo', respectively). 
-  Before chopping, the AirDAS data is filtered for events (rows) where either
-  the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O". 
-  In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'), 
-  where effort sections run from "T"/"R" to "E"/"O" events (inclusive), 
-  and then passed to the chopping function specified using \code{method}. 
-  All on effort events must not have \code{NA} Lat or Lon values; 
-  note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
+This is the top-level function for chopping processed AirDAS data
+into modeling segments (henceforth 'segments'), and assigning sightings
+and related information (e.g., weather conditions) to each segment.
+This function returns data frames with all relevant information for the
+effort segments and associated sightings ('segdata' and 'sightinfo', respectively).
+Before chopping, the AirDAS data is filtered for events (rows) where either
+the 'OnEffort' column is \code{TRUE} or the 'Event' column is "E" or "O".
+In other words, the data is filtered for continuous effort sections (henceforth 'effort sections'),
+where effort sections run from "T"/"R" to "E"/"O" events (inclusive),
+and then passed to the chopping function specified using \code{method}.
+All on effort events must not have \code{NA} Lat or Lon values;
+note Lat/Lon values for 1 events were 'filled in' in \code{\link{airdas_process}}.
 
-  The following chopping methods are currently available: 
-  "condition", "equallength", and "section". 
-  When using the "condition" method, effort sections are chopped 
-  into segments every time a condition specified in \code{conditions} changes, 
-  thereby ensuring that the conditions are consistent across the entire segment.
-  See \code{\link{airdas_chop_condition}} for more details about this method, 
-  including arguments that must be passed to it via \code{...}.
-  
-  The "equallength" method consists of
-  chopping effort sections into equal-length segments of length \code{seg.km}, 
-  and doing a weighted average of the conditions for the length of that segment. 
-  See \code{\link{airdas_chop_equallength}} for more details about this method, 
-  including arguments that must be passed to it via \code{...}.
-  
-  The "section" method involves 'chopping' the effort into continuous effort sections,
-  i.e. each continuous effort section is a single effort segment.
-  See \code{\link{airdas_chop_section}} for more details about this method.
-  
-  The distance between the lat/lon points of subsequent events
-  is calculated using the method specified in \code{distance.method}.
-  If "greatcircle", \code{\link[swfscDAS]{distance_greatcircle}} is used,
-  while \code{\link[swfscMisc]{distance}} is used otherwise.
-  See \code{\link{airdas_sight}} for how the sightings are processed.
+The following chopping methods are currently available:
+"condition", "equallength", and "section".
+When using the "condition" method, effort sections are chopped
+into segments every time a condition specified in \code{conditions} changes,
+thereby ensuring that the conditions are consistent across the entire segment.
+See \code{\link{airdas_chop_condition}} for more details about this method,
+including arguments that must be passed to it via \code{...}.
 
-  The sightinfo data frame includes the column 'included',
-  which is used in \code{\link{airdas_effort_sight}} when summarizing
-  the number of sightings and animals for selected species.
-  \code{\link{airdas_effort_sight}} is a separate function to allow users to
-  personalize the 'included' values as desired for their specific analysis.
-  By default, i.e. in the output of this function, 'included' is \code{TRUE} if:
-  the sighting was a standard sighting (see \code{\link{airdas_sight}}) 
-  and in a Beaufort sea state less than or equal to 'btf.max'.
+The "equallength" method consists of
+chopping effort sections into equal-length segments of length \code{seg.km},
+and doing a weighted average of the conditions for the length of that segment.
+See \code{\link{airdas_chop_equallength}} for more details about this method,
+including arguments that must be passed to it via \code{...}.
+
+The "section" method involves 'chopping' the effort into continuous effort sections,
+i.e. each continuous effort section is a single effort segment.
+See \code{\link{airdas_chop_section}} for more details about this method.
+
+The distance between the lat/lon points of subsequent events
+is calculated using the method specified in \code{distance.method}.
+If "greatcircle", \code{\link[swfscDAS]{distance_greatcircle}} is used,
+while \code{\link[swfscMisc]{distance}} is used otherwise.
+See \code{\link{airdas_sight}} for how the sightings are processed.
+
+The sightinfo data frame includes the column 'included',
+which is used in \code{\link{airdas_effort_sight}} when summarizing
+the number of sightings and animals for selected species.
+\code{\link{airdas_effort_sight}} is a separate function to allow users to
+personalize the 'included' values as desired for their specific analysis.
+By default, i.e. in the output of this function, 'included' is \code{TRUE} if:
+the sighting was a standard sighting (see \code{\link{airdas_sight}})
+and in a Beaufort sea state less than or equal to 'btf.max'.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")

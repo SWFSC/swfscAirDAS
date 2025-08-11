@@ -16,16 +16,16 @@ as_airdas_dfr(x)
 \item{x}{An object to be coerced to class \code{airdas_dfr}}
 }
 \value{
-An object of class `airdas_dfr`
+An object of class \code{airdas_dfr}
 }
 \description{
 Check if an object is of class \code{\link{airdas_dfr}}, or coerce it if possible.
 }
 \details{
 Currently only data frames can be coerced to an object of class \code{\link{airdas_dfr}}.
-  If \code{x} does not have column names and classes as specified in \code{\link{airdas_dfr}},
-  then the function returns an error message detailing the first column that does not
-  meet the \code{\link{airdas_dfr}} requirements.
+If \code{x} does not have column names and classes as specified in \code{\link{airdas_dfr}},
+then the function returns an error message detailing the first column that does not
+meet the \code{\link{airdas_dfr}} requirements.
 }
 \seealso{
 \code{\link{airdas_dfr-class}}

@@ -43,7 +43,7 @@
 Subsetting \code{airdas_dfr} or \code{airdas_df} objects
 }
 \details{
-When subsetting a \code{airdas_dfr} or \code{airdas_df} object, 
+When subsetting a \code{airdas_dfr} or \code{airdas_df} object,
 henceforth a \code{airdas_} object,
 using any of the functions described in \code{\link[base]{[.data.frame}},
 then then the \code{airdas_} class is simply dropped and the object is of class \code{data.frame}.
@@ -51,7 +51,7 @@ This is because of the strict format requirements of \code{airdas_} objects;
 it is likely that a subsetted \code{airdas_} object will not have
 the format required by subsequent swfscAirDAS functions,
 and thus it is safest to drop the \code{airdas_} class.
-If a data frame is passed to downstream \code{swfscAirDAS} functions 
+If a data frame is passed to downstream \code{swfscAirDAS} functions
 that require a \code{airdas_} object,
 then they will attempt to coerce the object to the necessary \code{airdas_} class
 See \code{\link{as_airdas_dfr}} and \code{\link{as_airdas_df}} for more details.

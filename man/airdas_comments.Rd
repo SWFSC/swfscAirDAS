@@ -16,23 +16,23 @@ airdas_comments(x)
 \method{airdas_comments}{airdas_dfr}(x)
 }
 \arguments{
-\item{x}{\code{airdas_dfr} or \code{airdas_df} object, 
+\item{x}{\code{airdas_dfr} or \code{airdas_df} object,
 or a data frame that can be coerced to a \code{airdas_dfr} object}
 }
 \value{
 \code{x}, filtered for C events and with the added column
-  comment_str containing the concatenated comment strings
+comment_str containing the concatenated comment strings
 }
 \description{
 Extract comments from \code{airdas_dfr} or \code{airdas_df} object
 }
 \details{
-This function recreates the comment strings by 
-  pasting the Data# columns back together for the C events (comments)
-  
-  See the examples section for how to search for comments with the
-  phrase "record" to determine what extra information (e.g. molas)
-  was being recorded vs ignored.
+This function recreates the comment strings by
+pasting the Data# columns back together for the C events (comments)
+
+See the examples section for how to search for comments with the
+phrase "record" to determine what extra information (e.g. molas)
+was being recorded vs ignored.
 }
 \examples{
 y <- system.file("airdas_sample.das", package = "swfscAirDAS")

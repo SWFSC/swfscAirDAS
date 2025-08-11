@@ -64,9 +64,9 @@ at
 
 Checks that are not done by this function that may be of interest:
 \itemize{
-  \item Check for valid fish ball/mola/jelly/crab pot codes
-  \item Check that datetimes are sequential, meaning they 
-    1) are the same as or 2) come after the previous event
+\item Check for valid fish ball/mola/jelly/crab pot codes
+\item Check that datetimes are sequential, meaning they
+1) are the same as or 2) come after the previous event
 }
 }
 \examples{
