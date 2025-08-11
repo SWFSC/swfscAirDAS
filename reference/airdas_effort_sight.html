@@ -66,22 +66,21 @@ The default is that all of these event codes are kept</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A list, identical to <code>x.list</code> except for
-  1) the nSI and ANI columns added to <code>x.list$segdata</code>,
-  one each for each element of <code>sp.codes</code>, and
-  2) the included column of <code>x.list$sightinfo</code>, which has been set as
-  <code>FALSE</code> for sightings of species not listed in <code>sp.codes</code></p>
-    </div>
+    <p>A list, identical to <code>x.list</code> except for</p><ol><li><p>the nSI and ANI columns added to <code>x.list$segdata</code>,
+one each for each element of <code>sp.codes</code>, and</p></li>
+<li><p>the included column of <code>x.list$sightinfo</code>, which has been set as
+<code>FALSE</code> for sightings of species not listed in <code>sp.codes</code></p></li>
+</ol></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>This function takes the output of <code><a href="airdas_effort.html">airdas_effort</a></code> and
-  adds columns for the number of sightings (nSI) and number of animals (ANI)
-  for selected species (selected via <code>sp.codes</code>) for each segment
-  to the segdata element of <code>x.list</code>.
-  However, only sightings with an included value of <code>TRUE</code>
-  (included is a column in sightinfo) are included in the summaries.
-  Having this step separate from <code><a href="airdas_effort.html">airdas_effort</a></code> allows users to
-  personalize the included values as desired for their analysis.</p>
+adds columns for the number of sightings (nSI) and number of animals (ANI)
+for selected species (selected via <code>sp.codes</code>) for each segment
+to the segdata element of <code>x.list</code>.
+However, only sightings with an included value of <code>TRUE</code>
+(included is a column in sightinfo) are included in the summaries.
+Having this step separate from <code><a href="airdas_effort.html">airdas_effort</a></code> allows users to
+personalize the included values as desired for their analysis.</p>
     </div>
 
     <div class="section level2">

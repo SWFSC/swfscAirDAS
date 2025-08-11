@@ -96,45 +96,45 @@ into which <code>x</code> will be chopped</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Data frame with the segdata information described above
-  and in <code><a href="airdas_effort.html">airdas_effort</a></code></p>
+and in <code><a href="airdas_effort.html">airdas_effort</a></code></p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>WARNING - do not call this function directly!
-  It is exported for documentation purposes, but is intended for internal package use only.</p>
+It is exported for documentation purposes, but is intended for internal package use only.</p>
 <p>This function was designed to be called by one of the airdas_chop_ functions,
-  e.g. <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>, and thus
-  users should avoid calling it themselves.
-  It loops through the events in <code>x</code>, calculating and storing relevant
-  information for each modeling segment as it goes.
-  Because <code>x</code> is a continuous effort section, it must begin with
-  a "T" or "R" event and end with the corresponding "E" or "O" event.</p>
+e.g. <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>, and thus
+users should avoid calling it themselves.
+It loops through the events in <code>x</code>, calculating and storing relevant
+information for each modeling segment as it goes.
+Because <code>x</code> is a continuous effort section, it must begin with
+a "T" or "R" event and end with the corresponding "E" or "O" event.</p>
 <p>For each segment, this function reports the
-  segment ID, transect code, the start/end/mid coordinates (lat/lon),
-  start/end/mid date/times (DateTime), segment length,
-  year, month, day, time, observers,
-  and average conditions (which are specified by <code>conditions</code>).
-  The segment ID is designated as <code>section.id</code> _ index of the modeling segment.
-  Thus, if <code>section.id</code> is <code>1</code>, then the segment ID for
-  the second segment from <code>x</code> is <code>"1_2"</code>.</p>
+segment ID, transect code, the start/end/mid coordinates (lat/lon),
+start/end/mid date/times (DateTime), segment length,
+year, month, day, time, observers,
+and average conditions (which are specified by <code>conditions</code>).
+The segment ID is designated as <code>section.id</code> _ index of the modeling segment.
+Thus, if <code>section.id</code> is <code>1</code>, then the segment ID for
+the second segment from <code>x</code> is <code>"1_2"</code>.</p>
 <p>When <code>segdata.method</code> is <code>"avg"</code>, the condition values are
-  calculated as a weighted average by distance.
-  The reported value for logical columns (e.g. Haze) is the percentage
-  (in decimals) of the segment in which that condition was <code>TRUE</code>.
-  For character columns, the reported value for each segment is
-  the unique value(s) present in the segment, with <code>NA</code>s omitted,
-  pasted together via <code>paste(..., collapse = "; ")</code>.
-  When <code>segdata.method</code> is <code>"maxdist"</code>, the reported values
-  are, for each condition, the value recorded for the longest distance
-  during that segment (with <code>NA</code>s omitted).</p>
+calculated as a weighted average by distance.
+The reported value for logical columns (e.g. Haze) is the percentage
+(in decimals) of the segment in which that condition was <code>TRUE</code>.
+For character columns, the reported value for each segment is
+the unique value(s) present in the segment, with <code>NA</code>s omitted,
+pasted together via <code>paste(..., collapse = "; ")</code>.
+When <code>segdata.method</code> is <code>"maxdist"</code>, the reported values
+are, for each condition, the value recorded for the longest distance
+during that segment (with <code>NA</code>s omitted).</p>
 <p>Transect code, file name, and vent code that started the continuous effort section
-  are also included in the segdata output.
-  These values (excluding <code>NA</code>s) must be consistent across the
-  entire effort section, and thus across all segments in <code>x</code>;
-  a warning is printed if there are any inconsistencies.</p>
+are also included in the segdata output.
+These values (excluding <code>NA</code>s) must be consistent across the
+entire effort section, and thus across all segments in <code>x</code>;
+a warning is printed if there are any inconsistencies.</p>
 <p><code><a href="https://rdrr.io/pkg/swfscMisc/man/bearing.html" class="external-link">bearing</a></code> and <code><a href="https://rdrr.io/pkg/swfscMisc/man/destination.html" class="external-link">destination</a></code>
-  are used to calculate the segment start, mid, and end points,
-  with <code>method = "vincenty"</code>.</p>
+are used to calculate the segment start, mid, and end points,
+with <code>method = "vincenty"</code>.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

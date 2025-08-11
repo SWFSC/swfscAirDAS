@@ -73,32 +73,32 @@ See the 'Using <code>comment.format</code>' section</p></dd>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p><code>x</code>, filtered for comments with recorded data,
-  with the following columns added:</p><ul><li><p>comment_str: the full comment string</p></li>
+with the following columns added:</p><ul><li><p>comment_str: the full comment string</p></li>
 <li><p>Misc#: Some number of descriptor columns. There should be <code>n</code>
-    columns, although the minimum number will be two columns</p></li>
+columns, although the minimum number will be two columns</p></li>
 <li><p>Value: Associated count or percentage for TURTLE/PHOCOENA data</p></li>
 <li><p>flag_check: logical indicating if the TURTLE/PHOCOENA
-      comment string was longer than an expected number of characters,
-      and thus should be manually inspected</p></li>
+comment string was longer than an expected number of characters,
+and thus should be manually inspected</p></li>
 </ul><p>See the additional sections for more context. If <code>comment.format</code> is
-  <code>NULL</code>, then the output data frame would two Misc# columns: a level
-  one descriptor, e.g. "Fish ball" or "Jellyfish", and a level two
-  descriptor, e.g. s, m, or c. However, if <code>comment.format$n</code> is say 4,
-  then the output data frame would have columns Misc1, Misc2, Misc3, and
-  Misc4.</p>
+<code>NULL</code>, then the output data frame would two Misc# columns: a level
+one descriptor, e.g. "Fish ball" or "Jellyfish", and a level two
+descriptor, e.g. s, m, or c. However, if <code>comment.format$n</code> is say 4,
+then the output data frame would have columns Misc1, Misc2, Misc3, and
+Misc4.</p>
 <p>Messages are printed if either <code>comment.format</code> is not <code>NULL</code>
-  and not comment-data is identified using <code>comment.format</code>, or if
-  <code>x</code> has TURTLE/PHOCOENA data but no TURTLE/PHOCOENA comment-data</p>
+and not comment-data is identified using <code>comment.format</code>, or if
+<code>x</code> has TURTLE/PHOCOENA data but no TURTLE/PHOCOENA comment-data</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Historically, project-specific or miscellaneous data have been
-  recorded in AirDAS comments using specific formats and character codes.
-  This functions identifies and extracts this data from the comment text
-  strings. However, different data types have different comment-data formats.
-  Specifically, TURTLE and PHOCOENA comment-data uses identifier codes that
-  each signify a certain data pattern, while other comment-data (usually that
-  of CARETTA) uses data separated by some delimiter.</p>
+recorded in AirDAS comments using specific formats and character codes.
+This functions identifies and extracts this data from the comment text
+strings. However, different data types have different comment-data formats.
+Specifically, TURTLE and PHOCOENA comment-data uses identifier codes that
+each signify a certain data pattern, while other comment-data (usually that
+of CARETTA) uses data separated by some delimiter.</p>
     </div>
     <div class="section level2">
     <h2 id="turtle-and-phocoena-comment-data">TURTLE and PHOCOENA comment-data<a class="anchor" aria-label="anchor" href="#turtle-and-phocoena-comment-data"></a></h2>
@@ -106,20 +106,20 @@ See the 'Using <code>comment.format</code>' section</p></dd>
 
 
 <p>Current supported data types are: fish balls, molas, jellyfish, and crab
-  pots. See any of the AirDAS format PDFs (<code><a href="airdas_format_pdf.html">airdas_format_pdf</a></code>)
-  for information about the specific codes and formats used to record this
-  data. All comments are converted to lower case for processing to avoid
-  missing data.</p>
+pots. See any of the AirDAS format PDFs (<code><a href="airdas_format_pdf.html">airdas_format_pdf</a></code>)
+for information about the specific codes and formats used to record this
+data. All comments are converted to lower case for processing to avoid
+missing data.</p>
 <p>These different codes contain (at most): a level one descriptor (e.g. fish
-  ball or crab pot), a level two descriptor (e.g. size or jellyfish species),
-  and a value (a count or percentage). Thus, the extracted data are returned
-  together in this structure. The output data frame is long data, i.e. it has
-  one piece of information per line. For instance, if the comment is "fb1s
-  fb1m", then the output data frame will have one line for the small fish
-  ball and one for the medium fish ball. See Value section for more details.</p>
+ball or crab pot), a level two descriptor (e.g. size or jellyfish species),
+and a value (a count or percentage). Thus, the extracted data are returned
+together in this structure. The output data frame is long data, i.e. it has
+one piece of information per line. For instance, if the comment is "fb1s
+fb1m", then the output data frame will have one line for the small fish
+ball and one for the medium fish ball. See Value section for more details.</p>
 <p>Currently this function only recognizes mola data recorded using the "m1",
-  "m2", and "m3" codes (small, medium, and large mola, respectively). Thus,
-  "mola" is not recognized and processed.</p>
+"m2", and "m3" codes (small, medium, and large mola, respectively). Thus,
+"mola" is not recognized and processed.</p>
 <p>The following codes are used for the level two descriptors:</p><table class="table table"><tr><td><em>Description</em></td><td><em>Code</em></td></tr><tr><td>Small</td><td>s</td></tr><tr><td>Medium</td><td>m</td></tr><tr><td>Large</td><td>l</td></tr><tr><td>Unknown</td><td>u</td></tr><tr><td>Chrysaora</td><td>c</td></tr><tr><td>Moon jelly</td><td>m</td></tr><tr><td>Egg yolk</td><td>e</td></tr><tr><td>Other</td><td>o</td></tr></table></div>
     <div class="section level2">
     <h2 id="using-comment-format">Using <code>comment.format</code><a class="anchor" aria-label="anchor" href="#using-comment-format"></a></h2>
@@ -127,18 +127,18 @@ See the 'Using <code>comment.format</code>' section</p></dd>
 
 
 <p><code>comment.format</code> is a list that allows the user to specify the
- comment-data format. To use this argument, data must be separated by a
- delimiter. This list must contain three named elements:</p><ul><li><p>n: A single number indicating the number of elements of data in each
-   comment. Must equal the length of <code>type</code>. A comment must contain
-   exactly this number of <code>sep</code> to be recognized as comment-data</p></li>
+comment-data format. To use this argument, data must be separated by a
+delimiter. This list must contain three named elements:</p><ul><li><p>n: A single number indicating the number of elements of data in each
+comment. Must equal the length of <code>type</code>. A comment must contain
+exactly this number of <code>sep</code> to be recognized as comment-data</p></li>
 <li><p>sep: A single string indicating the field separator string
-   (delimiter). Values within each comment are separated by this string.
-   Currently accepted values are ";" and ","</p></li>
+(delimiter). Values within each comment are separated by this string.
+Currently accepted values are ";" and ","</p></li>
 <li><p>type: A character vector of length <code>n</code> indicating the data type
-   of each data element (column). All values must be one of: "character",
-   "numeric", or "integer".</p></li>
+of each data element (column). All values must be one of: "character",
+"numeric", or "integer".</p></li>
 </ul><p>For instance, for most CARETTA data <code>comment.format</code> should be
- <code>list(n = 5, sep = ";", type = c("character", "character", "numeric",
+<code>list(n = 5, sep = ";", type = c("character", "character", "numeric",
  "numeric", "character"))</code></p>
     </div>
 

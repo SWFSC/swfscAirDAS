@@ -87,25 +87,25 @@ calculated in <code><a href="airdas_effort.html">airdas_effort</a></code></p></d
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>See <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>.
-  The randpicks values will all be <code>NA</code></p>
+The randpicks values will all be <code>NA</code></p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>WARNING - do not call this function directly!
-  It is exported for documentation purposes, but is intended for internal package use only.</p>
+It is exported for documentation purposes, but is intended for internal package use only.</p>
 <p>This function is simply a wrapper for <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>.
-  It calls <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>, with <code>seg.km</code> set to a
-  value larger than the longest continuous effort section in <code>x</code>.
-  Thus, the effort is 'chopped' into the continuous effort sections and then summarized.</p>
+It calls <code><a href="airdas_chop_equallength.html">airdas_chop_equallength</a></code>, with <code>seg.km</code> set to a
+value larger than the longest continuous effort section in <code>x</code>.
+Thus, the effort is 'chopped' into the continuous effort sections and then summarized.</p>
 <p>See the Examples section for an example where the two methods give the same output.
-  Note that the longest continuous effort section in the sample data is ~32km.</p>
+Note that the longest continuous effort section in the sample data is ~32km.</p>
 <p>For an example of how to summarize data by transect,
-  see <code><a href="../articles/swfscAirDAS.html">vignette("swfscAirDAS")</a></code>.
-  In short, if looking to group by individual transects, use
-  <code>segdata$transect_idx &lt;- cumsum(segdata$event == "T")</code>
-  to create a column with a transect index.
-  Then you can use <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a>(transect_idx)</code> and
-  <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></code> to summarise the desired data by transect</p>
+see <code><a href="../articles/swfscAirDAS.html">vignette("swfscAirDAS")</a></code>.
+In short, if looking to group by individual transects, use
+<code>segdata$transect_idx &lt;- cumsum(segdata$event == "T")</code>
+to create a column with a transect index.
+Then you can use <code><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a>(transect_idx)</code> and
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></code> to summarise the desired data by transect</p>
     </div>
 
     <div class="section level2">
