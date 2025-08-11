@@ -61,12 +61,12 @@
 <dt id="arg-file-type">file.type<a class="anchor" aria-label="anchor" href="#arg-file-type"></a></dt>
 <dd><p>character; indicates the program used to create <code>file</code>.
 Must be one of: "turtle", "caretta", "survey", or "phocoena" (case
-sensitive). Default is "turtle". Passed to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
+sensitive). Default is "turtle". Passed to <code><a href="airdas_read.html">airdas_read()</a></code></p></dd>
 
 
 <dt id="arg-skip">skip<a class="anchor" aria-label="anchor" href="#arg-skip"></a></dt>
-<dd><p>integer: see <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">read_fwf</a></code>. Default is 0. Passed
-to <code><a href="airdas_read.html">airdas_read</a></code></p></dd>
+<dd><p>integer: see <code><a href="https://readr.tidyverse.org/reference/read_fwf.html" class="external-link">readr::read_fwf()</a></code>. Default is 0. Passed
+to <code><a href="airdas_read.html">airdas_read()</a></code></p></dd>
 
 
 <dt id="arg-file-out">file.out<a class="anchor" aria-label="anchor" href="#arg-file-out"></a></dt>
@@ -93,8 +93,8 @@ found in the AirDAS files: the file name, line number, index (row number)
 from the <code>airdas_read(file)</code> data frame, 'ID' (pre-Data# columns from
 the DAS file), and description of the issue. This data frame is sorted by the
 'Description' column. If there are multiple issues with the same line, the
-issue descriptions are concatenated together using <code>paste(..., collapse
-= "; ")</code></p>
+issue descriptions are concatenated together using
+<code>paste(..., collapse = "; ")</code></p>
 <p>If <code>print.transect</code> is <code>TRUE</code>, then the output of
 <code>table(x$Data1[x$Event == "T"], useNA = "always")</code>, where <code>x</code> is
 the output of <code>airdas_read(file, ...)</code> is printed</p>
@@ -107,11 +107,9 @@ the file (e.g., a .txt or .csv file) specified by <code>file.out</code></p>
 <code>system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")</code>.</p>
 <p>To see the checks performed by this function, you can access the PDF locally
 at <code>system.file("AirDAS_check.pdf", package = "swfscAirDAS")</code>, or online
-at
-<a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link">https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
+at <a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link">https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
 <p>Checks that are not done by this function that may be of interest:</p><ul><li><p>Check for valid fish ball/mola/jelly/crab pot codes</p></li>
-<li><p>Check that datetimes are sequential, meaning they
-1) are the same as or 2) come after the previous event</p></li>
+<li><p>Check that datetimes are sequential, meaning they 1) are the same as or 2) come after the previous event</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
