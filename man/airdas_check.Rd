@@ -18,10 +18,10 @@ airdas_check(
 
 \item{file.type}{character; indicates the program used to create \code{file}.
 Must be one of: "turtle", "caretta", "survey", or "phocoena" (case
-sensitive). Default is "turtle". Passed to \code{\link{airdas_read}}}
+sensitive). Default is "turtle". Passed to \code{\link[=airdas_read]{airdas_read()}}}
 
-\item{skip}{integer: see \code{\link[readr]{read_fwf}}. Default is 0. Passed
-to \code{\link{airdas_read}}}
+\item{skip}{integer: see \code{\link[readr:read_fwf]{readr::read_fwf()}}. Default is 0. Passed
+to \code{\link[=airdas_read]{airdas_read()}}}
 
 \item{file.out}{character; filename to which to write the error log. Should
 be a text or CSV file. Default is \code{NULL}}
@@ -40,8 +40,8 @@ found in the AirDAS files: the file name, line number, index (row number)
 from the \code{airdas_read(file)} data frame, 'ID' (pre-Data# columns from
 the DAS file), and description of the issue. This data frame is sorted by the
 'Description' column. If there are multiple issues with the same line, the
-issue descriptions are concatenated together using \code{paste(..., collapse
-= "; ")}
+issue descriptions are concatenated together using
+\code{paste(..., collapse = "; ")}
 
 If \code{print.transect} is \code{TRUE}, then the output of
 \code{table(x$Data1[x$Event == "T"], useNA = "always")}, where \code{x} is
@@ -59,14 +59,12 @@ The default (internal) \code{sp.codes} file is located at
 
 To see the checks performed by this function, you can access the PDF locally
 at \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, or online
-at
-\url{https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
+at \url{https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
 
 Checks that are not done by this function that may be of interest:
 \itemize{
 \item Check for valid fish ball/mola/jelly/crab pot codes
-\item Check that datetimes are sequential, meaning they
-1) are the same as or 2) come after the previous event
+\item Check that datetimes are sequential, meaning they 1) are the same as or 2) come after the previous event
 }
 }
 \examples{

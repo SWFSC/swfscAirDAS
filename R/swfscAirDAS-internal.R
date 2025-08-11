@@ -253,6 +253,7 @@
   # event.code: character; event code by which to filter z
   # z.col: Column which to check; must be one of the Data# columns
   ### Output: indices of z that is NA
+  # File LineNum Idx ID Description
   
   stopifnot(
     inherits(z, "airdas_df") | inherits(z, "airdas_dfr"), 
@@ -281,6 +282,7 @@
   # z3: idx.
   # z4: txt.
   ### Output: list formatted to be added to error.out
+  # Output columns: File, LineNum, Idx, ID, Description
   
   stopifnot(inherits(z1, "airdas_dfr"))
   list(z1$file_das[z3], z1$line_num[z3], z3, z2[z3], rep(z4, length(z3)))

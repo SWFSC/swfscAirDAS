@@ -3,51 +3,48 @@
 #' Check that AirDAS file has accepted formatting and values
 #'
 #' @param file filename(s) of one or more AirDAS files
-#' @param file.type character; indicates the program used to create \code{file}.
+#' @param file.type character; indicates the program used to create `file`.
 #'   Must be one of: "turtle", "caretta", "survey", or "phocoena" (case
-#'   sensitive). Default is "turtle". Passed to \code{\link{airdas_read}}
-#' @param skip integer: see \code{\link[readr]{read_fwf}}. Default is 0. Passed
-#'   to \code{\link{airdas_read}}
+#'   sensitive). Default is "turtle". Passed to [airdas_read()]
+#' @param skip integer: see [readr::read_fwf()]. Default is 0. Passed
+#'   to [airdas_read()]
 #' @param file.out character; filename to which to write the error log. Should
-#'   be a text or CSV file. Default is \code{NULL}
+#'   be a text or CSV file. Default is `NULL`
 #' @param sp.codes character; filename of .dat file from which to read accepted
-#'   species codes. If \code{NULL}, default (internal) file will be used.
-#'   Default is \code{NULL}
+#'   species codes. If `NULL`, default (internal) file will be used.
+#'   Default is `NULL`
 #' @param print.transect logical; indicates if a table with all the transect
-#'   numbers in the \code{x} should be printed using \code{\link[base]{table}}.
-#'   Default is \code{TRUE}
+#'   numbers in the `x` should be printed using \code{\link[base]{table}}.
+#'   Default is `TRUE`
 #'
-#' @details The default (internal) \code{sp.codes} file is located at
-#' \code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}.
+#' @details The default (internal) `sp.codes` file is located at
+#' `system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")`.
 #'
 #' To see the checks performed by this function, you can access the PDF locally
-#' at \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, or online
-#' at
-#' \url{https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf}
+#' at `system.file("AirDAS_check.pdf", package = "swfscAirDAS")`, or online
+#' at <https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf>
 #'
 #' Checks that are not done by this function that may be of interest:
-#' \itemize{
-#'   \item Check for valid fish ball/mola/jelly/crab pot codes
-#'   \item Check that datetimes are sequential, meaning they 
-#'     1) are the same as or 2) come after the previous event
-#' }
+#' * Check for valid fish ball/mola/jelly/crab pot codes
+#' * Check that datetimes are sequential, meaning they 1) are the same as or 2) come after the previous event
 #'
-#' @return A data frame with five columns that list information about errors
+#' @return 
+#' A data frame with five columns that list information about errors
 #' found in the AirDAS files: the file name, line number, index (row number)
-#' from the \code{airdas_read(file)} data frame, 'ID' (pre-Data# columns from
+#' from the `airdas_read(file)` data frame, 'ID' (pre-Data# columns from
 #' the DAS file), and description of the issue. This data frame is sorted by the
 #' 'Description' column. If there are multiple issues with the same line, the
-#' issue descriptions are concatenated together using \code{paste(..., collapse
-#' = "; ")}
+#' issue descriptions are concatenated together using 
+#' `paste(..., collapse = "; ")`
 #'
-#' If \code{print.transect} is \code{TRUE}, then the output of
-#' \code{table(x$Data1[x$Event == "T"], useNA = "always")}, where \code{x} is
-#' the output of \code{airdas_read(file, ...)} is printed
+#' If `print.transect` is `TRUE`, then the output of
+#' `table(x$Data1[x$Event == "T"], useNA = "always")`, where `x` is
+#' the output of `airdas_read(file, ...)` is printed
 #'
-#' If \code{file.out} is not \code{NULL}, then the error log is also written to
-#' the file (e.g., a .txt or .csv file) specified by \code{file.out}
+#' If `file.out` is not `NULL`, then the error log is also written to
+#' the file (e.g., a .txt or .csv file) specified by `file.out`
 #'
-#' @seealso \url{https://swfsc.github.io/swfscAirDAS/}
+#' @seealso <https://swfsc.github.io/swfscAirDAS/>
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -442,7 +439,6 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   # the angle must be negative if sighting observer is left observer, 
   # and positive if right observer. 
   # Only checks for idx w/out previous angle/obs issue, and for non-NA angles
-  browser()
   ang.lr <- obs.code %>% 
     .mutate_std(sight = FALSE) %>% 
     filter(!(.data$idx %in% c(idx.s.obs.code, idx.s.ang)), 
