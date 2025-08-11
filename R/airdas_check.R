@@ -65,7 +65,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   #----------------------------------------------------------------------------
   ### Read and process file
   error.out <- data.frame(
-    File = NA, LineNum = NA, Idx = NA, ID = NA, Description = NA,
+    File = NA, LineNum = NA, CheckIdx = NA, ID = NA, Description = NA, 
     stringsAsFactors = FALSE
   )
   
@@ -129,8 +129,8 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   )
   
   ### Check lat/lon coordinates - coords added to 1 events in processed data
-  lat.which <- which(!between(x.proc$Lat, -90, 90))
-  lon.which <- which(!between(x.proc$Lon, -180, 180))
+  lat.which <- x.proc$idx[which(!between(x.proc$Lat, -90, 90))]
+  lon.which <- x.proc$idx[which(!between(x.proc$Lon, -180, 180))]
   
   error.out <- rbind(
     error.out,
@@ -643,19 +643,16 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   #----------------------------------------------------------------------------
   ### Remove first line and return
   if (nrow(error.out) == 1) {
-    bevs <- c(
-      "beer!", "glass of wine!", "margarita!", "vodka soda!", "gin and tonic!"
-    )
     to.return <- data.frame(
-      File = NA, LineNum = NA, Idx = NA, ID = NA, 
-      Description = paste("No errors found, enjoy your", sample(bevs, 1)), 
+      File = NA, LineNum = NA, CheckIdx = NA, ID = NA, 
+      Description = "No errors found, enjoy your beverage!", 
       stringsAsFactors = FALSE
     )
     
   } else {
     to.return <- error.out %>% 
       slice(-1) %>% 
-      group_by(.data$File, .data$LineNum, .data$Idx, .data$ID) %>%
+      group_by(.data$File, .data$LineNum, .data$CheckIdx, .data$ID) %>%
       summarise(Description = paste(sort(.data$Description), collapse = "; ")) %>%
       ungroup() %>%
       arrange(.data$Description)

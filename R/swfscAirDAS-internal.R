@@ -281,11 +281,16 @@
   # z2: x.lines
   # z3: idx.
   # z4: txt.
-  ### Output: list formatted to be added to error.out
-  # Output columns: File, LineNum, Idx, ID, Description
-  
+  ### Output: named list, formatted to be added to error.out
+
   stopifnot(inherits(z1, "airdas_dfr"))
-  list(z1$file_das[z3], z1$line_num[z3], z3, z2[z3], rep(z4, length(z3)))
+  list(
+    File = z1$file_das[z3], 
+    LineNum = z1$line_num[z3], 
+    ID = z2[z3], 
+    CheckIdx = z3, 
+    Description = rep(z4, length(z3))
+  )
 }
 
 ###############################################################################
