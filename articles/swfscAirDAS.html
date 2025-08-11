@@ -84,7 +84,7 @@ all processing options.</p>
 document. This file is formatted as a DAS file created using the TURTLE
 program</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "  1C 123059 040915 N39:14.13 W123:09.38 Recorder: dd                                "</span></span>
 <span><span class="co">#&gt; [2] "  2C 123059 040915 N39:14.13 W123:09.38 Not recording molas                         "</span></span>
@@ -108,7 +108,7 @@ These PDFs are available online at <a href="https://swfsc.github.io/swfscAirDAS/
 <code class="sourceCode R"><span><span class="co"># Code not run</span></span>
 <span><span class="va">y.check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/airdas_check.html">airdas_check</a></span><span class="op">(</span><span class="va">y</span>, file.type <span class="op">=</span> <span class="st">"turtle"</span>, skip <span class="op">=</span> <span class="fl">0</span>, print.transect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>Part of the check is to check that all sighting events use expected
-species codes. The package includes a <a href="https://github.com/SWFSC/swfscAirDAS/blob/main/inst/SpCodesAirDAS.DAT" class="external-link">default
+species codes. The package includes a <a href="https://github.com/SWFSC/swfscAirDAS/blob/main/inst/extdata/SpCodesAirDAS.DAT" class="external-link">default
 SpCodes file</a>; however, <code>airdas_check</code> does have an
 argument <code>sp.codes.file</code> if you need to use a custom SpCodes
 file.</p>

@@ -107,29 +107,36 @@ See <code><a href="as_airdas_dfr.html">as_airdas_dfr</a></code> and <code><a hre
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extadata"</span>, <span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in airdas_read(y):</span> The supplied character string does not all name an existing file(s), meaning file.exists(file) is FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># All return a data frame:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">y.read</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, <span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.read' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">y.read</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.read' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y.df</span> <span class="op">&lt;-</span> <span class="va">y.read</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.read' not found</span>
 <span class="r-in"><span><span class="va">y.df</span><span class="op">[</span>, <span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"a"</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">y.df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y.df</span> <span class="op">&lt;-</span> <span class="va">y.read</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.read' not found</span>
 <span class="r-in"><span><span class="va">y.df</span><span class="op">$</span><span class="va">Event</span> <span class="op">&lt;-</span> <span class="st">"a"</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">y.df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">y.df</span> <span class="op">&lt;-</span> <span class="va">y.read</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.read' not found</span>
 <span class="r-in"><span><span class="va">y.df</span><span class="op">[[</span><span class="st">"Event"</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"a"</span></span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">y.df</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "data.frame"</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.df' not found</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -111,7 +111,7 @@ the file (e.g., a .txt or .csv file) specified by <code>file.out</code></p>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The default (internal) <code>sp.codes</code> file is located at
-<code>system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")</code>.</p>
+<code>system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")</code>.</p>
 <p>To see the checks performed by this function, you can access the PDF locally
 at <code>system.file("AirDAS_check.pdf", package = "swfscAirDAS")</code>, or online
 at <a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf" class="external-link">https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.pdf</a></p>
@@ -125,8 +125,12 @@ at <a href="https://github.com/swfsc/swfscAirDAS/blob/master/inst/AirDAS_check.p
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">airdas_check</span><span class="op">(</span><span class="va">y</span>, print.transect <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Replace system.file... with path to your SpCodes file </span></span></span>
+<span class="r-in"><span><span class="va">sp.codes.file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"SpCodesAirDAS.DAT"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">airdas_check</span><span class="op">(</span><span class="va">y</span>, sp.codes.file <span class="op">=</span>  <span class="va">sp.codes.file</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
