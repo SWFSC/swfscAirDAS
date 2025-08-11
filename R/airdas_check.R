@@ -454,8 +454,8 @@ airdas_check <- function(
     .mutate_std(sight = FALSE) %>% 
     filter(!(.data$idx %in% c(idx.s.obs.code, idx.s.ang)), 
            !is.na(.data$angle_curr), 
-           ObsStd, 
-           OnEffort) %>% 
+           .data$ObsStd, 
+           .data$OnEffort) %>% 
     mutate(angle_curr = as.numeric(.data$angle_curr), 
            angle_issue1 = .data$angle_curr > 0 & .data$s_obs_code %in% c(1, 5), 
            angle_issue2 = .data$angle_curr < 0 & .data$s_obs_code %in% c(3, 6), 
