@@ -23,7 +23,7 @@
 #' @importFrom methods setOldClass
 #' @importFrom parallel clusterExport detectCores parLapplyLB stopCluster
 #' @importFrom purrr pmap_lgl
-#' @importFrom readr cols col_character read_fwf fwf_positions
+#' @importFrom readr cols col_character read_fwf fwf_cols fwf_positions
 #' @importFrom rlang !! .data na_lgl
 #' @importFrom stats na.omit runif
 #' @importFrom stringr str_count str_detect str_match_all str_split

@@ -41,6 +41,8 @@ The first step in processing AirDAS data is to ensure that the DAS file has expe
 y.check <- airdas_check(y, file.type = "turtle", skip = 0, print.transect = TRUE)
 ```
 
+Part of the check is to check that all sighting events use expected species codes.  The package includes a [default SpCodes file](https://github.com/SWFSC/swfscAirDAS/blob/main/inst/SpCodesAirDAS.DAT); however, `airdas_check` does have an argument `sp.codes.file` if you need to use a custom SpCodes file.
+
 ## Read and process data
 
 Once QA/QC is complete and you have fixed any data entry errors, you can begin to process the AirDAS data. The backbone of this package is the reading and processing steps: 1) the data from the DAS file are read into the columns of a data frame and 2) state and condition information are extracted for each event. This means that after processing, you can simply look at any event (row) and determine the Beaufort, viewing conditions, etc., at the time of the event. All other functions in the package depend on the AirDAS data being in this processed state.

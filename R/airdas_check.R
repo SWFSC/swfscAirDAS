@@ -10,14 +10,18 @@
 #'   to [airdas_read()]
 #' @param file.out character; filename to which to write the error log. Should
 #'   be a text or CSV file. Default is `NULL`
-#' @param sp.codes character; filename of .dat file from which to read accepted
-#'   species codes. If `NULL`, default (internal) file will be used.
-#'   Default is `NULL`
+#' @param sp.codes.file character; default is `NULL`. 
+#'   Filename of .dat file from which to read the species codes. 
+#'   If `NULL`, the default (internal) file will be used.
+#'   The SpCodes file will be read by [airdas_spcodes_read()]
+#' @param sp.codes.skip integer; default is 3. 
+#'   Passed directly to `skip` argument of [airdas_spcodes_read()]
 #' @param print.transect logical; indicates if a table with all the transect
-#'   numbers in the `x` should be printed using \code{\link[base]{table}}.
+#'   numbers in the `x` should be printed using [base::table()].
 #'   Default is `TRUE`
 #'
-#' @details The default (internal) `sp.codes` file is located at
+#' @details 
+#' The default (internal) `sp.codes` file is located at
 #' `system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")`.
 #'
 #' To see the checks performed by this function, you can access the PDF locally
@@ -51,9 +55,15 @@
 #' if (interactive()) airdas_check(y, print.transect = TRUE)
 #'
 #' @export
-airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),  
-                         skip = 0, file.out = NULL, 
-                         sp.codes = NULL, print.transect = TRUE) {
+airdas_check <- function(
+    file, 
+    file.type = c("turtle", "caretta", "phocoena"),  
+    skip = 0, 
+    file.out = NULL, 
+    sp.codes.file = NULL, 
+    sp.codes.skip = 3, 
+    print.transect = TRUE
+) {
   
   file.type <- match.arg(file.type)
   
@@ -97,21 +107,22 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   #----------------------------------------------------------------------------
   ### Process sp.codes file
   message("Reading and processing SpCodes file")
-  if (is.null(sp.codes)) 
-    sp.codes <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
+  if (is.null(sp.codes.file)) 
+    sp.codes.file <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
   
-  sp.acc.df <- read_fwf(
-    sp.codes, 
-    col_positions = fwf_positions(start = c(1, 10, 43), end = c(6, 42, NA)),
-    col_types = cols(.default = col_character()),
-    trim_ws = TRUE, skip = 3, skip_empty_rows = FALSE
-  )
+  sp.acc.df <- airdas_spcodes_read(file = sp.codes.file, skip = sp.codes.skip)
+  # sp.acc.df <- read_fwf(
+  #   sp.codes, 
+  #   col_positions = fwf_positions(start = c(1, 10, 43), end = c(6, 42, NA)),
+  #   col_types = cols(.default = col_character()),
+  #   trim_ws = TRUE, skip = 3, skip_empty_rows = FALSE
+  # )
   
   sp.acc <- sp.acc.df[[1]]
   sp.acc.all <- c(sp.acc, toupper(sp.acc))
   
-  if (!all(nchar(sp.acc) == 2))
-    warning("Some species codes from sp.codes are not two charcters. ", 
+  if (!all(nchar(sp.acc) <= 5))
+    warning("Some species codes from sp.codes are more than five charcters. ", 
             "Did you load the correct species code .dat file?", 
             immediate. = TRUE)
   
@@ -589,7 +600,7 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
     # Turtle size
     data.t.size <- switch(file.type, caretta = 6, turtle = 4)
     acc.size <- c(1:9, sprintf("%02d", 1:9), seq(0.5, 8.5, by = 1))
-
+    
     if (file.type == "caretta") {
       acc.size <- c(acc.size, "s", "m", "l")
       idx.t.size <- .check_character(x.proc, "t", paste0("Data", data.t.size), acc.size, 2)

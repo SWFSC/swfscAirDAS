@@ -1,16 +1,26 @@
 # swfscAirDAS 0.4.0 (dev)
 
-* Add ability to read and parse left rear and right rear observers to columns ObsLR and ObsRR, respectively. These should only be relevant for the TURTLE format. Sightings by left rear and right rear observers are considered standard sightings. Additionally, updated the AirDAS TURTLE format PDF to include descriptions of these data
-
-* Fix longitude check (#5)
-
-* Allow turtle sizes to be in increments of 0.5, rather than just whole numbers
+* Added ability to read and parse left rear and right rear observers to columns ObsLR and ObsRR, respectively. These should only be relevant for the TURTLE format. Sightings by left rear and right rear observers are considered standard sightings. Additionally, updated the AirDAS TURTLE format PDF to include descriptions of these data
 
 * Added "mm" (unidentified marine mammal) to the default airdas species code file
 
-* Use [proper](https://dplyr.tidyverse.org/articles/programming.html) tidyselect syntax
+* Changed to use [proper](https://dplyr.tidyverse.org/articles/programming.html) tidyselect syntax
 
 * The DateTime column in `airdas_read` output now always has a timezone of "" (#7)
+
+* Changed 'Line Number' to 'Event Number' in the Format PDFs, for consistency with shipboard DAS data
+
+* Added a function `airdas_spcodes_read` for reading AirDas SpCodes files in a consistent way. Changed `airdas_check` to use this function for reading in either the default or a custom SpCodes file. 
+
+## `airdas_check` updates
+
+* Angles checks: inlcude ObsLR and ObsRR in observer checks; allow 'zz' as an  observer code; only check for sighting angle for on-effort, standard observers. 
+
+* Fixed longitude check (#5)
+
+* Fixed the lat/lon check to return the proper line number of any errors
+
+* Changed the turtle size check in `airdas_check` to allow turtle sizes to be in increments of 0.5, rather than just whole numbers
 
 
 # swfscAirDAS 0.3.1

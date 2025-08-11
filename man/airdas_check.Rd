@@ -9,7 +9,8 @@ airdas_check(
   file.type = c("turtle", "caretta", "phocoena"),
   skip = 0,
   file.out = NULL,
-  sp.codes = NULL,
+  sp.codes.file = NULL,
+  sp.codes.skip = 3,
   print.transect = TRUE
 )
 }
@@ -26,12 +27,16 @@ to \code{\link[=airdas_read]{airdas_read()}}}
 \item{file.out}{character; filename to which to write the error log. Should
 be a text or CSV file. Default is \code{NULL}}
 
-\item{sp.codes}{character; filename of .dat file from which to read accepted
-species codes. If \code{NULL}, default (internal) file will be used.
-Default is \code{NULL}}
+\item{sp.codes.file}{character; default is \code{NULL}.
+Filename of .dat file from which to read the species codes.
+If \code{NULL}, the default (internal) file will be used.
+The SpCodes file will be read by \code{\link[=airdas_spcodes_read]{airdas_spcodes_read()}}}
+
+\item{sp.codes.skip}{integer; default is 3.
+Passed directly to \code{skip} argument of \code{\link[=airdas_spcodes_read]{airdas_spcodes_read()}}}
 
 \item{print.transect}{logical; indicates if a table with all the transect
-numbers in the \code{x} should be printed using \code{\link[base]{table}}.
+numbers in the \code{x} should be printed using \code{\link[base:table]{base::table()}}.
 Default is \code{TRUE}}
 }
 \value{
