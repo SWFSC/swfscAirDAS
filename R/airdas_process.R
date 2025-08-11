@@ -1,101 +1,99 @@
 #' Process aerial survey DAS data
 #'
-#' Process AirDAS data (the output of \code{\link{airdas_read}}), 
+#' Process AirDAS data (the output of [airdas_read()), 
 #'   including extracting state and condition information for each AirDAS event
 #'
-#' @param x an object of class \code{airdas_dfr} object, 
-#'   an object that can be coerced to class \code{airdas_dfr},
-#'   or a character (filepath) which is first passed to \code{\link{airdas_read}}
-#' @param ... passed to \code{\link{airdas_read}} if \code{x} is a character.
+#' @param x an object of class `airdas_dfr` object, 
+#'   an object that can be coerced to class `airdas_dfr`,
+#'   or a character (filepath) which is first passed to [airdas_read()]
+#' @param ... passed to [airdas_read()] if `x` is a character.
 #'   Otherwise ignored
 #' @param days.gap.part numeric of length 1; 
 #'   time gap (in days) used to identify when a 'partial reset' is performed, 
 #'   i.e. when propagated info (weather, observers, etc) is reset. 
-#'   Default is 30 minutes; must be less than or equal to \code{days.gap.full}
+#'   Default is 30 minutes; must be less than or equal to `days.gap.full`
 #' @param days.gap.full numeric of length 1; 
 #'   time gap (in days) used to identify when a 'full reset; is performed, 
 #'   i.e. when all info (transect number and propagated info) is reset. 
-#'   Default is 12 hours; must be greater than \code{days.gap.part}
-#' @param gap.message logical; default is \code{FALSE}.
+#'   Default is 12 hours; must be greater than `days.gap.part`
+#' @param gap.message logical; default is `FALSE`.
 #'   Indicates if messages should be printed detailing which row(s) of the 
 #'   output data frame were partially or fully reset
-#' @param reset.transect logical; default is \code{TRUE}.
+#' @param reset.transect logical; default is `TRUE`.
 #'   Indicates if propagated info (weather, observers, etc) should be reset 
-#'   to \code{NA} when beginning a new transect. See Details section
+#'   to `NA` when beginning a new transect. See Details section
 #' @param trans.upper logical; indicates if all transect codes should be 
-#'   capitalized using \code{\link[base:chartr]{toupper}}.
-#'   Default is \code{FALSE}
+#'   capitalized using [base::toupper()].
+#'   Default is `FALSE`
 #'
-#' @details If \code{x} is a character, it is assumed to be a filepath and 
-#'   first passed to \code{\link{airdas_read}}. 
-#'   This output is then processed.
+#' @details 
+#' If `x` is a character, it is assumed to be a filepath and first passed
+#' to [airdas_read()]. This output is then processed.
+#'
+#' This function cannot handle concatenated airdas_dfr objects of multiple file
+#' types. In other words, AirDAS data must be processed and then concatenated.
+#'
+#' AirDAS data is event-based, meaning most events indicate when a state or
+#' weather condition changes. For instance, a 'W' event indicates when one or
+#' more weather conditions (such as Beaufort sea state) change, and the weather
+#' conditions are the same for subsequent events until the next 'W' event. For
+#' each state/condition: a new column is created, the state/condition
+#' information is extracted from relevant events, and extracted information is
+#' propagated to appropriate subsequent rows (events). Thus, each row in the
+#' output data frame contains all pertinent state/condition information for that
+#' row.
+#'
+#' The following assumptions/decisions are made during processing:
+#' * All '#' events (deleted events) are removed
+#' * 'DateTime', 'Lat', and 'Lon' information are added to '1' events where applicable
+#' * Effort is determined as follows: T/R events turns effort on,
+#'   and O/E events turn effort off. T/R events themselves will be on effort,
+#'   while O/E events will be off effort. The 'EffortDot' column is ignored
+#' * 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
+#' * Observer ('ObsL', 'ObsB', 'ObsR', 'Rec', 'ObsLR', 'ObsRR') values are converted to lower case
+#' * Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
+#' * Missing values are `NA` rather than `-1`
+#'
+#' Normally, a T event (to indicate starting/resuming a transect) is immediately
+#' followed by a VPAW event series, creating a TVPAW event series. The
+#' `reset.transect` argument causes the conditions set in the VPAW event
+#' series (Beaufort, viewing conditions, altitude, etc.) to be reset to
+#' `NA` at each T event
 #'   
-#'   This function cannot handle concatenated airdas_dfr objects of multiple file types. 
-#'   In other words, AirDAS data must be processed and then concatenated.
-#'      
-#'   AirDAS data is event-based, meaning most events indicate when a state or weather condition changes.
-#'   For instance, a 'W' event indicates when one or more weather conditions 
-#'   (such as Beaufort sea state) change, and the weather conditions 
-#'   are the same for subsequent events until the next 'W' event.
-#'   For each state/condition: a new column is created, 
-#'   the state/condition information is extracted from relevant events, 
-#'   and extracted information is propagated to appropriate subsequent rows (events). 
-#'   Thus, each row in the output data frame contains all 
-#'   pertinent state/condition information for that row.
+#' @returns
+#' An `airdas_df` object, which is also a data frame. It consists of the
+#' input data frame, i.e. the output of [airdas_read()], with the
+#' following columns added:
+#' | *State/condition* | *Column name* | *Notes* |
+#' | :---                              | :---     | :--- |
+#' | On/off effort                     | OnEffort | |
+#' | Transect code                     | Trans    | |
+#' | Beaufort sea state                | Bft      | |
+#' | Percent overcast (cloud cover)    | CCover   | |
+#' | Jellyfish code                    | Jelly    | not in PHOCOENA data |
+#' | Horizontal sun (clock system)     | HorizSun |
+#' | Vertical sun (clock system)       | VertSun  | only in PHOCOENA data |
+#' | Haze/Kelp/Red tide code           | HKR      | |
+#' | Haze (from HKR code)              | Haze     | |
+#' | Kelp (from HKR code)              | Kelp     | |
+#' | Red tide (from HKR code)          | RedTide  | |
+#' | Altitude (feet)                   | AltFt    | |
+#' | Speed (knots)                     | SpKnot   | |
+#' | Left observer (front)             | ObsL     | |
+#' | Belly observer                    | ObsB     | |
+#' | Right observer (front)            | ObsR     | |
+#' | Data recorder                     | Rec      | |
+#' | Left rear observer                | ObsLR    | |
+#' | Right rear observer               | ObsRR    | |
+#' | Viewing condition - left inside   | VLI      | |
+#' | Viewing condition - left outside  | VLO      | |
+#' | Viewing condition - belly         | VB       | |
+#' | Viewing condition - right inside  | VRI      | |
+#' | Viewing condition - right outside | VRO      | |
 #'   
-#'   The following assumptions/decisions are made during processing:
-#'   \itemize{
-#'     \item All '#' events (deleted events) are removed
-#'     \item 'DateTime', 'Lat', and 'Lon' information are added to '1' events where applicable
-#'     \item Effort is determined as follows: T/R events turns effort on, 
-#'       and O/E events turn effort off. 
-#'       T/R events themselves will be on effort, while O/E events will be off effort.
-#'       The 'EffortDot' column is ignored
-#'     \item 'HKR' values are converted to lower case. "Y" values are considered to be "H" values
-#'     \item Observer ('ObsL', 'ObsB', 'ObsR', 'Rec', 'ObsLR', 'ObsRR') values are converted to lower case
-#'     \item Viewing condition ('VLI', 'VLO', 'VB', 'VRI', 'VRO') values are converted to lower case
-#'     \item Missing values are \code{NA} rather than \code{-1}
-#'   }
-#'   
-#'   Normally, a T event (to indicate starting/resuming a transect)
-#'   is immediately followed by a VPAW event series, creating a TVPAW event series.
-#'   The \code{reset.transect} argument causes the conditions set in the VPAW event series
-#'   (Beaufort, viewing conditions, altitude, etc.) to be reset to \code{NA} at each T event
-#'   
-#' @return An \code{airdas_df} object, which is also a data frame.
-#'   It consists of the input data frame, i.e. the output of \code{\link{airdas_read}},
-#'   with the following columns added:
-#'   \tabular{lll}{
-#'     \emph{State/condition}            \tab \emph{Column name} \tab \emph{Notes}\cr
-#'     On/off effort                     \tab OnEffort\cr
-#'     Transect code                     \tab Trans\cr
-#'     Beaufort sea state                \tab Bft\cr
-#'     Percent overcast (cloud cover)    \tab CCover\cr
-#'     Jellyfish code                    \tab Jelly \tab not in PHOCOENA data\cr
-#'     Horizontal sun (clock system)     \tab HorizSun\cr
-#'     Vertical sun (clock system)       \tab VertSun \tab only in PHOCOENA data\cr
-#'     Haze/Kelp/Red tide code           \tab HKR\cr
-#'     Haze (from HKR code)              \tab Haze\cr
-#'     Kelp (from HKR code)              \tab Kelp\cr
-#'     Red tide (from HKR code)          \tab RedTide\cr
-#'     Altitude (feet)                   \tab AltFt\cr
-#'     Speed (knots)                     \tab SpKnot\cr
-#'     Left observer (front)             \tab ObsL\cr
-#'     Belly observer                    \tab ObsB\cr
-#'     Right observer (front)            \tab ObsR\cr
-#'     Data recorder                     \tab Rec\cr
-#'     Left rear observer                \tab ObsLR\cr
-#'     Right rear observer               \tab ObsRR\cr
-#'     Viewing condition - left inside   \tab VLI\cr
-#'     Viewing condition - left outside  \tab VLO\cr
-#'     Viewing condition - belly         \tab VB\cr
-#'     Viewing condition - right inside  \tab VRI\cr
-#'     Viewing condition - right outside \tab VRO\cr
-#'   }
-#'   
-#'   See \code{\link{airdas_format_pdf}} for which data columns the condition information 
-#'   is extracted form for each file type. 
-#'   In addition, warnings are printed with line numbers of unexpected event codes
+#' See [airdas_format_pdf()] for which data columns the condition
+#' information is extracted form for each file type. In addition, warnings are
+#' printed with line numbers of unexpected event codes
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")

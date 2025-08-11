@@ -10,6 +10,8 @@
 
 * Use [proper](https://dplyr.tidyverse.org/articles/programming.html) tidyselect syntax
 
+* The DateTime column in `airdas_read` output now always has a timezone of "" (#7)
+
 
 # swfscAirDAS 0.3.1
 
