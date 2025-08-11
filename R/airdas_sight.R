@@ -2,62 +2,61 @@
 #'
 #' Extract sighting information from aerial DAS data
 #'
-#' @param x \code{airdas_df} object; output from \code{\link{airdas_process}}, 
-#'   or a data frame that can be coerced to a \code{airdas_df} object
+#' @param x `airdas_df` object; output from [airdas_process()], 
+#'   or a data frame that can be coerced to a `airdas_df` object
 #' @param ... ignored
 #' @param angle.min numeric; the minimum (absolute value) angle 
 #'   for which to consider a sighting a standard sighting. Default is 12
 #' 
-#' @details AirDAS events contain specific information in the 'Data#' columns,
-#'   with the information depending on the event code and file type for that row.
-#'   This function extracts relevant data for sighting events, and returns a
-#'   data frame with dedicated columns for each piece of sighting information. 
-#'   It can handle multiple file types in \code{x}; for instance, 
-#'   \code{x} could be processed PHOCOENA and TURTLE data
-#'   combined using \code{\link[base:cbind]{rbind}}. 
-#'   See \code{\link{airdas_format_pdf}} for more information about the expected
-#'   events and event formats, depending on the file type.
-#'   
-#'   All species codes are converted to lower case using \code{\link[base:chartr]{tolower}}.
-#'    
-#'   Abbreviations used in column names include: Gs = group size, Sp = species, 
-#'   Mixed = mixed species (multi-species) sighting. 
-#'   In addition, note that multi-species group sizes are rounded to 
-#'   the nearest whole number using \code{round(, 0)}
-#'   
-#'   A 'sighting by a standard observer' ('ObsStd') is a sighting 
-#'   made by ObsL, ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot).   
-#'   A 'standard sighting' ('SightStd') is a sighting 
-#'   that was made while on effort, by a standard observer, 
-#'   and with the absolute value of the angle of declination 
-#'   being greater than or equal to \code{angle.min}.   
-#'   Resights (Events 's') are not considered standard events, 
-#'   and thus both 'ObsStd' and 'SightStd' will be \code{NA} for 's' events.
+#' @details 
+#' AirDAS events contain specific information in the 'Data#' columns, with the
+#' information depending on the event code and file type for that row. This
+#' function extracts relevant data for sighting events, and returns a data frame
+#' with dedicated columns for each piece of sighting information. It can handle
+#' multiple file types in `x`; for instance, `x` could be processed PHOCOENA and
+#' TURTLE data combined using [base::rbind()]. See [airdas_format_pdf()] for
+#' more information about the expected events and event formats, depending on
+#' the file type.
 #'
-#' @return Data frame with 1) the columns from \code{x}, excluding the 'Data#' columns,
-#'   and 2) columns with sighting information extracted from 'Data#' columns as described below.
-#'   The data frame has one row for each sighting, or one row for each 
-#'   species of each sighting if it is a multi-species (mixed) sighting.
+#' All species codes are converted to lower case using [base::tolower()].
+#'
+#' Abbreviations used in column names include: Gs = group size, Sp = species,
+#' Mixed = mixed species (multi-species) sighting. In addition, note that
+#' multi-species group sizes are rounded to the nearest whole number using
+#' [base::round()] with `digits = 0`.
+#'
+#' A 'sighting by a standard observer' ('ObsStd') is a sighting made by ObsL,
+#' ObsB, ObsR, ObsLR, or ObsRR (not the data recorder or pilot). A 'standard
+#' sighting' ('SightStd') is a sighting that was made while on effort, by a
+#' standard observer, and with the absolute value of the angle of declination
+#' being greater than or equal to `angle.min`. Resights (Events 's') are not
+#' considered standard events, and thus both 'ObsStd' and 'SightStd' will be
+#' `NA` for 's' events.
+#'
+#' @return 
+#' Data frame with 1) the columns from `x`, excluding the 'Data#' columns,
+#' and 2) columns with sighting information extracted from 'Data#' columns as
+#' described below. The data frame has one row for each sighting, or one row for
+#' each species of each sighting if it is a multi-species (mixed) sighting.
 #'   
-#'   Added sighting information columns:
-#'   \tabular{lll}{
-#'     \emph{Sighting information}       \tab \emph{Column name} \tab \emph{Notes}\cr
-#'     Sighting number                   \tab SightNo\cr
-#'     Observer that made the sighting   \tab Obs\cr
-#'     Angle of declination              \tab Angle    \tab Left is negative\cr
-#'     Sighting by standard observer     \tab ObsStd   \tab Logical; described in Details\cr
-#'     Standard sighting                 \tab SightStd \tab Logical; described in Details\cr
-#'     Mixed species sighting            \tab Mixed    \tab Logical\cr
-#'     Species code                      \tab SpCode   \tab All characters converted to lower case\cr
-#'     Group size of school              \tab GsTotal  \tab Only different from GsSp for mixed species sightings\cr
-#'     Group size of species             \tab GsSp\cr
-#'     Turtle length (feet if numeric)   \tab TurtleSize      \tab \code{NA} for non-"t" events; may be character or numeric\cr
-#'     Turtle travel direction (degrees) \tab TurtleDirection \tab \code{NA} for non-"t" events\cr
-#'     Turtle tail visible?              \tab TurtleTail      \tab \code{NA} for non-"t" events\cr
-#'   }
+#' Added sighting information columns:
+#' | *Sighting information*           | *Column name*  | *Notes* |
+#' | :---                             | :---           | :---    |
+#' | Sighting number                  | SightNo | |
+#' | Observer that made the sighting  | Obs     | |
+#' | Angle of declination             | Angle   | Left is negative |
+#' | Sighting by standard observer    | ObsStd  | Logical; described in Details |
+#' | Standard sighting                | SightStd| Logical; described in Details |
+#' | Mixed species sighting           | Mixed   | Logical |
+#' | Species code                     | SpCode  | All characters converted to lower case |
+#' | Group size of school             | GsTotal | Only different from GsSp for mixed species sightings |
+#' | Group size of species            | GsSp    | | 
+#' | Turtle length (feet if numeric)  | TurtleSize     | `NA` for non-"t" events; may be character or numeric |
+#' | Turtle travel direction (degrees)| TurtleDirection| `NA` for non-"t" events |
+#' | Turtle tail visible?             | TurtleTail     | `NA` for non-"t" events |
 #'   
-#'   The TurtleSize will be of class character is there is any 
-#'   CARETTA data in \code{x}, and of class numeric otherwise.
+#' The TurtleSize will be of class character is there is any 
+#' CARETTA data in `x`, and of class numeric otherwise.
 #'
 #' @examples
 #' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
@@ -182,6 +181,26 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   )
 }
 
+.mutate_std <- function(x, sight = TRUE, angle.min = NULL) {
+  x.out <- x %>% 
+    mutate(ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
+                                  .data$ObsB, .data$ObsR, .data$ObsLR, 
+                                  .data$ObsRR), 
+                             .obsStd_lgl)) 
+  
+  if (sight) {
+    if (is.null(angle.min)) {
+      stop("If calculating SightStd, then 'angle.min' must be not NULL")
+    }
+    x.out %>% 
+      mutate(SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event,
+                                      .data$Angle, angle.min))
+  } else {
+    x.out
+  }
+  
+}
+
 
 
 ###############################################################################
@@ -199,14 +218,16 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            Angle = as.numeric(.data$Data4), 
            Obs = .data$Data5, 
            GsSp = .data$GsTotal, 
-           ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
-                             .obsStd_lgl), 
-           SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
-                                    .data$Angle, angle.min), 
+           # ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
+           #                        .data$ObsB, .data$ObsR, .data$ObsLR, 
+           #                        .data$ObsRR), 
+           #                   .obsStd_lgl), 
+           # SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
+           #                          .data$Angle, angle.min), 
            TurtleSize = NA_character_, 
            TurtleDirection = as.numeric(NA), 
            TurtleTail = NA_character_) %>% 
+    .mutate_std(angle.min = angle.min) %>% 
     select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
            "Mixed", "SpCode", "GsTotal", "GsSp", 
            "TurtleSize", "TurtleDirection", "TurtleTail")
@@ -226,17 +247,19 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data3)), 
-           ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
-                             .obsStd_lgl), 
-           SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
-                                    .data$Angle, angle.min), 
+           # ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
+           #                        .data$ObsB, .data$ObsR, .data$ObsLR, 
+           #                        .data$ObsRR), 
+           #                   .obsStd_lgl), 
+           # SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
+           #                          .data$Angle, angle.min), 
            SpCode = case_when(.data$Event == "S" ~ .data$Data5,
                               .data$Event == "t" ~ .data$Data5), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ as.numeric(.data$Data4)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ .data$GsSp)) %>% 
+    .mutate_std(angle.min = angle.min) %>% 
     select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
            "Mixed", "SpCode", "GsTotal", "GsSp")
   
@@ -265,17 +288,19 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data2)), 
-           ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
-                                  .data$ObsB, .data$ObsR, .data$ObsLR, .data$ObsRR), 
-                             .obsStd_lgl), 
-           SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
-                                    .data$Angle, angle.min), 
+           # ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
+           #                        .data$ObsB, .data$ObsR, .data$ObsLR, 
+           #                        .data$ObsRR), 
+           #                   .obsStd_lgl), 
+           # SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
+           #                          .data$Angle, angle.min), 
            SpCode = case_when(.data$Event == "S" ~ .data$Data5,
                               .data$Event == "t" ~ .data$Data3), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ 1), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
                                .data$Event == "t" ~ 1)) %>% 
+    .mutate_std(angle.min = angle.min) %>% 
     select("idx", "SightNo", "Obs", "Angle", "ObsStd", "SightStd", 
            "Mixed", "SpCode", "GsTotal", "GsSp")
   

@@ -355,13 +355,12 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   x.p <- x %>% filter(.data$Event == "P")
   x.p.data <- select(x.p, "Data1", "Data2", "Data3", "Data4")
   x.p.which <- apply(x.p.data, 1, function(i) any(duplicated(na.omit(i))))
-  
   idx.obs.dup <- x.p$idx[x.p.which]
   txt.obs.dup <- "One or more observer entries (Data1-4 of P events) are duplicated"
   rm(x.p, x.p.data, x.p.which)
   
   
-  # Add text to error.out as needed and return
+  # Add text to error.out
   error.out <- rbind(
     error.out,
     .check_list(x, x.lines, idx.na.phoc, txt.na.phoc),
@@ -422,34 +421,44 @@ airdas_check <- function(file, file.type = c("turtle", "caretta", "phocoena"),
   obs.code <- x.proc %>% 
     filter(.data$Event == "S", 
            !(.data$idx %in% idx.s.obs)) %>% 
-    select("ObsL", "ObsB", "ObsR", "Rec", 
-           obs_curr = !!data.s.obs, "idx", angle_curr = !!data.s.ang) %>% 
-    mutate(s_obs_code = case_when(.data$obs_curr == .data$ObsL ~ 1, 
-                                  .data$obs_curr == .data$ObsB ~ 2, 
-                                  .data$obs_curr == .data$ObsR ~ 3, 
-                                  .data$obs_curr == .data$Rec ~ 4))
+    select("Event", "OnEffort", "ObsL", "ObsB", "ObsR", "Rec", "ObsLR", "ObsRR", 
+           Obs = !!data.s.obs, "idx", angle_curr = !!data.s.ang) %>% 
+    mutate(s_obs_code = case_when(.data$Obs == .data$ObsL ~ 1, 
+                                  .data$Obs == .data$ObsB ~ 2, 
+                                  .data$Obs == .data$ObsR ~ 3, 
+                                  .data$Obs == .data$Rec ~ 4, 
+                                  .data$Obs == .data$ObsLR ~ 5, 
+                                  .data$Obs == .data$ObsRR ~ 6, 
+                                  tolower(.data$Obs) == "zz" ~ 7))
   
   idx.s.obs.code <- obs.code$idx[is.na(obs.code$s_obs_code)]
   txt.s.obs.code <- paste(
-    "Sighting observer codes with two characters must be one of", 
-    "the current observers, as specified by the most recent P event"
+    "Sighting observer codes with two characters must be either one of", 
+    "the current observers as specified by the most recent P event,", 
+    "or the code 'zz' (representing pilot/other person)"
   )
   
-  # Angle must be negative if sighting observer is left observer, 
-  #   and positive if right observer. 
-  #   Only checks for idx w/out previous angle/obs issue, and for non-NA angles
+  # For angles when it is “on effort” and by a primary observer, 
+  # the angle must be negative if sighting observer is left observer, 
+  # and positive if right observer. 
+  # Only checks for idx w/out previous angle/obs issue, and for non-NA angles
+  browser()
   ang.lr <- obs.code %>% 
+    .mutate_std(sight = FALSE) %>% 
     filter(!(.data$idx %in% c(idx.s.obs.code, idx.s.ang)), 
-           !is.na(.data$angle_curr)) %>% 
+           !is.na(.data$angle_curr), 
+           ObsStd, 
+           OnEffort) %>% 
     mutate(angle_curr = as.numeric(.data$angle_curr), 
-           angle_issue1 = .data$angle_curr > 0 & .data$s_obs_code == 1, 
-           angle_issue2 = .data$angle_curr < 0 & .data$s_obs_code == 3, 
+           angle_issue1 = .data$angle_curr > 0 & .data$s_obs_code %in% c(1, 5), 
+           angle_issue2 = .data$angle_curr < 0 & .data$s_obs_code %in% c(3, 6), 
            angle_issue = .data$angle_issue1 | .data$angle_issue2)
   
   idx.s.anglr <- ang.lr$idx[ang.lr$angle_issue]
   txt.s.anglr <- paste(
-    "Sighting angle is positive with right observer sighting,", 
-    "or negative with left observer sighting"
+    "On-effort sighting angle by a standard observer", 
+    "muist be positive for right observer sighting,", 
+    "and negative for left observer sighting"
   )
   
   rm(obs.code, ang.lr)
