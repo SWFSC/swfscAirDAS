@@ -174,25 +174,710 @@ and in a Beaufort sea state less than or equal to 'btf.max'.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">y</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"airdas_sample.das"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">y.proc</span> <span class="op">&lt;-</span> <span class="fu"><a href="airdas_process.html">airdas_process</a></span><span class="op">(</span><span class="va">y</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in airdas_read(x, ...):</span> The supplied character string does not all name an existing file(s), meaning file.exists(file) is FALSE</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">airdas_effort</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">y.proc</span>, method <span class="op">=</span> <span class="st">"condition"</span>, conditions <span class="op">=</span> <span class="st">"Bft"</span>, seg.min.km <span class="op">=</span> <span class="fl">0.05</span>, </span></span>
 <span class="r-in"><span>  num.cores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.proc' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $segdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       segnum section_id section_sub_id event transect              file stlin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat        1          1              1     T       T1 airdas_sample.das     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1       2          1              2     T       T1 airdas_sample.das    36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2       3          2              1     R       T1 airdas_sample.das    40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11      4          2              2     R       T1 airdas_sample.das    44</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3       5          3              1     T       T2 airdas_sample.das    53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12      6          3              2     T       T2 airdas_sample.das    78</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       endlin     lat1      lon1           DateTime1     lat2      lon2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat       36 39.23550 -123.1563 2015-04-09 12:30:59 39.23400 -123.4033</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1      37 39.23400 -123.4033 2015-04-09 12:37:57 39.23400 -123.4047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2      44 39.23400 -123.4742 2015-04-09 12:40:00 39.23317 -123.5143</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11     49 39.23317 -123.5143 2015-04-09 12:41:08 39.23283 -123.6032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3      78 39.22000 -123.6078 2015-04-09 12:46:51 39.21683 -123.3605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12     88 39.21683 -123.3605 2015-04-09 12:54:04 39.21700 -123.2418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 DateTime2     mlat      mlon           mDateTime    dist year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat   2015-04-09 12:37:57 39.23309 -123.2797 2015-04-09 12:34:28 21.2882 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1  2015-04-09 12:38:00 39.23400 -123.4040 2015-04-09 12:37:58  0.1148 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2  2015-04-09 12:41:08 39.23323 -123.4942 2015-04-09 12:40:34  3.4595 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11 2015-04-09 12:43:43 39.23245 -123.5588 2015-04-09 12:42:25  7.6620 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3  2015-04-09 12:54:04 39.21667 -123.4842 2015-04-09 12:50:27 21.3146 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12 2015-04-09 12:57:30 39.21700 -123.3011 2015-04-09 12:55:47 10.2336 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       month day    mtime maxdistBft</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat       4   9 12:34:28          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1      4   9 12:37:58          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2      4   9 12:40:34          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11     4   9 12:42:25          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3      4   9 12:50:27          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12     4   9 12:55:47          2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sightinfo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    segnum     mlat      mlon Event            DateTime      Lat       Lon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1 39.23309 -123.2797     S 2015-04-09 12:31:35 39.23367 -123.1783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       1 39.23309 -123.2797     S 2015-04-09 12:31:47 39.23350 -123.1857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       1 39.23309 -123.2797     S 2015-04-09 12:31:56 39.23333 -123.1917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       1 39.23309 -123.2797     S 2015-04-09 12:32:20 39.23233 -123.2053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       1 39.23309 -123.2797     S 2015-04-09 12:32:30 39.23233 -123.2108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       1 39.23309 -123.2797     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7       1 39.23309 -123.2797     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       1 39.23309 -123.2797     S 2015-04-09 12:33:43 39.23333 -123.2550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9       1 39.23309 -123.2797     S 2015-04-09 12:35:13 39.23317 -123.3073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      1 39.23309 -123.2797     S 2015-04-09 12:36:13 39.23333 -123.3418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      1 39.23309 -123.2797     S 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      1 39.23309 -123.2797     t 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      1 39.23309 -123.2797     S 2015-04-09 12:36:43 39.23350 -123.3592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      1 39.23309 -123.2797     S 2015-04-09 12:37:01 39.23400 -123.3697</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      1 39.23309 -123.2797     S 2015-04-09 12:37:16 39.23433 -123.3790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      1 39.23309 -123.2797     S 2015-04-09 12:37:37 39.23417 -123.3910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      4 39.23245 -123.5588     S 2015-04-09 12:42:13 39.23250 -123.5515</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      5 39.21667 -123.4842     S 2015-04-09 12:51:40 39.21750 -123.4410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      5 39.21667 -123.4842     S 2015-04-09 12:51:55 39.21750 -123.4317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20      5 39.21667 -123.4842     S 2015-04-09 12:52:03 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21      5 39.21667 -123.4842     S 2015-04-09 12:52:04 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22      5 39.21667 -123.4842     S 2015-04-09 12:52:07 39.21733 -123.4258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23      5 39.21667 -123.4842     S 2015-04-09 12:52:17 39.21700 -123.4185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24      5 39.21667 -123.4842     S 2015-04-09 12:52:54 39.21700 -123.3982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25      6 39.21700 -123.3011     S 2015-04-09 12:54:34 39.21667 -123.3422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26      6 39.21700 -123.3011     S 2015-04-09 12:55:20 39.21700 -123.3172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27      6 39.21700 -123.3011     S 2015-04-09 12:56:49 39.21717 -123.2685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28      6 39.21700 -123.3011     s 2015-04-09 12:57:00 39.21700 -123.2617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    OnEffort Trans Bft CCover Jelly HorizSun VertSun HKR  Haze  Kelp RedTide</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE    T1   1     20     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    AltFt SpKnot ObsL ObsB ObsR Rec ObsLR ObsRR VLI VLO VB VRI VRO EffortDot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    EventNum          file_das line_num file_type SightNo  Obs Angle ObsStd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         9 airdas_sample.das        9    turtle       1   cc    67   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        10 airdas_sample.das       10    turtle       2   bb   -60   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        12 airdas_sample.das       12    turtle       3   cc    38   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        14 airdas_sample.das       14    turtle       4   aa   -50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        15 airdas_sample.das       15    turtle       5   cc    49   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        18 airdas_sample.das       19    turtle       7   aa   -53   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        23 airdas_sample.das       24    turtle       8   dd    24  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       26 airdas_sample.das       27    turtle       9   aa   -57   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       27 airdas_sample.das       28    turtle      10   cc    65   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       28 airdas_sample.das       29    turtle    &lt;NA&gt;   aa   -20   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       29 airdas_sample.das       30    turtle      11   bb    87   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       31 airdas_sample.das       32    turtle      12   bb    82   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       32 airdas_sample.das       33    turtle      13   bb    54   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       34 airdas_sample.das       35    turtle      14   cc    62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       46 airdas_sample.das       47    turtle      15   bb    50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       65 airdas_sample.das       66    turtle      16   aa   -31   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       66 airdas_sample.das       67    turtle      17   bb   -59  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       68 airdas_sample.das       69    turtle      18   aa   -62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       69 airdas_sample.das       70    turtle      19   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       70 airdas_sample.das       71    turtle      20   aa   -48   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       71 airdas_sample.das       72    turtle      21   cc    63   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       73 airdas_sample.das       74    turtle      22   cc    43   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       78 airdas_sample.das       79    turtle      23   cc    56   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       80 airdas_sample.das       81    turtle      24   cc    37   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       84 airdas_sample.das       85    turtle      25   bb   -76  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       86 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SightStd Mixed SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE FALSE     mn       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE FALSE     mn       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE  TRUE     gg      10    8         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE  TRUE     er      10    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE FALSE     bm       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE FALSE     bm       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE FALSE     mn       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE FALSE     dc       1    1          5              90          n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE FALSE     pp       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE FALSE     mn       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE FALSE     bm       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE FALSE     bm       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE FALSE     pp       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE FALSE     pp       1    1         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       NA    NA   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    included</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $randpicks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">y.rand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"airdas_sample_randpicks.csv"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">y.rand</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>,<span class="st">"airdas_sample_randpicks.csv"</span>, package <span class="op">=</span> <span class="st">"swfscAirDAS"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">airdas_effort</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">y.proc</span>, method <span class="op">=</span> <span class="st">"equallength"</span>, conditions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Bft"</span>, <span class="st">"CCover"</span><span class="op">)</span>, </span></span>
 <span class="r-in"><span>  seg.km <span class="op">=</span> <span class="fl">3</span>, randpicks.load <span class="op">=</span> <span class="va">y.rand</span>, num.cores <span class="op">=</span> <span class="fl">1</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.proc' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $segdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       segnum section_id section_sub_id event transect              file stlin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat        1          1              1     T       T1 airdas_sample.das     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1       2          1              2     T       T1 airdas_sample.das    12</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2       3          1              3     T       T1 airdas_sample.das    18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3       4          1              4     T       T1 airdas_sample.das    20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat4       5          1              5     T       T1 airdas_sample.das    22</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat5       6          1              6     T       T1 airdas_sample.das    26</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat6       7          1              7     T       T1 airdas_sample.das    31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11      8          2              1     R       T1 airdas_sample.das    40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12      9          2              2     R       T1 airdas_sample.das    43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat21     10          2              3     R       T1 airdas_sample.das    45</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat31     11          2              4     R       T1 airdas_sample.das    48</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat13     12          3              1     T       T2 airdas_sample.das    53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat14     13          3              2     T       T2 airdas_sample.das    59</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat22     14          3              3     T       T2 airdas_sample.das    62</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat32     15          3              4     T       T2 airdas_sample.das    63</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat41     16          3              5     T       T2 airdas_sample.das    65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat51     17          3              6     T       T2 airdas_sample.das    67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat61     18          3              7     T       T2 airdas_sample.das    74</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat7      19          3              8     T       T2 airdas_sample.das    76</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat8      20          3              9     T       T2 airdas_sample.das    80</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat9      21          3             10     T       T2 airdas_sample.das    82</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat10     22          3             11     T       T2 airdas_sample.das    83</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       endlin     lat1      lon1           DateTime1     lat2      lon2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat       12 39.23550 -123.1563 2015-04-09 12:30:59 39.23335 -123.1910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1      18 39.23335 -123.1910 2015-04-09 12:31:55 39.23255 -123.2257</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2      20 39.23255 -123.2257 2015-04-09 12:32:53 39.23312 -123.2606</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3      22 39.23312 -123.2606 2015-04-09 12:33:54 39.23317 -123.2955</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat4      26 39.23317 -123.2955 2015-04-09 12:34:53 39.23330 -123.3302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat5      31 39.23330 -123.3302 2015-04-09 12:35:54 39.23371 -123.3651</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat6      37 39.23371 -123.3651 2015-04-09 12:36:54 39.23400 -123.4047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11     43 39.23400 -123.4742 2015-04-09 12:40:00 39.23317 -123.5089</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12     45 39.23317 -123.5089 2015-04-09 12:40:59 39.23284 -123.5335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat21     48 39.23284 -123.5335 2015-04-09 12:41:42 39.23239 -123.5684</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat31     49 39.23239 -123.5684 2015-04-09 12:42:43 39.23283 -123.6032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat13     59 39.22000 -123.6078 2015-04-09 12:46:51 39.21808 -123.5733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat14     62 39.21808 -123.5733 2015-04-09 12:47:51 39.21783 -123.5383</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat22     63 39.21783 -123.5383 2015-04-09 12:48:51 39.21640 -123.5037</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat32     65 39.21640 -123.5037 2015-04-09 12:49:51 39.21722 -123.4687</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat41     67 39.21722 -123.4687 2015-04-09 12:50:53 39.21750 -123.4339</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat51     74 39.21750 -123.4339 2015-04-09 12:51:51 39.21700 -123.3990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat61     76 39.21700 -123.3990 2015-04-09 12:52:52 39.21686 -123.3644</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat7      80 39.21686 -123.3644 2015-04-09 12:53:55 39.21667 -123.3294</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat8      82 39.21667 -123.3294 2015-04-09 12:54:58 39.21700 -123.3114</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat9      83 39.21700 -123.3114 2015-04-09 12:55:31 39.21728 -123.2766</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat10     88 39.21728 -123.2766 2015-04-09 12:56:33 39.21700 -123.2418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                 DateTime2     mlat      mlon           mDateTime   dist year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat   2015-04-09 12:31:55 39.23412 -123.1736 2015-04-09 12:31:27 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1  2015-04-09 12:32:53 39.23233 -123.2084 2015-04-09 12:32:24 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2  2015-04-09 12:33:54 39.23303 -123.2432 2015-04-09 12:33:23 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3  2015-04-09 12:34:53 39.23308 -123.2781 2015-04-09 12:34:23 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat4  2015-04-09 12:35:54 39.23317 -123.3129 2015-04-09 12:35:23 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat5  2015-04-09 12:36:54 39.23345 -123.3478 2015-04-09 12:36:24 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat6  2015-04-09 12:38:00 39.23425 -123.3849 2015-04-09 12:37:27 3.4029 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11 2015-04-09 12:40:59 39.23333 -123.4916 2015-04-09 12:40:29 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12 2015-04-09 12:41:42 39.23305 -123.5213 2015-04-09 12:41:21 2.1215 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat21 2015-04-09 12:42:43 39.23251 -123.5511 2015-04-09 12:42:12 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat31 2015-04-09 12:43:43 39.23249 -123.5859 2015-04-09 12:43:13 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat13 2015-04-09 12:47:51 39.21892 -123.5905 2015-04-09 12:47:21 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat14 2015-04-09 12:48:51 39.21771 -123.5557 2015-04-09 12:48:21 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat22 2015-04-09 12:49:51 39.21723 -123.5208 2015-04-09 12:49:21 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat32 2015-04-09 12:50:53 39.21661 -123.4860 2015-04-09 12:50:22 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat41 2015-04-09 12:51:51 39.21743 -123.4512 2015-04-09 12:51:22 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat51 2015-04-09 12:52:52 39.21700 -123.4164 2015-04-09 12:52:22 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat61 2015-04-09 12:53:55 39.21703 -123.3816 2015-04-09 12:53:24 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat7  2015-04-09 12:54:58 39.21671 -123.3467 2015-04-09 12:54:27 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat8  2015-04-09 12:55:31 39.21691 -123.3203 2015-04-09 12:55:14 1.5482 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat9  2015-04-09 12:56:33 39.21703 -123.2939 2015-04-09 12:56:02 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat10 2015-04-09 12:57:30 39.21700 -123.2591 2015-04-09 12:57:01 3.0000 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       month day    mtime   avgBft avgCCover</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat       4   9 12:31:27 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1      4   9 12:32:24 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2      4   9 12:33:23 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat3      4   9 12:34:23 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat4      4   9 12:35:23 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat5      4   9 12:36:24 1.000000  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat6      4   9 12:37:27 1.033724  10.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat11     4   9 12:40:29 2.000000  15.02091</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat12     4   9 12:41:21 1.216574  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat21     4   9 12:42:12 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat31     4   9 12:43:13 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat13     4   9 12:47:21 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat14     4   9 12:48:21 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat22     4   9 12:49:21 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat32     4   9 12:50:22 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat41     4   9 12:51:22 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat51     4   9 12:52:22 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat61     4   9 12:53:24 1.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat7      4   9 12:54:27 1.895145  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat8      4   9 12:55:14 2.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat9      4   9 12:56:02 2.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat10     4   9 12:57:01 2.000000  20.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sightinfo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    segnum     mlat      mlon Event            DateTime      Lat       Lon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1 39.23412 -123.1736     S 2015-04-09 12:31:35 39.23367 -123.1783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       1 39.23412 -123.1736     S 2015-04-09 12:31:47 39.23350 -123.1857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       2 39.23233 -123.2084     S 2015-04-09 12:31:56 39.23333 -123.1917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       2 39.23233 -123.2084     S 2015-04-09 12:32:20 39.23233 -123.2053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       2 39.23233 -123.2084     S 2015-04-09 12:32:30 39.23233 -123.2108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       2 39.23233 -123.2084     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7       2 39.23233 -123.2084     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       3 39.23303 -123.2432     S 2015-04-09 12:33:43 39.23333 -123.2550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9       5 39.23317 -123.3129     S 2015-04-09 12:35:13 39.23317 -123.3073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      6 39.23345 -123.3478     S 2015-04-09 12:36:13 39.23333 -123.3418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      6 39.23345 -123.3478     S 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      6 39.23345 -123.3478     t 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      6 39.23345 -123.3478     S 2015-04-09 12:36:43 39.23350 -123.3592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      7 39.23425 -123.3849     S 2015-04-09 12:37:01 39.23400 -123.3697</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      7 39.23425 -123.3849     S 2015-04-09 12:37:16 39.23433 -123.3790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      7 39.23425 -123.3849     S 2015-04-09 12:37:37 39.23417 -123.3910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     10 39.23251 -123.5511     S 2015-04-09 12:42:13 39.23250 -123.5515</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     16 39.21743 -123.4512     S 2015-04-09 12:51:40 39.21750 -123.4410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     17 39.21700 -123.4164     S 2015-04-09 12:51:55 39.21750 -123.4317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     17 39.21700 -123.4164     S 2015-04-09 12:52:03 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     17 39.21700 -123.4164     S 2015-04-09 12:52:04 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     17 39.21700 -123.4164     S 2015-04-09 12:52:07 39.21733 -123.4258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     17 39.21700 -123.4164     S 2015-04-09 12:52:17 39.21700 -123.4185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     18 39.21703 -123.3816     S 2015-04-09 12:52:54 39.21700 -123.3982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     19 39.21671 -123.3467     S 2015-04-09 12:54:34 39.21667 -123.3422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     20 39.21691 -123.3203     S 2015-04-09 12:55:20 39.21700 -123.3172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27     22 39.21700 -123.2591     S 2015-04-09 12:56:49 39.21717 -123.2685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28     22 39.21700 -123.2591     s 2015-04-09 12:57:00 39.21700 -123.2617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    OnEffort Trans Bft CCover Jelly HorizSun VertSun HKR  Haze  Kelp RedTide</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE    T1   1     20     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    AltFt SpKnot ObsL ObsB ObsR Rec ObsLR ObsRR VLI VLO VB VRI VRO EffortDot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    EventNum          file_das line_num file_type SightNo  Obs Angle ObsStd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         9 airdas_sample.das        9    turtle       1   cc    67   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        10 airdas_sample.das       10    turtle       2   bb   -60   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        12 airdas_sample.das       12    turtle       3   cc    38   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        14 airdas_sample.das       14    turtle       4   aa   -50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        15 airdas_sample.das       15    turtle       5   cc    49   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        18 airdas_sample.das       19    turtle       7   aa   -53   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        23 airdas_sample.das       24    turtle       8   dd    24  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       26 airdas_sample.das       27    turtle       9   aa   -57   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       27 airdas_sample.das       28    turtle      10   cc    65   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       28 airdas_sample.das       29    turtle    &lt;NA&gt;   aa   -20   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       29 airdas_sample.das       30    turtle      11   bb    87   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       31 airdas_sample.das       32    turtle      12   bb    82   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       32 airdas_sample.das       33    turtle      13   bb    54   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       34 airdas_sample.das       35    turtle      14   cc    62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       46 airdas_sample.das       47    turtle      15   bb    50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       65 airdas_sample.das       66    turtle      16   aa   -31   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       66 airdas_sample.das       67    turtle      17   bb   -59  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       68 airdas_sample.das       69    turtle      18   aa   -62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       69 airdas_sample.das       70    turtle      19   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       70 airdas_sample.das       71    turtle      20   aa   -48   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       71 airdas_sample.das       72    turtle      21   cc    63   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       73 airdas_sample.das       74    turtle      22   cc    43   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       78 airdas_sample.das       79    turtle      23   cc    56   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       80 airdas_sample.das       81    turtle      24   cc    37   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       84 airdas_sample.das       85    turtle      25   bb   -76  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       86 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SightStd Mixed SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE FALSE     mn       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE FALSE     mn       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE  TRUE     gg      10    8         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE  TRUE     er      10    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE FALSE     bm       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE FALSE     bm       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE FALSE     mn       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE FALSE     dc       1    1          5              90          n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE FALSE     pp       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE FALSE     mn       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE FALSE     bm       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE FALSE     bm       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE FALSE     pp       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE FALSE     pp       1    1         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       NA    NA   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    included</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $randpicks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   effort_section randpicks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              1         7</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              2         2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              3         9</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">airdas_effort</span><span class="op">(</span><span class="va">y.proc</span>, method <span class="op">=</span> <span class="st">"section"</span>, num.cores <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error:</span> object 'y.proc' not found</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $segdata</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      segnum section_id section_sub_id event transect              file stlin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat       1          1              1     T       T1 airdas_sample.das     3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1      2          2              1     R       T1 airdas_sample.das    40</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2      3          3              1     T       T2 airdas_sample.das    53</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      endlin    lat1      lon1           DateTime1     lat2      lon2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat      37 39.2355 -123.1563 2015-04-09 12:30:59 39.23400 -123.4047</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1     49 39.2340 -123.4742 2015-04-09 12:40:00 39.23283 -123.6032</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2     88 39.2200 -123.6078 2015-04-09 12:46:51 39.21700 -123.2418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                DateTime2     mlat      mlon           mDateTime    dist year</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat  2015-04-09 12:38:00 39.23309 -123.2804 2015-04-09 12:34:29 21.4029 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1 2015-04-09 12:43:43 39.23275 -123.5388 2015-04-09 12:41:51 11.1215 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2 2015-04-09 12:57:30 39.21729 -123.4248 2015-04-09 12:52:10 31.5482 2015</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      month day    mtime   avgBft avgCCover  avgJelly avgHorizSun avgVertSun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat      4   9 12:34:29 1.005362   10.0000 0.8757162           6         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1     4   9 12:41:51 1.311061   18.6569 0.0000000           6         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2     4   9 12:52:10 1.324381   20.0000 0.0000000          12         NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      avgHaze avgKelp avgRedTide avgAltFt avgSpKnot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat        0       0 0.43785812 650.0000 100.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat1       0       0 0.00000000 650.0000 100.00000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> lat2       0       0 0.08556751 669.8738  93.50289</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $sightinfo</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    segnum     mlat      mlon Event            DateTime      Lat       Lon</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1       1 39.23309 -123.2804     S 2015-04-09 12:31:35 39.23367 -123.1783</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2       1 39.23309 -123.2804     S 2015-04-09 12:31:47 39.23350 -123.1857</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3       1 39.23309 -123.2804     S 2015-04-09 12:31:56 39.23333 -123.1917</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4       1 39.23309 -123.2804     S 2015-04-09 12:32:20 39.23233 -123.2053</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5       1 39.23309 -123.2804     S 2015-04-09 12:32:30 39.23233 -123.2108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6       1 39.23309 -123.2804     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7       1 39.23309 -123.2804     S 2015-04-09 12:32:42 39.23233 -123.2195</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8       1 39.23309 -123.2804     S 2015-04-09 12:33:43 39.23333 -123.2550</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9       1 39.23309 -123.2804     S 2015-04-09 12:35:13 39.23317 -123.3073</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10      1 39.23309 -123.2804     S 2015-04-09 12:36:13 39.23333 -123.3418</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11      1 39.23309 -123.2804     S 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12      1 39.23309 -123.2804     t 2015-04-09 12:36:26 39.23350 -123.3500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13      1 39.23309 -123.2804     S 2015-04-09 12:36:43 39.23350 -123.3592</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14      1 39.23309 -123.2804     S 2015-04-09 12:37:01 39.23400 -123.3697</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15      1 39.23309 -123.2804     S 2015-04-09 12:37:16 39.23433 -123.3790</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16      1 39.23309 -123.2804     S 2015-04-09 12:37:37 39.23417 -123.3910</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17      2 39.23275 -123.5388     S 2015-04-09 12:42:13 39.23250 -123.5515</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18      3 39.21729 -123.4248     S 2015-04-09 12:51:40 39.21750 -123.4410</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19      3 39.21729 -123.4248     S 2015-04-09 12:51:55 39.21750 -123.4317</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20      3 39.21729 -123.4248     S 2015-04-09 12:52:03 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21      3 39.21729 -123.4248     S 2015-04-09 12:52:04 39.21733 -123.4270</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22      3 39.21729 -123.4248     S 2015-04-09 12:52:07 39.21733 -123.4258</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23      3 39.21729 -123.4248     S 2015-04-09 12:52:17 39.21700 -123.4185</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24      3 39.21729 -123.4248     S 2015-04-09 12:52:54 39.21700 -123.3982</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25      3 39.21729 -123.4248     S 2015-04-09 12:54:34 39.21667 -123.3422</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26      3 39.21729 -123.4248     S 2015-04-09 12:55:20 39.21700 -123.3172</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27      3 39.21729 -123.4248     S 2015-04-09 12:56:49 39.21717 -123.2685</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28      3 39.21729 -123.4248     s 2015-04-09 12:57:00 39.21700 -123.2617</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    OnEffort Trans Bft CCover Jelly HorizSun VertSun HKR  Haze  Kelp RedTide</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE    T1   1     10     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9      TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE    T1   1     10     2        6      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE    T1   1     20     0        6      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE    T2   1     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE    T2   2     20     0       12      NA   n FALSE FALSE   FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28     TRUE    T2   2     20     0       12      NA   r FALSE FALSE    TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    AltFt SpKnot ObsL ObsB ObsR Rec ObsLR ObsRR VLI VLO VB VRI VRO EffortDot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9    650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17   650    100   aa   bb   cc  dd  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  g   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28   680     90   aa   dd   cc  bb  &lt;NA&gt;  &lt;NA&gt;   g   g  p   g   g      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    EventNum          file_das line_num file_type SightNo  Obs Angle ObsStd</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         9 airdas_sample.das        9    turtle       1   cc    67   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        10 airdas_sample.das       10    turtle       2   bb   -60   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        12 airdas_sample.das       12    turtle       3   cc    38   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        14 airdas_sample.das       14    turtle       4   aa   -50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        15 airdas_sample.das       15    turtle       5   cc    49   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7        16 airdas_sample.das       16    turtle       6   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8        18 airdas_sample.das       19    turtle       7   aa   -53   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9        23 airdas_sample.das       24    turtle       8   dd    24  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10       26 airdas_sample.das       27    turtle       9   aa   -57   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11       27 airdas_sample.das       28    turtle      10   cc    65   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12       28 airdas_sample.das       29    turtle    &lt;NA&gt;   aa   -20   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13       29 airdas_sample.das       30    turtle      11   bb    87   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14       31 airdas_sample.das       32    turtle      12   bb    82   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15       32 airdas_sample.das       33    turtle      13   bb    54   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16       34 airdas_sample.das       35    turtle      14   cc    62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17       46 airdas_sample.das       47    turtle      15   bb    50   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18       65 airdas_sample.das       66    turtle      16   aa   -31   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19       66 airdas_sample.das       67    turtle      17   bb   -59  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20       68 airdas_sample.das       69    turtle      18   aa   -62   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21       69 airdas_sample.das       70    turtle      19   cc    42   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22       70 airdas_sample.das       71    turtle      20   aa   -48   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23       71 airdas_sample.das       72    turtle      21   cc    63   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24       73 airdas_sample.das       74    turtle      22   cc    43   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25       78 airdas_sample.das       79    turtle      23   cc    56   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26       80 airdas_sample.das       81    turtle      24   cc    37   TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27       84 airdas_sample.das       85    turtle      25   bb   -76  FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       86 airdas_sample.das       87    turtle      25 &lt;NA&gt;   -70     NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    SightStd Mixed SpCode GsTotal GsSp TurtleSize TurtleDirection TurtleTail</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE FALSE     mn       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE FALSE     mn       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE  TRUE     gg      10    8         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE  TRUE     er      10    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE FALSE     bm       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE FALSE     bm       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE FALSE     mn       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE FALSE     dc       1    1          5              90          n</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE FALSE     pp       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE FALSE     gg       5    5         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE FALSE     mn       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE FALSE     bm       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE FALSE     gg       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE FALSE     bm       3    3         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE FALSE     bm       4    4         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE FALSE     pp       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE FALSE     pp       2    2         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE FALSE     mn       6    6         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE FALSE     pp       1    1         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28       NA    NA   &lt;NA&gt;      NA   NA         NA              NA       &lt;NA&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    included</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 7      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 9     FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 10     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 11     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 12     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 14     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 15     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 16     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 17     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 18     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 19    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 20     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 21     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 23     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 26     TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 27    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28    FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $randpicks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   effort_section randpicks</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1              1        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              2        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              3        NA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
