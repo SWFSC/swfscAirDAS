@@ -127,6 +127,6 @@ identical(order(na.omit(x.out2$DateTime)), sort(order(na.omit(x.out2$DateTime)))
 
 ### Write to das file
 # raw_airdas_fwf(x, "data-raw/airdas_strawman_test.das", data7len = 5)
-raw_airdas_fwf(x.out2, "inst/airdas_sample.das", data7len = 15)
+raw_airdas_fwf(x.out2, "inst/extdata/airdas_sample.das", data7len = 15)
 
 ###############################################################################
