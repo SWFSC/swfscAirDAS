@@ -34,6 +34,6 @@ Methods described in 'returns'
 sp.codes.file <- system.file(
   "extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS"
 )
-airdas_spcodes_read(sp.codes.file)
+if (interactive()) airdas_spcodes_read(sp.codes.file)
 
 }
