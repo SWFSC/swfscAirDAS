@@ -130,7 +130,7 @@ series (Beaufort, viewing conditions, altitude, etc.) to be reset to
 \code{NA} at each T event
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 airdas_process(y, trans.upper = FALSE)
 
 y.read <- airdas_read(y)

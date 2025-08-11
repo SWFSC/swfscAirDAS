@@ -1,5 +1,5 @@
 test_that("equallength with big value and section method match", {
-  y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.proc <- airdas_process(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   
   # Using "equallength" method
   y1 <- suppressMessages(airdas_effort(

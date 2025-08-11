@@ -119,7 +119,7 @@ For instance, for most CARETTA data \code{comment.format} should be
 }
 
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
 airdas_comments_process(y.proc)

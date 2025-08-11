@@ -35,7 +35,7 @@ phrase "record" to determine what extra information (e.g. molas)
 was being recorded vs ignored.
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.read <- airdas_read(y, file.type = "turtle")
 
 airdas_comments(y.read)

@@ -96,7 +96,7 @@
 #' printed with line numbers of unexpected event codes
 #'
 #' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' airdas_process(y, trans.upper = FALSE)
 #' 
 #' y.read <- airdas_read(y)

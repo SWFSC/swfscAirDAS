@@ -62,7 +62,7 @@ Then you can use \code{\link[dplyr]{group_by}(transect_idx)} and
 \code{\link[dplyr]{summarise}} to summarise the desired data by transect
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
 y.eff1 <- airdas_effort(y.proc, method = "equallength", seg.km = 35, num.cores = 1)

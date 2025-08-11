@@ -16,7 +16,7 @@
 #'   comment_str containing the concatenated comment strings
 #' 
 #' @examples 
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' y.read <- airdas_read(y, file.type = "turtle")
 #' 
 #' airdas_comments(y.read)

@@ -1,5 +1,5 @@
 test_that("airdas_read output has expected column names and classes", {
-  y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.read <- airdas_read(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   y.read2 <- as_airdas_dfr(data.frame(y.read))
   
   # Same as in as_airdas_dfr()
@@ -28,7 +28,7 @@ test_that("airdas_read output has expected column names and classes", {
 
 
 test_that("airdas_process output has expected column names and classes", {
-  y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.proc <- airdas_process(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   y.proc2 <- as_airdas_df(data.frame(y.proc))
   
   # Same as in as_airdas_df()
@@ -81,7 +81,7 @@ test_that("airdas_process output has expected column names and classes", {
 
 
 test_that("airdas_sight output has expected column names and classes", {
-  y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.proc <- airdas_process(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   y.sight <- airdas_sight(y.proc)
   
   exp.name <- c(
@@ -101,7 +101,7 @@ test_that("airdas_sight output has expected column names and classes", {
 
 
 test_that("airdas_sight output has expected column names and classes with an extra column", {
-  y.proc <- airdas_process(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.proc <- airdas_process(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   y.proc$testrr <- 4
   y.sight <- airdas_sight(y.proc)
   

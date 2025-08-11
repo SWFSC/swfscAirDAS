@@ -94,7 +94,7 @@
 #'   \code{x} has TURTLE/PHOCOENA data but no TURTLE/PHOCOENA comment-data
 #' 
 #' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
 #' 
 #' airdas_comments_process(y.proc)

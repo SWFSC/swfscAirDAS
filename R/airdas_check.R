@@ -22,7 +22,7 @@
 #'
 #' @details 
 #' The default (internal) `sp.codes` file is located at
-#' `system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")`.
+#' `system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")`.
 #'
 #' To see the checks performed by this function, you can access the PDF locally
 #' at `system.file("AirDAS_check.pdf", package = "swfscAirDAS")`, or online
@@ -51,8 +51,12 @@
 #' @seealso <https://swfsc.github.io/swfscAirDAS/>
 #'
 #' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' if (interactive()) airdas_check(y, print.transect = TRUE)
+#' 
+#' # Replace system.file... with path to your SpCodes file 
+#' sp.codes.file <- system.file("extdata", "SpCodesAirDAS.DAT", package = "swfscAirDAS")
+#' if (interactive()) airdas_check(y, sp.codes.file =  sp.codes.file)
 #'
 #' @export
 airdas_check <- function(
@@ -108,7 +112,9 @@ airdas_check <- function(
   ### Process sp.codes file
   message("Reading and processing SpCodes file")
   if (is.null(sp.codes.file)) 
-    sp.codes.file <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
+    sp.codes.file <- system.file(
+      "extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS"
+    )
   
   sp.acc.df <- airdas_spcodes_read(file = sp.codes.file, skip = sp.codes.skip)
   # sp.acc.df <- read_fwf(

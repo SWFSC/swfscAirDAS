@@ -1,4 +1,4 @@
-y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+y.read <- airdas_read(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
 y.proc <- airdas_process(y.read)
 
 

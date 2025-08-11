@@ -17,7 +17,7 @@
 #' ( sci_name: species scientific name)
 #' 
 #' @examples
-#' sp.codes.file <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
+#' sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")
 #' airdas_spcodes_read(sp.codes.file)
 #' 
 #' @export

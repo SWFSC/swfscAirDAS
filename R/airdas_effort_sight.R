@@ -27,7 +27,7 @@
 #'   \code{FALSE} for sightings of species not listed in \code{sp.codes}
 #' 
 #' @examples 
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
 #' y.cond <- airdas_effort(
 #'   y.proc, method = "condition", conditions = "Bft", seg.min.km = 0.05, 

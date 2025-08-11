@@ -29,7 +29,7 @@ Read AirDAS SpCodes file
 todo
 }
 \examples{
-sp.codes.file <- system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")
+sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")
 airdas_spcodes_read(sp.codes.file)
 
 }

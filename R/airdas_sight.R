@@ -59,7 +59,7 @@
 #' CARETTA data in `x`, and of class numeric otherwise.
 #'
 #' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' y.proc <- airdas_process(y)
 #' 
 #' airdas_sight(y.proc)

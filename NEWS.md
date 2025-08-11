@@ -12,6 +12,8 @@
 
 * Added a function `airdas_spcodes_read` for reading AirDas SpCodes files in a consistent way. Changed `airdas_check` to use this function for reading in either the default or a custom SpCodes file. 
 
+* Moved sample files for examples to an 'extdata' folder within 'inst'
+
 ## `airdas_check` updates
 
 * Angles checks: inlcude ObsLR and ObsRR in observer checks; allow 'zz' as an  observer code; only check for sighting angle for on-effort, standard observers. 

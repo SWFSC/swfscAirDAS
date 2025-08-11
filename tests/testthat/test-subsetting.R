@@ -1,5 +1,5 @@
 test_that("subsetting airdas_ objects returns a data frame", {
-  y.read <- airdas_read(system.file("airdas_sample.das", package = "swfscAirDAS"))
+  y.read <- airdas_read(system.file("extdata", "airdas_sample.das", package = "swfscAirDAS"))
   y.proc <- airdas_process(y.read)
   
   expect_identical("data.frame", class(y.read[, 1:10]))

@@ -51,7 +51,7 @@ See \code{\link[=airdas_format_pdf]{airdas_format_pdf()}} for information about 
 for the specific file types (programs)
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 airdas_read(y, file.type = "turtle")
 
 }

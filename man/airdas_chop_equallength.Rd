@@ -114,7 +114,7 @@ to recreate the same effort segments from \code{x}
 Note that when saving with \code{\link[utils:read.table]{write.csv}}, users must
 specify \code{row.names = FALSE} so that the CSV file only has two columns.
 For an example randpicks file, see
-\code{system.file("airdas_sample_randpicks.csv", package = "swfscAirDAS")}
+\code{system.file("extdata", "airdas_sample_randpicks.csv", package = "swfscAirDAS")}
 
 If the column \code{dist_from_prev} does not exist, the distance between
 subsequent events is calculated as described in \code{\link{airdas_effort}}

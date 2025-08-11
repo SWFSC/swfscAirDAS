@@ -60,7 +60,7 @@ Check that AirDAS file has accepted formatting and values
 }
 \details{
 The default (internal) \code{sp.codes} file is located at
-\code{system.file("SpCodesAirDAS.dat", package = "swfscAirDAS")}.
+\code{system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")}.
 
 To see the checks performed by this function, you can access the PDF locally
 at \code{system.file("AirDAS_check.pdf", package = "swfscAirDAS")}, or online
@@ -73,8 +73,12 @@ Checks that are not done by this function that may be of interest:
 }
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 if (interactive()) airdas_check(y, print.transect = TRUE)
+
+# Replace system.file... with path to your SpCodes file 
+sp.codes.file <- system.file("extdata", "SpCodesAirDAS.DAT", package = "swfscAirDAS")
+if (interactive()) airdas_check(y, sp.codes.file =  sp.codes.file)
 
 }
 \seealso{

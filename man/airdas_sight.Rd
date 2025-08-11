@@ -76,7 +76,7 @@ considered standard events, and thus both 'ObsStd' and 'SightStd' will be
 \code{NA} for 's' events.
 }
 \examples{
-y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.proc <- airdas_process(y)
 
 airdas_sight(y.proc)

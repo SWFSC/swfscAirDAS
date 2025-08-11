@@ -37,7 +37,7 @@
 #' | file_type | character | `file.type` argument
 #'
 #' @examples
-#' y <- system.file("airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' airdas_read(y, file.type = "turtle")
 #'
 #' @export
