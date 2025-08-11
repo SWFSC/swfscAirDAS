@@ -119,6 +119,15 @@ are extracted for each event. This means that after processing, you can
 simply look at any event (row) and determine the Beaufort, viewing
 conditions, etc., at the time of the event. All other functions in the
 package depend on the AirDAS data being in this processed state.</p>
+<p>One other processing note is that the ‘DateTime’ column in the
+<code>airdas_read</code> output has a time zone of ““. This means that
+when this ‘DateTime’ column is printed (or any other DateTime object
+without a timezone), RStudio will print these values with the local
+timezone. You can confirm the timezone by running
+<code>attr(y.read$DateTime, "tzone")</code>. If you need to do
+conversions based on time zone, then use <code>force_tz</code> and
+<code>with_tz</code> from the <code>lubridate</code> package. See <a href="https://github.com/SWFSC/swfscAirDAS/issues/7" class="external-link">here</a> for more
+discussion</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Read </span></span>
 <span><span class="va">y.read</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/airdas_read.html">airdas_read</a></span><span class="op">(</span><span class="va">y</span>, file.type <span class="op">=</span> <span class="st">"turtle"</span>, skip <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
