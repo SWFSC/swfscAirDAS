@@ -20,7 +20,9 @@
 #' * sci_name: species scientific name, columns 43 until the end of the line
 #' 
 #' @examples
-#' sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")
+#' sp.codes.file <- system.file(
+#'   "extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS"
+#' )
 #' airdas_spcodes_read(sp.codes.file)
 #' 
 #' @export

@@ -57,7 +57,7 @@ then they will attempt to coerce the object to the necessary \code{airdas_} clas
 See \code{\link{as_airdas_dfr}} and \code{\link{as_airdas_df}} for more details.
 }
 \examples{
-y <- system.file("extadata", "airdas_sample.das", package = "swfscAirDAS")
+y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 y.read <- airdas_read(y)
 
 # All return a data frame:

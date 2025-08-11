@@ -25,7 +25,7 @@
 #' @name subsetting
 #'
 #' @examples
-#' y <- system.file("extadata", "airdas_sample.das", package = "swfscAirDAS")
+#' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
 #' y.read <- airdas_read(y)
 #'
 #' # All return a data frame:

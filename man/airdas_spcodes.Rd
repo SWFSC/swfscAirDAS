@@ -31,7 +31,9 @@ Provide a standardized function to read an aerial survey DAS SpCodes file.
 Methods described in 'returns'
 }
 \examples{
-sp.codes.file <- system.file("extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS")
+sp.codes.file <- system.file(
+  "extdata", "SpCodesAirDAS.dat", package = "swfscAirDAS"
+)
 airdas_spcodes_read(sp.codes.file)
 
 }
