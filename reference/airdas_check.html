@@ -45,7 +45,8 @@
 <span>  file.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"turtle"</span>, <span class="st">"caretta"</span>, <span class="st">"phocoena"</span><span class="op">)</span>,</span>
 <span>  skip <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  file.out <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  sp.codes <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sp.codes.file <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sp.codes.skip <span class="op">=</span> <span class="fl">3</span>,</span>
 <span>  print.transect <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -74,15 +75,21 @@ to <code><a href="airdas_read.html">airdas_read()</a></code></p></dd>
 be a text or CSV file. Default is <code>NULL</code></p></dd>
 
 
-<dt id="arg-sp-codes">sp.codes<a class="anchor" aria-label="anchor" href="#arg-sp-codes"></a></dt>
-<dd><p>character; filename of .dat file from which to read accepted
-species codes. If <code>NULL</code>, default (internal) file will be used.
-Default is <code>NULL</code></p></dd>
+<dt id="arg-sp-codes-file">sp.codes.file<a class="anchor" aria-label="anchor" href="#arg-sp-codes-file"></a></dt>
+<dd><p>character; default is <code>NULL</code>.
+Filename of .dat file from which to read the species codes.
+If <code>NULL</code>, the default (internal) file will be used.
+The SpCodes file will be read by <code><a href="airdas_spcodes_read.html">airdas_spcodes_read()</a></code></p></dd>
+
+
+<dt id="arg-sp-codes-skip">sp.codes.skip<a class="anchor" aria-label="anchor" href="#arg-sp-codes-skip"></a></dt>
+<dd><p>integer; default is 3.
+Passed directly to <code>skip</code> argument of <code><a href="airdas_spcodes_read.html">airdas_spcodes_read()</a></code></p></dd>
 
 
 <dt id="arg-print-transect">print.transect<a class="anchor" aria-label="anchor" href="#arg-print-transect"></a></dt>
 <dd><p>logical; indicates if a table with all the transect
-numbers in the <code>x</code> should be printed using <code><a href="https://rdrr.io/r/base/table.html" class="external-link">table</a></code>.
+numbers in the <code>x</code> should be printed using <code><a href="https://rdrr.io/r/base/table.html" class="external-link">base::table()</a></code>.
 Default is <code>TRUE</code></p></dd>
 
 </dl></div>
