@@ -48,12 +48,13 @@
 
 
 <dl><dt id="arg-x-list">x.list<a class="anchor" aria-label="anchor" href="#arg-x-list"></a></dt>
-<dd><p>list; output of <code><a href="airdas_effort.html">airdas_effort</a></code></p></dd>
+<dd><p>list; output of <code><a href="airdas_effort.html">airdas_effort()</a></code></p></dd>
 
 
 <dt id="arg-sp-codes">sp.codes<a class="anchor" aria-label="anchor" href="#arg-sp-codes"></a></dt>
 <dd><p>character; species code(s) to include in segdata.
-These code(s) will be converted to lower case to match <code><a href="airdas_sight.html">airdas_sight</a></code></p></dd>
+These code(s) will be converted to lower case to match <code><a href="airdas_sight.html">airdas_sight()</a></code>
+behavior, and so in practice these codes are case-insensitive</p></dd>
 
 
 <dt id="arg-sp-events">sp.events<a class="anchor" aria-label="anchor" href="#arg-sp-events"></a></dt>
@@ -73,13 +74,13 @@ one each for each element of <code>sp.codes</code>, and</p></li>
 </ol></div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>This function takes the output of <code><a href="airdas_effort.html">airdas_effort</a></code> and
+    <p>This function takes the output of <code><a href="airdas_effort.html">airdas_effort()</a></code> and
 adds columns for the number of sightings (nSI) and number of animals (ANI)
 for selected species (selected via <code>sp.codes</code>) for each segment
 to the segdata element of <code>x.list</code>.
 However, only sightings with an included value of <code>TRUE</code>
 (included is a column in sightinfo) are included in the summaries.
-Having this step separate from <code><a href="airdas_effort.html">airdas_effort</a></code> allows users to
+Having this step separate from <code><a href="airdas_effort.html">airdas_effort()</a></code> allows users to
 personalize the included values as desired for their analysis.</p>
     </div>
 

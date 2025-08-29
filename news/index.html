@@ -40,12 +40,12 @@
 <li><p>Changed to use <a href="https://dplyr.tidyverse.org/articles/programming.html" class="external-link">proper</a> tidyselect syntax</p></li>
 <li><p>The DateTime column in <code>airdas_read</code> output now always has a timezone of “” (<a href="https://github.com/swfsc/swfscAirDAS/issues/7" class="external-link">#7</a>)</p></li>
 <li><p>Changed ‘Line Number’ to ‘Event Number’ in the Format PDFs, for consistency with shipboard DAS data</p></li>
-<li><p>Added a function <code>airdas_spcodes_read</code> for reading AirDas SpCodes files in a consistent way. Changed <code>airdas_check</code> to use this function for reading in either the default or a custom SpCodes file.</p></li>
+<li><p>Added a function <code>airdas_spcodes_read</code> for reading AirDas SpCodes files in a consistent way. Changed <code>airdas_check</code> to use this function for reading in either the default or a custom SpCodes file [#6]</p></li>
 <li><p>Moved example data files to an ‘extdata’ folder within ‘inst’</p></li>
 <li><p>Update roxygen to use markdown</p></li>
 <li><p>Use <code>stringr</code> functions <code>str_to_lower</code> and <code>str_to_upper</code>, rather than the corresponding <code>base</code> functions</p></li>
 <li><p>Make RedTide <code>NA</code> for phoecena data [#8]</p></li>
-<li><p>Ensure that ‘Obs’ output from <code>airdas_sight</code> is lowercase [#9]</p></li>
+<li><p>Ensure that ‘Obs’ output from <code>airdas_sight</code> is lowercase, to match behavior of <code>airdas_sight</code>. In practice, this means that any observer code comparisons done by <code>swfscAirDAS</code> are case-insensitive [#9]</p></li>
 </ul><div class="section level3">
 <h3 id="airdas_check-updates-0-4-0">
 <code>airdas_check</code> updates<a class="anchor" aria-label="anchor" href="#airdas_check-updates-0-4-0"></a></h3>
@@ -53,6 +53,7 @@
 <li><p>Fixed longitude check (<a href="https://github.com/swfsc/swfscAirDAS/issues/5" class="external-link">#5</a>)</p></li>
 <li><p>Fixed the lat/lon check to return the proper line number of any errors</p></li>
 <li><p>Changed the turtle size check in <code>airdas_check</code> to allow turtle sizes to be in increments of 0.5, rather than just whole numbers</p></li>
+<li><p>Made the valid SpCodes check case-insensitive, and ensure that species codes are made lowercase before doing any comparisons. In practice, this means that any species code actions in <code>swfscAirDAS</code> are case-insensitive</p></li>
 </ul></div>
 </div>
     <div class="section level2">
