@@ -10,7 +10,7 @@
 
 * Changed 'Line Number' to 'Event Number' in the Format PDFs, for consistency with shipboard DAS data
 
-* Added a function `airdas_spcodes_read` for reading AirDas SpCodes files in a consistent way. Changed `airdas_check` to use this function for reading in either the default or a custom SpCodes file. 
+* Added a function `airdas_spcodes_read` for reading AirDas SpCodes files in a consistent way. Changed `airdas_check` to use this function for reading in either the default or a custom SpCodes file [#6]
 
 * Moved example data files to an 'extdata' folder within 'inst'
 
@@ -20,7 +20,7 @@
 
 * Make RedTide `NA` for phoecena data [#8]
 
-* Ensure that 'Obs' output from `airdas_sight` is lowercase [#9]
+* Ensure that 'Obs' output from `airdas_sight` is lowercase, to match behavior of `airdas_sight`. In practice, this means that any observer code comparisons done by `swfscAirDAS` are case-insensitive [#9]
 
 ## `airdas_check` updates
 
@@ -31,6 +31,8 @@
 * Fixed the lat/lon check to return the proper line number of any errors
 
 * Changed the turtle size check in `airdas_check` to allow turtle sizes to be in increments of 0.5, rather than just whole numbers
+
+* Made the valid SpCodes check case-insensitive, and ensure that species codes are made lowercase before doing any comparisons. In practice, this means that any species code actions in `swfscAirDAS` are case-insensitive
 
 
 # swfscAirDAS 0.3.1

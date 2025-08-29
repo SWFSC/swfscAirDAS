@@ -135,14 +135,19 @@
 
 
 # Check that specified values are part of a set of accepted values
-.check_character <- function(z, event.code, z.col, vals.accepted, na.eff) {
+.check_character <- function(z, event.code, z.col, vals.accepted, na.eff, case = TRUE) {
   # z: airdas_df object
   # event.code: character; event code(s) by which to filter z
   # z.col: Column(s) which to check
   # vals.accepted: character; accepted (expected) values. Should not include NA
-  # na.eff: if 1, NAs have no special consideration; 
+  # na.eff: 
+  #   if 1, NAs have no special consideration; 
   #   if 2, NAs are ok when off effort; 
   #   if 3, NAs are always ok (i.e. NA is added to vals.accepted)
+  # case: if FALSE, then compare values 'case-insensitive' (default TRUE)
+  #   If FALSE, then both z.vec and vals.accepted will be passed to 
+  #   stringr::str_to_lower before being compared. 
+  #   If TRUE, then values will be comared as they were passed
   ### Output: indices of z where z.col is not one of vals.accepted
   
   stopifnot(
@@ -158,6 +163,11 @@
       z.curr <- z[z$Event == i, ]
       z.vec <- z.curr[[j]]
       z.oneff <- z.curr[["OnEffort"]]
+      
+      if (!case) {
+        z.vec <- str_to_lower(z.vec)
+        vals.accepted <- str_to_lower(vals.accepted)
+      }
       
       idx.logical <- if (na.eff == 1) {
         !(z.vec %in% vals.accepted)

@@ -35,7 +35,7 @@ Added sighting information columns:\tabular{lll}{
    Sighting by standard observer \tab ObsStd \tab Logical; described in Details \cr
    Standard sighting \tab SightStd \tab Logical; described in Details \cr
    Mixed species sighting \tab Mixed \tab Logical \cr
-   Species code \tab SpCode \tab All characters converted to lower case \cr
+   Species code \tab SpCode \tab Made lowercase using \code{\link[stringr:case]{stringr::str_to_lower()}} \cr
    Group size of school \tab GsTotal \tab Only different from GsSp for mixed species sightings \cr
    Group size of species \tab GsSp \tab  \cr
    Turtle length (feet if numeric) \tab TurtleSize \tab \code{NA} for non-"t" events; may be character or numeric \cr

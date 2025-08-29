@@ -125,7 +125,7 @@ airdas_check <- function(
   # )
   
   sp.acc <- sp.acc.df[[1]]
-  sp.acc.all <- c(sp.acc, str_to_upper(sp.acc))
+  # sp.acc.all <- c(sp.acc, str_to_lower(sp.acc))
   
   if (!all(nchar(sp.acc) <= 5))
     warning("Some species codes from sp.codes are more than five charcters. ", 
@@ -422,7 +422,7 @@ airdas_check <- function(
   idx.s.sp1 <- x$idx[is.na(x[[data.s.sp1]]) & x$Event == "S"]
   txt.s.sp1 <- "The first species entry for an S event must not be NA"
   
-  idx.s.sp <- .check_character(x.proc, "S", data.s.sp, sp.acc.all, 3)
+  idx.s.sp <- .check_character(x.proc, "S", data.s.sp, sp.acc, 3, case = FALSE)
   txt.s.sp <- "Species codes that are not NA must be specified in sp.codes"
   
   # Observer
@@ -597,7 +597,7 @@ airdas_check <- function(
     
     # Turtle species code
     data.t.sp <- paste0("Data", switch(file.type, caretta = 5, turtle = 3))
-    idx.t.sp <- .check_character(x.proc, "t", data.t.sp, sp.acc.all, 1)
+    idx.t.sp <- .check_character(x.proc, "t", data.t.sp, sp.acc, 1, case = FALSE)
     txt.t.sp <- "Turtle species codes must not be NA and be specified in sp.codes"
     
     # Observer

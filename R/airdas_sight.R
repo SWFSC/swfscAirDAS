@@ -48,7 +48,7 @@
 #' | Sighting by standard observer    | ObsStd  | Logical; described in Details |
 #' | Standard sighting                | SightStd| Logical; described in Details |
 #' | Mixed species sighting           | Mixed   | Logical |
-#' | Species code                     | SpCode  | All characters converted to lower case |
+#' | Species code                     | SpCode  | Made lowercase using [stringr::str_to_lower()] |
 #' | Group size of school             | GsTotal | Only different from GsSp for mixed species sightings |
 #' | Group size of species            | GsSp    | | 
 #' | Turtle length (feet if numeric)  | TurtleSize     | `NA` for non-"t" events; may be character or numeric |
@@ -162,7 +162,6 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   # Join data frames and return
   sight.info %>% 
     left_join(sight.df.all, by = "idx") %>% 
-    mutate(SpCode = tolower(.data$SpCode)) %>%
     select(-"idx")
 }
 
@@ -213,7 +212,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   
   sight.df %>% 
     mutate(SightNo = .data$Data1, 
-           SpCode = .data$Data2, 
+           SpCode = str_to_lower(.data$Data2), 
            GsTotal = as.numeric(.data$Data3), 
            Angle = as.numeric(.data$Data4), 
            Obs = str_to_lower(.data$Data5), 
@@ -253,8 +252,8 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            #                   .obsStd_lgl), 
            # SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
            #                          .data$Angle, angle.min), 
-           SpCode = case_when(.data$Event == "S" ~ .data$Data5,
-                              .data$Event == "t" ~ .data$Data5), 
+           SpCode = str_to_lower(case_when(.data$Event == "S" ~ .data$Data5,
+                                           .data$Event == "t" ~ .data$Data5)), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ as.numeric(.data$Data4)), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 
@@ -294,8 +293,8 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            #                   .obsStd_lgl), 
            # SightStd = .sightStd_lgl(.data$OnEffort, .data$ObsStd, .data$Event, 
            #                          .data$Angle, angle.min), 
-           SpCode = case_when(.data$Event == "S" ~ .data$Data5,
-                              .data$Event == "t" ~ .data$Data3), 
+           SpCode = str_to_lower(case_when(.data$Event == "S" ~ .data$Data5,
+                                           .data$Event == "t" ~ .data$Data3)), 
            GsSp = case_when(.data$Event == "S" ~ as.numeric(.data$Data4),
                             .data$Event == "t" ~ 1), 
            GsTotal = case_when(.data$Event == "S" ~ .data$GsTotal, 

@@ -2,29 +2,31 @@
 #' 
 #' Summarize number of sightings and animals for selected species by segment
 #' 
-#' @param x.list list; output of \code{\link{airdas_effort}}
+#' @param x.list list; output of [airdas_effort()]
 #' @param sp.codes character; species code(s) to include in segdata. 
-#'   These code(s) will be converted to lower case to match \code{\link{airdas_sight}} 
+#'   These code(s) will be converted to lower case to match [airdas_sight()] 
+#'   behavior, and so in practice these codes are case-insensitive
 #' @param sp.events character; event code(s) to include in the sightinfo output.
 #'   This argument supersedes the 'included' value when determining
 #'   whether a sighting is included in the segment summaries.
 #'   Must be one or more of: "S", "t" (case-sensitive).
 #'   The default is that all of these event codes are kept
 #' 
-#' @details This function takes the output of \code{\link{airdas_effort}} and
-#'   adds columns for the number of sightings (nSI) and number of animals (ANI)
-#'   for selected species (selected via \code{sp.codes}) for each segment
-#'   to the segdata element of \code{x.list}.
-#'   However, only sightings with an included value of \code{TRUE}
-#'   (included is a column in sightinfo) are included in the summaries.
-#'   Having this step separate from \code{\link{airdas_effort}} allows users to
-#'   personalize the included values as desired for their analysis.
+#' @details 
+#' This function takes the output of [airdas_effort()] and
+#' adds columns for the number of sightings (nSI) and number of animals (ANI)
+#' for selected species (selected via `sp.codes`) for each segment
+#' to the segdata element of `x.list`.
+#' However, only sightings with an included value of \code{TRUE}
+#' (included is a column in sightinfo) are included in the summaries.
+#' Having this step separate from [airdas_effort()] allows users to
+#' personalize the included values as desired for their analysis.
 #' 
-#' @return A list, identical to \code{x.list} except for
-#'   1) the nSI and ANI columns added to \code{x.list$segdata},
-#'   one each for each element of \code{sp.codes}, and
-#'   2) the included column of \code{x.list$sightinfo}, which has been set as
-#'   \code{FALSE} for sightings of species not listed in \code{sp.codes}
+#' @return A list, identical to `x.list` except for
+#'   1) the nSI and ANI columns added to `x.list$segdata`,
+#'   one each for each element of `sp.codes`, and
+#'   2) the included column of `x.list$sightinfo`, which has been set as
+#'   `FALSE` for sightings of species not listed in `sp.codes`
 #' 
 #' @examples 
 #' y <- system.file("extdata", "airdas_sample.das", package = "swfscAirDAS")
@@ -56,7 +58,7 @@ airdas_effort_sight <- function(x.list, sp.codes, sp.events = c("S", "t")) {
   
   ### Processing
   # Prep sp.codes
-  sp.codes <- sort(sp.codes)
+  sp.codes <- str_to_lower(sort(sp.codes))
   if (!all(sp.codes %in% sightinfo$SpCode))
     message("The following species codes are not present in the provided data: ",
             paste(sp.codes[!(sp.codes %in% sightinfo$SpCode)], collapse = ", "))
