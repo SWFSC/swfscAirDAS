@@ -16,6 +16,12 @@
 
 * Update roxygen to use markdown
 
+* Use `stringr` functions `str_to_lower` and `str_to_upper`, rather than the corresponding `base` functions
+
+* Make RedTide `NA` for phoecena data [#8]
+
+* Ensure that 'Obs' output from `airdas_sight` is lowercase [#9]
+
 ## `airdas_check` updates
 
 * Angles checks: inlcude ObsLR and ObsRR in observer checks; allow 'zz' as an  observer code; only check for sighting angle for on-effort, standard observers. 

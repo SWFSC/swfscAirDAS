@@ -125,7 +125,7 @@ airdas_check <- function(
   # )
   
   sp.acc <- sp.acc.df[[1]]
-  sp.acc.all <- c(sp.acc, toupper(sp.acc))
+  sp.acc.all <- c(sp.acc, str_to_upper(sp.acc))
   
   if (!all(nchar(sp.acc) <= 5))
     warning("Some species codes from sp.codes are more than five charcters. ", 
@@ -300,7 +300,9 @@ airdas_check <- function(
   
   # Viewing conditions
   patt <- c("e", "g", "o", "p")
-  idx.view <- .check_character(x.proc, "V", paste0("Data", 1:5), c(patt, toupper(patt)), 2)
+  idx.view <- .check_character(
+    x.proc, "V", paste0("Data", 1:5), c(patt, str_to_upper(patt)), 2
+  )
   txt.view <- "Viewing conditions (Data1-5 of V events) must be one of: e, g, p, or o"
   rm(patt)
   
@@ -318,7 +320,7 @@ airdas_check <- function(
   patt <- c("h", "k", "r", "n")
   if (file.type == "phocoena") patt <- c(patt, "y") #y means h in early years
   x.tmp <- x.proc
-  x.tmp$Data1 <- .gsub_multi(c(patt, toupper(patt)), "", x.tmp$Data1)
+  x.tmp$Data1 <- .gsub_multi(c(patt, str_to_upper(patt)), "", x.tmp$Data1)
   
   idx.hkr <- .check_character(as_airdas_df(x.tmp), "W", "Data1", c(""), 2)
   txt.hkr <- paste(
@@ -443,7 +445,7 @@ airdas_check <- function(
                                   .data$Obs == .data$Rec ~ 4, 
                                   .data$Obs == .data$ObsLR ~ 5, 
                                   .data$Obs == .data$ObsRR ~ 6, 
-                                  tolower(.data$Obs) == "zz" ~ 7))
+                                  .data$Obs == "zz" ~ 7))
   
   idx.s.obs.code <- obs.code$idx[is.na(obs.code$s_obs_code)]
   txt.s.obs.code <- paste(

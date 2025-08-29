@@ -27,6 +27,7 @@
 #' @importFrom rlang !! .data na_lgl
 #' @importFrom stats na.omit runif
 #' @importFrom stringr str_count str_detect str_match_all str_split
+#'   str_to_lower str_to_upper 
 #' @importFrom swfscDAS das_effort_sight distance_greatcircle 
 #'   .chop_condition_eff .chop_equallength_eff .dist_from_prev  
 #'   .process_chr .process_num .segdata_aggr .segdata_proc das_effort_sight

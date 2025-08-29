@@ -23,7 +23,7 @@
 #'   Indicates if propagated info (weather, observers, etc) should be reset 
 #'   to `NA` when beginning a new transect. See Details section
 #' @param trans.upper logical; indicates if all transect codes should be 
-#'   capitalized using [base::toupper()].
+#'   capitalized using [stringr::str_to_upper()].
 #'   Default is `FALSE`
 #'
 #' @details 
@@ -249,7 +249,7 @@ airdas_process.airdas_dfr <- function(x,
   VRO <- .process_chr(init.val, x, "Data5", event.V, event.na)
   
   Trans <- .process_chr(init.val, x, "Data1", event.T, event.na)
-  if (trans.upper) Trans <- toupper(Trans)
+  if (trans.upper) Trans <- str_to_upper(Trans)
   Trans[event.O] <- event.na
   
   Eff <- as.logical(init.val)
@@ -316,7 +316,10 @@ airdas_process.airdas_dfr <- function(x,
     HorizSun = HorizSun, VertSun = VertSun, HKR = HKR, 
     Haze = grepl("h", HKR, ignore.case = TRUE) | grepl("y", HKR, ignore.case = TRUE), 
     Kelp = grepl("h", HKR, ignore.case = TRUE), 
-    RedTide = grepl("r", HKR, ignore.case = TRUE), 
+    RedTide = if_else(
+      rep(file.type == "phocoena", length(HKR)), 
+      rep(NA, length(HKR)), grepl("r", HKR, ignore.case = TRUE)
+    ), 
     AltFt = AltFt, SpKnot = SpKnot, 
     ObsL = ObsL, ObsB = ObsB, ObsR = ObsR, Rec = Rec, 
     ObsLR = ObsLR, ObsRR = ObsRR, 
@@ -334,20 +337,20 @@ airdas_process.airdas_dfr <- function(x,
   tmp$OnEffort <- ifelse(is.na(tmp$OnEffort), FALSE, tmp$OnEffort)
   
   # Convert values to lower case
-  tmp$HKR <- tolower(tmp$HKR)
+  tmp$HKR <- str_to_lower(tmp$HKR)
   
-  tmp$ObsL <- tolower(tmp$ObsL)
-  tmp$ObsB <- tolower(tmp$ObsB)
-  tmp$ObsR <- tolower(tmp$ObsR)
-  tmp$Rec  <- tolower(tmp$Rec)
-  tmp$ObsLR <- tolower(tmp$ObsLR)
-  tmp$ObsRR <- tolower(tmp$ObsRR)
+  tmp$ObsL <- str_to_lower(tmp$ObsL)
+  tmp$ObsB <- str_to_lower(tmp$ObsB)
+  tmp$ObsR <- str_to_lower(tmp$ObsR)
+  tmp$Rec  <- str_to_lower(tmp$Rec)
+  tmp$ObsLR <- str_to_lower(tmp$ObsLR)
+  tmp$ObsRR <- str_to_lower(tmp$ObsRR)
   
-  tmp$VLI <- tolower(tmp$VLI)
-  tmp$VLO <- tolower(tmp$VLO)
-  tmp$VB  <- tolower(tmp$VB)
-  tmp$VRI <- tolower(tmp$VRI)
-  tmp$VRO <- tolower(tmp$VRO)
+  tmp$VLI <- str_to_lower(tmp$VLI)
+  tmp$VLO <- str_to_lower(tmp$VLO)
+  tmp$VB  <- str_to_lower(tmp$VB)
+  tmp$VRI <- str_to_lower(tmp$VRI)
+  tmp$VRO <- str_to_lower(tmp$VRO)
   
   
   #----------------------------------------------------------------------------

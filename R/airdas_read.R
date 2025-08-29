@@ -168,13 +168,13 @@ airdas_read <- function(file, file.type = c("turtle", "caretta", "survey", "phoc
   line_num  <- as.integer(seq_along(x$Event) + skip)
   
   data.df <- data.frame(
-    Data1 = ifelse(toupper(x$Event) == "C", x$Data1, trimws(x$Data1)), 
-    Data2 = ifelse(toupper(x$Event) == "C", x$Data2, trimws(x$Data2)), 
-    Data3 = ifelse(toupper(x$Event) == "C", x$Data3, trimws(x$Data3)), 
-    Data4 = ifelse(toupper(x$Event) == "C", x$Data4, trimws(x$Data4)), 
-    Data5 = ifelse(toupper(x$Event) == "C", x$Data5, trimws(x$Data5)), 
-    Data6 = ifelse(toupper(x$Event) == "C", x$Data6, trimws(x$Data6)), 
-    Data7 = ifelse(toupper(x$Event) == "C", 
+    Data1 = ifelse(str_to_upper(x$Event) == "C", x$Data1, trimws(x$Data1)), 
+    Data2 = ifelse(str_to_upper(x$Event) == "C", x$Data2, trimws(x$Data2)), 
+    Data3 = ifelse(str_to_upper(x$Event) == "C", x$Data3, trimws(x$Data3)), 
+    Data4 = ifelse(str_to_upper(x$Event) == "C", x$Data4, trimws(x$Data4)), 
+    Data5 = ifelse(str_to_upper(x$Event) == "C", x$Data5, trimws(x$Data5)), 
+    Data6 = ifelse(str_to_upper(x$Event) == "C", x$Data6, trimws(x$Data6)), 
+    Data7 = ifelse(str_to_upper(x$Event) == "C", 
                    ifelse(trimws(x$Data7) == "", NA, x$Data7), 
                    trimws(x$Data7)), 
     stringsAsFactors = FALSE

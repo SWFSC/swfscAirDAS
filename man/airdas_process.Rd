@@ -50,7 +50,7 @@ Indicates if propagated info (weather, observers, etc) should be reset
 to \code{NA} when beginning a new transect. See Details section}
 
 \item{trans.upper}{logical; indicates if all transect codes should be
-capitalized using \code{\link[base:chartr]{base::toupper()}}.
+capitalized using \code{\link[stringr:case]{stringr::str_to_upper()}}.
 Default is \code{FALSE}}
 }
 \value{

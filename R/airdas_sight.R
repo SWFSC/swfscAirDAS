@@ -43,7 +43,7 @@
 #' | *Sighting information*           | *Column name*  | *Notes* |
 #' | :---                             | :---           | :---    |
 #' | Sighting number                  | SightNo | |
-#' | Observer that made the sighting  | Obs     | |
+#' | Observer that made the sighting  | Obs     | Made lowercase using [stringr::str_to_lower()] |
 #' | Angle of declination             | Angle   | Left is negative |
 #' | Sighting by standard observer    | ObsStd  | Logical; described in Details |
 #' | Standard sighting                | SightStd| Logical; described in Details |
@@ -216,7 +216,7 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
            SpCode = .data$Data2, 
            GsTotal = as.numeric(.data$Data3), 
            Angle = as.numeric(.data$Data4), 
-           Obs = .data$Data5, 
+           Obs = str_to_lower(.data$Data5), 
            GsSp = .data$GsTotal, 
            # ObsStd = pmap_lgl(list(.data$Event, .data$Obs, .data$ObsL, 
            #                        .data$ObsB, .data$ObsR, .data$ObsLR, 
@@ -242,8 +242,8 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   
   sight.info.all <- sight.df %>% 
     mutate(SightNo = .data$Data1, 
-           Obs = case_when(.data$Event == "S" ~ .data$Data2,
-                           .data$Event == "t" ~ .data$Data2), 
+           Obs = str_to_lower(case_when(.data$Event == "S" ~ .data$Data2,
+                                        .data$Event == "t" ~ .data$Data2)), 
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data3)), 
@@ -283,8 +283,8 @@ airdas_sight.airdas_df <- function(x, angle.min = 12, ...) {
   sight.info.all <- sight.df %>% 
     mutate(SightNo = as.character(ifelse(.data$Event == "t", NA, .data$Data1)), 
            # ^ is for when there are 0 rows to ensure character class
-           Obs = case_when(.data$Event == "S" ~ .data$Data2,
-                           .data$Event == "t" ~ .data$Data1), 
+           Obs = str_to_lower(case_when(.data$Event == "S" ~ .data$Data2,
+                                        .data$Event == "t" ~ .data$Data1)), 
            Angle = as.numeric(case_when(.data$Event == "S" ~ .data$Data3,
                                         .data$Event == "s" ~ .data$Data2, 
                                         .data$Event == "t" ~ .data$Data2)), 

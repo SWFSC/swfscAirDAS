@@ -30,7 +30,7 @@ each species of each sighting if it is a multi-species (mixed) sighting.
 Added sighting information columns:\tabular{lll}{
    \emph{Sighting information} \tab \emph{Column name} \tab \emph{Notes} \cr
    Sighting number \tab SightNo \tab  \cr
-   Observer that made the sighting \tab Obs \tab  \cr
+   Observer that made the sighting \tab Obs \tab Made lowercase using \code{\link[stringr:case]{stringr::str_to_lower()}} \cr
    Angle of declination \tab Angle \tab Left is negative \cr
    Sighting by standard observer \tab ObsStd \tab Logical; described in Details \cr
    Standard sighting \tab SightStd \tab Logical; described in Details \cr
